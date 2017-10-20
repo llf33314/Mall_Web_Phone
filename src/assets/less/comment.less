@@ -1,0 +1,296 @@
+@import "./import/mixins.less";
+@import "./import/base.less";
+
+
+.index-main{
+    width: 100%;
+    position: relative;
+    .index-nav{
+        height: 116/@dev-Width *1rem;
+        .ik-box;
+        .ik-box-pack(justify);
+        .ik-box-align(center);
+        padding:0 44/@dev-Width *1rem; 
+    }
+    .index-no{
+        width: 100%;
+        text-align: center;
+        background: #fff;
+        padding-top:  109/@dev-Width *1rem;
+        padding-bottom:  46/@dev-Width *1rem;
+    }
+    .index-content{
+        width: 100%;
+        background: #fff;
+        .index-item{
+            width: 100%;
+            padding: 40/@dev-Width *1rem 27/@dev-Width *1rem;
+        }
+        .index-user-img{
+            width: 128/@dev-Width *1rem;
+            height: 128/@dev-Width *1rem;
+            background-size: cover;
+            background-position: center;
+            .border-radius(100%);
+            float: left;
+        }
+        .index-user-fr{
+            width: 85%;
+            float: right;
+            padding: 15/@dev-Width*1rem 0;
+        }
+        .index-user-name{
+            width: 100%;
+        }
+        .index-txt{
+            width: 100%;
+            padding: 20/@dev-Width*1rem 0;
+        }
+        .index-photo{
+            max-width:200%; 
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            font-size: 0;
+            padding-bottom: 20/@dev-Width*1rem;
+            height: 330/@dev-Width*1rem;
+            .ik-box;
+            position: relative;
+            .index-img{
+                width: 300/@dev-Width*1rem;
+                height: 300/@dev-Width*1rem;
+                .border-radius(8px);
+                background-size: cover;
+                background-position: center;
+                margin-right: 30/@dev-Width*1rem;
+            }
+        }
+        .index-choice{
+            width: 100%;
+            font-size: 0;
+            span{
+                margin-right: 58/@dev-Width*1rem;
+            }
+        }
+        .index-reply{
+            width: 100%;
+            margin-top: 48/@dev-Width*1rem;
+            background: #f2f2f2;
+            padding: 30/@dev-Width*1rem;
+            text-align: justify;
+            .border-radius(2px);
+            position: relative;
+            &::after{
+                content: ' ';
+                position: absolute;
+                top: -20/@dev-Width*1rem;
+                left: 28/@dev-Width*1rem;
+                width: 0;
+                height: 0;
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+                border-bottom: 10px solid #f2f2f2;
+            }
+        }
+    }
+}
+::-webkit-scrollbar {width: 0;height: 0;opacity:0;} 
+.scrollbar{
+    scrollbar-face-color:#fff;
+    scrollbar-arrow-color:#fff;
+    scrollbar-highlight-color:#fff;
+    scrollbar-3dlight-color:#fff;
+    scrollbar-shadow-color:#fff;
+    scrollbar-darkshadow-color:#fff;
+    scrollbar-track-color:#fff;
+    scrollbar-base-color:#fff;
+}
+.comment-main{
+    width: 100%;
+    padding-bottom:134/@dev-Width *1rem; 
+    .comment-goods{
+        background: #fff;
+        padding: 20/@dev-Width *1rem 40/@dev-Width *1rem;
+        margin-bottom: 20/@dev-Width *1rem;
+        .goods-img{
+            float: left;
+            width: 264/@dev-Width *1rem;
+            height: 264/@dev-Width *1rem;
+            background-size: cover; 
+            background-position: center;
+        }
+        .goods-txt{
+            width: 72%;
+            float: right;
+            &>p:last-child{
+                margin-top: 48/@dev-Width *1rem;
+            }
+        }
+    }
+    .comment-content{
+        font-size: 0;
+        background: #fff;
+        padding: 40/@dev-Width *1rem 0 0;
+        width: 100%;
+        .comment-textarea{
+            width: 92%;
+            margin: 0 auto;
+            display: block;
+            height: 620/@dev-Width *1rem;
+            border: 1px solid #ededed;
+            background: 0;
+            padding: 10/@dev-Width *1rem;
+        }
+        .comment-photo{
+            width: 100%;
+            text-align: justify;
+            padding: 40/@dev-Width *1rem;
+            .comment-upload,.comment-img{
+                //display: inline-block;
+                float: left;
+                position: relative;
+                width: 22%;
+                height: 230/@dev-Width *1rem;
+                background-size: cover; 
+                background-position: center;
+                margin-top: 40/@dev-Width *1rem;
+                margin-right: 30/@dev-Width *1rem;
+                input{
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    display: block;
+                    top: 0;
+                    left: 0;
+                    opacity: 0;
+                }
+            }
+            .comment-img{
+                position: relative;
+                i{
+                    width: 60/@dev-Width *1rem;
+                    height: 60/@dev-Width *1rem;
+                    text-align: center;
+                    line-height: 60/@dev-Width *1rem;
+                    background: rgba(0,0,0,0.6);
+                    color:#e0e0e8;
+                    font-size: 36/@dev-Width *1rem;
+                    .border-radius(100%);
+                    position: absolute;
+                    top:-8%;
+                    right: -8%;
+                }
+            }
+            .border-img{
+                border:1px solid #ededed;
+                width:26%;
+                height: 280/@dev-Width *1rem;
+            }
+            .comment-upload{
+                color: #999;
+                border: 2px dashed #999;
+                .border-radius(5px);
+                text-align: center;
+                .ik-box;
+                .ik-box-align(center);
+                .ik-box-pack(center);
+                .ik-box-orient(vertical);
+                i{
+                    font-size: 88/@dev-Width *1rem;
+                }
+                p{
+                    width: 75%;
+                }
+            }
+        }
+        .comment-txt{
+            width: 100%;
+            padding: 0 40/@dev-Width *1rem;
+        }
+    }
+    .comment-main-footer{
+        width: 100%;
+        padding:0 45/@dev-Width *1rem;
+        background: #fff;
+        font-size: 0;
+        .comment-button{
+            text-align: center;
+            width: 33%;
+            display: inline-block;
+            padding: 48/@dev-Width *1rem 0;
+            color: #888;
+            i{
+                font-size:  68/@dev-Width *1rem;
+            }
+            &>i:first-child{
+                display: inline-block;
+            }
+            &>i:last-child{
+                display: none;
+            }
+        }
+        .selected{
+            color:#e4393c;
+            &>i:first-child{
+                display: none;
+            }
+            &>i:last-child{
+                display: inline-block;
+            }
+        }
+    }
+}
+.comment-footer1{
+    .shop-max-button{
+        height: 134/@dev-Width *1rem;
+        .border-radius(0);
+    }
+}
+.comment-footer2{
+    .shop-max-button{
+        height: 134/@dev-Width *1rem;
+        width: 92%;
+        margin: 0 auto;
+        color: #fff;
+    }
+}
+.comment-footer3{
+    .shop-max-button{
+        height: 134/@dev-Width *1rem;
+        width: 92%;
+        margin: 0 auto;
+        color: #fff;
+        font-weight: bold; 
+        .border-radius(50px);
+        border: 1px solid #f53e18;
+        background: -o-radial-gradient(#f55211 , #f6423a); /* Opera 11.1 - 12.0 */
+        background: -webkit-radial-gradient(#f55211 , #e7242c); /* Safari 5.1 - 6.0 */
+        background: -moz-radial-gradient(#f55211 , #f6423a);  /* Firefox 3.6 - 15 */
+        background: radial-gradient(#f55211 , #f6423a);  /* 标准的语法 */
+    }
+}
+.share-wrapper{
+    width: 100%;
+    height: 100%;
+    background: url('../../image/fengxiang_bg.jpg')no-repeat;
+    background-size: cover;
+    .share-main{
+        font-size: 0;
+        width: 100%;
+        padding: 100/@dev-Width *1rem 36/@dev-Width *1rem;
+    }
+    .share-title{
+        width: 100%;
+        font-size: 70/@dev-Width *1rem;
+        text-align: center;
+        color: #fff;
+        font-weight: bold;
+        text-shadow: 2px 3px 2px rgba(0,0,0,0.2);
+        margin-bottom: 60/@dev-Width *1rem;
+    }
+    .share-content{
+        background: #fff;
+        margin: 0 auto;
+        .border-radius(8px);
+        margin-bottom: 45/@dev-Width *1rem;
+    }
+}

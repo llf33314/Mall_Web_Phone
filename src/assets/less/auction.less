@@ -1,0 +1,175 @@
+@import "./import/mixins.less";
+@import "./import/base.less";
+
+.auction-wrapper{
+    width: 100%;
+    position: relative;
+    .bond-main{
+        width: 100%;
+        padding: 160/@dev-Width *1rem  50/@dev-Width *1rem 0;
+        .bond-dui{
+            text-align: center;
+            line-height: 320/@dev-Width *1rem;
+            width: 320 /@dev-Width *1rem;
+            height: 320/@dev-Width *1rem;
+            margin: 0 auto;
+            background: #09bb07;
+            .border-radius(100%);
+            font-size: 180/@dev-Width *1rem;
+            color: #fff;
+            margin-bottom: 80/@dev-Width *1rem;
+        }
+        .bond-txt{
+            width: 100%;
+            text-align: center;
+            &>p{
+                margin-bottom: 80/@dev-Width *1rem;
+            }
+        }
+        .bond-button{
+            width: 100%;
+            p{
+                height: 140/@dev-Width *1rem;
+            }
+            &>p:first-child{
+                background: #09bb07;
+                color: #fff;
+                margin-bottom: 50/@dev-Width *1rem;
+            }
+            &>p:last-child{
+                background: #09bb07;
+                color: #fff;
+                border: 1px solid #d6d5d6;
+                background: #fbfafc;
+                color: #000;
+            }
+        }
+    }
+    .agreement-main{
+        width: 100%;
+        position: relative;
+        padding-bottom: 160/@dev-Width *1rem;
+        .agreement-content{
+            width: 100%;
+            padding: 30/@dev-Width *1rem 45/@dev-Width *1rem 50/@dev-Width *1rem;
+            .agreement-h1{
+                width: 100%;
+                text-align: center;
+                font-weight: bold;
+                margin-bottom: 20/@dev-Width *1rem
+            }
+            .agreement-text{
+                width: 100%;
+                .agreement-title{
+                    text-align: justify;
+                }
+                .agreement-txt{
+                    text-indent: 2em;
+                    text-align: justify;
+                }
+            }
+        }
+        .auction-footer{
+            width: 100%;
+            .auction-buttom{
+                width: 100%;
+                height: 158/@dev-Width *1rem;
+                .ik-box;
+                .ik-box-align(center);
+                .ik-box-pack(center);
+                color: #fff;
+            }
+        }
+    }
+}
+.payMoney-wapper{
+    background: #fff;
+    width: 100%;
+    height: 100%;
+    .payMoney-main{
+        width: 100%;
+        padding: 30/@dev-Width *1rem;
+        .payMoney-item{
+            width: 100%;
+            height: 124/@dev-Width *1rem;
+            .ik-box;
+            .ik-box-align(center);
+            .ik-box-pack(justify);
+            line-height: 1;
+        }
+        .payMoney-buttom{
+            margin: 20/@dev-Width *1rem auto 0;
+            width: 90%;
+            height: 158/@dev-Width *1rem;
+        }
+    }
+}
+.apply-wapper{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: #fff;
+    .apply-notice{
+        font-size: 0;
+        width: 100%;
+        padding: 20/@dev-Width *1rem 50/@dev-Width *1rem;
+        p{
+            width: 88%;
+            display: inline-block;
+            color: #87858f;
+        }
+        i{
+            text-align: center;
+            line-height: 78/@dev-Width *1rem;
+            display: inline-block;
+            width: 80/@dev-Width *1rem;
+            height: 80/@dev-Width *1rem;
+            font-size: 48/@dev-Width *1rem;
+            background: #10aeff;
+            .border-radius(100%);
+            color: #fff;
+            margin-right: 40/@dev-Width *1rem;
+            margin-top: 20/@dev-Width *1rem;
+            vertical-align: top;
+        }
+    }
+    .apply-main{
+        width: 100%;
+        padding-left: 25/@dev-Width *1rem;
+        .apply-item{
+            width: 100%;
+            height: 120/@dev-Width *1rem;
+            .ik-box;
+            .ik-box-align(center);
+            .apply-title{
+                width: 20%;
+            }
+            .apply-txt{
+                width: 80%;
+                input{
+                    width: 100%;
+                    padding: 15/@dev-Width *1rem 0;
+                    border: 0;
+                }
+                .apply-tel{
+                    width: 68%;
+                }
+                .apply-tel-button{
+                    display: inline-block;
+                    width: 30%;
+                    padding: 30/@dev-Width *1rem 0;
+                    text-align: center;
+                    border-left: 1px solid #e8e8ed;
+                }
+            }
+        }
+        .apply-buttom {
+            margin-top: 25%;
+            height: 148/@dev-Width *1rem;
+            p{
+                margin-top: 28/@dev-Width *1rem;
+                color: #87858f;
+            }
+        }
+    }
+}

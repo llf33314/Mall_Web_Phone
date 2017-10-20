@@ -1,0 +1,354 @@
+.ik-box {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -o-box;
+  display: box;
+}
+.box-sizing {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  /* Firefox */
+  -webkit-box-sizing: border-box;
+  /* Safari */
+}
+.text-overflow {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/**------vars------*/
+.index-main {
+  width: 100%;
+  position: relative;
+}
+.index-main .index-nav {
+  height: 0.77333333rem;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -o-box;
+  display: box;
+  -webkit-box-pack: justify;
+  -moz-box-pack: justify;
+  -o-box-pack: justify;
+  box-pack: justify;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -o-box-align: center;
+  box-align: center;
+  padding: 0 0.29333333rem;
+}
+.index-main .index-no {
+  width: 100%;
+  text-align: center;
+  background: #fff;
+  padding-top: 0.72666667rem;
+  padding-bottom: 0.30666667rem;
+}
+.index-main .index-content {
+  width: 100%;
+  background: #fff;
+}
+.index-main .index-content .index-item {
+  width: 100%;
+  padding: 0.26666667rem 0.18rem;
+}
+.index-main .index-content .index-user-img {
+  width: 0.85333333rem;
+  height: 0.85333333rem;
+  background-size: cover;
+  background-position: center;
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  border-radius: 100%;
+  float: left;
+}
+.index-main .index-content .index-user-fr {
+  width: 85%;
+  float: right;
+  padding: 0.1rem 0;
+}
+.index-main .index-content .index-user-name {
+  width: 100%;
+}
+.index-main .index-content .index-txt {
+  width: 100%;
+  padding: 0.13333333rem 0;
+}
+.index-main .index-content .index-photo {
+  max-width: 200%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  font-size: 0;
+  padding-bottom: 0.13333333rem;
+  height: 2.2rem;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -o-box;
+  display: box;
+  position: relative;
+}
+.index-main .index-content .index-photo .index-img {
+  width: 2rem;
+  height: 2rem;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+  background-size: cover;
+  background-position: center;
+  margin-right: 0.2rem;
+}
+.index-main .index-content .index-choice {
+  width: 100%;
+  font-size: 0;
+}
+.index-main .index-content .index-choice span {
+  margin-right: 0.38666667rem;
+}
+.index-main .index-content .index-reply {
+  width: 100%;
+  margin-top: 0.32rem;
+  background: #f2f2f2;
+  padding: 0.2rem;
+  text-align: justify;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  position: relative;
+}
+.index-main .index-content .index-reply::after {
+  content: ' ';
+  position: absolute;
+  top: -0.13333333rem;
+  left: 0.18666667rem;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #f2f2f2;
+}
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+.scrollbar {
+  scrollbar-face-color: #fff;
+  scrollbar-arrow-color: #fff;
+  scrollbar-highlight-color: #fff;
+  scrollbar-3dlight-color: #fff;
+  scrollbar-shadow-color: #fff;
+  scrollbar-darkshadow-color: #fff;
+  scrollbar-track-color: #fff;
+  scrollbar-base-color: #fff;
+}
+.comment-main {
+  width: 100%;
+  padding-bottom: 0.89333333rem;
+}
+.comment-main .comment-goods {
+  background: #fff;
+  padding: 0.13333333rem 0.26666667rem;
+  margin-bottom: 0.13333333rem;
+}
+.comment-main .comment-goods .goods-img {
+  float: left;
+  width: 1.76rem;
+  height: 1.76rem;
+  background-size: cover;
+  background-position: center;
+}
+.comment-main .comment-goods .goods-txt {
+  width: 72%;
+  float: right;
+}
+.comment-main .comment-goods .goods-txt > p:last-child {
+  margin-top: 0.32rem;
+}
+.comment-main .comment-content {
+  font-size: 0;
+  background: #fff;
+  padding: 0.26666667rem 0 0;
+  width: 100%;
+}
+.comment-main .comment-content .comment-textarea {
+  width: 92%;
+  margin: 0 auto;
+  display: block;
+  height: 4.13333333rem;
+  border: 1px solid #ededed;
+  background: 0;
+  padding: 0.06666667rem;
+}
+.comment-main .comment-content .comment-photo {
+  width: 100%;
+  text-align: justify;
+  padding: 0.26666667rem;
+}
+.comment-main .comment-content .comment-photo .comment-upload,
+.comment-main .comment-content .comment-photo .comment-img {
+  float: left;
+  position: relative;
+  width: 22%;
+  height: 1.53333333rem;
+  background-size: cover;
+  background-position: center;
+  margin-top: 0.26666667rem;
+  margin-right: 0.2rem;
+}
+.comment-main .comment-content .comment-photo .comment-upload input,
+.comment-main .comment-content .comment-photo .comment-img input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: block;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+.comment-main .comment-content .comment-photo .comment-img {
+  position: relative;
+}
+.comment-main .comment-content .comment-photo .comment-img i {
+  width: 0.4rem;
+  height: 0.4rem;
+  text-align: center;
+  line-height: 0.4rem;
+  background: rgba(0, 0, 0, 0.6);
+  color: #e0e0e8;
+  font-size: 0.24rem;
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  border-radius: 100%;
+  position: absolute;
+  top: -8%;
+  right: -8%;
+}
+.comment-main .comment-content .comment-photo .border-img {
+  border: 1px solid #ededed;
+  width: 26%;
+  height: 1.86666667rem;
+}
+.comment-main .comment-content .comment-photo .comment-upload {
+  color: #999;
+  border: 2px dashed #999;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  text-align: center;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -o-box;
+  display: box;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -o-box-align: center;
+  box-align: center;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  box-pack: center;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -o-box-orient: vertical;
+  box-orient: vertical;
+}
+.comment-main .comment-content .comment-photo .comment-upload i {
+  font-size: 0.58666667rem;
+}
+.comment-main .comment-content .comment-photo .comment-upload p {
+  width: 75%;
+}
+.comment-main .comment-content .comment-txt {
+  width: 100%;
+  padding: 0 0.26666667rem;
+}
+.comment-main .comment-main-footer {
+  width: 100%;
+  padding: 0 0.3rem;
+  background: #fff;
+  font-size: 0;
+}
+.comment-main .comment-main-footer .comment-button {
+  text-align: center;
+  width: 33%;
+  display: inline-block;
+  padding: 0.32rem 0;
+  color: #888;
+}
+.comment-main .comment-main-footer .comment-button i {
+  font-size: 0.45333333rem;
+}
+.comment-main .comment-main-footer .comment-button > i:first-child {
+  display: inline-block;
+}
+.comment-main .comment-main-footer .comment-button > i:last-child {
+  display: none;
+}
+.comment-main .comment-main-footer .selected {
+  color: #e4393c;
+}
+.comment-main .comment-main-footer .selected > i:first-child {
+  display: none;
+}
+.comment-main .comment-main-footer .selected > i:last-child {
+  display: inline-block;
+}
+.comment-footer1 .shop-max-button {
+  height: 0.89333333rem;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+.comment-footer2 .shop-max-button {
+  height: 0.89333333rem;
+  width: 92%;
+  margin: 0 auto;
+  color: #fff;
+}
+.comment-footer3 .shop-max-button {
+  height: 0.89333333rem;
+  width: 92%;
+  margin: 0 auto;
+  color: #fff;
+  font-weight: bold;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  border-radius: 50px;
+  border: 1px solid #f53e18;
+  background: -o-radial-gradient(#f55211, #f6423a);
+  /* Opera 11.1 - 12.0 */
+  background: -webkit-radial-gradient(#f55211, #e7242c);
+  /* Safari 5.1 - 6.0 */
+  background: -moz-radial-gradient(#f55211, #f6423a);
+  /* Firefox 3.6 - 15 */
+  background: radial-gradient(#f55211, #f6423a);
+  /* 标准的语法 */
+}
+.share-wrapper {
+  width: 100%;
+  height: 100%;
+  background: url('../../image/fengxiang_bg.jpg') no-repeat;
+  background-size: cover;
+}
+.share-wrapper .share-main {
+  font-size: 0;
+  width: 100%;
+  padding: 0.66666667rem 0.24rem;
+}
+.share-wrapper .share-title {
+  width: 100%;
+  font-size: 0.46666667rem;
+  text-align: center;
+  color: #fff;
+  font-weight: bold;
+  text-shadow: 2px 3px 2px rgba(0, 0, 0, 0.2);
+  margin-bottom: 0.4rem;
+}
+.share-wrapper .share-content {
+  background: #fff;
+  margin: 0 auto;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+  margin-bottom: 0.3rem;
+}

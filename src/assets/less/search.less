@@ -1,0 +1,214 @@
+@import './import/base.less';
+@import './import/mixins.less';
+
+.search-main{
+    width: 100%;
+    position: relative;
+    .search-header{
+        width: 100%;
+        font-size: 0;
+        background: #fff;
+    }
+    .search-header1{
+        width: 100%;
+        background: #e4393c;
+        font-size: 0;
+        position: absolute;
+        top:0;
+        left: 0;
+    }
+    .header-search{
+        width: 100%;
+        padding: 25/@dev-Width *1rem ;
+        padding-right: 0;
+        position: relative;
+        .input1{
+            float: left;
+            padding-left: 80/@dev-Width *1rem;
+            background: rgba(255, 255, 255,0.6);
+            color: #fff;
+        }
+        .icon-sousuo {
+            position: absolute;
+            left: 4%;
+            top: 35%;
+            color: #fff;
+            font-size: 40/@dev-Width *1rem;
+        }
+        .classify-button{
+            color: #fff;
+            width: 12%;
+            float: left;
+            text-align: center;
+            font-size: 0;
+            line-height:1;
+            i{
+                display: block;
+                font-size: 68/@dev-Width *1rem;
+                position: relative;
+            }
+            em{
+                width: 8px;
+                height: 8px;
+                background: #fff;
+                .border-radius(100%);
+                position: absolute;
+                top: -5%;
+                right: 22%;
+            }
+        }
+        input{
+            width: 88%;
+            border: 0;
+            background: #f1f1f4;
+            padding: 20/@dev-Width *1rem;
+            padding-right: 0;
+            .border-radius(10px);
+        }
+        &>span{
+                width: 12%;
+                display: inline-block;
+                text-align: center;
+                padding: 20/@dev-Width *1rem 0;
+            }
+    }
+    .search-content{
+        width: 100%;
+        .search-history{
+            width: 100%;
+            .search-title{
+                width: 100%;
+                .ik-box;
+                .ik-box-pack(justify);
+                i{
+                    padding: 40/@dev-Width *1rem;
+                    display: block;
+                }
+            }
+            .search-txt{
+                width: 100%;
+                padding: 0 40/@dev-Width *1rem ;
+                font-size: 0;
+            }
+        }
+    }
+}
+.classify-wrapper{
+    position: relative;
+    height: 100%;
+    .search-main{
+        height: 100%;
+    }
+    .classify-content{
+        width: 100%;
+        height: 100%;
+        padding-top: 138/@dev-Width *1rem;
+        position: relative; 
+        .classify-nav{
+            height: 85%;
+            .calc-w(295,1242,100%);
+            float: left;
+            margin-bottom: 1rem;
+            overflow-y: auto; 
+            overflow-x: hidden; 
+            position: absolute;
+            top: 1rem;
+            left: 0;
+            background: #fff;
+            -webkit-overflow-scrolling: touch;
+            li{
+                width: 100%;
+                height: 150/@dev-Width *1rem;
+                .ik-box;
+                .ik-box-align(center);
+                .ik-box-pack(center);
+                border-bottom: 1px solid #e5e5e5;
+                background: #fff;
+            }
+            .selected{
+                background: #f0f2f5;
+                border-right: 0; 
+                position: relative;
+            }
+        }
+        .classify-main{
+            right: 0;
+            height: 93%;
+            .calc-w(1242-295,1242,100%);
+            float: right;
+            padding: 30/@dev-Width *1rem 32/@dev-Width *1rem 0;
+            position: relative;
+            overflow: hidden;
+            .Slide{
+                width: 100%;
+                position: absolute;
+                height: 97%;
+                overflow-y: auto;
+                overflow-x: hidden;
+                margin-bottom: 1.2rem;
+                -webkit-overflow-scrolling: touch;
+            }
+            .classify-title{
+                width: 100%;
+                font-size: 42/@dev-Width *1rem;
+                font-weight: bold;
+                padding: 25/@dev-Width *1rem 0;
+            }
+            .classify-goods,.whole-goods{
+                width: 93%;
+                background: #fff;
+                padding: 25/@dev-Width *1rem;
+                position: relative;
+                &::before{
+                    content: '';
+                    display: block;
+                    width: 100%;
+                    position: absolute;
+                    bottom: 25/@dev-Width *1rem;
+                    left: 0;
+                    height: 3px;
+                    background: #fff;
+                }
+                .goods-item,.whole-item{
+                    font-size: 0;
+                    float: left;
+                    width: 33.333%;
+                    padding: 20/@dev-Width *1rem;
+                    border-bottom: 1px solid #f3f5f7;
+                    border-right: 1px solid #f3f5f7;
+                    p{
+                        text-align: center;
+                        padding: 10/@dev-Width *1rem 0;
+                    }
+                }
+                .goods-img,.whole-img{
+                    margin: 0 auto;
+                    width: 210/@dev-Width *1rem;
+                    height: 210/@dev-Width *1rem;
+                    display: block;
+                    background-size: cover;
+                    background-position: center; 
+                    margin-bottom: 10/@dev-Width *1rem;
+                }
+            }
+            .classify-goods>div:nth-child(3n){
+                    border-right:0;
+            }
+            .whole-goods{
+                .whole-item{
+                    width: 50%;
+                    p{
+                        text-align: left;
+                    }
+                }
+                .whole-img{
+                    width: 350/@dev-Width *1rem;
+                    height: 350/@dev-Width *1rem;
+                }
+                &>div:nth-child(2n){
+                    border-right:0;
+                }
+            }
+        }
+    }
+}
