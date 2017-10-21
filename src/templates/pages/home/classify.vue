@@ -1,337 +1,542 @@
 <template>
-<div class="shop-wrapper classify-wrapper">
-    <div class="search-main">
-        <header class="search-header1" @click="search">
-            <div class="header-search clearfix">
-                <input class="fs40 input1" placeholder="搜索商品" >
-                <i class="iconfont icon-sousuo shop"></i>
-                <!-- <div class="classify-button">
-                    <i class="iconfont icon-xiaoxi">
-                        <em></em>
-                    </i>
-                    <span class="fs26">活动</span>
-                </div> -->
+<div class="classify-main">
+    <header class="classify-header">
+        <div class="header-search" @click="search">
+            <input class="fs40" placeholder="搜索商品" 
+             v-model="keyWord">
+            <i class="iconfont icon-sousuo shop"></i>
+        </div>
+        <div class="header-nav fs40">
+            <div  
+                @click="showNav()">
+                分类
+                <!-- sidebar_a, #sidebar_b -->
             </div>
-        </header>
-        <section class="classify-content clearfix">
-            <ul class="classify-nav">
+            <div :class="[sort =='new'?'shop-font':'']" 
+                @click="switchProduc('new')">
+                最新
+            </div>
+            <div :class="[sort =='sale'?'shop-font':'']" 
+                @click="switchProduc('sale')"> 
+                销量
+            </div>
+            <div class="price"
+            :class="[sort =='price'?'shop-font':'']" 
+                @click="switchProduc('price')">
+                价格
+                <!--      -->
+                
+            </div>
+            <div>
+                <i class="icon-fenglei" 
+                 @click="listToggle"
+                 v-if="isList">
+                </i>
+                <i class="icon-fenglei2" 
+                    @click="listToggle('isList')"
+                    v-else>
+                </i> 
+            </div>
+        </div>
+    </header>
+    <section class="classify-content-nav" v-if="isNav">
+            <ul class="classify-nav" :class="{'navshow':isNav}">
                 <li class="fs42 " 
                     v-for="(item,index) in classNav"
-                    :class="[selectedClass==index?'selected':'']" 
+                    :class="[selectedClass == index?'selected':'']" 
                     v-text="item.group_name"
-                    @click="selected(index,item.group_id,item.is_child)">
+                    @click="selected(index,item.group_id,item.is_child,item.group_name)">
                 </li>
             </ul>
-            <div class="classify-main">
-                <div class="Slide">
-                    <div class="classify-title ">
-                        品牌分类
-                    </div>
-                    <!--其他分类-->
-                    <div class="classify-goods clearfix">
-                        <div class="goods-item" v-for="item in classGoods">
-                            <div class="goods-img">
-                                <default-img :background="imgUrl+item.image_url"
-                                    :isHeadPortrait="0">
-                                </default-img>
-                            </div>
-                            <p class="fs36" v-text="item.group_name"></p>
-                        </div>
-                    </div>
-                    <!--全部商品-->
-                    <div class="whole-goods clearfix">
-                        <div class="whole-item">
-                            <div class="whole-img">
-                                <default-img :background="background"
-                                    :isHeadPortrait="0">
-                                </default-img>
-                            </div>
-                            <p class="fs36 text-overflow">苹果手机苹果手机苹果手机苹果手机苹果手机</p>
-                            <span class="shop-font fs46">¥123</span>
-                        </div>
-                        <div class="whole-item">
-                            <div class="whole-img">
-                                <default-img :background="background"
-                                    :isHeadPortrait="0">
-                                </default-img>
-                            </div>
-                            <p class="fs36 text-overflow">苹果手机苹果手机苹果手机苹果手机苹果手机</p>
-                            <span class="shop-font fs46">¥123</span>
-                        </div>
-                        <div class="whole-item">
-                            <div class="whole-img">
-                                <default-img :background="background"
-                                    :isHeadPortrait="0">
-                                </default-img>
-                            </div>
-                            <p class="fs36 text-overflow">苹果手机苹果手机苹果手机苹果手机苹果手机</p>
-                            <span class="shop-font fs46">¥123</span>
-                        </div>
-                    </div>
-                    
-                </div>
-                <more :is-more="isMore"></more>
+        </transition>
+        <sidebar-b :imgurl="imgUrl" 
+                    :goodsData="classGoods" 
+                    v-if="isGoods">
+        </sidebar-b>
+    </section>
+    <section class="clearfix" 
+            :class="[isList?'classify-content1':'classify-content2']" 
+            v-if="subList !=='' ">
+        <div class="classify-item" v-for="goods in subList">
+            <div class="classify-img" >
+                <default-img :background="goods.image_url"
+                            :isHeadPortrait="0">
+                </default-img>
             </div>
-        </section>
-        <footer-nav :navshow="isNavshow"></footer-nav> 
-    </div>
+            <div class="classify-txt">
+                <p  class="fs42 " 
+                    :class="[isList?'text-overflow':'',goods.pro_name.length>30?'text-more-overflow':'']">
+                    <em class="em-tag" v-if="goods.pro_label">{{goods.pro_label}}</em>
+                    {{goods.pro_name}}
+                </p>
+                <div class="classify-money">
+                    <p class="fs32 shop-font">
+                        <span v-if=" type == 1">团购:￥</span>
+                        <span v-else-if=" type == 4 ">当前价:￥</span>
+                        <span v-else-if=" type == 6 ">预售:￥</span>
+                        <span v-else-if=" type == 7 ">批发:￥</span>
+                        <span v-else>￥</span>
+                        <span class="fs42">{{goods.price[0]}}</span>.{{goods.price[1]}}
+                        <span v-if="type == 5">积分</span>
+                    </p>
+                    <p class="fs32 shopGray">销量 :{{goods.sale_total}}</p>
+                </div>
+                <div class="fs36 classify-time shopGray" v-if="type == 3 || type == 4 || type == 6 || type == 1||type == 7">
+                    距结束<span>5天</span>
+                    <em>99</em> :
+                    <em>99</em> :
+                    <em>99</em>
+                </div>
+            </div>
+        </div>
+    </section>
+    <goods-no v-if="subList==''"></goods-no>
+    <more :is-more="isMore"></more>
 </div>
 </template>
-
 <script>
 
-import footerNav from 'components/footerNav'
-import defaultImg from 'components/defaultImg'
+import defaultImg from 'components/defaultImg'//默认图片
 import more from 'components/more.vue';//加载更多
+import goodsNo from 'components/goodsNo.vue';//加载更多
+import sidebarB from './classify_child/sidebarB';//侧导航
+
 export default {
-  data() {
-    return {
-        path:'',
-        imgUrl :'',
-        webPath :'',
-        isMore: 1,//控制没有更多的显示
-        isNavshow: 'classify',
-        background:'',
-        classNav:{},
-        classGoods:{},
-        selectedClass:''
-    }
-  },
-  components:{
-	  footerNav,defaultImg,more
-  },
-  mounted(){
-      this.classAllAjax();
-  },
-  //相关操作事件
-  methods: {
-	/**
-     * 跳转页面
-     */
-    search(){
-        let type = this.$route.params.type;
-        let shopId = this.$route.params.shopId;
-        let busId = this.$route.params.busId;
-        let keyWord = this.keyWord || this.$route.params.keyword
-        console.log(this.keyWord);
-        this.$router.push('/search/'+shopId+'/'+busId+'/'+type+'/'+keyWord)
+    components: {
+        defaultImg,more,goodsNo,sidebarB
     },
-	/**
-     * 商品分类接口
-     */
-    classAllAjax(groupId){
-        let _this = this ;
-        console.log(groupId)
-        this.commonFn.ajax({
-            'url': h5App.activeAPI.phoneProduct_classAll_post,
-            'data':{
-                shopId : _this.$route.params.shopId,
-                busId : _this.$route.params.busId,
-                groupId : groupId || ''
-            },
-            'success':function(data){
-                _this.isMore = 1;
-                if(groupId){
-                    console.log(data,'classGoods');
-                    _this.classGoods = data.data;
-                }else{
-                    console.log(data,'classNav');
-                    _this.classNav = data.data;
-                    let all = {
-                        group_id:'',
-                        group_name:'全部',
-                        is_child:0,
-                        shop_id:''
+    data () {
+        return {
+            productList:{},
+            path:'',
+            webPath:'',
+            imgUrl:'',
+            subList:[],//商品
+            type: 0,//0/1.团购 3.秒杀 4.拍卖 5 粉币 6预售 7批发
+            isList: true,//超出部分显示隐藏
+            sort :'new',//默认最新商品，最新，销量，价格
+            desc_num : -1,//排序显示
+            isMore: 1,//控制没有更多的显示
+            curPage:1,//分页
+            keyWord:'',//关键词
+            classNav:{},//分类菜单
+            isNav:false,//分类菜单显示
+            selectedClass:-1,
+            classGoods:{},//分类子集
+            footershow: 'classify',
+            isGoods: false,//分类子集商品显示
+        }
+    },
+    watch: {
+          // 如果路由有变化，会再次执行该方法
+          "$route":'setTitle'
+    },
+    methods: {
+        //加载更多
+        loadMore: function () {
+            console.log('加载更多');
+            this.curPage++; //请求页数
+            let pageCount = this.productList.pageCount;//总页数
+            if(this.curPage > pageCount){
+                this.isMore = 3;
+                return
+            }
+            this.isMore = 2;
+            this.productAjax({
+                sort: this.sort,
+                curPage: this.curPage,
+                type : this.$route.params.type
+            });
+        },
+        /**
+         * 切换列表样式
+        **/
+        listToggle(e){
+            if( e === 'isList' ) return this.isList = true;
+            this.isList = false;
+        },
+        /**
+         * 跳转页面
+         */
+        search(){
+            let type = this.$route.params.type;
+            let shopId = this.$route.params.shopId;
+            let busId = this.$route.params.busId;
+            let keyWord = this.keyWord || this.$route.params.keyword
+            this.$router.push('/search/'+type+'/'+keyWord)
+        },
+        /** 
+         * 显示侧导航
+         */
+        showNav(){
+            if(!this.isNav){
+                this.isNav = true;
+                $('.wrapper').css({
+                    'overflow':'hidden'
+                })
+                return
+            }
+            this.isNav = false;
+            $('.wrapper').removeAttr("style");
+        },
+        /**
+         * 商品搜索接口
+         */
+        productAjax(data){
+            let _this = this;
+            let _data = {
+                // 'loginDTO':  JSON.stringify(_this.$store.state.loginDTO),
+                'url':    _this.$store.state.loginDTO.url,
+                'browerType':    _this.$store.state.loginDTO.browerType,
+                'shopId':	 _this.$store.state.shopId ,
+                'busId'	:    _this.$store.state.busId,
+                'groupId':	data.groupId || '',
+                'sort' : data.sort || 'new',    //new最新 || price销量 || sale价格
+                'isDesc':	data.isDesc || '',//排序 1、升序 -1 降序	可不传
+                'searchContent':	data.searchContent||'',//搜索内容	可不传
+                'type':    data.type|| 0,  //	类型，1.团购 3.秒杀 4.拍卖 5 粉币 6预售 7批发	可不传
+                'curPage': data.curPage||''//	当前页	可不传
+            }
+            console.log(typeof _data.loginDTO)
+            this.commonFn.ajax({
+                'url': h5App.activeAPI.phoneProduct_productAll_post,
+                'data':_data,
+                'success':function(data){
+                    console.log(data)
+                    if(data.code == '-1'){//接口失败显示
+                        _this.subList = [];
+                        return
                     }
-                     _this.classNav.unshift(all);
+                    _this.isMore = 1;
+                    _this.productList = data.data.productList;
+
+                    let newSubList = data.data.productList.subList;//商品数组
+                    newSubList.forEach((item,index)=>{
+                        item.price = _this.commonFn.moneySplit(item.price)//价钱显示效果
+                        // if(item.times){
+                        //     console.log(1111)
+                        //     item.times = _this.commonFn.timer(item.times);
+                        // }
+                    })
+                    // console.log(_this.commonFn.timer(1773389))
+                    // console.log(newSubList,'newSubList')
+
+                    if (_this.curPage === 1) {//第一页数据
+                        _this.subList = newSubList;
+                    } else {
+                        _this.subList = _this.subList.concat(newSubList) || [];//拼接多页数据
+                    }
+
+                    _this.path = data.path;
+                    _this.imgUrl = data.imgUrl;
+                    _this.webPath = data.webPath;
                 }
-                // _this.productList = data.data.productList;
-
-                // let newSubList = data.data.productList.subList;
-                // newSubList.forEach((item,index)=>
-                //     item.price = _this.commonFn.moneySplit(item.price)
-                // )
-
-                // if (_this.curPage === 1) {
-                //     _this.subList = newSubList;
-                // } else {
-                //     _this.subList = _this.subList.concat(newSubList) || [];
-                // }
-
-                _this.path = data.path;
-                _this.imgUrl = data.imgUrl;
-                _this.webPath = data.webPath;
+            })
+        },
+        /**
+         * 切换最新，销量，价格
+         * @param sort 列表类型
+         * @param desc 排序 1、升序 -1 降序
+         */
+        switchProduc(sort){
+            let _this = this,desc;
+            _this.isNav = false;
+            if(sort === 'price'){//排序判断
+                desc = this.desc_num;
+                this.desc_num > 0 ? this.desc_num = 0 : this.desc_num = 1 ;
+            }else{
+                this.desc_num = -1 ;
             }
-        })
-    },
-     /**
-     * 商品搜索接口
-     */
-    productAjax(data){
-        let _this = this;
-        let _data = {
-            'shopId':	 this.$route.params.shopId ,
-            'busId'	:    this.$route.params.busId ,
-            'groupId':	data.groupId || '',
-            'sort' : data.sort || 'new',    //new最新 || price销量 || sale价格
-            'isDesc':	data.isDesc || '',//排序 1、升序 -1 降序	可不传
-            'searchContent':	data.searchContent||'',//搜索内容	可不传
-            'type':    data.type|| '',  //	类型，1.团购 3.秒杀 4.拍卖 5 粉币 6预售 7批发	可不传
-            'curPage': data.curPage||''//	当前页	可不传
-        }
-        this.commonFn.ajax({
-            'url': h5App.activeAPI.phoneProduct_productAll_post,
-            'data':_data,
-            'success':function(data){
-                _this.isMore = 1;
-                _this.classGoods = data.data;
+            this.sort = sort;
+            this.productAjax({
+                sort : sort,
+                isDesc : _this.desc_num,
+                curPage: 1,
+                type : this.$route.params.type
+            });
+            this.curPage = 1
+        },
+        /**
+         * 页面初始
+         */
+        setTitle(){
+            //1.团购 3.秒杀 4.拍卖 5 粉币 6预售 7批发
+            let _this = this;
+            let  title = {1:'团购',3:'秒杀',4:'拍卖',5:'粉币',6:'预售',7:'批发'}
+            _this.commonFn.setTitle(title[this.type] || '分类详情');
 
-                // let newSubList = data.data;
-                // newSubList.forEach((item,index)=>
-                //     item.price = _this.commonFn.moneySplit(item.price)
-                // )
-                // if (_this.curPage === 1) {
-                //     _this.subList = newSubList;
-                // } else {
-                //     _this.subList = _this.subList.concat(newSubList) || [];
-                // }
+            this.productAjax({
+                sort: 'new',
+                curPage: 1,
+                type : _this.$route.params.type,
+                searchContent: encodeURI(_this.keyWord)
+            });
+        },
+        /**
+         * 商品分类接口 分类和侧导航和子集接口
+         */
+        classAllAjax(groupId){
+            let _this = this ;
+            this.commonFn.ajax({
+                'url': h5App.activeAPI.phoneProduct_classAll_post,
+                'data':{
+                    shopId : _this.$store.state.shopId,
+                    busId : _this.$store.state.busId,
+                    groupId : groupId || ''
+                },
+                'success':function(data){
+                    _this.isMore = 1;
+                    if(groupId){
+                        _this.classGoods = data.data;
+                    }else{
+                        _this.classNav = data.data;
+                        let all = {
+                            group_id:'',
+                            group_name:'全部',
+                            is_child:0,
+                            shop_id:''
+                        }
+                        _this.classNav.unshift(all);//添加对象到数组第一个
+                    }
+                    _this.path = data.path;
+                    _this.imgUrl = data.imgUrl;
+                    _this.webPath = data.webPath;
+                }
+            })
+        },
+        /** 
+         * 选择类型
+         * @param child 判断子集条件
+         * @param Id    group_id分类ID
+         * @param name  group_name分类名字
+        */
+        selected(index,Id,child,name){
+            let _this = this;
+            _this.selectedClass = index;
+            _this.isGoods = false;
+            if(child){//有子集调用子集分类接口
+                _this.isGoods = true;
+                _this.classAllAjax(Id);
+            }else{//没有子集传类型，调用搜索商品接口
+                _this.classGoods ='';
+                _this.isNav = false;
+                $('.wrapper').removeAttr("style");
+                _this.productAjax({
+                    groupId: Id
+                });
             }
-        })
-    },
-    /** 
-     * 选择类型
-     * @param child 判断子集条件
-    */
-    selected(index,groupId,child){
-        let _this = this;
-        console.log(index,groupId,child);
-        _this.selectedClass = index;
-        if(child){
-            _this.classAllAjax(groupId);
-        }else{
-            _this.classGoods =''
         }
+    },
+    mounted () {
+        this.type = this.$route.params.type;
+
+        let _keyword = this.$route.params.keyword;
+        _keyword === 'k=k'?this.keyWord = '':this.keyWord = _keyword || '';
+
+        this.setTitle();
+
+        this.classAllAjax();
+
+        let _this =this;
+        $(window).bind('scroll', function () {
+            if ($(window).scrollTop() > 0 && $(window).scrollTop() >= ($(document).height() - $(window).height()) - 1000) {
+            _this.loadMore();
+            }
+        });
     }
-  }
 }
 </script>
 
 <style lang="less">
 @import '../../../assets/css/mixins.less';
 @import '../../../assets/css/base.less';
-
-.search-main{
+.classify-main{
     width: 100%;
-    position: relative;
-    .search-header{
+    .classify-header{
         width: 100%;
         font-size: 0;
         background: #fff;
-    }
-    .search-header1{
-        width: 100%;
-        background: #fff;
-        font-size: 0;
         position: absolute;
-        top:0;
-        left: 0;
+        z-index: 3;
+        .price{
+            position: relative;
+            i{
+                right: 65/@dev-Width *1rem;
+                position: absolute;
+                width:0; 
+                height:0; 
+            }
+        }
+        /*箭头向上*/
+        .price-up {
+            top: 28/@dev-Width *1rem;
+            border-left:6px solid transparent;
+            border-right:6px solid transparent;
+            border-bottom:6px solid #ccc;
+        }
+            
+        /*箭头向下*/
+        .price-down {
+            bottom: 28/@dev-Width *1rem;
+            border-left:6px solid transparent;
+            border-right:6px solid transparent;
+            border-top: 6px solid #ccc;
+        }
+        .upborder{
+            border-bottom:6px solid #e4393c
+        }
+        .downborder{
+            border-top:6px solid #e4393c
+        }
     }
     .header-search{
         width: 100%;
-        padding: 25/@dev-Width *1rem ;
-        padding-right: 0;
+        padding: 25/@dev-Width *1rem;
         position: relative;
-        .input1{
-            float: left;
-            padding-left: 80/@dev-Width *1rem;
-            background: #ebebeb;
-            color: #333333;
-        }
-        .icon-sousuo {
+        i{
             position: absolute;
-            left: 4%;
-            top: 35%;
-            color: #888;
-            font-size: 40/@dev-Width *1rem;
-        }
-        .classify-button{
-            color: #fff;
-            width: 12%;
-            float: left;
-            text-align: center;
-            font-size: 0;
-            line-height:1;
-            i{
-                display: block;
-                font-size: 68/@dev-Width *1rem;
-                position: relative;
-            }
-            em{
-                width: 8px;
-                height: 8px;
-                background: #fff;
-                .border-radius(100%);
-                position: absolute;
-                top: -5%;
-                right: 22%;
-            }
+            top:38%;
+            left: (25+(95/3))/@dev-Width *1rem;
+            color: #87858f;
         }
         input{
-            width: 98%;
+            width: 100%;
             border: 0;
             background: #f1f1f4;
-            padding: 20/@dev-Width *1rem;
+            padding: 20/@dev-Width *1rem 95/@dev-Width *1rem;
             padding-right: 0;
             .border-radius(10px);
         }
-        &>span{
-                width: 12%;
-                display: inline-block;
-                text-align: center;
-                padding: 20/@dev-Width *1rem 0;
-            }
     }
-    .search-content{
+    .header-nav{
         width: 100%;
-        .search-history{
-            width: 100%;
-            .search-title{
-                width: 100%;
-                .ik-box;
-                .ik-box-pack(justify);
-                i{
-                    padding: 40/@dev-Width *1rem;
-                    display: block;
-                }
-            }
-            .search-txt{
-                width: 100%;
-                padding: 0 40/@dev-Width *1rem ;
-                font-size: 0;
+        .ik-box;
+        line-height: 1;
+        &>div{
+            .ik-box-flex(1);
+            text-align: center;
+            padding: 25/@dev-Width *1rem 0;
+            text-align: center;
+        }
+        &>div:last-child{
+            padding: 25/@dev-Width *1rem 0;
+            i{
+                background-position: 50%;
             }
         }
     }
-}
-.classify-wrapper{
-    position: relative;
-    height: 100%;
-    .search-main{
-        height: 100%;
+    .classify-content1{
+        width: 100%;
+        position: relative;
+        background: #fff;
+        padding-top:230/@dev-Width *1rem;
+        .classify-item{
+            width: 50%;
+            float: left;
+            padding: 20/@dev-Width *1rem;
+            .classify-img{
+                width: 520/@dev-Width *1rem;
+                height: 520/@dev-Width *1rem;
+                background-size: cover;
+                background-position: center;
+                margin-bottom: 20/@dev-Width *1rem;
+            }
+            .classify-txt{
+                width: 100%;
+                 &>p{
+                    min-height: 1.5em;
+                }
+                .classify-money{
+                    margin-top: 20/@dev-Width *1rem;
+                    width: 100%;
+                    .ik-box;
+                    .ik-box-align(center);
+                    .ik-box-pack(justify);
+                    font-size: 0;
+                    p{
+                        vertical-align: bottom;
+                    }
+                }
+            }
+            .classify-time{
+                margin-top: 10/@dev-Width *1rem;
+                span{
+                    color: #333333;
+                    margin: 3px;
+                }
+                em{
+                    font-size: 32/@dev-Width *1rem;
+                    display: inline-block;
+                    background: #ffcc00;
+                    color: #333333;
+                    padding: 1px 2px;
+                    .border-radius(3px);
+                }
+            }
+        }
     }
-    .classify-content{
+    .classify-content2{
+        width: 100%;
+        position: relative;
+        background: #fff;
+        padding-top:230/@dev-Width *1rem;
+        .classify-item{
+            width: 100%;
+            .ik-box;
+            .ik-box-align(center);
+            .ik-box-pack(justify);
+            padding: 10/@dev-Width *1rem 30/@dev-Width *1rem ;
+            .classify-img{
+                width: 330/@dev-Width *1rem;
+                height: 330/@dev-Width *1rem;
+                background-size: cover;
+                background-position: center;
+            }
+            .classify-txt{
+                width: 66%;
+                &>p{
+                    min-height: 1em;
+                    max-height: 115/@dev-Width *1rem;
+                    margin-bottom: 10/@dev-Width *1rem;
+                }
+                .classify-money{
+                    margin-bottom: 25/@dev-Width *1rem;
+                }
+            }
+            .classify-time{
+                margin-top: 10/@dev-Width *1rem;
+                .ik-box;
+                .ik-box-pack(justify);
+                span{
+                    color: #333333;
+                    margin: 3px;
+                }
+                em{
+                    font-size: 32/@dev-Width *1rem;
+                    display: inline-block;
+                    background: #ffcc00;
+                    color: #333333;
+                    padding: 1px 2px;
+                    .border-radius(3px);
+                }
+            }
+        }
+    }
+    .classify-content-nav{
         width: 100%;
         height: 100%;
-        padding-top: 138/@dev-Width *1rem;
-        position: relative; 
+        background: rgba(0,0,0,.5);
+        position: absolute;
+        padding-top:230/@dev-Width *1rem;
+        z-index: 2; 
+        padding-bottom: 1rem;
         .classify-nav{
-            height: 85%;
+            height: 100%;
             .calc-w(295,1242,100%);
             float: left;
-            margin-bottom: 1rem;
             overflow-y: auto; 
             overflow-x: hidden; 
-            position: absolute;
-            top: 1rem;
+            position: relative;
             left: 0;
             background: #fff;
             -webkit-overflow-scrolling: touch;
@@ -351,86 +556,24 @@ export default {
                 position: relative;
             }
         }
-        .classify-main{
-            right: 0;
-            height: 93%;
-            .calc-w(1242-295,1242,100%);
-            float: right;
-            padding: 30/@dev-Width *1rem 32/@dev-Width *1rem 0;
-            position: relative;
-            overflow: hidden;
-            .Slide{
-                width: 100%;
-                position: absolute;
-                height: 97%;
-                overflow-y: auto;
-                overflow-x: hidden;
-                margin-bottom: 1.2rem;
-                -webkit-overflow-scrolling: touch;
-            }
-            .classify-title{
-                width: 100%;
-                font-size: 42/@dev-Width *1rem;
-                font-weight: bold;
-                padding: 25/@dev-Width *1rem 0;
-            }
-            .classify-goods,.whole-goods{
-                width: 93%;
-                background: #fff;
-                padding: 25/@dev-Width *1rem;
-                position: relative;
-                &::before{
-                    content: '';
-                    display: block;
-                    width: 100%;
-                    position: absolute;
-                    bottom: 25/@dev-Width *1rem;
-                    left: 0;
-                    height: 3px;
-                    background: #fff;
-                }
-                .goods-item,.whole-item{
-                    font-size: 0;
-                    float: left;
-                    width: 33.333%;
-                    padding: 20/@dev-Width *1rem;
-                    border-bottom: 1px solid #f3f5f7;
-                    border-right: 1px solid #f3f5f7;
-                    p{
-                        text-align: center;
-                        padding: 10/@dev-Width *1rem 0;
-                    }
-                }
-                .goods-img,.whole-img{
-                    margin: 0 auto;
-                    width: 210/@dev-Width *1rem;
-                    height: 210/@dev-Width *1rem;
-                    display: block;
-                    background-size: cover;
-                    background-position: center; 
-                    margin-bottom: 10/@dev-Width *1rem;
-                }
-            }
-            .classify-goods>div:nth-child(3n){
-                    border-right:0;
-            }
-            .whole-goods{
-                .whole-item{
-                    width: 50%;
-                    p{
-                        text-align: left;
-                    }
-                }
-                .whole-img{
-                    width: 330/@dev-Width *1rem;
-                    height: 330/@dev-Width *1rem;
-                    overflow: hidden;
-                }
-                &>div:nth-child(2n){
-                    border-right:0;
-                }
-            }
-        }
+    }
+}
+
+// .nav-enter-active, .nav-leave-active {
+//   transition: opacity 2s
+// }
+// .nav-enter, .nav-leave-to /* .fade-leave-active in below version 2.1.8 */ {
+//   opacity: 0
+// }
+.navshow{
+    -webkit-animation: .5s ease wrap_kf forwards;
+}
+@-webkit-keyframes wrap_kf {
+    0% {
+        height: 0;
+    }
+    100% {
+        height: 100%;
     }
 }
 </style>

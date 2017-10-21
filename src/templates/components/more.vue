@@ -23,6 +23,7 @@
     color: #737373;
     text-align: center;
     padding: .25rem 0;
+    margin-bottom: 60px;
   }
 
   .more-main p {

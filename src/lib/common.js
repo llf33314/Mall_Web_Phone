@@ -1,5 +1,4 @@
 
-import conf from './conf';
 import axios from 'axios';
 import Vue from 'vue'
 
@@ -121,18 +120,23 @@ var Rxports = {
 	checkPlatform(){
 		if(/android/i.test(navigator.userAgent)){
 			//这是Android平台下浏览器
+			return 'Android'
 		}
 		if(/(iPhoneiPadiPodiOS)/i.test(navigator.userAgent)){
 			//这是iOS平台下浏览器
+			return 'iOS'
 		}
 		if(/Linux/i.test(navigator.userAgent)){
 			//这是Linux平台下浏览器
+			return 'Linux'
 		}
 		if(/Linux/i.test(navigator.platform)){
 			//这是Linux操作系统平台
+			return 'Linux'
 		}
 		if(/MicroMessenger/i.test(navigator.userAgent)){
 			//这是微信平台下浏览器
+			return 'Messenger'
 		}
 	},
 	/**
@@ -165,7 +169,34 @@ var Rxports = {
 		arr = money.split('.');
 		arr[0] = parseFloat(arr[0] ).toLocaleString()
 		return arr
-	}
+	},
+	/**
+	 * 活动时间分隔
+	 */
+	timer(intDiff) {
+        var day = 0,
+            hour = 0,
+            minute = 0,
+            second = 0;
+        if (intDiff > 0) {
+            day = Math.floor(intDiff / (60 * 60 * 24));
+            hour = Math.floor(intDiff / (60 * 60)) - (day * 24);
+            minute = Math.floor(intDiff / 60) - (day * 24 * 60) - (hour * 60);
+            second = Math.floor(intDiff) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+        } else {
+
+        }
+        if (minute <= 9) minute = '0' + minute;
+        if (second <= 9) second = '0' + second;
+
+
+        var times = Array();
+        times[0] = day;
+        times[1] = hour;
+        times[2] = minute;
+        times[3] = second;
+        return times;
+    }
 };
 
 Vue.prototype.commonFn = Rxports;

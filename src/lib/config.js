@@ -69,7 +69,9 @@
     /*商品分类接口*/
     phoneProduct_classAll_post: '/phoneProduct/79B4DE7C/classAll',
     /*获取商家的客服*/
-    phonePage_getCustomer_post: '/phonePage/79B4DE7C/getCustomer'
+    phonePage_getCustomer_post: '/phonePage/79B4DE7C/getCustomer',
+    /*商家id获取底部菜单*/
+    phonePage_footerMenu_post: '/phonePage/79B4DE7C/footerMenu'
   };
 
   window.h5App = h5App;

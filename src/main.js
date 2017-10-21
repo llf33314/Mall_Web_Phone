@@ -6,11 +6,14 @@ require('assets/font/iconfont.css');
 require('@/lib/common.js');
 //接口文件
 require('@/lib/config');
+//vuex
 import Vue from 'vue'
 import App from './App'
 import router from './router'
 
-Vue.config.productionTip = false
+import storeConfig from './vuex/store'
+
+//Vue.config.productionTip = false
 
 import jq from './lib/jquery-2.2.2.min';
 
@@ -21,6 +24,7 @@ FastClick.attach(document.body);
 new Vue({
   el: '#app',
   router,
+  store:storeConfig,
   template: '<App/>',
   components: { App }
 })

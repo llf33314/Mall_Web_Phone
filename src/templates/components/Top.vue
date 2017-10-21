@@ -1,5 +1,5 @@
 <template>
-   <section class="top-box" v-if="isShow">
+   <section class="top-box">
         <i class="iconfont icon-zhiding" v-if=" scroll >= 300"
             @click="top()"></i>
         <em class="icon-kefu"
@@ -11,7 +11,6 @@
 export default {
     data: function () {
         return {
-            isShow:false,//用vuex 获取
             scroll:'',
             QQ:''
         }
@@ -35,22 +34,22 @@ export default {
                 },200); 
         },
         qqUrl(){
-            window.location.href ='http://wpa.qq.com/msgrd?v=3&amp;uin='+this.QQ+'&amp;site=qq&amp;menu=yes'
+            window.location.href ='http://wpa.qq.com/msgrd?v=3&amp;uin=&amp;site='+this.QQ+'&amp;menu=yes'
         },
         /**
          * 客服QQ
          */
         qqAjax(){
             let _this = this ;
-            console.log(this,'11111');
-            console.log(this.$parent.$route,'2222');
+            let _shopId = _this.$store.state.shopId;
             _this.commonFn.ajax({
                 'url': h5App.activeAPI.phonePage_getCustomer_post,
                 'data':{
-                    shopId : _this.$route.params.shopId //todo 参数没有
+                    shopId : _shopId //todo 参数没有
                 },
                 'success':function(data){
-                    console.log(data)
+                    console.log(data,'QQ')
+                    _this.QQ = data.data;
                 }
             })
         },
