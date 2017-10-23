@@ -49,14 +49,11 @@ export default {
                 },
                 'success':function(data){
                     console.log(data,'QQ')
-                    _this.QQ = data.data;
+                    _this.QQ = data.data.qq;
+                    _this.$store.commit('is_Advert',data.data.isAdvert);
                 }
             })
         },
-        // showTop(){
-        //     let vm = this;
-        //     vm.isShow = true;
-        // }
     }
 }
 </script>

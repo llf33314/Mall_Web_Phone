@@ -332,7 +332,7 @@ export default {
 
         let _keyword = this.$route.params.keyword;
         _keyword === 'k=k'?this.keyWord = '':this.keyWord = _keyword || '';
-
+        
         this.setTitle();
 
         this.classAllAjax();

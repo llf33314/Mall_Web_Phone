@@ -14,6 +14,7 @@ const state = {
     },
     showTop:true,//置顶按钮显示
     showfooter:true,//底部导航显示隐藏
+    isAdvert:false,//是否显示技术支持
 }
 
 const actions ={
@@ -34,7 +35,8 @@ const mutations = {
     },
     show_top:(state,Booleans)=>state.showTop = Booleans,
     show_footer:(state,Booleans)=>state.showfooter = Booleans,
-    loginDTO_URL:(state,url)=>state.loginDTO.url = url
+    loginDTO_URL:(state,url)=>state.loginDTO.url = url,
+    is_Advert:(state,num)=>state.isAdvert = !!(num),//是否显示技术支持
 }
 
 export default new Vuex.Store({
