@@ -29,13 +29,10 @@ const Goods_Details = resolve => require(['pages/goods/child/details'], resolve)
 //Goods_details => 商品详情-评论
 const Goods_Spec = resolve => require(['pages/goods/child/spec'], resolve);
 //Goods_details => 商品详情-评论
-<<<<<<< HEAD
 const Goods_Classify = resolve => require(['pages/goods/classify'], resolve);
 //Goods_classify => 商品分类
 const my_center = resolve => require(['pages/my/myApp'], resolve);
 //Goods_classify =>我的
-=======
->>>>>>> 349689d92683dab8999c936fc17985bbe1ad701c
 Vue.use(Router)
 
 export default new Router({
