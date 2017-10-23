@@ -29,10 +29,13 @@ const Goods_Details = resolve => require(['pages/goods/child/details'], resolve)
 //Goods_details => 商品详情-评论
 const Goods_Spec = resolve => require(['pages/goods/child/spec'], resolve);
 //Goods_details => 商品详情-评论
+<<<<<<< HEAD
 const Goods_Classify = resolve => require(['pages/goods/classify'], resolve);
 //Goods_classify => 商品分类
 const my_center = resolve => require(['pages/my/myApp'], resolve);
 //Goods_classify =>我的
+=======
+>>>>>>> 349689d92683dab8999c936fc17985bbe1ad701c
 Vue.use(Router)
 
 export default new Router({
@@ -51,27 +54,28 @@ export default new Router({
         title: '导航,上线后删除'
       },
     },{
-      path: '/Stores',
+      path: '/stores',
       name: 'Stores',
       component: Stores,
       meta: {
         title: '选择门店'
       },
     },{
-      path: '/search/:shopId/:busId/:type/:keyword',
+      path: '/search/:type/:keyword',
+      // path: '/search/:shopId/:busId/:type/:keyword',
       name: 'search',
       component: Search,
       meta: {
         title: '搜索'
       }
     },{
-      path: '/classify/:shopId/:busId',
+      path: '/classify/:type/:keyword',
       name: 'classify',
       component: Classify,
       meta: {
         title: '分类'
-      }
-    },{
+      },
+    },,{
       path: '/auction/bond',
       name: 'bond',
       component: Auction_Bond,
@@ -124,6 +128,7 @@ export default new Router({
           component: Goods_Comment
         }
       ]
+
     },{
       path: '/goods/classify/:shopId/:busId/:type/:keyword',
       name: 'goods/classify',
