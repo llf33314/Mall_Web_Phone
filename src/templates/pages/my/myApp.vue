@@ -157,116 +157,138 @@
 </template>
 
 <script>
-import Lib from 'assets/js/Lib';
-import footerNav from 'components/footerNav'
-import defaultImg from 'components/defaultImg'
+// import Lib from 'assets/js/Lib';
+import footerNav from "components/footerNav";
+import defaultImg from "components/defaultImg";
 
 export default {
-  name: 'my',	
+  name: "my",
 
-  data () {
+  data() {
     return {
-      isNavshow: 'my',
-      background: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1501765343077&di=5d3652848769c1abd7eb25dea007bb1d&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D450%252C600%2Fsign%3Dcf8442791bd8bc3ec65d0eceb7bb8a28%2Fb3119313b07eca80c63dcea4932397dda14483bd.jpg'
-    }
+      busId: 0,
+      isNavshow: "my",
+      background:
+        "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1501765343077&di=5d3652848769c1abd7eb25dea007bb1d&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D450%252C600%2Fsign%3Dcf8442791bd8bc3ec65d0eceb7bb8a28%2Fb3119313b07eca80c63dcea4932397dda14483bd.jpg"
+    };
   },
-  components:{
-	  footerNav,defaultImg
+  components: {
+    footerNav,
+    defaultImg
   },
   methods: {
-
+    loads() {
+      let _this = this;
+      let _data = {
+        busId: this.busId, //商家id
+        url: location.href, //當前頁面地址
+        browerType: 1 //瀏覽器類型 1微信 99 其他瀏覽器
+      };
+      debugger
+      _this.commonFn.ajax({
+        'url': h5App.activeAPI.my_center_post,
+        'data': _data,
+        'success': function(data) {
+          if (data.code != 1) {
+            return;
+          }
+          console.log("返回數據" + data);
+        }
+      });
+    }
+  },
+  mounted() {
+    this.busId = this.$route.params.busId;
+    this.loads();
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
+@import "../../../assets/css/mixins.less";
+@import "../../../assets/css/base.less";
 
-@import '../../../assets/css/mixins.less';
-@import '../../../assets/css/base.less';
-
-
-.my-index{
+.my-index {
   width: 100%;
   color: #666;
-  margin-bottom: 65 /@dev-Width *1rem; 
-  .my-header{
-      width: 100%;
-      height: 520 /@dev-Width *1rem;
-      background-image: url('../../../assets/img/myHbg.png');
-      background-size: cover;
-      background-repeat: no-repeat;
+  margin-bottom: 65 /@dev-Width *1rem;
+  .my-header {
+    width: 100%;
+    height: 520 /@dev-Width *1rem;
+    background-image: url("../../../assets/img/myHbg.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    .ik-box;
+    .ik-box-align(center);
+    .ik-box-pack(center);
+    .ik-box-orient(vertical);
+    color: #fff;
+    .my-indexUser {
+      font-size: 0;
+      width: 210 /@dev-Width *1rem;
+      height: 210 /@dev-Width *1rem;
+      .border-radius(100%);
+      border: 6/@dev-Width *1rem solid #fff;
+      overflow: hidden;
+      color: rgba(0, 0, 0, 0);
+      margin-bottom: 25 /@dev-Width *1rem;
+    }
+  }
+  .my-order {
+    background: #fff;
+    margin-bottom: 30 /@dev-Width *1rem;
+    .my-list {
+      line-height: 1;
       .ik-box;
       .ik-box-align(center);
-      .ik-box-pack(center);
-      .ik-box-orient(vertical);
-      color: #fff;
-      .my-indexUser{
-          font-size: 0;
-          width: 210 /@dev-Width *1rem;
-          height: 210 /@dev-Width *1rem;
-          .border-radius(100%);
-          border: 6/@dev-Width *1rem solid #fff;
-          overflow: hidden;
-          color: rgba(0,0,0,0);
-          margin-bottom: 25 /@dev-Width *1rem
+      .ik-box-pack(justify);
+      height: 135 /@dev-Width *1rem;
+      padding: 0 56 /@dev-Width *1rem;
+      i {
+        font-size: 68 /@dev-Width *1rem;
       }
+      .my-right {
+        color: #9e9e9e;
+        i {
+          font-size: 36 /@dev-Width *1rem;
+          color: #d7d7db;
+        }
+      }
+    }
+    .my-nav {
+      .ik-box;
+      .ik-box-pack(justify);
+      padding: 0 35 /@dev-Width *1rem;
+      color: #666;
+      li {
+        text-align: center;
+        width: 20%;
+        padding: 55 /@dev-Width *1rem 0;
+        i {
+          font-size: 68 /@dev-Width *1rem;
+        }
+      }
+    }
   }
-  .my-order{
-      background: #fff;
-      margin-bottom: 30 /@dev-Width *1rem;
-      .my-list{
-          line-height: 1;
-          .ik-box;
-          .ik-box-align(center);
-          .ik-box-pack(justify);
-          height: 135 /@dev-Width *1rem;
-          padding: 0 56 /@dev-Width *1rem;
-          i{
-              font-size: 68 /@dev-Width *1rem
-          }
-          .my-right{
-              color: #9e9e9e;
-              i{
-                  font-size: 36 /@dev-Width *1rem; 
-                  color: #d7d7db;
-              }
-          }
+  .my-path {
+    width: 100%;
+    background: #fff;
+    margin-bottom: 20 /@dev-Width *1rem;
+    .my-list {
+      .ik-box;
+      .ik-box-align(center);
+      .ik-box-pack(justify);
+      height: 135 /@dev-Width *1rem;
+      padding: 0 56 /@dev-Width *1rem;
+      i {
+        font-size: 68 /@dev-Width *1rem;
+        vertical-align: -0.05rem;
       }
-      .my-nav{
-          .ik-box;
-          .ik-box-pack(justify);
-          padding: 0 35 /@dev-Width *1rem;
-          color: #666;
-          li{
-              text-align: center;
-              width: 20%;
-              padding: 55 /@dev-Width *1rem 0; 
-              i{
-              font-size: 68 /@dev-Width *1rem;
-              }
-          }
+      .my-right {
+        font-size: 45 /@dev-Width *1rem;
+        color: #d7d7db;
       }
-  }
-  .my-path{
-      width: 100%;
-      background: #fff;
-      margin-bottom: 20 /@dev-Width *1rem;
-        .my-list{
-          .ik-box;
-          .ik-box-align(center);
-          .ik-box-pack(justify);
-          height: 135 /@dev-Width *1rem;
-          padding: 0 56 /@dev-Width *1rem;
-          i{
-              font-size: 68 /@dev-Width *1rem;
-              vertical-align: -0.05rem
-              
-          }
-          .my-right{
-              font-size: 45 /@dev-Width *1rem; 
-              color: #d7d7db;
-          }
-      }
+    }
   }
 }
 </style>
