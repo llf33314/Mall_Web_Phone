@@ -31,8 +31,9 @@ const Goods_Spec = resolve => require(['pages/goods/child/spec'], resolve);
 //Goods_details => 商品详情-评论
 const Goods_Classify = resolve => require(['pages/goods/classify'], resolve);
 //Goods_classify => 商品分类
+
 const my_center = resolve => require(['pages/my/myApp'], resolve);
-//Goods_classify =>我的
+//my_center =>我的
 Vue.use(Router)
 
 export default new Router({
