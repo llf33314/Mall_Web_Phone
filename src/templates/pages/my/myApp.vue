@@ -184,7 +184,6 @@ export default {
         url: location.href, //當前頁面地址
         browerType: 1 //瀏覽器類型 1微信 99 其他瀏覽器
       };
-      debugger 
       _this.commonFn.ajax({
         'url': h5App.activeAPI.my_center_post,
         'data': _data,
