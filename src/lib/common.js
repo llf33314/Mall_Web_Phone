@@ -165,38 +165,35 @@ var Rxports = {
      * @param money 标题
      */
 	moneySplit(money){
-		let arr = []
-		arr = money.split('.');
+		let arr = [];
+		let str = money+"";
+		
+		if(str.indexOf(".")==-1){
+			arr = [money,'00'];
+		}else{
+			arr = str.split('.');
+		}
 		arr[0] = parseFloat(arr[0] ).toLocaleString()
 		return arr
 	},
-	/**
-	 * 活动时间分隔
-	 */
-	timer(intDiff) {
-        var day = 0,
-            hour = 0,
-            minute = 0,
-            second = 0;
-        if (intDiff > 0) {
-            day = Math.floor(intDiff / (60 * 60 * 24));
-            hour = Math.floor(intDiff / (60 * 60)) - (day * 24);
-            minute = Math.floor(intDiff / 60) - (day * 24 * 60) - (hour * 60);
-            second = Math.floor(intDiff) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
-        } else {
-
-        }
-        if (minute <= 9) minute = '0' + minute;
-        if (second <= 9) second = '0' + second;
-
-
-        var times = Array();
-        times[0] = day;
-        times[1] = hour;
-        times[2] = minute;
-        times[3] = second;
-        return times;
+	 /** 
+     * 含有表情符号字符串 处理 
+     * @param text 接受字符串
+     * @param imgUrl 图片域名
+     */
+    emoji(text,imgUrl){
+        let _this = this;
+        let oText = text.split('/images/');
+        let newText='';
+        oText.forEach(function(itme,index) {
+            if(index < oText.length-1){
+                itme = itme+ imgUrl+'images/';
+            }
+            newText += itme;
+        });
+        return newText;
     }
+    
 };
 
 Vue.prototype.commonFn = Rxports;

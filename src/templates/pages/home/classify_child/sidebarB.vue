@@ -3,7 +3,7 @@
         <div class="sidebar-goods">
             <div class="Slide">
                 <div class="classify-title ">
-                    品牌分类
+                    {{name}}分类
                 </div>
                 <!--其他分类-->
                 <div class="classify-goods clearfix">
@@ -59,7 +59,7 @@ export default {
     components: {
         more,defaultImg
     },
-    props:['imgurl','goodsData'],
+    props:['imgurl','goodsData','name'],
     data() {
         return {
             path:'',
@@ -132,7 +132,7 @@ export default {
         }
         .goods-img,.whole-img{
             margin: 0 auto;
-            width: 210/@dev-Width *1rem;
+            //width: 210/@dev-Width *1rem;
             height: 210/@dev-Width *1rem;
             display: block;
             background-size: cover;

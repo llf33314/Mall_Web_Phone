@@ -50,14 +50,16 @@
             </ul>
         </transition>
         <sidebar-b :imgurl="imgUrl" 
-                    :goodsData="classGoods" 
+                    :goodsData="classGoods"
+                    :name="group_name" 
                     v-if="isGoods">
         </sidebar-b>
     </section>
     <section class="clearfix" 
             :class="[isList?'classify-content1':'classify-content2']" 
             v-if="subList !=='' ">
-        <div class="classify-item" v-for="goods in subList">
+        <div class="classify-item" v-for="goods in subList"
+            @click="goods_jump(goods.id,goods.activityId)">
             <div class="classify-img" >
                 <default-img :background="goods.image_url"
                             :isHeadPortrait="0">
@@ -81,12 +83,8 @@
                     </p>
                     <p class="fs32 shopGray">销量 :{{goods.sale_total}}</p>
                 </div>
-                <div class="fs36 classify-time shopGray" v-if="type == 3 || type == 4 || type == 6 || type == 1||type == 7">
-                    距结束<span>5天</span>
-                    <em>99</em> :
-                    <em>99</em> :
-                    <em>99</em>
-                </div>
+                <count-down :times="goods.times"
+                ></count-down>
             </div>
         </div>
     </section>
@@ -100,10 +98,15 @@ import defaultImg from 'components/defaultImg'//默认图片
 import more from 'components/more.vue';//加载更多
 import goodsNo from 'components/goodsNo.vue';//加载更多
 import sidebarB from './classify_child/sidebarB';//侧导航
+import countDown from './classify_child/countDown';//倒计时
 
 export default {
     components: {
-        defaultImg,more,goodsNo,sidebarB
+        defaultImg,
+        more,
+        goodsNo,
+        sidebarB,
+        countDown
     },
     data () {
         return {
@@ -159,10 +162,11 @@ export default {
          * 跳转页面
          */
         search(){
-            let type = this.$route.params.type;
-            let shopId = this.$route.params.shopId;
-            let busId = this.$route.params.busId;
-            let keyWord = this.keyWord || this.$route.params.keyword
+            let type = this.$route.params.type ;
+            console.log(type,'typetype')
+            let shopId = this.$route.params.shopId || this.$store.state.shopId;
+            let busId = this.$route.params.busId || this.$store.state.shopId;
+            let keyWord = this.keyWord || this.$store.state.keywords ||this.$route.params.keywords
             this.$router.push('/search/'+type+'/'+keyWord)
         },
         /** 
@@ -186,8 +190,8 @@ export default {
             let _this = this;
             let _data = {
                 // 'loginDTO':  JSON.stringify(_this.$store.state.loginDTO),
-                'url':    _this.$store.state.loginDTO.url,
-                'browerType':    _this.$store.state.loginDTO.browerType,
+                'url':    _this.$store.state.loginDTO_URL,
+                'browerType':    _this.$store.state.browerType,
                 'shopId':	 _this.$store.state.shopId ,
                 'busId'	:    _this.$store.state.busId,
                 'groupId':	data.groupId || '',
@@ -314,6 +318,7 @@ export default {
             let _this = this;
             _this.selectedClass = index;
             _this.isGoods = false;
+            _this.group_name = name;
             if(child){//有子集调用子集分类接口
                 _this.isGoods = true;
                 _this.classAllAjax(Id);
@@ -325,19 +330,31 @@ export default {
                     groupId: Id
                 });
             }
+        },
+        goods_jump(id,activity){
+            let shopId =  this.$store.state.shopId || this.$route.params.shopId;
+            let busId =  this.$store.state.busId || this.$route.params.busId;
+            let type = this.$store.state.type || this.$route.params.type;
+            this.$store.commit('mutationData',{
+                shopId: shopId,
+                busId: busId,
+                type : type,
+            });
+            this.$router.push('/goods/details/'+shopId+'/'+busId+'/'+type+'/'+id+'/'+activity);
         }
     },
     mounted () {
-        this.type = this.$route.params.type;
-
-        let _keyword = this.$route.params.keyword;
-        _keyword === 'k=k'?this.keyWord = '':this.keyWord = _keyword || '';
+        let _this = this;
+        _this.type = _this.$route.params.type;
+        _this.$store.commit('mutationData',{type:_this.type});
         
-        this.setTitle();
+        let _keyword = this.$store.state.keywords || this.$route.params.keywords;
+        _keyword === 'k=k'?_this.keyWord = '':_this.keyWord = _keyword || '';
+        
+        _this.setTitle();
 
-        this.classAllAjax();
+        _this.classAllAjax();
 
-        let _this =this;
         $(window).bind('scroll', function () {
             if ($(window).scrollTop() > 0 && $(window).scrollTop() >= ($(document).height() - $(window).height()) - 1000) {
             _this.loadMore();
@@ -456,21 +473,6 @@ export default {
                     p{
                         vertical-align: bottom;
                     }
-                }
-            }
-            .classify-time{
-                margin-top: 10/@dev-Width *1rem;
-                span{
-                    color: #333333;
-                    margin: 3px;
-                }
-                em{
-                    font-size: 32/@dev-Width *1rem;
-                    display: inline-block;
-                    background: #ffcc00;
-                    color: #333333;
-                    padding: 1px 2px;
-                    .border-radius(3px);
                 }
             }
         }

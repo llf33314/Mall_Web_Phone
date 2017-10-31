@@ -22,14 +22,14 @@ export default {
             footerData: [
                 {
                     name:'首页',
-                    router:'',
+                    router:'/home',
                     icon: 'icon-shouye',
                     statu:'home',
                     title:'home'
                 },
                 {
                     name:'分类',
-                    router:'',
+                    router:'/classify/0/k=k',
                     icon: 'icon-fenlei3',
                     statu:'group',
                     title:'classify'
@@ -43,7 +43,7 @@ export default {
                 },
                 {
                     name:'我的',
-                    router:'',
+                    router:'/my/center/42',
                     icon: 'icon-ren1',
                     statu:'my',
                     title:'my'
@@ -55,6 +55,7 @@ export default {
     mounted() {
         this.footerMenuAjax();
         let _nav = window.location.hash.split('/')[1];
+        console.log(_nav);
         this.isShow = _nav;
     },
     methods: {
@@ -85,7 +86,7 @@ export default {
          */
         jump(name,router){
             this.isShow = name;
-            //this.$router.push(router);
+            this.$router.push(router);
         }
     }
 }

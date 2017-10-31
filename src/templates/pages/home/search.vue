@@ -15,7 +15,34 @@
                     <span class="fs42" @click="submit()">搜索</span>
                 </div>
             </header>
-        </div>
+            <section class="search-content">
+                <div class="search-history" v-if="keywordList">
+                    <p class="search-title">
+                        <i class="fs36">历史搜索</i>
+                        <i class="iconfont icon-shanchu"
+                            @click="clearSearchAjax">
+                        </i>
+                    </p>
+                    <div class="search-txt">
+                        <em class="em-search" v-for=" item in keywordList"
+                        @click="submit(item.keyword)">
+                            {{item.keyword}}
+                        </em>
+                    </div>
+                </div>
+                <div class="search-history">
+                    <p class="search-title">
+                        <i class="fs36">搜索推荐</i>
+                    </p>
+                    <div class="search-txt">
+                        <em class="em-search" v-for=" item in labelList"
+                            @click="submit(item.group_name)">
+                            {{item.group_name}}
+                        </em>
+                    </div>
+                </div>
+           </section>
+      </div>
 	</div>
 </template>
 
@@ -67,15 +94,16 @@ export default {
     },
     /** 
      * 确定
-     * @param data 搜索关键词
      */
     submit(data){
-        let type = this.$route.params.type || 'type';//活动类型
-        let shopId = this.$route.params.shopId || 'shopId';//店铺id
-        let busId = this.$route.params.busId || 'busId';//店铺id
-        let keyword = data || this.keyWord || 'k=k';//搜索关键词
-        console.log('/classify/'+type+'/'+shopId+'/'+busId+'/'+keyword)
-        this.$router.push('/classify/'+type+'/'+keyword)
+        let type = this.$store.state.type || 0;//活动类型
+        let shopId = this.$store.state.shopId || 'shopId';//店铺id
+        let busId = this.$store.state.busId || 'busId';//店铺id
+        let keyword =  data || this.keyWord || 'k=k';//搜索关键词
+
+        this.$store.commit('mutationData',{keywords:keyword});
+
+        this.$router.push('/classify/'+shopId+'/'+busId+'/'+type+'/'+keyword)
     },
     /** 
      * 取消
@@ -123,7 +151,7 @@ export default {
     this.commonFn.setTitle('搜索');
     this.searchAjax();
     
-    let _keyword = this.$route.params.keyword;
+    let _keyword = this.$store.state.keywords || this.$route.params.keywords;
     _keyword === 'k=k'?this.keyWord = '':this.keyWord = _keyword || '';
     
     $('#input').focus();

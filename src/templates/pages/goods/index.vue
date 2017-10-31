@@ -1,138 +1,188 @@
 <template>
 <div class="goods-wrapper">
     <div class="goods-main">
-        <section class="goods-img-display">
-            <div class="goods-img-box" @touchmove.prevent>
-                <div class="goods-img">
-                    <img src="../../../assets/img/test/test1.jpg">
-                </div>
-                <div class="goods-img">
-                    <img src="../../../assets/img/test/test2.jpg">
-                </div>
-                <div class="goods-img">
-                    <img src="../../../assets/img/test/test2.jpg">
-                </div>
-            </div>
-            <p class="goods-origin-box">
-                <i class="goods-origin img-selecte"></i>
-                <i class="goods-origin"></i>
-                <i class="goods-origin"></i>
-            </p>
-        </section>
+        <banner :banner="goodsData.imageList" :imgUrl="imgUrl"></banner>
         <section class="goods-info">
-            <div class="goods-info-name">
-                <em class="em-tag">爆款</em>
-                <span class="fs40">Apple iPhone 7 Plus (A1661) 128G 玫瑰金色 移动联通电信 4G手机</span>
-            </div>
-            <p class="fs40 shop-font goods-info-money">
-                价格:  ￥<span class="fs50">6,899</span>.00 
-                <span class="fs36 shopGray">原价:<del>￥6,899.00</del></span>
-            </p>
-            <div class="goods-info-other fs40">
-                <div class="shop-font">
-                    秒杀价:￥<span class="fs50">6,899.</span>00
+            <div class="goods-top " :class="[ type == 4 ?'border':'']">
+                <div class="goods-info-name">
+                    <em class="em-tag" v-if="goodsData.productLabel">{{goodsData.productLabel}}</em>
+                    <span class="fs42">{{goodsData.productName}}</span>
                 </div>
-                <div class="fs36 goods-info-time shopGray">
-                    距结束<span>5天</span>
-                    <em>99</em> :
-                    <em>99</em> :
-                    <em>99</em>
+            
+                <div class="fs40  goods-info-other">
+                    <div class="shop-font" v-if="type != 5">
+                        <span v-if=" type== 3">秒杀价</span>
+                        <span v-else-if="type== 1">团购价:</span>
+                        <span v-else-if="type== 4">当前价:</span>
+                        <span v-else-if="type== 6">预售价:</span>
+                        <span class="fs50" v-else-if="type== 5">{{goodsData.productPrice[0]}}积分</span>
+                        <span v-else >价格:</span>
+                        ￥<span class="fs50">{{goodsData.productPrice[0]}}</span>.{{goodsData.productPrice[1]}}
+                        <span v-if="type== 7">批发价：￥{{goodsData.pfPrice}}</span>
+                        <span class="shopGray" v-if="goodsData.auctionResult >= 0 ">抢拍{{goodsData.auctionResult.auctionNumber}}次</span>
+                    </div>
+                    <span class="fs50 shop-font" v-else>{{goodsData.productPrice[0]}} 积分</span>
+                    <count-down :times="goodsData.activityTimes"
+                    ></count-down>
                 </div>
+                <div class="fs40  goods-info-other" v-if=" type == 4 || type == 7">
+                    <div v-if="type == 7 " class="shopGray">
+                        原价<del>￥{{goodsData.productCostPrice}}</del>
+                        <span class="shop-font" > 会员价：￥{{goodsData.hyPrice}}</span>
+                    </div>
+                    <div class="shop-font" v-if="goodsData.auctionResult != '' &&  type == 4">
+                        <span >保证金：</span>
+                        ￥<span class="fs50" >{{goodsData.auctionResult.depositMoney[0]}}</span>.{{goodsData.auctionResult.depositMoney[1]}}
+                        <span class="shopGray">不成拍卖后退还</span>
+                    </div>
+                    <div class="fs36 shopGray" v-if=" type != 7">{{goodsData.auctionResult.marginNumber}}人已报名</div>
+                </div>
+                <p class="goods-info-other fs40 shopGray" v-if="type != 4">
+                    <span v-if="type != 0 && type != 7 ">
+                        <del>￥{{goodsData.productCostPrice}}</del>
+                    </span>
+                    <span v-if="type == 0 || type == 7 ">
+                        运费: ￥{{goodsData.freightMoney}}
+                    </span>
+                    <span v-if="type == 0 || type == 7 ">
+                        库存:{{goodsData.productStockTotal}}
+                    </span>
+                    <span v-if="type == 7 ">
+                        关注量:{{goodsData.attentionNum}}
+                    </span>
+                    <span>
+                        销量:{{goodsData.productSaleTotal}}
+                    </span>
+                </p>
             </div>
-            <p class="goods-info-other fs40 shopGray">
-                <span>
-                    运费: ￥5
-                </span>
-                <span>
-                    库存:9999
-                </span>
-                <span>
-                    销量:9.9万
-                </span>
-            </p>
+            <div class="goods-bottom shopGray" v-if=" type ==4 ">
+                <p class="fs40 ">
+                    <span>起拍价：￥{{goodsData.auctionResult.aucStartPrice}}</span>
+                    <span v-if="goodsData.auctionResult.aucLowestPrice>=0">保留价：￥{{goodsData.auctionResult.aucLowestPrice}}</span>
+                    <span v-if="goodsData.auctionResult.aucLowestPrice>=0">保证金：￥{{goodsData.auctionResult.depositMoney[0]+'.'+goodsData.auctionResult.depositMoney[1]}}</span>
+                </p>
+                <p class="fs40 ">
+                    <span v-if="goodsData.auctionResult.aucType == 2 ">加价幅度：￥{{goodsData.auctionResult.aucAddPrice}}</span>
+                    <span v-if="goodsData.auctionResult.aucType == 1 ">降价幅度：每{{goodsData.auctionResult.aucLowerPriceTime}}分钟降价
+                        ￥{{goodsData.auctionResult.aucLowerPrice}}
+                    </span>
+                </p>
+                <p class="fs40 ">
+                    <span >拍卖方式：{{goodsData.auctionResult.aucTypeVal}}</span>
+                </p>
+                <p class="fs40 ">
+                    <span >服务支持：支持7天无理由退货</span>
+                </p>
+            </div>
         </section>
         <section class="goods-selected"
-                @click="dialogShow">
-            <div class="goods-selected-main">
+                v-if="goodsData.isShowCardRecevie == 1"
+                @click="isCardRecevie = true">
+            <div class="goods-selected-main" >
                 <div class="fs40">
-                    已选  玫瑰金，128GB，1个
+                    查看所含优惠卷
                 </div>
                 <i class="iconfont icon-jiantou-copy shopGray"></i>
             </div>
         </section>
-        <section class="goods-address">
+        <section class="goods-selected"
+                v-if="goodsData.isSpecifica == 1"
+                @click="isShow=true">
+            <div class="goods-selected-main" >
+                <div class="fs40">
+                    已选  {{dialogData.values}} {{spec_num}}份 
+                </div> 
+                <i class="iconfont icon-jiantou-copy shopGray"></i>
+            </div>
+        </section>
+        <section class="goods-address" v-if="goodsData.memberAddress">
             <div class="goods-address-main border">
                 <div class="fs40 goods-address-txt text-overflow">
                     <i class="iconfont icon-dingwei shopFont"></i>
-                    送至：广东省惠州市惠城区东平大道赛格假日广场赛格大厦...
+                    送至：{{goodsData.memberAddress}}
                 </div>
                 <i class="iconfont icon-jiantou-copy shopGray"></i>
             </div>
             <div class="shopGray fs40 goods-address-postage">
-                免运费
+                运费 :{{goodsData.freightMoney}}
             </div>
         </section>
         <section class="goods-prove">
-            <span class="fs40"><i class="iconfont icon-chenggong shopGreen"></i>企业认证</span>
-            <span class="fs40"><i class="iconfont icon-chenggong shopGreen"></i>担保交易</span>
-            <span class="fs40"><i class="iconfont icon-chenggong shopGreen"></i>线下门店</span>
+            <span class="fs40" >
+                <i class="iconfont icon-chenggong shopGreen" v-if="goodsData.stoType"></i>
+                {{goodsData.stoType}}
+            </span>
+            <span class="fs40" v-if="goodsData.isSecuritytrade == true">
+                <i class="iconfont icon-chenggong shopGreen"></i>
+                担保交易
+            </span>
+            <span class="fs40">
+                <i class="iconfont icon-chenggong shopGreen"></i>
+                线下门店
+            </span>
         </section>
         <section class="goods-shop">
             <div class="goods-shop-main clearfix">
                 <div class="goods-shop-info">
                     <div class="goods-shop-img">
-                        <default-img :background="background"
+                        <default-img :background="imgUrl+goodsData.shopImageUrl"
                             :isHeadPortrait="0">
                         </default-img>
                     </div>
                     <div class="goods-shop-txt">
                         <div class="goods-shop-name">
-                            <span class="fs46 text-overflow">权律二的店铺aaaaaaaaaaaaaa</span><em class="em-flag">旗舰店</em>
+                            <span class="fs46 text-overflow">{{goodsData.shopName}}</span>
+                            <em class="em-flag" v-if="goodsData.categoryName">旗舰店</em>
                         </div>
-                        <div class="fs40 shopGray">
-                            <span class="goods-shop-km text-overflow">0000km</span>    
-                            <span class="goods-shop-tel text-overflow">东湖西路666号aaaaaa</span>
+                        <div class="fs40 shopGray text-overflow">
+                            {{goodsData.shopAddress}}
                         </div>
                     </div>
                 </div>
                 <div class="goods-shop-rigtn">
-                    <div class="shopborder goods-shop-buttom fs42">
-                        收藏商品
+                    <div class="shopborder goods-shop-buttom fs42" 
+                        v-if="!goodsData.isCollect"
+                        @click="collectProductAjax()">收藏商品
                     </div>
-                    <div class="shopborder goods-shop-buttom fs42">
-                        进店逛逛
+                    <div class="shopborder goods-shop-buttom fs42"
+                        @click="collectProductAjax()"
+                        v-else>已收藏
+                    </div>
+                    <div class="shopborder goods-shop-buttom fs42" 
+                    @click="shop()">进店逛逛td
+                        <!-- (跳首页) -->
                     </div>
                 </div>
             </div>
         </section>
-         <section class="goods-content">
+        <section class="goods-content">
             <div class="goods-content-nav shop-header">
                 <div class="header-nav">
-                    <router-link to="/router/details" 
-                            class="header-itme shop-font"
-                            tag="div">
-                        <p class="fs42">商品详情</p>
-                        <em class="shop-bg"></em>
-                    </router-link>
-                     <router-link to="/router/spec"
-                                class="header-itme" tag="div">
-                        <p class="fs42">规格参数</p>
-                        <em ></em>
-                    </router-link> 
-                    <router-link router-link to="/router/comment"
-                        class="header-itme"  tag="div">
-                        <p class="fs42">商品评价</p>
-                        <em ></em>
-                    </router-link>
+                    <div class="header-itme"
+                        :class="{'shop-font':nav.name == nav_choice}"
+                        v-for="(nav,index) in min_nav"
+                        :key="nav[index]"
+                        @click="nav_change(nav.name)">
+                        <p class="fs42">{{nav.title}}</p>
+                        <em :class="{'shop-bg':nav.name == nav_choice}"></em>
+                    </div>
                 </div>
             </div>
-            <router-view></router-view>
+            <div class="goods-details"
+                v-show="isDetails">
+                <div v-html="detailsData"></div>
+            </div>
+            <router-view v-show="!isDetails"></router-view>
+            <technical-support v-if="$store.state.isAdvert == 1"></technical-support>
         </section>
-        <section class="goods-footer">
+        <section class="goods-footer" style="background:0">
             <div class="goods-footer-no fs40" v-if="isSoldOut">
                 商品已经下架啦~
             </div>
-            <div class="goods-footer-content">
+            <div class="goods-footer-botton ui-col-2 fs50 shop-bg" v-if="type == 4 || type == 6 ">
+                交保证金报名
+            </div>
+            <div class="goods-footer-content" v-if=" goodsData.isShowAddShopButton == 1">
                 <div class="goods-footer-botton ui-col-1 fs32">
                     <i class="iconfont icon-xiaoxi shop-font"></i>
                     客服
@@ -140,90 +190,87 @@
                 <div class="goods-footer-botton ui-col-1 fs32 border-left">
                     <i class="iconfont icon-yinhang"></i>
                     购物车
-                    <em class="goods-footer-num shop-bg">1</em>
+                    <em class="goods-footer-num shop-bg" v-if="goodsData.shopCartNum">{{goodsData.shopCartNum }}
+                    </em>
                 </div>
-                <div class="goods-footer-botton ui-col-2 fs50 shop-yellow shopFff"
+                <div class="goods-footer-botton ui-col-2 fs50 shop-yellow"
+                    :class="{'shopFff':isSoldOut}"
                     @click="dialogShow">
                     加入购物车
                 </div>
-                <div class="goods-footer-botton ui-col-2 fs50 shop-bg shopFff"
+                <div class="goods-footer-botton ui-col-2 fs50 shop-bg"
+                    :class="{'shopFff':isSoldOut}"
                     @click="dialogShow">
                     立即购买
                 </div>
-            <!--<div class="goods-footer-botton ui-col-2 fs50 shop-bg">
-                    交保证金报名
-                </div> -->
             </div>
         </section>
     </div>
-    <div class="goods-dialog" v-show="isShow"
-        @click.self="dialogClose">
+    <div class="goods-dialog" 
+        v-if="isShow"
+        @click.self="isShow =false">
         <div class="goods-dialog-main">
             <div class="goods-dialog-title  border">
-                <span class="text-overflow fs40">Apple iPhone 7 Plus (A1661) 128G 玫瑰金色 移动联通电</span>
+                <span class="text-overflow fs42">{{goodsData.productName}}</span>
                 <i class="iconfont icon-guanbi fs40"
-                @click.self="dialogClose"></i>
+                @click.self="isShow =false"></i>
             </div>
-            <div v-if="isShop">
+            <div v-if="type != 7">
                 <div class="goods-dialog-detl border clearfix">
                     <div class="goods-dialog-img">
-                        <default-img :background="background"
+                        <default-img :background="imgUrl+dialogData.specifica_img_url"
                             :isHeadPortrait="1">
                         </default-img>
                     </div>
                     <div class="goods-dialog-txt">
-                        <p class="fs42 shop-font"><span class="fs32">¥</span>7,199.<span class="fs32">00</span></p>
-                        <p class="fs36 shopGray">商品编号：9527</p>
+                        <p class="fs42 shop-font">
+                            <span class="fs32">¥</span>{{dialogData.inv_price[0]}}<span class="fs32">.{{dialogData.inv_price[1]}}</span>
+
+                            <span class="fs36 " v-if="dialogData.hyPrice"> 会员价 :{{dialogData.hyPrice}}</span>
+                        </p>
+                        <p class="fs36 shopGray" >库存：{{dialogData.inv_num}}</p>
+                        <p class="fs36 shopGray" v-if="dialogData.inv_code">商品编号：{{dialogData.inv_code}}</p>
+                        <p class="fs36 shopGray" v-if="goodsData.maxBuyNum">限购数量：{{goodsData.maxBuyNum}}</p>
                     </div>
                 </div>
                 <div class="goods-dialog-choice">
-                    <div class="goods-choice-list clearfix">
-                        <div class="goods-choice-title fs36">
-                            颜色
+                     <div class="goods-choice-list clearfix" v-for="(item,key) in specificaList">
+                        <div class="goods-choice-title fs36">{{item.specName}}
                         </div>
-                        <div class="goods-choice-box">
-                            <em class="fs40 em-choice">金色</em>
-                            <em class="fs40 em-choice">金色</em>
-                            <em class="fs40 em-choice">金色</em>
-                            <em class="fs40 em-choice">金色</em>
-                            <em class="fs40 em-choice">金色</em>
-                        </div>
-                    </div>
-                    <div class="goods-choice-list clearfix">
-                        <div class="goods-choice-title fs36">
-                            选择容量
-                        </div>
-                        <div class="goods-choice-box">
-                            <em class="fs40 em-choice">32G</em>
-                            <em class="fs40 em-choice">128G</em>
-                            <em class="fs40 em-choice">32G</em>
-                            <em class="fs40 em-choice">128G</em>
+                        <div class="goods-choice-box js-specValue">
+                            <div v-for="(spec,index) in dialogData.specifica_ids" v-if="index == key">
+                                <em class="fs40 em-choice " v-for=" specValue in item.specValues"
+                                    @click="choice_product($event)" 
+                                    :class="{'shop-bg':dialogData.specifica_ids[index]== specValue.id }"
+                                    :value="specValue.id">
+                                    {{specValue.specValue}}
+                                </em>
+                            </div>
                         </div>
                     </div>
                     <div class="goods-choice-list clearfix">
-                        <div class="goods-choice-title fs36">
-                            数量
+                        <div class="goods-choice-title fs36">数量
                         </div>
                         <div class="goods-choice-box2">
-                            <em class="em-choice">-</em>
-                            <em class="em-choice">1</em>
-                            <em class="em-choice">+</em>
+                            <em class="em-choice" @click="addSpec_number('-')">-</em>
+                            <input class="em-input" v-model="spec_num"></input>
+                            <em class="em-choice" @click="addSpec_number('+')">+</em>
                         </div>
                     </div>
                 </div>
             </div>
-            <div v-if="isWholesale">
+            <div v-else>
                 <div class="goods-dialog-detl border clearfix">
                     <div class="goods-dialog-img">
-                        <default-img :background="background"
+                        <default-img :background="imgUrl+dialogData.specifica_img_url"
                             :isHeadPortrait="0">
                         </default-img>
                     </div>
                     <div class="goods-dialog-txt">
-                        <p class="fs42 shop-font"><span class="fs32">¥</span>7,199.<span class="fs32">00</span></p>
+                        <p class="fs42 shop-font"><span class="fs32">¥</span>{{dialogData.inv_price[0]}}.<span class="fs32">{{dialogData.inv_price[1]}}</span></p>
                         <p class="fs36 shop-font">批发价:￥6,999.00</p>
-                        <p class="fs36 shop-font">库存29994件</p>
-                        <p class="fs36 shopGray">本商品2手起批</p>
+                        <p class="fs36 shop-font">库存{{dialogData.inv_num}}件</p>
+                        <p class="fs36 shopGray" v-if="dialogData.hpMoney">本商品{{dialogData.hpMoney}}手起批</p>
                     </div>
                 </div>
                 <div class="goods-dialog-choice">
@@ -234,55 +281,34 @@
                             <span class="fs36 shop-bg">加一手</span>
                         </div>
                     </div>
-                    <div class="goods-choice-list clearfix border"
-                    style="padding-bottom:20px">
-                        <div class="goods-choice-title fs36">
-                            内存
-                        </div>
-                        <div class="goods-choice-box ">
-                            <em class="fs40 em-choice shop-bg">金色
-                                <i class="fs36">1</i>
-                            </em>
-                            <em class="fs40 em-choice">金色</em>
-                            <em class="fs40 em-choice">金色</em>
-                            <em class="fs40 em-choice">金色</em>
-                            <em class="fs40 em-choice">金色</em>
+                    <div style="padding-bottom:20px" class="border">
+                        <div class="goods-choice-list clearfix" v-for="(item,i) in specificaList"  v-if=" i == 0 && specificaList.length > 1">
+                            <div class="goods-choice-title fs36">{{item.specName}}
+                            </div>
+                            <div class="goods-choice-box js-specValue">
+                                <div v-for="(spec,index) in dialogData.specifica_ids" v-if="index == i">
+                                    <em class="fs40 em-choice " v-for=" specValue in item.specValues"
+                                        @click="choice_product($event)" 
+                                        :class="{'shop-bg':dialogData.specifica_ids[index] == specValue.id }"
+                                        :value="specValue.id">
+                                        {{specValue.specValue}}
+                                    </em>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="goods-choice-option1 border">
+                    <div class="goods-choice-option2 border" >
                         <ul class="goods-choice-ul">
-                            <li class="goods-choice-li">
-                                <p class="fs36">尺寸</p>
-                                <div class="goods-option">
-                                    <p class="fs36">qqq</p>
+                            <li class="goods-choice-li" v-for="(item,i) in specificaList" v-if="i == 1 || specificaList.length == 1">
+                                <p class="fs36">{{item.specName}}</p>
+                                <div class="goods-option" >
+                                    <p class="fs36"  v-for="(spec,index) in item.specValues">{{spec.specValue}}</p>
                                 </div>
                             </li>
-                        </ul>
-                    </div> 
-                    <div class="goods-choice-option2 border">
-                        <ul class="goods-choice-ul">
-                            <li class="goods-choice-li">
-                                <p class="fs36">尺寸</p>
-                                <div class="goods-option">
-                                    <p class="fs36">qqq</p>
-                                    <p class="fs36">qqq</p>
-                                    <p class="fs36">qqq</p>
-                                </div>
-                            </li>
-                            <li class="goods-choice-li">
-                                <p class="fs36">尺寸</p>
-                                    <div class="goods-option">
-                                    <p class="fs36">qqq</p>
-                                    <p class="fs36">qqq</p>
-                                    <p class="fs36">qqq</p>
-                                </div>
-                            </li>
-                            <li class="goods-choice-li">
-                                <p class="fs36">尺寸</p>
-                                    <div class="goods-option">
-                                    <p class="fs36">qqq</p>
-                                    <p class="fs36">qqq</p>
-                                    <p class="fs36">qqq</p>
+                            <li class="goods-choice-li" v-for="(item,i) in specificaList" v-if="i == 2 || specificaList.length == 1">
+                                <p class="fs36">{{item.specName}}</p>
+                                <div class="goods-option" >
+                                    <p class="fs36"  v-for="(spec,index) in item.specValues">{{spec.specValue}}</p>
                                 </div>
                             </li>
                             <li class="goods-choice-li">
@@ -322,43 +348,329 @@
                     加入购物车
                 </div>
                 <div class="goods-dialog-button fs52  shop-bg">
-                    <span v-if="isShop">立刻购买</span>
-                    <span v-if="isWholesale">立刻批发</span>
-                </div>
-                <div class="goods-dialog-button fs52  shop-bg shop-hide">
-                    确 定
+                    <span v-if="type == 4">立刻批发</span>
+                    <span v-else>立刻购买</span>
                 </div> 
             </div>
         </div>
-    </div>  
+    </div>
+    <div class="goods-dialog" 
+        v-if="isCardRecevie"
+        @click.self="isCardRecevie =false">
+         <div class="goods-dialog-main">
+             <div class="goods-dialog-title  border">
+                <span class="text-overflow fs40">卡券包</span>
+                <i class="iconfont icon-guanbi fs40"
+                @click.self="isCardRecevie =false"></i>
+            </div>
+            <div>
+                <div class="goods-dialog-choice shop-box-justify" 
+                    style="padding: 0.2rem;"
+                    v-for="item in goodsData.cardRecevieArr"
+                    :key="item.cardId">
+                    <div class="fs42">{{item.cardName}}</div>
+                    <div class="fs42">{{item.num}}</div>
+                </div>
+            </div>
+         </div>
+    </div>
 </div>
 </template>
- <script>
+<script>
 
-import defaultImg from 'components/defaultImg'
+import defaultImg from 'components/defaultImg';
+import countDown from '../home/classify_child/countDown';//倒计时
+import banner from './child/banner';//倒计时
+import technicalSupport from 'components/technicalSupport' //技术支持
+
 
 export default {
   components: {
-    defaultImg
+    defaultImg,countDown,technicalSupport,banner
   },
   data () {
     return {
-        isShow:false,
+        isShow:true,
         isSoldOut:false,//判断下架
-        isPhoto: false,//
-        isShop: false,//判断不是批发
-        isWholesale: false,//判断是批发弹出
-        background: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1501765343077&di=5d3652848769c1abd7eb25dea007bb1d&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D450%252C600%2Fsign%3Dcf8442791bd8bc3ec65d0eceb7bb8a28%2Fb3119313b07eca80c63dcea4932397dda14483bd.jpg'
+        SoldOut:'',//错误信息
+        isCardRecevie: false,//判断不是批发
+        background: '',
+        goodsId:'',
+        goodsData:{
+            auctionResult:{
+                depositMoney:''
+            },
+            productPrice:[
+                '',''
+            ]
+        },
+        path:'',
+        imgUrl:'',
+        webPath:'',
+        imgSelecte:0,
+        type:'',
+        dialogData:{},
+        isProductCode:false,//商品编号,
+        guigePrice:'',//规格集合分类
+        specificaList:'',//规格集合，
+        spec_num:1,//数量默认
+        min_nav:[
+            {
+                title:'商品详情',
+                name:'details'
+            },
+            {
+                title:'规格参数',
+                name:'spec'
+            },
+            {
+                title:'商品评价',
+                name:'comment'
+            }
+        ],
+        nav_choice: '',
+        detailsData:'',
+        isDetails:false,
     }
+  },
+  watch: {
+      'nav_choice'(a,b){
+        a == 'details'?this.isDetails = true:this.isDetails =false;
+      }
   },
   methods: {
     dialogShow(){
+        if(this.isSoldOut) return;
         this.isShow = true;
     },
-    dialogClose(){
-        this.isShow = false;
-    }
+    /** 
+     * 查询商品接口
+    */
+    phoneProductAjax(){
+        let _this = this ;
+        let activityId = _this.$route.params.activityId
+        activityId == 'undefined' ? activityId=0 : activityId;
+        this.commonFn.ajax({
+            'url': h5App.activeAPI.phoneProduct_getProduct_post,
+            'data':{
+                url: _this.$store.state.loginDTO_URL,
+                browerType: _this.$store.state.browerType,
+                shopId : _this.$store.state.shopId,
+                busId : _this.$store.state.busId,
+                productId :  _this.$route.params.goodsId,
+                type: _this.$route.params.type,
+                activityId: activityId,
+            },
+            'success':function(data){
+                console.log(data);
+                 if(data.code == -1){
+                    _this.$parent.$refs.bubble.show_tips(data.msg);//bubble_hint*/
+                    return
+                }
+                
+                if(data.code == 1006 || data.code == 1007 || data.code == 1011){
+                    _this.isSoldOut = true;
+                    _this.SoldOut = data.msg;
+                }
 
+                _this.goodsData = data.data;
+                _this.path = data.path;
+                _this.imgUrl = data.imgUrl;
+                _this.webPath = data.webPath;
+
+                _this.goodsData.productPrice = _this.commonFn.moneySplit(data.data.productPrice)//价钱显示效果
+
+                if(_this.type == 4){//拍卖，分割价钱
+                    let depositMoney = data.data.auctionResult.depositMoney
+                     _this.goodsData.auctionResult.depositMoney = _this.commonFn.moneySplit(depositMoney);
+                }
+                _this.detailsAjax();
+                //弹出规格初始数据--有规格匹配
+                if(data.data.isSpecifica){
+                     _this.productDetailAjax({
+                        productId: _this.$route.params.goodsId,
+                        invId: data.data.invId,
+                        type: _this.$route.params.type,
+                        activityId: activityId,
+                        isShowCommission: data.data.isShowCommission
+                    });
+                    return
+                }
+                //弹出规格初始数据--无规格匹配
+                _this.dialogData.inv_price = _this.commonFn.moneySplit(data.data.productPrice);//价钱
+                _this.dialogData.inv_code = data.data.productCode;//默认编号
+                _this.dialogData.inv_num = data.data.productStockTotal;//默认库存
+                let imageLists = _this.goodsData.imageList;//默认图片
+                    imageLists.forEach((item,index)=>{
+                        if(item.isMainImages == 1){
+                            _this.dialogData.specifica_img_url = item.imageUrl;
+                        }  
+                })
+            }
+        })
+    },
+    /** 
+     * 查询商品规格接口(规格弹出框调用)
+     */
+    productDetailAjax(data){
+        let _this = this;
+        let _data = data;
+        let activityId = _this.$route.params.activityId;
+        this.commonFn.ajax({
+            'url': h5App.activeAPI.phoneProduct_getSpecifica_post,
+            'data':_data,
+            'success':function(data){
+                console.log(data,'data批發')
+                _this.specificaList = data.data.specificaList;
+                _this.guigePrice = data.data.guigePrice;
+                
+                _this.guigePrice.forEach((item,i)=>{//弹出规格初始值
+                    item.specifica_ids = item.specifica_ids.split(',');
+                    if(item.id == _data.invId){
+                        item.inv_price = _this.commonFn.moneySplit(item.inv_price);//分割价钱
+                        _this.dialogData = item;
+                        if(!item.specifica_img_url){
+                            //判断是规格集合里面是否有匹配图片没有使用img主图
+                            let imageLists = _this.goodsData.imageList;
+                                imageLists.forEach((item,index)=>{
+                                    if(item.isMainImages == 1){
+                                        _this.dialogData.specifica_img_url = item.imageUrl;
+                                    }  
+                            });
+                        }
+                    }
+                })
+            }
+        })
+
+    },
+    /**
+     * 选择规格 
+     * @param id 选择INV_id
+     */
+    choice_product(e){
+        let _this = this ;
+        let specs= [],invid;
+        if(e){//获取选中值 存成数组
+            $(e.target).siblings().removeClass('shop-bg');
+            $(e.target).addClass('shop-bg');
+        }
+        for(var i = 0 ;i<$('.js-specValue .shop-bg').length;i++){
+            specs.push($('.js-specValue .shop-bg').eq(i).attr('value'));
+        }
+        //获取选中值的规格集合
+         _this.guigePrice.forEach((item,i) => {
+             //判断两个数组完全相等 转字符串比较
+             if(specs.toString() === item.specifica_ids.toString()){
+
+                item.inv_price = _this.commonFn.moneySplit(item.inv_price);
+                if(!item.specifica_img_url){
+                    item.specifica_img_url = _this.dialogData.specifica_img_url;
+                }
+                _this.dialogData = item;
+            }
+        })
+        //切换时规格时 如果规格 购买数量大于库存数量 则等于库存数量
+        if(_this.spec_num >= _this.dialogData.inv_num){
+            _this.spec_num = _this.dialogData.inv_num;
+        }
+    },
+    /** 
+     * 收藏店铺
+     */
+    collectProductAjax(){
+        let _this = this;
+        _this.commonFn.ajax({
+            'url': h5App.activeAPI.phoneProduct_collectProduct_post,
+            'data':{
+                busId: _this.$store.state.busId,
+                url: _this.$store.state.loginDTO_URL,
+                browerType: _this.$store.state.browerType,
+                productId :  _this.$route.params.goodsId,
+            },
+            'success':function(data){
+                if(data.code==1){
+                    _this.goodsData.isCollect = !_this.goodsData.isCollect;
+                    if(_this.goodsData.isCollect){
+                        _this.$parent.$refs.bubble.show_tips('收藏成功');
+                    }else{
+                        _this.$parent.$refs.bubble.show_tips('取消成功');
+                    }
+                }
+            } 
+        })
+    },
+    /** 
+     * 规格数量加减
+     */
+    addSpec_number(e){
+        let _this =this;
+        if( e === '-'){//减小时，
+            if(_this.spec_num<=1){
+                 _this.$parent.$refs.bubble.show_tips('数量不能小于1');
+                return
+            }
+            _this.spec_num --;
+        }else{//增减时
+            // 限购数量不为零时，购买数量不能超出限购数量
+            if(_this.goodsData.maxBuyNum && (_this.spec_num >= _this.goodsData.maxBuyNum)){
+                _this.$parent.$refs.bubble.show_tips('超出限购数量');
+                return
+            }
+            //超出规格库存
+            if(_this.spec_num >= _this.dialogData.inv_num){
+                 _this.$parent.$refs.bubble.show_tips('超出现有库存量');
+                 return
+            }
+            _this.spec_num ++;
+        }
+    },
+    /** 
+     * 切换副导航
+     * @param name 子路由名字
+    */
+    nav_change(name){
+        this.nav_choice = name;
+        let hash = window.location.hash.split('#')[1];
+        let _name =  hash.split('/')[2];
+        let _hash= hash.split(_name)[0]+name+hash.split(_name)[1];
+        this.$router.push(_hash);
+    },
+    /**
+     * 商品详情请求
+     */
+    detailsAjax(){
+      let _this = this;
+      _this.commonFn.ajax({
+        'url': h5App.activeAPI.phoneProduct_getProductDetail_post,
+        'data':{
+            productId :  _this.$route.params.goodsId,
+        },
+        'success':function(data){
+            _this.detailsData = data.data;
+        } 
+      })
+    }
+  },
+  beforeCreate() {
+      this.$store.commit('show_footer',false);
+    },  
+  mounted () {
+        this.commonFn.setTitle( '商品详情');
+        this.goodsId = this.$route.params.goodsId;
+
+        this.phoneProductAjax();
+        this.type = this.$route.params.type;
+
+        let _name =  window.location.hash.split('/')[2];
+        this.nav_choice = _name;
+
+        if(_name == 'details'){
+            this.isDetails = true;
+        }else{
+            this.isDetails = false;
+        }
+        
   }
 }
 </script>
@@ -377,52 +689,7 @@ export default {
     .goods-main{
         padding-bottom: 168/@dev-Width *1rem;
     }
-    .goods-img-display{
-        position: relative;
-        width: 100%;
-        height: 1130/@dev-Width *1rem;
-         margin-bottom: 0;
-        .goods-img-box{
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            .ik-box;
-            .goods-img{
-                width: 100%;
-                height: 100%;
-                display: flex;
-                display: -webkit-box;
-                display: -ms-flexbox;
-                flex-shrink: 0;
-                img{
-                    margin: 0 auto;
-                    display: block;
-                    max-width: 100%;
-                    max-height: 100%;
-                }
-            }
-        }
-        .goods-origin-box{
-            width: 100%;
-            text-align: center;
-            font-size: 0;
-            position: absolute;
-            bottom: 5%;
-            i{
-                display: inline-block;
-                width: 8px;
-                height: 8px;
-                background: #cccccc;
-                .border-radius(100%);
-                margin: 0 3px;
-            }
-            .img-selecte{
-                background: #e4393c;
-                width: 14px;
-                .border-radius(20px);
-            }
-        }
-    }
+    
     .goods-info{
         width: 100%;
         padding: 30/@dev-Width *1rem 46/@dev-Width *1rem;
@@ -432,9 +699,14 @@ export default {
                 margin-left: 20/@dev-Width *1rem;
             }
         }
+        .goods-bottom{
+            width: 100%;
+            padding-top: 5px;
+        }
         .goods-info-other{
             .ik-box;
             .ik-box-pack(justify);
+            margin-top: 5px;
             &>span{
                 display: block;
             }
@@ -552,7 +824,9 @@ export default {
     }
     .goods-content{
         width: 100%;
+        // padding-bottom: 1.05333333rem;
         position: relative;
+        background: 0;
         .goods-content-nav{
             position: relative;
         }
@@ -574,13 +848,14 @@ export default {
         z-index: 1;
         .goods-footer-no{
             text-align: center;
-            background: #666;
+            background: rgba(0, 0, 0, 0.6);
             color: #fff;
             line-height: l;
             padding: 38/@dev-Width *1rem 0;
         }
         .goods-footer-content{
             .ik-box;
+            background: #fff;
             &>div:nth-last-child(2),&>div:nth-last-child(1){
             color: #fff;
             }
@@ -600,11 +875,12 @@ export default {
             }
             em{
                 font-size: 12px;
+                text-align: center;
                 position: absolute;
                 top: 5%;
                 right: 20%;
-                width: 18px;
-                height: 18px;
+                min-width: 18px;
+                // min-height: 18px;
                 line-height: 18px;
                 color: #fff;
                 display: block;
@@ -658,11 +934,13 @@ export default {
             padding-left:  30/@dev-Width *1rem;
             width: 100%;
             .goods-dialog-img{
+                border: 1px solid #eee;
                 width: 265/@dev-Width *1rem;
                 height: 265/@dev-Width *1rem;
                 float: left;
                 background-size: 100%;
                 margin-right: 30/@dev-Width *1rem;
+                overflow: hidden;
             }
             .goods-dialog-txt{
                 float: left;
@@ -760,7 +1038,7 @@ export default {
                     margin-top: 48 / @dev-Width *1rem;
                     float: left;
                     color: #87858f;
-                    width: 80/@dev-Width *1rem;
+                    width: 90/@dev-Width *1rem;
                     margin-right: 20/@dev-Width *1rem;
                     height: 92 / @dev-Width *1rem;
                     .ik-box;
@@ -769,7 +1047,7 @@ export default {
                 }
                 .goods-choice-box{
                     float: left;
-                    width: 90%;
+                    width: 88%;
                     em{
                         margin-top: 48 / @dev-Width *1rem;
                         position: relative;
@@ -837,6 +1115,14 @@ export default {
         }
     }
 
+}
+.goods-details{
+    width: 100%;
+    background: #fff;
+    img{
+        width: 100%;
+        height: auto;
+    }
 }
 .goods-info-txt{
     width: 100%;

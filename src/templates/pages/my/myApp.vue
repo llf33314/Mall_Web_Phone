@@ -188,6 +188,9 @@ export default {
         'url': h5App.activeAPI.my_center_post,
         'data': _data,
         'success': function(data) {
+            if(data.code == 1001){
+                location.href=data.url;
+            }
           if (data.code != 1) {
             return;
           }

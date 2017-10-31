@@ -6,15 +6,15 @@ Vue.use(Vuex);
 // 存储状态值
 const state = {
     app_name : '多粉商城',
-    shopId:'',
-    busId:'',
-    loginDTO:{
-        url:'',//当前页面地址
-        browerType:'',//浏览器类型 1 微信 ， 99 浏览器	必传
-    },
-    showTop:true,//置顶按钮显示
-    showfooter:true,//底部导航显示隐藏
-    isAdvert:false,//是否显示技术支持
+    shopId: '',
+    busId: '',
+    keywords: '',
+    type:'',
+    loginDTO_URL:'',//浏览器地址
+    browerType:'',//浏览器类型 1 微信 ， 99 浏览器	必传
+    showTop:1,//置顶按钮显示
+    showfooter:1,//底部导航显示隐藏
+    isAdvert:'',//是否显示技术支持
 }
 
 const actions ={
@@ -29,14 +29,16 @@ const getters = {
 // 状态值的改变方法,操作状态值, 提交mutations是更改Vuex状态的唯一方法
 const mutations = {
     mutationData:(state,data) => {
-        state.shopId =  data.shopId;
-        state.busId =  data.busId;
-        state.loginDTO =  data.loginDTO;
+        state.shopId =  data.shopId ||state.shopId;
+        state.busId =  data.busId ||state.busId;
+        state.browerType =  data.browerType ||state.browerType;
+        state.keywords =  data.keywords || state.keywords;
+        state.loginDTO_URL =  data.loginDTO_URL || state.loginDTO_URL;
     },
-    show_top:(state,Booleans)=>state.showTop = Booleans,
-    show_footer:(state,Booleans)=>state.showfooter = Booleans,
-    loginDTO_URL:(state,url)=>state.loginDTO.url = url,
-    is_Advert:(state,num)=>state.isAdvert = !!(num),//是否显示技术支持
+    show_top:(state,Booleans)=>state.showTop =  Booleans,
+    show_footer:(state,Booleans)=>state.showfooter =  Booleans,
+    is_Advert:(state,number)=>state.isAdvert = number,
+    goods_details:(state,data)=>state.goodsdetails = data,
 }
 
 export default new Vuex.Store({

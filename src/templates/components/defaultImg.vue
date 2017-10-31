@@ -5,10 +5,10 @@
         </div>
         <img src="../../assets/img/default.png" 
              class="default-img"
-             v-if="isHeadPortrait==1 && background==''"></img>
+             v-if="isHeadPortrait==1 && background == undefined"></img>
         <img src="../../assets/img/kuaidiyuan.png" 
              class="default-img"
-             v-if="isHeadPortrait==0 && background==''"></img>
+             v-if="isHeadPortrait==0 && background == undefined"></img>
     </div>
 </template>
 <script>
@@ -17,11 +17,11 @@ export default {
     props:['background','isHeadPortrait'],
     data: function () {
         return {
-
+            
         }
     },
     mounted() {
-       
+        
     },
 }
 </script>

@@ -24,7 +24,31 @@ FastClick.attach(document.body);
 new Vue({
   el: '#app',
   router,
-  store:storeConfig,
+  store: storeConfig,
   template: '<App/>',
   components: { App }
 })
+/**
+ * 弹出框调用
+ * 使用方法
+ * @param msg 显示参数
+* let msg ={
+      btnNum: 2 ,按钮显示个数
+      btnOne: '',//按钮文字
+      btnTow: '',//按钮文字
+      dialogTitle:'提示',
+      dialogMsg: '我是消息内容？',
+      callback: {
+          btnOne: '',点击按执行方法
+          btnTow: ''点击按执行方法
+      }
+    }
+    _this.$root.$refs.dialog.showDialog(msg);//调用方法
+ */
+
+/**
+ * 气泡调用
+ * 使用方法
+ * @param xxx 显示内容,'内容' 
+    _this.$root.$refs.dialog.showDialog('xxxx');//调用方法
+ */

@@ -22,7 +22,7 @@
         setTimeout(function () {
           $('.bubble').fadeOut(200,function(){
             self.hint_msg = '';
-             self.show = false;
+            self.show = false;
           });
         }, 1000);
       }
@@ -51,7 +51,7 @@
     white-space: nowrap;
     font-size: 0.28rem;
     text-align: center;
-    background: rgba(0, 0, 0, .8);
+    background: rgba(0, 0, 0, .5);
     display: inline-block;
     border-radius: 5px
   }

@@ -93,7 +93,6 @@
 
 <script>
 
-    import Lib from 'assets/js/Lib';
     import defaultImg from 'components/defaultImg'
     export default {
         data() {
@@ -107,13 +106,13 @@
 
         //实例初始化最之前，无法获取到data里的数据
         beforeCreate(){
-
+            
 
         },
         //在挂载开始之前被调用
         beforeMount(){
 
-
+            this.$store.commit('show_footer',false);
         },
         //已成功挂载，相当ready()
         mounted(){
@@ -181,7 +180,7 @@
             .nav-item{
                 float: left;
                 width: 33.333%;
-                height: 400/@dev-Width *1rem;
+                height: 415/@dev-Width *1rem;
                 border-bottom: 1px solid #ededed;
                 border-right: 1px solid #ededed;
                 .ik-box;

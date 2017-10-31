@@ -48,7 +48,6 @@ export default {
                     shopId : _shopId //todo 参数没有
                 },
                 'success':function(data){
-                    console.log(data,'QQ')
                     _this.QQ = data.data.qq;
                     _this.$store.commit('is_Advert',data.data.isAdvert);
                 }
@@ -74,6 +73,7 @@ export default {
         display: block;
         font-size: 116/@dev-Width *1rem ;
         margin-bottom: 28/@dev-Width *1rem;
+        margin: 0 auto;
     }
     .icon-kefu{
         display: block;

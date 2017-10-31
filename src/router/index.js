@@ -5,6 +5,8 @@ import Router from 'vue-router'
 /***懒加载**************************************************************************/
 const Nav = resolve => require(['pages/nav/nav.vue'], resolve);
 //nav => 导航
+// const Index = resolve => require(['pages/home/index'], resolve);
+// //nav => 首页
 const Stores = resolve => require(['pages/home/stores'], resolve);
 //Search => 选择门店
 const Search = resolve => require(['pages/home/search'], resolve);
@@ -25,12 +27,12 @@ const Goods = resolve => require(['pages/goods/index'], resolve);
 //Goods => 商品详情
 const Goods_Comment = resolve => require(['pages/goods/child/comment'], resolve);
 //Goods_comment => 商品详情-评论
-const Goods_Details = resolve => require(['pages/goods/child/details'], resolve);
+const Goods_Details = resolve => require(['pages/goods/index'], resolve);
 //Goods_details => 商品详情-评论
 const Goods_Spec = resolve => require(['pages/goods/child/spec'], resolve);
 //Goods_details => 商品详情-评论
-const Goods_Classify = resolve => require(['pages/goods/classify'], resolve);
-//Goods_classify => 商品分类
+const Sale_index = resolve => require(['pages/sale/index.vue'], resolve);
+//Sale_index =>超级营销员
 const my_center = resolve => require(['pages/my/myApp'], resolve);
 //my_center =>我的
 Vue.use(Router)
@@ -50,87 +52,91 @@ export default new Router({
       meta: {
         title: '导航,上线后删除'
       },
-    },{
+    }, {
       path: '/stores',
       name: 'Stores',
       component: Stores,
       meta: {
         title: '选择门店'
       },
-    },{
-      path: '/search/:type/:keyword',
-      // path: '/search/:shopId/:busId/:type/:keyword',
+    }, {
+      path: '/search/:type/:keywords',
       name: 'search',
       component: Search,
       meta: {
         title: '搜索'
       }
-    },{
-      path: '/classify/:type/:keyword',
+    }, {
+      path: '/classify/:shopId/:busId/:type/:keywords',
       name: 'classify',
       component: Classify,
       meta: {
         title: '分类'
       },
-    },,{
+    }, , {
       path: '/auction/bond',
       name: 'bond',
       component: Auction_Bond,
       meta: {
         title: '保证金'
       }
-    },{
+    }, {
       path: '/auction/agreement',
       name: 'agreement',
       component: Auction_Agreement,
       meta: {
         title: '协议'
       }
-    },{
+    }, {
       path: '/auction/succeed',
       name: 'succeed',
       component: Auction_Succeed,
       meta: {
         title: '报名成功'
       }
-    },{
+    }, {
       path: '/comment',
       name: 'comment',
       component: Comment,
       meta: {
         title: '评论'
       }
-    },{
+    }, {
       path: '/comment/share',
       name: 'share',
       component: Comment_Share,
       meta: {
         title: '分享成功'
       }
-    },{
-      path: '/goods',
+    }, {
+      path: '/goods/details/:shopId/:busId/:type/:goodsId/:activityId',
       name: 'goods',
       component: Goods,
       meta: {
         title: '商品详情'
       },
-      children:[
-        { path: '/goods/details', 
-          component: Goods_Details
-        },{ 
-          path: '/goods/spec', 
-          component: Goods_Spec},
-        { 
-          path: '/goods/comment', 
+      children: [{
+          path: '/goods/spec/:shopId/:busId/:type/:goodsId/:activityId',
+          component: Goods_Spec
+        },
+        {
+          path: '/goods/comment/:shopId/:busId/:type/:goodsId/:activityId',
           component: Goods_Comment
         }
       ]
-    },{
+    }, {
       path: '/my/center/:busId',
       name: 'my_center',
       component: my_center,
       meta: {
         title: '我的'
+      }
+    }, {
+      path: '/sale/:busId',
+      name: 'Sale_index',
+      component: Sale_index,
+      meta: {
+        title: '超级营销员首页'
       }
     }
   ]
