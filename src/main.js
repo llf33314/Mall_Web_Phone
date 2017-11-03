@@ -43,12 +43,12 @@ new Vue({
           btnTow: ''点击按执行方法
       }
     }
-    _this.$root.$refs.dialog.showDialog(msg);//调用方法
+    _this.$parent.$refs.dialog.showDialog(msg);//调用方法
  */
 
 /**
  * 气泡调用
  * 使用方法
  * @param xxx 显示内容,'内容' 
-    _this.$root.$refs.dialog.showDialog('xxxx');//调用方法
+    _this.$parent.$refs.bubble.show_tips(xxx);//调用方法
  */

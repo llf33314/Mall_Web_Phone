@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import Lib from 'assets/js/Lib';
+
 import shopDialog from 'components/shopDialog'
 import divTextarea from 'components/divTextarea'
 export default {

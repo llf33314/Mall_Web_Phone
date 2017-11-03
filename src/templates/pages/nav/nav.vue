@@ -22,7 +22,7 @@
     <a href="/views/auction/bond.html">提交保证金(完成)</a> 
     <a href="/views/auction/agreement.html">用户竞拍服务协议(完成)</a> 
     <p>批发</p>
-    <a href="/views/wholesale/apply.html">批发申请(完成)</a> 
+    <router-link to="/wholesale/apply">批发申请(完成)</router-link> 
     <p>评论</p>
     <a href="/views/comment/comment.html">发表评论(完成,上传组件)</a> 
     <a href="/views/comment/succeed.html">评论成功(完成)</a> 

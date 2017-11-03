@@ -118,11 +118,15 @@ var Rxports = {
 	},
 	//判断微信浏览器类型
 	checkPlatform(){
+		if(/MicroMessenger/i.test(navigator.userAgent)){
+			//这是微信平台下浏览器
+			return 'Messenger'
+		}
 		if(/android/i.test(navigator.userAgent)){
 			//这是Android平台下浏览器
 			return 'Android'
 		}
-		if(/(iPhoneiPadiPodiOS)/i.test(navigator.userAgent)){
+		if(/iphone os/i.test(navigator.userAgent)){
 			//这是iOS平台下浏览器
 			return 'iOS'
 		}
@@ -133,10 +137,6 @@ var Rxports = {
 		if(/Linux/i.test(navigator.platform)){
 			//这是Linux操作系统平台
 			return 'Linux'
-		}
-		if(/MicroMessenger/i.test(navigator.userAgent)){
-			//这是微信平台下浏览器
-			return 'Messenger'
 		}
 	},
 	/**

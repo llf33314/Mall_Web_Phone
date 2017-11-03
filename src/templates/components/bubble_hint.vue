@@ -24,7 +24,7 @@
             self.hint_msg = '';
             self.show = false;
           });
-        }, 1000);
+        }, 1500);
       }
     }
   }

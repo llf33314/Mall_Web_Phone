@@ -60,7 +60,6 @@ export default {
       let browser = this.commonFn.checkPlatform();
       browser === 'Messenger' ? this.Messenger = 1: this.Messenger = 99;
     }
-    
   }
 }
 

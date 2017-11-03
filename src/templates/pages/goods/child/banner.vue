@@ -59,7 +59,6 @@ export default {
         $('#banner').css({
             'height': $('body').width()
         });
-        console.log(this.banner)
         // this.banner.forEach(function(item,i) {
             
         // });

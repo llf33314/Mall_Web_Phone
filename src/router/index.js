@@ -33,6 +33,9 @@ const Goods_Spec = resolve => require(['pages/goods/child/spec'], resolve);
 //Goods_details => 商品详情-评论
 const Sale_index = resolve => require(['pages/sale/index.vue'], resolve);
 //Sale_index =>超级营销员
+const Wholesale_Apply = resolve => require(['pages/wholesale/apply'], resolve);
+//Wholesale_Apply =>批发申请页
+
 const my_center = resolve => require(['pages/my/myApp'], resolve);
 //my_center =>我的
 Vue.use(Router)
@@ -108,7 +111,7 @@ export default new Router({
       meta: {
         title: '分享成功'
       }
-    }, {
+    },{
       path: '/goods/details/:shopId/:busId/:type/:goodsId/:activityId',
       name: 'goods',
       component: Goods,
@@ -124,6 +127,13 @@ export default new Router({
           component: Goods_Comment
         }
       ]
+    },{
+      path: '/wholesale/apply',
+      name: 'Wholesale_Apply',
+      component: Wholesale_Apply,
+      meta: {
+        title: '批发申请页'
+      }
     }, {
       path: '/my/center/:busId',
       name: 'my_center',
