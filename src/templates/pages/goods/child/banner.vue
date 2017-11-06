@@ -18,7 +18,8 @@
         <p class="goods-origin-box">
             <i class="goods-origin " 
             v-for="(img,index) in banner"
-            :class="[index == imgSelecte?'img-selecte':'']"></i>
+            :class="[index == imgSelecte?'img-selecte':'']"
+            :key="index"></i>
         </p> 
     </div>
 </template>
