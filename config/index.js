@@ -32,6 +32,7 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
+      //打包时注释
       '/api':{
         target: 'http://mall.yifriend.net/',
         changeOrigin: true,

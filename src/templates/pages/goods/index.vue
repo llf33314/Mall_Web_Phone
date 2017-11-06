@@ -27,8 +27,8 @@
                 </div>
                 <div class="fs40  goods-info-other" v-if=" type == 4 || type == 7">
                     <div v-if="type == 7 " class="shopGray">
-                        原价<del>￥{{goodsData.productCostPrice}}</del>
-                        <span class="shop-font" > 会员价：￥{{goodsData.hyPrice}}</span>
+                        <!-- 原价<del>￥{{goodsData.productCostPrice}}</del> -->
+                        <span class="shop-font" v-if="goodsData.hyPrice > 0"> 会员价：￥{{goodsData.hyPrice}}</span>
                     </div>
                     <div class="shop-font" v-if="goodsData.auctionResult != '' &&  type == 4">
                         <span >保证金：</span>
@@ -107,12 +107,21 @@
                 <i class="iconfont icon-jiantou-copy shopGray"></i>
             </div>
         </section>
-        <section class="goods-selected" 
-                v-if="goodsData.isSpecifica "
+        <!-- <section class="goods-selected" 
+                v-if="goodsData.isSpecifica"
                 @click="isShow=true">
             <div class="goods-selected-main" >
                 <div class="fs40">
                     已选  {{dialogData.values}} {{spec_num}}份 
+                </div> 
+                <i class="iconfont icon-jiantou-copy shopGray"></i>
+            </div>
+        </section> -->
+        <section class="goods-selected" 
+                @click="isShow=true">
+            <div class="goods-selected-main" >
+                <div class="fs40">
+                    已选 {{dialogData.values}} {{spec_num}}份 
                 </div> 
                 <i class="iconfont icon-jiantou-copy shopGray"></i>
             </div>
@@ -260,7 +269,7 @@
                     </div>
                     <div class="goods-choice-box js-specValue">
                         <div v-for="(spec,index) in dialogData.specifica_ids" v-if="index == key" :key="index">
-                            <em class="fs40 em-choice " v-for=" specValue in item.specValues" :key="specValue"
+                            <em class="fs40 em-choice " v-for=" (specValue,i) in item.specValues" :key="i"
                                 @click="choice_product($event)" 
                                 :class="{'shop-bg':dialogData.specifica_ids[index]== specValue.id }"
                                 :value="specValue.id">
@@ -309,76 +318,108 @@
                     <p class="fs40 shop-font">批发价:¥ {{w_dialogData.pfPrice}}</span>
                     <p class="fs36 shop-font" v-if="w_dialogData.inv_num">库存{{w_dialogData.inv_num}}件</p>
                     <p class="fs36 shop-font" v-else>库存 0 件</p>
-                    <p class="fs36 shopGray" v-if="w_dialogData.hpMoney">本商品{{dialogw_dialogDataData.hpMoney}}手起批</p>
+                    <p class="fs36 shop-font" v-if="w_dialogData.inv_code">商品编号: {{w_dialogData.inv_code}}</p>
+                    <p class="fs36 shopGray"  v-if="w_dialogData.hpMoney">本商品{{dialogw_dialogDataData.hpMoney}}手起批</p>
                 </div>
             </div>
-            <div class="goods-dialog-choice" >
-                <!-- <div class="goods-choice-list2 border" v-if="goodsData.pifaResult.pfType==1"> -->
-                <div class="goods-choice-list2 border" v-if="pifaResult.pfType == 1">
-                    <div class="fs40">按一手货下单</div>
-                    <div class="goods-choice-button">
-                        <span class="fs36" @click="addw_specNum('-')">减一手</span>
-                        <span class="fs36" @click="addw_specNum('+')">加一手</span>
+            <div class="goods-dialog-choice">
+                <div v-if="w_dialogData.isSpec">
+                    <div class="goods-choice-list clearfix">
+                        <div class="goods-choice-title fs36">数量
+                        </div>
+                        <div class="goods-choice-box2">
+                            <em class="em-choice" @click="w_addSpecNumber('-')">-</em>
+                            <input  class="em-choice" 
+                                    v-model="w_dialogData.productNum" 
+                                    @blur="w_addSpecNumber('',index)"></input>
+                            <em class="em-choice" @click="w_addSpecNumber('+')">+</em>
+                        </div>
                     </div>
                 </div>
-                <div style="padding-bottom:20px" class="border">
-                    <div class="goods-choice-list clearfix" 
-                        v-for="(item,i) in w_specificaList"  
-                        :key = "i"
-                        v-if=" i == 0 && w_specificaList.length > 1">
-                        <div class="goods-choice-title fs36">{{item.specName}}
+                <div v-else>
+                <!-- <div class="goods-choice-list2 border" v-if="goodsData.pifaResult.pfType==1"> -->
+                    <div class="goods-choice-list2 border" v-if="pifaResult.pfType == 1">
+                        <div class="fs40">按一手货下单</div>
+                        <div class="goods-choice-button">
+                            <span class="fs36" @click="addw_specNum('-')">减一手</span>
+                            <span class="fs36" @click="addw_specNum('+')">加一手</span>
                         </div>
-                        <div class="goods-choice-box js-specValue">
-                            <div v-for="(spec,index) in w_dialogData.specifica_ids" v-if="index == i" :key = "index">
-                                <em class="fs40 em-choice " v-for=" (specValue,j) in item.specValues"
-                                    @click="choice_product($event,specValue.id)" 
-                                    :class="{'shop-bg':w_dialogData.specifica_ids[index] == specValue.id }"
-                                    :value="specValue.id"
-                                    :key = "j">
-                                    {{specValue.specValue}}
-                                </em>
+                    </div>
+                    <div style="padding-bottom:20px" class="border">
+                        <div class="goods-choice-list clearfix" 
+                            v-for="(item,i) in w_specificaList"  
+                            :key = "i"
+                            v-if=" i == 0 && w_specificaList.length > 1">
+                            <div class="goods-choice-title fs36">{{item.specName}}
+                            </div>
+                            <div class="goods-choice-box js-specValue">
+                                <div v-for="(spec,index) in w_dialogData.specifica_ids" v-if="index == i" :key = "index">
+                                    <em class="fs40 em-choice " v-for=" (specValue,j) in item.specValues"
+                                        @click="choice_product($event,specValue.id)" 
+                                        :class="{'shop-bg':w_dialogData.specifica_ids[index] == specValue.id }"
+                                        :value="specValue.id"
+                                        :key = "j">
+                                        {{specValue.specValue}}
+                                    </em>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="goods-choice-option1 border">
+                        <div class="goods-choice-li shop-box-justify" style="margin-bottom:5px">
+                            <div class="fs36" 
+                                v-for="(item,i) in w_specificaList" 
+                                v-if=" i > 0 && w_specificaList.length > 1" :key="i">{{item.specName}}</div>
+                            <div class="fs36">库存</div>
+                            <div class="fs36">价格</div>
+                            <div class="fs36" v-if="pifaResult.pfType == 1">数量</div>
+                            <div class="fs36 goods-option-number" v-else>选择数量</div>
+                        </div>
+                        <div class="goods-choice-li shop-box-justify" 
+                            v-for=" (test,index) in w_guigePrice" 
+                            v-if=" test.specifica_ids[0] == wholesaleId"
+                            :key="index">
+                            <div class="fs36" >{{test.values[1]}}</div>
+                            <div class="fs36" >{{test.values[2]}}</div>
+                            <div class="fs36" v-if="test.inv_num">{{test.inv_num}}</div>
+                            <div class="fs36" v-else>0</div>
+                            <div class="fs36">{{test.inv_price}}</div>
+                            <div class="fs36" v-if="pifaResult.pfType==1">{{w_specNum}}</div>
+                            <div class="goods-choice-box2" v-if="pifaResult.pfType==2">
+                                <em class="em-choice" @click="w_addSpecNumber('-',index)">-</em>
+                                <input class="em-choice" 
+                                    v-model.number="test.productNum" 
+                                    @blur="w_addSpecNumber('',index)">
+                                </input>
+                                <em class="em-choice" @click="w_addSpecNumber('+',index)">+</em>
                             </div>
                         </div>
                     </div>
                 </div>
-                    
-                <div class="goods-choice-option1 border">
-                    <div class="goods-choice-li shop-box-justify" style="margin-bottom:5px">
-                        <div class="fs36" 
-                            v-for="(item,i) in w_specificaList" 
-                            v-if=" i > 0 && w_specificaList.length > 1" :key="i">{{item.specName}}</div>
-                        <div class="fs36">库存</div>
-                        <div class="fs36">价格</div>
-                        <div class="fs36" v-if="pifaResult.pfType == 1">数量</div>
-                        <div class="fs36 goods-option-number" v-else>选择数量</div>
-                    </div>
-                    <div class="goods-choice-li shop-box-justify" 
-                        v-for=" (test,index) in w_guigePrice" 
-                        v-if=" test.specifica_ids[0] == wholesaleId"
-                        :key="index">
-                        <div class="fs36" >{{test.values[1]}}</div>
-                        <div class="fs36" >{{test.values[2]}}</div>
-                        <div class="fs36" v-if="test.inv_num">{{test.inv_num}}</div>
-                        <div class="fs36" v-else>0</div>
-                        <div class="fs36">{{test.pfPrice}}</div>
-                        <div class="fs36" v-if="pifaResult.pfType==1">{{w_specNum}}</div>
-                        <div class="goods-choice-box2" v-if="pifaResult.pfType==2">
-                            <em class="em-choice" @click="w_addSpecNumber('-',index)">-</em>
-                            <input class="em-choice" 
-                                v-model.number="test.productNum" 
-                                @blur="w_addSpecNumber('',index)">
-                            </input>
-                            <em class="em-choice" @click="w_addSpecNumber('+',index)">+</em>
-                        </div>
-                    </div>
+                <!--默认1手-->
+                 <div class="fs40 goods-choice-Total fs36 shop-textr" v-if="pifaResult.pfType ==1">
+                    满
+                    <!--手批-->
+                    <span v-if="pifaResult.pfSetObj.isSpHand == 1 && pifaResult.pfSetObj.spHand != '' ">{{pifaResult.pfSetObj.spHand}}手</span>
+                    <span v-else>1手</span>
+                    <span class="fs46 shop-font">￥{{pifaTotal}}</span>
+                    <span class="shop-font">.00 </span>共{{pifaAmount}}件
                 </div>
-                <div class="goods-choice-Total fs36 shop-textr" >
-                    满2手，达到批发条件，<span class="fs46 shop-font">￥43,106</span>
-                    <span class="shop-font">.00 </span>共2件
+                <div class="fs40 goods-choice-Total fs36 shop-textr" v-else>
+                    <!--混批-->
+                    满<span v-if="pifaResult.pfSetObj.isHpNum == 1 && pifaResult.pfSetObj.hpNum != ''">{{pifaResult.pfSetObj.hpNum}}件</span>
+                    <span v-if="pifaResult.pfSetObj.isHpNum == 1 && pifaResult.pfSetObj.isHpMoney == 1">或</span>
+                    <span v-if="pifaResult.pfSetObj.isHpMoney == 1 && pifaResult.pfSetObj.hpMoney != ''">{{pifaResult.pfSetObj.hpMoney}}元</span>
+                    <span v-if="pifaResult.pfSetObj.isHpNum ==0 && pifaResult.pfSetObj.isHpMoney == 0">1件</span>
+                    起批，<span class="fs46 shop-font">￥{{pifaTotal}}</span>
+                    <span class="shop-font">元</span> 共{{pifaAmount}}件
                 </div>
             </div>
             <div class="goods-dialog-footer">
-                <div class="goods-dialog-button fs52 shop-yellow" @click="addCard(2)">
+                <div class="goods-dialog-button fs52 shop-yellow " 
+                    :class="[(pifaTotal < pifaResult.pfSetObj.hpMoney || pifaAmount < pifaResult.pfSetObj.hpNum) ?'shopGray':'']"
+                    @click="addCard(2)">
                     加入购物车
                 </div>
                 <div class="goods-dialog-button fs52  shop-bg " >
@@ -461,6 +502,8 @@ export default {
         nav_choice: '',
         w_pfStatus:false,//是否能批发条件
         w_specNum:0,//批发手批数量,
+        pifaTotal:0,//批发总数
+        pifaAmount:0,//批发总价
         min_nav:[
             {
                 title:'商品详情',
@@ -480,12 +523,22 @@ export default {
   watch: {
       'nav_choice'(a,b){
         a == 'details'?this.isDetails = true:this.isDetails =false;
+      },
+      'w_guigePrice'(a,b){
+          console.log(a,b)
+      },
+      'w_guigePrice'(a,b){
+
       }
   },
   methods: {
     dialogShow(){
-        if(this.isSoldOut) return;
+        //弹出正常的
+         console.log(this.isShow )
+        // debugger
+        // if(!this.isSoldOut) return;
         this.isShow = true;
+        // console.log(this.isShow )
     },
     /** 
      * 查询商品接口
@@ -559,24 +612,46 @@ export default {
                     });
                     return
                 }
-                console.log(_this.dialogData,'dialogData');
                 
                 //弹出规格初始数据--无规格匹配
                 if(_this.$route.params.type == 7){
+                    //弹出框数据规定为 添加数据
+                    let _data = data.data;
                     
-                    _this.w_dialogData = data.data;
-                    //todo
-                    // let imageLists = _this.goodsData.imageList;//默认图片
-                    // imageLists.forEach((item,index)=>{
-                    //         if(item.isMainImages == 1){
-                    //             _this.dialogData.shopImageUrl = item.imageUrl;
-                    //         }  
-                    // })
-                    return
+                    _this.w_dialogData = {
+                        maxBuyNum:_data.maxBuyNum,//限购数量
+                        pfPrice:_data.pfPrice,//批发价格
+                        inv_num:_data.productStockTotal,//库存
+                        inv_code:_data.productCode,//默认编号
+                        isSpec: true, //没有数据判断
+                        productNum:1//购买数量
+                    }
+                    //库存为0,购买数量默认为值判断
+                    _data.productStockTotal==0? _this.w_dialogData.productNum = 0:_this.w_dialogData.productNum = 1;
+                    //默认图片 主图显示
+                    let imageLists = _this.goodsData.imageList;
+                    imageLists.forEach((item,index)=>{
+                            if(item.isMainImages == 1){
+                                _this.w_dialogData.specifica_img_url = item.imageUrl;
+                            }  
+                    })
+                    //console.log(_this.w_dialogData,'w_dialogData无规格')
                 }
-                _this.dialogData.inv_price = _this.commonFn.moneySplit(data.data.productPrice);//价钱
+                _this.dialogData = data.data;
+
+                 _this.dialogData.inv_price = data.data.productPrice;//价钱
                 _this.dialogData.inv_code = data.data.productCode;//默认编号
                 _this.dialogData.inv_num = data.data.productStockTotal;//默认库存
+                _this.dialogData.values = '';
+                let imageLists = _this.goodsData.imageList;
+                imageLists.forEach((item,index)=>{
+                        if(item.isMainImages == 1){
+                            _this.dialogData.specifica_img_url = item.imageUrl;
+                        }  
+                })
+                _this.dialogData.productStockTotal==0? _this.spec_num = 0:_this.spec_num = 1;
+                console.log(_this.dialogData,'dialogData无规格');
+                
                 
             }
         })
@@ -591,10 +666,10 @@ export default {
             'url': h5App.activeAPI.phoneProduct_getSpecifica_post,
             'data':data,
             'success':function(data){
-                // console.log(data,'批发数据');
+                //console.log(data,'批发数据');
                 _this.w_specificaList = data.data.specificaList;
                 _this.w_guigePrice = data.data.guigePrice;
-                
+
                 data.data.guigePrice.forEach((item,i)=>{//弹出规格初始值
                     item.specifica_ids = item.specifica_ids.split(',');
                     item.values = item.values.split(',');//批发 规格数组 分割
@@ -605,7 +680,6 @@ export default {
                         if(data.data.specificaList.length>0){//批发 第一组数据 默认id
                             _this.wholesaleId = item.specifica_ids[0];
                         }
-
                         if(!item.specifica_img_url){
                             //判断是规格集合里面是否有匹配图片没有使用img主图
                             let imageLists = _this.goodsData.imageList;
@@ -662,7 +736,11 @@ export default {
      */
     addSpec_number(e){
         let _this =this;
-       
+        //库存为0 
+        if( _this.dialogData.inv_num == 0){
+            _this.$parent.$refs.bubble.show_tips('商品已售罄');
+            return
+        }
         if(_this.spec_num<0){
             _this.$parent.$refs.bubble.show_tips('数量不能小于1');
            _this.spec_num = 1;
@@ -698,6 +776,11 @@ export default {
     addw_specNum(e){
         let _this =this;
        
+       //库存为0 
+        if( _this.w_specNum.inv_num == 0){
+            _this.$parent.$refs.bubble.show_tips('商品已售罄');
+            return
+        }
         if(_this.w_specNum<0){
             _this.$parent.$refs.bubble.show_tips('数量不能小于1');
            _this.w_specNum = 1;
@@ -728,30 +811,21 @@ export default {
         }
     },
     /** 
-     * 批发条件--判断批发资格
-     */
-    wholesaleShow(){
-        let _this = this;
-        let data = _this.goodsData.pifaResult;
-        console.log(data,'pifaResult');
-        console.log(_this.w_dialogData,'w_dialogData',_this.w_guigePrice,_this.w_specificaList);
-        
-        //"pfStatus"--//批发状态  0 未审核  1审核通过   -1 审核不通过  -2还未申请
-        if(!_this.w_pfStatus){//跳转申请页
-            _this.$parent.$refs.bubble.show_tips(data.pfErrorMsg);
-            _this.$router.push('/wholesale/apply');
-            return
-        }
-        _this.isWholesale = true;
-    },
-    /** 
-     * 规格数量加减--批发
+     * 规格数量加减--批发混批
      */
     w_addSpecNumber(e,index){
         let _this =this;
-        let _data = _this.w_guigePrice[index];//当前要改变的数据
-            
-        //console.log(_data,'_data');
+        let _data;//当前要改变的数据
+        /*
+        有规格 - 从返回规格列表中获取（w_guigePrice）
+        无规格 - 从初始默认数据中获取（w_dialogData）
+        */
+        _this.w_guigePrice == '' ?_data = _this.w_dialogData:_this.w_guigePrice[index];
+        //库存为0 
+        if( _data.inv_num == 0){
+            _this.$parent.$refs.bubble.show_tips('商品已售罄');
+            return
+        }
 
         if(_data.productNum < 0){
             _this.$parent.$refs.bubble.show_tips('数量不能小于0');
@@ -773,7 +847,7 @@ export default {
                 _this.$parent.$refs.bubble.show_tips('超出限购数量');
                 return
             }
-            //超出规格库存
+            //库存不为0，超出规格库存
             if(_data.productNum >= _data.inv_num){
                  _this.$parent.$refs.bubble.show_tips('超出现有库存量');
                  _data.productNum = _data.inv_num;
@@ -789,6 +863,23 @@ export default {
                 return
             }
         }
+    },
+    /** 
+     * 批发条件--判断批发资格
+     */
+    wholesaleShow(){
+        let _this = this;
+        let data = _this.goodsData.pifaResult;
+        console.log(data,'pifaResult');
+        //console.log(_this.w_dialogData,'w_dialogData',_this.w_guigePrice,_this.w_specificaList);
+        
+        //"pfStatus"--//批发状态  0 未审核  1审核通过   -1 审核不通过  -2还未申请
+        if(!_this.w_pfStatus){//跳转申请页
+            _this.$parent.$refs.bubble.show_tips(data.pfErrorMsg);
+            _this.$router.push('/wholesale/apply');
+            return
+        }
+        _this.isWholesale = true;
     },
     /**
      * 选择规格 
@@ -830,6 +921,34 @@ export default {
 
     },
     /** 
+     * 批发总件总数 单价 数量
+     * 
+     */
+    add_pifa(){
+        let _this = this;
+    },
+    /** 
+     * 添加购物车
+     */
+    addCard(e){
+        let data;
+        let  _this = this;
+        let arr=[];
+        if(e===1){
+            data = _this.guigePrice;
+        }else{
+            data = _this.w_guigePrice;
+            let arr=[];
+
+            data.forEach((item,i)=>{
+                if(item.productNum > 0){
+                    arr.push(item);
+                }
+            })
+            console.log(arr)
+        }
+    },
+    /** 
      * 收藏店铺
      */
     collectProductAjax(){
@@ -853,26 +972,6 @@ export default {
                 }
             } 
         })
-    },
-    /** 
-     * 添加购物车
-     */
-    addCard(e){
-        let data;
-        let  _this = this;
-        let arr=[];
-        if(e===1){
-            data = _this.guigePrice;
-        }else{
-            data = _this.w_guigePrice;
-            let arr=[];
-            data.forEach((item,i)=>{
-                if(item.productNum > 0){
-                    arr.push(item);
-                }
-            })
-            console.log(arr)
-        }
     },
     /** 
      * 切换副导航

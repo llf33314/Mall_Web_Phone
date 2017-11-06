@@ -3,6 +3,12 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
+/** 获取使用方法 
+ * dom里 $store.state.xxx
+ * vue里 this.$store.state.xxx
+ * 改变状态 要用 mutations 里的方法
+ * this.$store.commit('mutationData',{loginDTO_URL:window.location.href});
+*/
 // 存储状态值
 const state = {
     app_name : '多粉商城',
