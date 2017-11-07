@@ -1,67 +1,85 @@
 <template>
 <div id='app' class="shop-wrapper  order-wrapper">  
-    <header-nav :headers= 'homeNav'></header-nav>  
-    <section class="shop-main order-main">
+    <header-nav :headers= "homeNav"></header-nav>  
+    <content-no :statu="statu" v-if="isShowNullContent"></content-no>
+    <section class="shop-main order-main" v-if="!isShowNullContent">
         <div class="order-box">
-            <div class="order-item">
+            <div class="order-item" v-for="(busItem,index) in orderList">
                 <div class="order-item-title fs40">
                     <div class="order-title-img">
-                        <default-img :background="background"
+                        <default-img :background="busItem.busImageUrl"
                                         :isHeadPortrait="1">
                         </default-img>
                     </div>
-                    <span>广东谷通科技有限公司</span>
+                    <span>{{busItem.busName}}</span>
                 </div>
                 <div class="order-shop border">
                     <p class="order-shop-name">
                         <i class="iconfont icon-dianpu"></i>
-                        <span class="fs36">江北店</span>
+                        <span class="fs36">{{busItem.shopName}}</span>
                         <i class="iconfont icon-you"></i>
                     </p>
                     <p class="shop-font fs42">
-                        待发货
+                        {{busItem.orderStatusName}}
                     </p>
                 </div>
-                <div class="order-item-box ">
+                <div class="order-item-box " v-for="detail in busItem.detailResultList">
                     <div class="order-item-content  border">
                         <div class="order-item-img">
-                            <default-img :background="background"
+                            <default-img  
+                                :background="imgUrl+detail.productImageUrl"
                                         :isHeadPortrait="0">
                             </default-img>
                         </div>
                         <div class="order-item-txt">
-                            <p class="fs42">Apple iPhone 7 Plus (A1661) 128GB 玫瑰金 色 移动联通电信4G手机</p>
-                            <p class="fs42 shop-font">¥7,199.<span class="fs32">00</span></p>
-                            <p class="fs36 shopGray">玫瑰金/128GB/1件/包邮</p>
+                            <p class="fs42">{{detail.productName}}</p>
+                            <p class="fs42 shop-font">¥{{detail.productPrice[0]}}.<span class="fs32">{{detail.productPrice[1]}}</span></p>
+                            <p class="fs36 shopGray">
+                                <span v-if="detail.productSpecificaValue != ''">{{detail.productSpecificaValue}}/</span>
+                                {{detail.productNum}}件</p>
+                        </div>
+                    </div>
+                    <div class="order-item-button fs42 border"  v-if="detail.isShowApplyReturnButton == 1 || detail.isShowCommentButton == 1 ">
+                        <div class="order-button shop-bg" 
+                            v-if="detail.isShowApplyReturnButton == 1">
+                            申请退款
+                        </div>
+                        <div class="order-button shop-bg"
+                            v-if="detail.isShowCommentButton == 1">
+                            评论
                         </div>
                     </div>
                 </div>
+                
                 <div class="order-number-time border">
                     <div class="order-number fs42">
-                        订单号：<span>DCS95270012</span>
+                        订单号：<span>{{busItem.orderNo}}</span>
                     </div>
                     <div class="order-time fs42">
-                        下单时间：<span>2017.03.17 16:02:00</span>
+                        下单时间：<span>{{busItem.orderCreateTime}}</span>
                     </div>
                 </div>
                 <div class="order-item-total border fs42">
-                    共计1件商品 合计：￥7,199.00
+                    共计{{busItem.totalNum}}件商品 合计：￥{{busItem.orderMoney[0]}}.{{busItem.orderMoney[1]}}
                 </div>
-                <div class="order-item-button fs42">
-                    <div class="order-button shop-bg">
-                        取消订单
-                    </div>
-                    <div class="order-button shop-bg">
+                <div class="order-item-button fs42"  v-if="busItem.isShowGoPayButton == 1 || busItem.isShowReceiveGoodButton == 1 || busItem.isShowDaifuButton == 1">
+                    <div class="order-button shop-bg" 
+                        v-if="busItem.isShowGoPayButton == 1">
                         去支付
                     </div>
-                </div>
-                    <div class="order-item-button fs42">
-                    <div class="order-button shop-bg">
-                        查看订单
-                    </div>
                     <div class="order-button shop-bg"
+                        v-if="busItem.isShowReceiveGoodButton == 1"
                         @click="sure_dialog">
                         确定收货
+                    </div>
+                    <div class="order-button shop-bg" 
+                        v-if="busItem.isShowDaifuButton == 1">
+                        代付详情
+                    </div>
+                </div>
+                <!-- <div class="order-item-button fs42">
+                    <div class="order-button shop-bg">
+                        查看订单
                     </div>
                 </div>
                 <div class="order-item-button fs42">
@@ -79,7 +97,7 @@
                        @click="revoke_dialog">
                         撤销退款
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </section>
@@ -91,223 +109,349 @@
 </template>
 
 <script>
-import Lib from 'assets/js/Lib';
-import contentNo from 'components/contentNo'
-import headerNav from 'components/headerNav'
-import shopDialog from 'components/shopDialog'
-import defaultImg from 'components/defaultImg'
+import contentNo from "components/contentNo";
+import headerNav from "components/headerNav";
+import shopDialog from "components/shopDialog";
+import defaultImg from "components/defaultImg";
 
 export default {
-    name: 'myorder',	
-    data () {
-        return {
-            homeNav: ['全部', '待付款', '待发货','待收货','已完成'],
-            bondStatu: 2,
-            isShow: false,
-            background: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1501765343077&di=5d3652848769c1abd7eb25dea007bb1d&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D450%252C600%2Fsign%3Dcf8442791bd8bc3ec65d0eceb7bb8a28%2Fb3119313b07eca80c63dcea4932397dda14483bd.jpg'
-        }
-    },
-    mounted() {
-
-    },
-    components:{
-        headerNav,contentNo,shopDialog,defaultImg
-    },
-    methods: {
-        order_ulShow(){
-            $('.orderTotal-ul').toggleClass('shop-hide');
-            $('.icon-up').toggleClass('shop-hide');
-            $('.icon-jiantou').toggleClass('shop-hide');
-        },
-        sure_dialog(){
-            var _this = this;
-           // _this.disableScroll();
-            var msg = {//弹出框组件调用
-                'btnNum': '2',
-                'dialogMsg': '确定已经到货？',
-                'btnOne': '关闭',
-                'btnTow': '确定',
-                'dialogTitle':'提示',
-                'callback': {
-                    'btnOne': function () {
-                        //关闭
-                        //_this.allowScroll();
-                    },
-                    'btnTow': function () {
-                        //确定
-                        //_this.allowScroll();
-                    }
-                }
-            }
-            console.log( _this.$refs)
-            _this.$refs.dialog.showDialog(msg);//弹出框
-        },
-        revoke_dialog(){
-            var _this = this;
-            //_this.disableScroll();
-            var msg = {//弹出框组件调用
-                'btnNum': '2',
-                'dialogMsg': '如您主动关闭正在处理的退款后，您将无法 再次发起退款申请，请务必谨慎操作。',
-                'btnOne': '确定',
-                'btnTow': '关闭',
-                'dialogTitle':'提示',
-                'callback': {
-                    'btnOne': function () {
-                        //确定
-                        //_this.allowScroll();
-                    },
-                    'btnTow': function () {
-                        //关闭
-                        //_this.allowScroll();
-                    }
-                }
-            }
-            _this.$refs.dialog.showDialog(msg);//弹出框
-        }
+  name: "myorder",
+  data() {
+    return {
+      homeNav: [
+        { id: 0, name: "全部" },
+        { id: 1, name: "待付款" },
+        { id: 2, name: "待发货" },
+        { id: 3, name: "待收货" },
+        { id: 4, name: "已完成" }
+      ],
+      statu: 1,
+      bondStatu: 2,
+      isShow: false,
+      isShowNullContent:true,
+      background:
+        "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1501765343077&di=5d3652848769c1abd7eb25dea007bb1d&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D450%252C600%2Fsign%3Dcf8442791bd8bc3ec65d0eceb7bb8a28%2Fb3119313b07eca80c63dcea4932397dda14483bd.jpg",
+      busId: 0, //商家id
+      type: 0, //查看订单类型 0查看全部订单 1待付款订单 2待发货订单 3已发货订单 4已完成订单 5 待评价 6 退款 7团购 8 秒杀
+      curPage: 0, //当前页数
+      pageCount: 1, //页面总数
+      orderId: 0, //订单id
+      orderList: [], //订单集合
+      isMore: 1, //控制没有更多的显示 1显示 -1 不显示
+      imgUrl: "" //图片域名
+    };
+  },
+  mounted() {
+    let _this = this;
+    _this.busId = _this.$route.params.busId;
+    _this.type = _this.$route.params.type;
+    _this.loadMore();
+    $(window).bind("scroll", function() {
+      var isScroll =
+        $(window).scrollTop() > 0 &&
+        $(window).scrollTop() >=
+          $(document).height() - $(window).height() - 1000;
+      if (isScroll) {
+        _this.loadMore();
+      }
+    });
+  },
+  watch: {
+    $route(a, b) {
+      this.type = this.$route.params.type;
+      this.getOrderList({
+        curPage: 1,
+        type: this.type
+      });
+      this.setTitle();
     }
-}
+  },
+  components: {
+    headerNav,
+    contentNo,
+    shopDialog,
+    defaultImg
+  },
+  methods: {
+    loadMore() {
+      console.log("加载更多", this.isMore);
+      this.curPage++; //请求页数
+      let pageCount = this.pageCount; //总页数
+      if (this.curPage > pageCount || this.isMore != 1) {
+        this.isMore = -1;
+        return;
+      }
+      this.isMore = 0;
+      this.getOrderList({
+        curPage: this.curPage
+      });
+      this.setTitle();
+    },
+    getOrderList(data) {
+      let _this = this;
+      let _data = {
+        busId: _this.busId, //商家id
+        url: location.href, //当前页面地址
+        browerType: _this.$store.state.browerType, //浏览器类型 1微信 99 其他浏览器
+        type: data.type == "" ? _this.type : data.type,
+        curPage: data.curPage
+      };
+      _this.commonFn.ajax({
+        url: h5App.activeAPI.order_list_post,
+        data: _data,
+        success: function(data) {
+          if (data.code == 1001) {
+            location.href = data.url;
+          }
+          if (data.code != 1) {
+            return;
+          }
+          let _returnData = data.data;
+          _this.orderData = _returnData;
+          let newOrderList = _returnData.orderResultList;
+          _this.curPage = _returnData.curPage;
+          _this.pageCount = _returnData.pageCount;
+          _this.imgUrl = data.imgUrl;
+          newOrderList.forEach((item, index) => {
+            item.orderMoney = _this.commonFn.moneySplit(item.orderMoney);
+            item.detailResultList.forEach((detailItem, index2) => {
+              detailItem.productPrice = _this.commonFn.moneySplit(
+                detailItem.productPrice
+              ); //价钱显示效果
+            });
+          });
+          _this.isMore = 1;
+          if (_this.curPage === 1) {
+            //第一页数据
+            _this.orderList = newOrderList;
+          } else {
+            _this.orderList = _this.orderList.concat(newOrderList) || []; //拼接多页数据
+          }
+          //_this.isShowNullContent = false;
+        }
+      });
+    },
+    order_ulShow() {
+      $(".orderTotal-ul").toggleClass("shop-hide");
+      $(".icon-up").toggleClass("shop-hide");
+      $(".icon-jiantou").toggleClass("shop-hide");
+    },
+    sure_dialog() {
+      var _this = this;
+      // _this.disableScroll();
+      var msg = {
+        //弹出框组件调用
+        btnNum: "2",
+        dialogMsg: "您确定已经到货？",
+        btnOne: "取消",
+        btnTow: "确定",
+        dialogTitle: "确认收货提示",
+        callback: {
+          btnOne: function() {
+            //关闭
+            //_this.allowScroll();
+          },
+          btnTow: function() {
+            //确定
+            //_this.allowScroll();
+          }
+        }
+      };
+      console.log(_this.$refs);
+      _this.$refs.dialog.showDialog(msg); //弹出框
+    },
+    revoke_dialog() {
+      var _this = this;
+      //_this.disableScroll();
+      var msg = {
+        //弹出框组件调用
+        btnNum: "2",
+        dialogMsg: "如您主动关闭正在处理的退款后，您将无法 再次发起退款申请，请务必谨慎操作。",
+        btnOne: "确定",
+        btnTow: "关闭",
+        dialogTitle: "提示",
+        callback: {
+          btnOne: function() {
+            //确定
+            //_this.allowScroll();
+          },
+          btnTow: function() {
+            //关闭
+            //_this.allowScroll();
+          }
+        }
+      };
+      _this.$refs.dialog.showDialog(msg); //弹出框
+    },
+    returnMyOrder(type) {
+      this.$store.commit("mutationData", { busId: this.busId });
+      this.$router.push("/order/list/" + this.busId + "/" + type);
+    },
+    setTitle() {
+      let _this = this;
+      let titles = "我的订单";
+      if (_this.type > 0 && _this.type < 5) {
+        titles = _this.homeNav[_this.type].name + "订单";
+      } else if (_this.type == 5) {
+        titles = "待评价订单";
+      } else if (_this.type == 6) {
+        titles = "退款订单";
+      } else if (_this.type == 7) {
+        titles = "团购订单";
+      } else if (_this.type == 8) {
+        titles = "秒杀订单";
+      }
+      console.log(_this.type);
+      console.log(titles);
+      this.commonFn.setTitle(titles);
+    }
+  }
+};
 </script>
 
 <style lang="less" scoped>
+@import "../../../assets/css/mixins.less";
+@import "../../../assets/css/base.less";
 
-@import '../../../assets/css/mixins.less';
-@import '../../../assets/css/base.less';
-
-.order-content{
-        width: 100%;
-        background: #fff;
-        .logistics-title{
-            padding: 50/ @dev-Width *1rem 35/ @dev-Width *1rem;
-            line-height: 1; 
-            .logistics-img{
-                width: 60/ @dev-Width *1rem;
-                height: 60/ @dev-Width *1rem;
-                .border-radius(100%);
-                margin-right: 20/ @dev-Width *1rem;
-                border: 1px solid #ededed;
-            }
-        }
-        .logistics-list{
-            width: 100%;
-            padding-left: 82/ @dev-Width *1rem;
-            padding-right: 30/ @dev-Width *1rem;
-            line-height: 1;
-            overflow: hidden;
-            .logistics-item{
-                padding: 40/@dev-Width *1rem 0 40/@dev-Width *1rem 82/ @dev-Width *1rem ;
-                position: relative;
-                height: 235/@dev-Width *1rem;
-                .logistics-txt{
-                    line-height: 0.35rem;
-                    margin-bottom: 15/@dev-Width *1rem;
-                }
-                em{
-                    position: absolute;
-                    width: 25/@dev-Width *1rem;
-                    height: 25/@dev-Width *1rem;
-                    background: #dddddd;
-                    top: 50/@dev-Width *1rem;
-                    left: -((25+3)/2)/@dev-Width *1rem;
-                    .border-radius(100%);
-                }
-                &::after{
-                    content: '';
-                    position: relative;
-                    display: inline-block;
-                    width: 3/@dev-Width *1rem;
-                    height: 200%;
-                    background: #dddddd;
-                    left: -(86)/@dev-Width *1rem;
-                    top: -(120)/@dev-Width *1rem;;
-                }
-            }
-            &>div:first-child{
-                color: #0bb453;
-                em{
-                    background: #0bb453;
-                    box-shadow: 0px 0px 0px 2px  rgba(11, 180, 83, 0.3);
-                }
-            }
-        }
+.order-content {
+  width: 100%;
+  background: #fff;
+  .logistics-title {
+    padding: 50/ @dev-Width *1rem 35/ @dev-Width *1rem;
+    line-height: 1;
+    .logistics-img {
+      width: 60/ @dev-Width *1rem;
+      height: 60/ @dev-Width *1rem;
+      .border-radius(100%);
+      margin-right: 20/ @dev-Width *1rem;
+      border: 1px solid #ededed;
     }
-    .order-main{
-        padding-top: 148/@dev-Width *1rem;
-    }
-    .order-main,.deltails-main{
+  }
+  .logistics-list {
+    width: 100%;
+    padding-left: 82/ @dev-Width *1rem;
+    padding-right: 30/ @dev-Width *1rem;
+    line-height: 1;
+    overflow: hidden;
+    .logistics-item {
+      padding: 40/@dev-Width *1rem 0 40/@dev-Width *1rem 82/ @dev-Width *1rem;
+      position: relative;
+      height: 235/@dev-Width *1rem;
+      .logistics-txt {
+        line-height: 0.35rem;
+        margin-bottom: 15/@dev-Width *1rem;
+      }
+      em {
+        position: absolute;
+        width: 25/@dev-Width *1rem;
+        height: 25/@dev-Width *1rem;
+        background: #dddddd;
+        top: 50/@dev-Width *1rem;
+        left: -((25+3)/2)/@dev-Width *1rem;
+        .border-radius(100%);
+      }
+      &::after {
+        content: "";
         position: relative;
-        .order-box{
-            width: 100%;
-        }
-        .order-item{
-            width: 100%;
-            margin-bottom: 20/@dev-Width *1rem;
-            background: #fff;
-        }
-        .order-item-title{
-            padding: 0 40/@dev-Width *1rem;
-            background: #fafafa;
-            height: 135 /@dev-Width *1rem;
-            .ik-box;
-            .ik-box-align(center);
-            .order-title-img{
-                width: 80 /@dev-Width *1rem;
-                height: 80 /@dev-Width *1rem;
-                .border-radius(100%);
-                border: 1px solid #efefef;
-                background-size: cover;
-                overflow:hidden
-            }
-            span{
-                margin-left: 20 /@dev-Width *1rem;
-                font-weight: bold;
-            }
-        }
-        .order-shop{
-            width: 100%;
-            height: 116 /@dev-Width *1rem;
-            padding-left: 40 /@dev-Width *1rem;
-            padding-right: 30/@dev-Width *1rem;
-            .ik-box;
-            .ik-box-align(center);
-            .ik-box-pack(justify);
-            font-size: 0;
-        }
-        .order-shop-name{
-            span{
-                    margin: 30/@dev-Width *1rem;
-            }
-        }
-        .order-item-content,.order-number-time{
-            .ik-box;
-            .ik-box-pack(justify);
-            width: 100%;
-            padding: 24/@dev-Width *1rem 30/@dev-Width *1rem  24/@dev-Width *1rem 40/@dev-Width *1rem;
-            .order-item-img{
-                width: 265  /@dev-Width *1rem;
-                height: 265 /@dev-Width *1rem;
-                background-size: cover; 
-            }
-            .order-item-txt{
-                width: 73%;
-                p{
-                    margin-bottom: 20 /@dev-Width *1rem
-                }
-            }
-        }
-        .order-item-total,.order-item-button,.order-number-time{
-            width: 100%; 
-            padding: 38/@dev-Width *1rem 30/@dev-Width *1rem  38/@dev-Width *1rem 40/@dev-Width *1rem;
-            text-align: right;
-            .order-button{
-                color: #fff;
-                width: 254/@dev-Width *1rem;
-                height: 88 /@dev-Width *1rem;
-                line-height: 88/@dev-Width *1rem;
-                display: inline-block;
-                .border-radius(5px);
-                text-align: center;
-                margin-left: 20/@dev-Width *1rem;
-            }
-        }
+        display: inline-block;
+        width: 3/@dev-Width *1rem;
+        height: 200%;
+        background: #dddddd;
+        left: -(86)/@dev-Width *1rem;
+        top: -(120)/@dev-Width *1rem;
+      }
     }
+    & > div:first-child {
+      color: #0bb453;
+      em {
+        background: #0bb453;
+        box-shadow: 0px 0px 0px 2px rgba(11, 180, 83, 0.3);
+      }
+    }
+  }
+}
+.order-main {
+  padding-top: 148/@dev-Width *1rem;
+}
+.order-main,
+.deltails-main {
+  position: relative;
+  .order-box {
+    width: 100%;
+  }
+  .order-item {
+    width: 100%;
+    margin-bottom: 20/@dev-Width *1rem;
+    background: #fff;
+  }
+  .order-item-title {
+    padding: 0 40/@dev-Width *1rem;
+    background: #fafafa;
+    height: 135 /@dev-Width *1rem;
+    .ik-box;
+    .ik-box-align(center);
+    .order-title-img {
+      width: 80 /@dev-Width *1rem;
+      height: 80 /@dev-Width *1rem;
+      .border-radius(100%);
+      border: 1px solid #efefef;
+      background-size: cover;
+      overflow: hidden;
+    }
+    span {
+      margin-left: 20 /@dev-Width *1rem;
+      font-weight: bold;
+    }
+  }
+  .order-shop {
+    width: 100%;
+    height: 116 /@dev-Width *1rem;
+    padding-left: 40 /@dev-Width *1rem;
+    padding-right: 30/@dev-Width *1rem;
+    .ik-box;
+    .ik-box-align(center);
+    .ik-box-pack(justify);
+    font-size: 0;
+  }
+  .order-shop-name {
+    span {
+      margin: 30/@dev-Width *1rem;
+    }
+  }
+  .order-item-content,
+  .order-number-time {
+    .ik-box;
+    .ik-box-pack(justify);
+    width: 100%;
+    padding: 24/@dev-Width *1rem 30/@dev-Width *1rem 24/@dev-Width *1rem 40/@dev-Width *1rem;
+    .order-item-img {
+      width: 265 /@dev-Width *1rem;
+      height: 265 /@dev-Width *1rem;
+      background-size: cover;
+    }
+    .order-item-txt {
+      width: 73%;
+      p {
+        margin-bottom: 20 /@dev-Width *1rem;
+      }
+    }
+  }
+  .order-item-total,
+  .order-item-button,
+  .order-number-time {
+    width: 100%;
+    padding: 38/@dev-Width *1rem 30/@dev-Width *1rem 38/@dev-Width *1rem 40/@dev-Width *1rem;
+    text-align: right;
+    .order-button {
+      color: #fff;
+      width: 254/@dev-Width *1rem;
+      height: 88 /@dev-Width *1rem;
+      line-height: 88/@dev-Width *1rem;
+      display: inline-block;
+      .border-radius(5px);
+      text-align: center;
+      margin-left: 20/@dev-Width *1rem;
+    }
+  }
+}
 </style>

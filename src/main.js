@@ -17,9 +17,9 @@ import storeConfig from './vuex/store'
 
 import jq from './lib/jquery-2.2.2.min';
 
-//消除移动端300ms延迟
-import FastClick from 'fastclick'
-FastClick.attach(document.body);
+// //消除移动端300ms延迟
+// import FastClick from 'fastclick'
+// FastClick.attach(document.body);
 
 new Vue({
   el: '#app',

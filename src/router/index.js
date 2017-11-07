@@ -38,6 +38,9 @@ const Wholesale_Apply = resolve => require(['pages/wholesale/apply'], resolve);
 
 const my_center = resolve => require(['pages/my/myApp'], resolve);
 //my_center =>我的
+const my_order_list = resolve => require(['pages/order/index'], resolve);
+//my_order_list =>订单列表
+
 Vue.use(Router)
 
 export default new Router({
@@ -128,7 +131,7 @@ export default new Router({
         }
       ]
     },{
-      path: '/wholesale/apply',
+      path: '/wholesale/apply/:busId',
       name: 'Wholesale_Apply',
       component: Wholesale_Apply,
       meta: {
@@ -147,6 +150,13 @@ export default new Router({
       component: Sale_index,
       meta: {
         title: '超级营销员首页'
+      }
+    },{
+      path: '/order/list/:busId/:type',
+      name: 'my_order_list',
+      component: my_order_list,
+      meta: {
+        title: '我的订单'
       }
     }
   ]

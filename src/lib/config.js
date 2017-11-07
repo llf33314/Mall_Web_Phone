@@ -87,9 +87,11 @@
     /*查询商品规格参数接口*/
     phoneProduct_getProductParams_post: '/phoneProduct/L6tgXlBFeK/getProductParams',
     /*加入购物车接口*/
-    phoneShopCart_addShopCart_post:'/phoneShopCart/79B4DE7C/addShopCart',
+    phoneShopCart_addShopCart_post: '/phoneShopCart/79B4DE7C/addShopCart',
     /*获取我的页面数据*/
-    my_center_post: '/phoneMember/L6tgXlBFeK/toUser'
+    my_center_post: '/phoneMember/L6tgXlBFeK/toUser',
+    /*获取我的订单数据 */
+    order_list_post: '/phoneOrder/L6tgXlBFeK/orderList'
   };
 
   window.h5App = h5App;
