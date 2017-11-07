@@ -425,7 +425,7 @@
                     <span v-if="pifaResult.pfSetObj.isSpHand == 0 ">满1手</span>
                     <span v-if="pifaAmount < pifaResult.pfSetObj.spHand">还差{{pifaResult.pfSetObj.spHand-pifaAmount}}手达到批发条件</span>
                     <span class="fs46 shop-font">￥{{pifaTotal}}</span>
-                    <span class="shop-font">.00 </span>共{{pifaAmount}} {{pifaResult.pfSetObj.spHand}}件
+                    <span class="shop-font">.00 </span>共{{pifaAmount}}件
                 </div>
                 <div class="fs40 goods-choice-Total fs36 shop-textr" v-else>
                     <!--混批-->
@@ -434,18 +434,18 @@
                     <span v-if="pifaResult.pfSetObj.isHpMoney == 1 && pifaResult.pfSetObj.hpMoney != ''">{{pifaResult.pfSetObj.hpMoney}}元</span>
                     <span v-if="pifaResult.pfSetObj.isHpNum ==0 && pifaResult.pfSetObj.isHpMoney == 0">1件</span>
                     起批，<span class="fs46 shop-font">￥{{pifaTotal}}</span>
-                    <span class="shop-font">元</span> 共{{pifaAmount}}件
+                    <span class="shop-font">元</span> 共{{pifaAmount}}手
                 </div>
             </div>
             <div class="goods-dialog-footer" v-if="pifaResult.pfType == 1" >
                 <div class="goods-dialog-button fs52 shop-yellow" 
                     :class="[pifaTotal < pifaResult.pfSetObj.spHand?'shopRgba':'']"
                     @click="addCard(2)">
-                    加入购物车 
+                    加入购物车 {{pifaAmount}}   {{pifaResult.pfSetObj.spHand}}
                 </div>
                 <div class="goods-dialog-button fs52  shop-bg " 
                    :class="[pifaTotal < pifaResult.pfSetObj.spHand?'shopRgba':'']">
-                    立刻批发
+                    立刻批发 {{pifaAmount}}   {{pifaResult.pfSetObj.spHand}}
                 </div> 
             </div>
             <div class="goods-dialog-footer" v-if="pifaResult.pfType == 2" >
@@ -830,7 +830,6 @@ export default {
      */
     addw_specNum(c){
         let _this =this;
-        console.log(this.w_dialogData,'w_dialogData')
        //库存为0 
         if( _this.w_specNum.inv_num == 0){
             _this.w_specNum = 0;
