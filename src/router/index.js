@@ -121,15 +121,6 @@ export default new Router({
       meta: {
         title: '商品详情'
       },
-      children: [{
-          path: '/goods/spec/:shopId/:busId/:type/:goodsId/:activityId',
-          component: Goods_Spec
-        },
-        {
-          path: '/goods/comment/:shopId/:busId/:type/:goodsId/:activityId',
-          component: Goods_Comment
-        }
-      ]
     },{
       path: '/wholesale/apply/:busId',
       name: 'Wholesale_Apply',

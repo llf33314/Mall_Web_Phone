@@ -1,22 +1,14 @@
 <template>
   <div class="comment-main">
-      <div class="comment-nav border">
-        <div class="em-nav fs36" v-if="countMap.all"
-            @click="commentAjax('','评论')">全部({{countMap.all}})</div>
-        <div class="em-nav fs36" v-else
-            @click="commentAjax('','评论')">全部(0)</div>
-        <div class="em-nav fs36" v-if="countMap.hao"
-            @click="commentAjax(1,'好评')">好评({{countMap.hao}})</div>
-        <div class="em-nav fs36" v-else
-            @click="commentAjax(1,'好评')">好评(0)</div>
-        <div class="em-nav fs36" v-if="countMap.zhong"
-            @click="commentAjax(0,'中评')" >中评({{countMap.zhong}})</div>
-        <div class="em-nav fs36" v-else
-            @click="commentAjax(0,'中评')" >中评(0)</div>
-        <div class="em-nav fs36" v-if="countMap.cha"
-            @click="commentAjax(-1,'差评')" >差评({{countMap.cha}})</div>
-        <div class="em-nav fs36" v-else
-            @click="commentAjax(-1,'差评')" >差评(0)</div>
+      <div class="comment-nav border" v-if="isShow == 1">
+        <div class="em-nav fs36" 
+            @click="commentAjax('','评论',countMap.all)">全部({{countMap.all}})</div>
+        <div class="em-nav fs36" 
+            @click="commentAjax(1,'好评',countMap.hao)">好评({{countMap.hao}})</div>
+        <div class="em-nav fs36" 
+            @click="commentAjax(0,'中评',countMap.zhong)" >中评({{countMap.zhong}})</div>
+        <div class="em-nav fs36"
+            @click="commentAjax(-1,'差评',countMap.cha)" >差评({{countMap.cha}})</div>
       </div>
       <div class="comment-no" v-if="isShow == 0">
           <p class="fs40 shopGray">暂无{{textNo}}</p>
@@ -82,9 +74,12 @@ export default {
     /**
      * 查询商品评价接口（商品详情页面）
      */
-    commentAjax(feel,name){
+    commentAjax(feel,name,count){
         let _this = this;
         _this.textNo = name||'评论';
+
+        if(count===0) return;
+        
         _this.commonFn.ajax({
         'url': h5App.activeAPI.phoneProduct_getProductComment_post,
         'data':{
@@ -93,6 +88,7 @@ export default {
             feel: feel || ''
         },
         'success':function(data){
+            
             if(data.code == -1 || !data.data.commentList){
                 _this.isShow = 0;
                 return
@@ -115,13 +111,14 @@ export default {
             }
             //初始值全部
             _this.commentList = data.data.commentList;
-            _this.countMap = data.data.countMap;
-            let  all = 0 ;
-
-            $.each( _this.countMap, function (i) { //全部条数
-                all = all+this;
-            });
-            _this.countMap.all = all;
+            let countMap = data.data.countMap;
+            _this.countMap = {
+                hao: countMap.hao || 0,
+                zhong: countMap.zhong || 0,
+                cha: countMap.cha || 0,
+            };
+            _this.countMap.all= (_this.countMap.hao+_this.countMap.zhong+_this.countMap.cha) || 0,
+            console.log(_this.countMap,'2countMap')
         } 
       })
     }
