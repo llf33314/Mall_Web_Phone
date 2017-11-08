@@ -190,20 +190,21 @@
             <div class="goods-content-nav shop-header">
                 <div class="header-nav">
                     <div class="header-itme"
-                        :class="{'shop-font':nav.name == nav_choice}"
+                        :class="{'shop-font':nav.name == isDetails}"
                         v-for="(nav,index) in min_nav"
                         :key="nav[index]"
                         @click="nav_change(nav.name)">
                         <p class="fs42">{{nav.title}}</p>
-                        <em :class="{'shop-bg':nav.name == nav_choice}"></em>
+                        <em :class="{'shop-bg':nav.name == isDetails}"></em>
                     </div>
                 </div>
             </div>
             <div class="goods-details fs40"
-                v-show="isDetails">
+                v-show="isDetails == 'details' ">
                 <div v-html="detailsData"></div>
             </div>
-            <router-view v-show="!isDetails"></router-view>
+            <spec v-if="isDetails == 'spec'"></spec>
+            <comment v-if="isDetails == 'comment'"></comment>
             <technical-support v-if="$store.state.isAdvert == 1"></technical-support>
         </section>
         <section class="goods-footer" style="background:0">
@@ -314,14 +315,16 @@
                     </default-img>
                 </div>
                 <div class="goods-dialog-txt">
-                    <p class="fs40 shop-font">批发价:¥ {{w_dialogData.pfPrice}}</span>
+                    <p class="fs40 shop-font">批发价:¥ {{goodsData.pfPrice}}</span>
                     <p class="fs36 shop-font" v-if="w_dialogData.inv_num">库存{{w_dialogData.inv_num}}件</p>
                     <p class="fs36 shop-font" v-else>库存 0 件</p>
                     <p class="fs36 shop-font" v-if="w_dialogData.inv_code">商品编号: {{w_dialogData.inv_code}}</p>
                     <p class="fs36 shopGray"  v-if="w_dialogData.hpMoney">本商品{{dialogw_dialogDataData.hpMoney}}手起批</p>
+                    <p class="fs36">{{w_dialogData}}</p>
                 </div>
             </div>
             <div class="goods-dialog-choice">
+                <!--isSpec无规格数据-->
                 <div v-if="w_dialogData.isSpec">
                     <div class="goods-choice-list clearfix">
                         <div class="goods-choice-title fs36">数量
@@ -336,7 +339,7 @@
                     </div>
                 </div>
                 <div v-else>
-                <!-- <div class="goods-choice-list2 border" v-if="goodsData.pifaResult.pfType==1"> -->
+                    <!--手批-pfType == 1-->
                     <div class="goods-choice-list2 border" v-if="pifaResult.pfType == 1">
                         <div class="fs40">按一手货下单</div>
                         <div class="goods-choice-button">
@@ -344,11 +347,12 @@
                             <span class="fs36" @click="addw_specNum('+')" :class="{'shopGray':w_specNum>w_dialogData.inv_num}">加一手</span>
                         </div>
                     </div>
+                    <!--多规格-上部分-->
                     <div style="padding-bottom:20px" class="border">
                         <div class="goods-choice-list clearfix" 
-                            v-for="(item,i) in w_specificaList"  
-                            :key = "i"
-                            v-if=" i == 0 && w_specificaList.length > 1">
+                            v-for="(item,i) in w_specificaList" 
+                            v-if=" i == 0 && w_specificaList.length > 1" 
+                            :key = "i">
                             <div class="goods-choice-title fs36">{{item.specName}}
                             </div>
                             <div class="goods-choice-box js-specValue">
@@ -359,29 +363,55 @@
                                         :value="specValue.id"
                                         :key = "j">
                                         {{specValue.specValue}}
+                                        <i v-for="data in newDialogData " 
+                                            v-if="data.values[0] == specValue.specValue">{{newDialogData[0].pifaAmount2}}</i>
                                     </em>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+                     <!--多规格-下部分-->
                     <div class="goods-choice-option1 border">
                         <div class="goods-choice-li shop-box-justify" style="margin-bottom:5px">
+                            <!--多个标题-->
                             <div class="fs36" 
                                 v-for="(item,i) in w_specificaList" 
-                                v-if=" i > 0 && w_specificaList.length > 1" :key="i">{{item.specName}}</div>
-                            <div class="fs36" v-else >{{item.specName}}</div>
+                                v-if=" i > 0 && w_specificaList.length > 1" 
+                                :key="i">{{item.specName}}
+                                <em v-if="item.specName"></em>
+                            </div>
+                            <!--单个标题-->
+                            <div class="fs36" v-if=" w_specificaList.length <= 1">{{w_specificaList[0].specName}}
+                            </div>
                             <div class="fs36">库存</div>
                             <div class="fs36">价格</div>
                             <div class="fs36" v-if="pifaResult.pfType == 1">数量</div>
-                            <div class="fs36 goods-option-number" v-else>选择数量</div>
+                            <div class="fs36 goods-option-number" v-if=" pifaResult.pfType == 2">选择数量</div>
                         </div>
-                        <!--多个规格显示-->
+                        <!--混批单个规格显示 -->
                         <div class="goods-choice-li shop-box-justify" 
-                            v-for=" (test,index) in w_guigePrice" 
+                            v-for=" (test,index) in w_guigePrice " 
                             v-if=" w_specificaList.length <= 1"
                             :key="index">
-                            <div class="fs36" v-if="test.values.length == 1">{{test.values[0]}}</div>
+                           <div class="fs36" >{{test.values[0]}}</div>
+                            <div class="fs36" v-if="test.inv_num">{{test.inv_num}}</div>
+                            <div class="fs36" v-else>0</div>
+                            <div class="fs36">{{test.inv_price}}</div>
+                            <div class="fs36" v-if="pifaResult.pfType==1">{{w_specNum}}</div>
+                            <div class="goods-choice-box2" v-if="pifaResult.pfType==2">
+                                <em class="em-choice" @click="w_addSpecNumber('-',index)">-</em>
+                                <input class="em-choice" 
+                                    v-model.number="test.productNum" 
+                                    @blur="w_addSpecNumber('',index)">
+                                </input>
+                                <em class="em-choice" @click="w_addSpecNumber('+',index)">+</em>
+                            </div>
+                        </div>
+                        <!--多个规格显示-->
+                         <div class="goods-choice-li shop-box-justify" 
+                            v-if=" test.specifica_ids[0] == wholesaleId && w_specificaList.length > 1"
+                            v-for=" (test,index) in w_guigePrice" 
+                            :key="index">
                             <div class="fs36" v-if="test.values[1]">{{test.values[1]}}</div>
                             <div class="fs36" v-if="test.values[2]">{{test.values[2]}}</div>
                             <div class="fs36" v-if="test.inv_num">{{test.inv_num}}</div>
@@ -397,65 +427,53 @@
                                 <em class="em-choice" @click="w_addSpecNumber('+',index)">+</em>
                             </div>
                         </div>
-                        <!--单个规格显示-->
-                         <div class="goods-choice-li shop-box-justify" 
-                            v-if=" test.specifica_ids[0] == wholesaleId && w_specificaList.length < 0"
-                            v-for=" (test,index) in w_guigePrice" 
-                            :key="index">
-                            <div class="fs36" >{{test.values[0]}}</div>
-                            <div class="fs36" v-if="test.inv_num">{{test.inv_num}}</div>
-                            <div class="fs36" v-else>0</div>
-                            <div class="fs36">{{test.inv_price}}</div>
-                            <div class="fs36" v-if="pifaResult.pfType==1">{{w_specNum}}</div>
-                            <div class="goods-choice-box2" v-if="pifaResult.pfType==2">
-                                <em class="em-choice" @click="w_addSpecNumber('-',index)">-"</em>
-                                <input class="em-choice" 
-                                    v-model.number="test.productNum" 
-                                    @blur="w_addSpecNumber('',index)">
-                                </input>
-                                <em class="em-choice" @click="w_addSpecNumber('+',index)">+</em>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <!--默认1手-->
-                 <div class="fs40 goods-choice-Total fs36 shop-textr" v-if="pifaResult.pfType ==1">
+                <div class="fs40 goods-choice-Total fs36 shop-textr" v-if="pifaResult.pfType == 1">
                     <!--手批-->
                     <span v-if="pifaResult.pfSetObj.isSpHand == 1 && pifaResult.pfSetObj.spHand != '' && pifaAmount >= pifaResult.pfSetObj.spHand">满{{pifaResult.pfSetObj.spHand}}手</span>
                     <span v-if="pifaResult.pfSetObj.isSpHand == 0 ">满1手</span>
                     <span v-if="pifaAmount < pifaResult.pfSetObj.spHand">还差{{pifaResult.pfSetObj.spHand-pifaAmount}}手达到批发条件</span>
                     <span class="fs46 shop-font">￥{{pifaTotal}}</span>
-                    <span class="shop-font">.00 </span>共{{pifaAmount}}件
+                    <span class="shop-font">.00 </span>共{{pifaAmount}}手
                 </div>
                 <div class="fs40 goods-choice-Total fs36 shop-textr" v-else>
                     <!--混批-->
-                    满<span v-if="pifaResult.pfSetObj.isHpNum == 1 && pifaResult.pfSetObj.hpNum != ''">{{pifaResult.pfSetObj.hpNum}}件</span>
-                    <span v-if="pifaResult.pfSetObj.isHpNum == 1 && pifaResult.pfSetObj.isHpMoney == 1">或</span>
-                    <span v-if="pifaResult.pfSetObj.isHpMoney == 1 && pifaResult.pfSetObj.hpMoney != ''">{{pifaResult.pfSetObj.hpMoney}}元</span>
-                    <span v-if="pifaResult.pfSetObj.isHpNum ==0 && pifaResult.pfSetObj.isHpMoney == 0">1件</span>
-                    起批，<span class="fs46 shop-font">￥{{pifaTotal}}</span>
-                    <span class="shop-font">元</span> 共{{pifaAmount}}手
+                    <div class="shop-inblock" v-if="pifaAmount < pifaResult.pfSetObj.hpNum || pifaTotal<pifaResult.pfSetObj.hpMoney">
+                         还差<span v-if="pifaResult.pfSetObj.hpNum>0"> {{pifaResult.pfSetObj.hpNum-pifaAmount}} 件 或</span>
+                         <span>{{pifaResult.pfSetObj.hpMoney-pifaTotal}} 元达到批发条件,</span>
+                    </div>
+                    <div class="shop-inblock" v-else>
+                        满
+                        <span v-if="pifaResult.pfSetObj.isHpNum == 1 && pifaResult.pfSetObj.hpNum != ''">{{pifaResult.pfSetObj.hpNum}}件</span>
+                        <span v-if="pifaResult.pfSetObj.isHpNum == 1 && pifaResult.pfSetObj.isHpMoney == 1">或</span>
+                        <span v-if="pifaResult.pfSetObj.isHpMoney == 1 && pifaResult.pfSetObj.hpMoney != ''">{{pifaResult.pfSetObj.hpMoney}}元</span>
+                        <span v-if="pifaResult.pfSetObj.isHpNum ==0 && pifaResult.pfSetObj.isHpMoney == 0">1件</span>起批
+                    </div>
+                    <span class="fs46 shop-font">￥{{pifaTotal}}</span>
+                    <span class="shop-font">元</span> 共{{pifaAmount}}件
                 </div>
             </div>
             <div class="goods-dialog-footer" v-if="pifaResult.pfType == 1" >
                 <div class="goods-dialog-button fs52 shop-yellow" 
-                    :class="[pifaTotal < pifaResult.pfSetObj.spHand?'shopRgba':'']"
+                    :class="[pifaTotal-pifaResult.pfSetObj.spHand<0?'shopRgba':'']"
                     @click="addCard(2)">
-                    加入购物车 {{pifaAmount}}   {{pifaResult.pfSetObj.spHand}}
+                    加入购物车 
                 </div>
                 <div class="goods-dialog-button fs52  shop-bg " 
-                   :class="[pifaTotal < pifaResult.pfSetObj.spHand?'shopRgba':'']">
-                    立刻批发 {{pifaAmount}}   {{pifaResult.pfSetObj.spHand}}
+                   :class="[pifaTotal-pifaResult.pfSetObj.spHand<0?'shopRgba':'']">
+                    立刻批发 
                 </div> 
             </div>
             <div class="goods-dialog-footer" v-if="pifaResult.pfType == 2" >
                 <div class="goods-dialog-button fs52 shop-yellow " 
-                    :class="[(pifaTotal < pifaResult.pfSetObj.hpMoney || pifaAmount < pifaResult.pfSetObj.hpNum) ?'shopRgba':'']"
+                    :class="[(pifaResult.pfSetObj.hpMoney-pifaTotal > 0 || pifaAmount - pifaResult.pfSetObj.hpNum < 0) ?'shopRgba':'']"
                     @click="addCard(2)">
                     加入购物车 
                 </div>
                 <div class="goods-dialog-button fs52  shop-bg "
-                    :class="[(pifaTotal < pifaResult.pfSetObj.hpMoney || pifaAmount < pifaResult.pfSetObj.hpNum) ?'shopRgba':'']">
+                    :class="[(pifaResult.pfSetObj.hpMoney-pifaTotal > 0 || pifaAmount - pifaResult.pfSetObj.hpNum < 0) ?'shopRgba':'']">
                     立刻批发
                 </div> 
             </div>
@@ -489,611 +507,627 @@ import defaultImg from 'components/defaultImg';
 import countDown from '../home/classify_child/countDown';//倒计时
 import banner from './child/banner';//倒计时
 import technicalSupport from 'components/technicalSupport' //技术支持
+import comment from './child/comment' //技术支持
+import spec from './child/spec' //技术支持
 
 
 export default {
-  components: {
-    defaultImg,countDown,technicalSupport,banner
-  },
-  data () {
-    return {
-        isShow:false,
-        isSoldOut:false,//判断下架
-        SoldOut:'',//错误信息
-        isCardRecevie: false,//判断不是卡卷包
-        goodsId:'',
-        path:'',
-        imgUrl:'',
-        webPath:'',
-        goodsData:{
-            auctionResult:{
-                depositMoney:''
-            },
-            productPrice:[
-                '',''
-            ]
-        },
-        pifaResult:{
-            pfSetObj:{}
-        },//批发数据
-        imgSelecte:0,
-        type:'',
-        isProductCode:false,//商品编号,
-        guigePrice:'',//规格集合分类
-        specificaList:'',//规格集合
-        detailsData:'',//商品详情数据
-        spec_num:'',//不是批发的选择数
-        isDetails:false,
-        wholesaleId:'',
-        isWholesale:'',
-        selected_spec:'',
-        dialogData:'',
-        w_dialogData:'',
-        w_guigePrice:'',
-        w_specificaList:'', 
-        nav_choice: '',
-        w_pfStatus:false,//是否能批发条件
-        w_specNum:0,//批发手批数量,
-        pifaTotal:0,//批发总价
-        pifaAmount:0,//批发总数
-        min_nav:[
-            {
-                title:'商品详情',
-                name:'details'
-            },
-            {
-                title:'规格参数',
-                name:'spec'
-            },
-            {
-                title:'商品评价',
-                name:'comment'
-            }
-        ],
-        flag:false,
-    }
-  },
-  watch: {
-      'nav_choice'(a,b){
-        a == 'details'?this.isDetails = true:this.isDetails =false;
-      },
-      'flag'(){
-        let _this = this;
-        let arr=[]
-        _this.w_guigePrice.forEach((item,i)=>{
-            if(item.productNum>0){
-                arr.push(item);
-            }
-        })
-
-        _this.pifaAmount = 0;
-        _this.pifaTotal = 0;
-
-        arr.forEach((item,i)=>{
-            _this.pifaAmount  += item.productNum;
-            _this.pifaTotal += ( item.inv_price * item.productNum);
-        })
-
-        _this.pifaTotal = _this.commonFn.keepTwoDecimalFull(_this.pifaTotal);
-      }
-      
-  },
-  methods: {
-    dialogShow(){
-        //弹出正常的
-         console.log(this.isShow )
-        // debugger
-        // if(!this.isSoldOut) return;
-        this.isShow = true;
-        // console.log(this.isShow )
+    components: {
+        defaultImg,countDown,technicalSupport,banner,comment,spec
     },
-    /** 
-     * 查询商品接口
-    */
-    phoneProductAjax(){
-        let _this = this ;
-        let activityId = _this.$route.params.activityId
-        activityId == 'undefined' ? activityId=0 : activityId;
-        this.commonFn.ajax({
-            'url': h5App.activeAPI.phoneProduct_getProduct_post,
-            'data':{
-                url: _this.$store.state.loginDTO_URL,
-                browerType: _this.$store.state.browerType,
-                shopId : _this.$store.state.shopId,
-                busId : _this.$store.state.busId,
-                productId :  _this.$route.params.goodsId,
-                type: _this.$route.params.type,
-                activityId: activityId,
+    data () {
+        return {
+            isShow:false,
+            isSoldOut:false,//判断下架
+            SoldOut:'',//错误信息
+            isCardRecevie: false,//判断不是卡卷包
+            goodsId:'',
+            path:'',
+            imgUrl:'',
+            webPath:'',
+            goodsData:{
+                auctionResult:{
+                    depositMoney:''
+                },
+                productPrice:[
+                    '',''
+                ]
             },
-            'success':function(data){
-                console.log(data);
-                 if(data.code == -1){
-                    _this.$parent.$refs.bubble.show_tips(data.msg);//bubble_hint*/
-                    return
+            pifaResult:{
+                pfSetObj:{}
+            },//批发数据
+            imgSelecte:0,
+            type:'',
+            isProductCode:false,//商品编号,
+            guigePrice:'',//规格集合分类
+            specificaList:'',//规格集合
+            detailsData:'',//商品详情数据
+            spec_num:'',//不是批发的选择数
+            isDetails: 'details',
+            wholesaleId:'',
+            isWholesale:'',
+            selected_spec:'',
+            dialogData:'',
+            w_dialogData:'',
+            w_guigePrice:'',
+            w_specificaList:'', 
+            w_pfStatus:false,//是否能批发条件
+            w_specNum:0,//批发手批数量,
+            pifaTotal:0,//批发总价
+            pifaAmount:0,//批发总数
+            min_nav:[
+                {
+                    title:'商品详情',
+                    name:'details'
+                },
+                {
+                    title:'规格参数',
+                    name:'spec'
+                },
+                {
+                    title:'商品评价',
+                    name:'comment'
                 }
-                
-                if(data.code == 1006 || data.code == 1007 || data.code == 1011){
-                    _this.isSoldOut = true;
-                    _this.SoldOut = data.msg;
+            ],
+            flag:false,
+            newDialogData:''
+        }
+    },
+    watch: {
+        'flag'(){
+            let _this = this;
+            let arr=[]
+            _this.w_guigePrice.forEach((item,i)=>{
+                if(item.productNum>0){
+                    arr.push(item);
                 }
+            })
 
-                _this.goodsData = data.data;
-                _this.path = data.path;
-                _this.imgUrl = data.imgUrl;
-                _this.webPath = data.webPath;
+            _this.pifaAmount = 0;
+            _this.pifaTotal = 0;
+            let num = 0;
+            let specifica_ids = 0
 
-                _this.goodsData.productPrice = _this.commonFn.moneySplit(data.data.productPrice)//价钱显示效果
+            arr.forEach((item,i)=>{
+                console.log(specifica_ids*1 != item.specifica_ids[0]*1)
+                if(specifica_ids == 0){
+                    specifica_ids = item.specifica_ids[0]; 
+                }else if(i+1 == arr.length){
+                    console.log(num)
+                    arr[i].pifaAmount2 = num;
+                }else if(specifica_ids*1 > 0 && specifica_ids*1 != item.specifica_ids[0]*1){
+                    debugger
+                    arr[i-1].pifaAmount2 = num;
+                    num = 0;
+                    specifica_ids = item.specifica_ids[0]; 
+                }
+                num += item.productNum;
 
-                if(_this.type == 4){//拍卖，分割价钱
-                    let depositMoney = data.data.auctionResult.depositMoney
-                     _this.goodsData.auctionResult.depositMoney = _this.commonFn.moneySplit(depositMoney);
-                }
-                
-                //"pfStatus"--//批发状态  0 未审核  1审核通过   -1 审核不通过  -2还未申请 
-                if(_this.type == 7 ){//批发状态
-                    let _pfStatus = data.data.pifaResult.pfStatus;
-                    _this.pifaResult = data.data.pifaResult;
-                    _pfStatus < 0? _this.w_pfStatus = false : _this.w_pfStatus = true;
-                }
-                //商品详情请求
-                _this.detailsAjax();
-                //弹出规格初始数据--有规格匹配
-                if(data.data.isSpecifica){
-                    let _type = _this.$route.params.type;
-                    if(_this.$route.params.type == 7){
-                         _this.wholesaleAjax({
+                _this.pifaAmount  += item.productNum;
+                _this.pifaTotal += ( item.inv_price * item.productNum);
+            })
+            arr[0].pifaAmount2 = num;
+            console.log(arr,'arr');
+            _this.pifaTotal = _this.commonFn.keepTwoDecimalFull(_this.pifaTotal);
+            _this.newDialogData =arr
+        }
+        
+    },
+    methods: {
+        dialogShow(){
+            //弹出正常的
+            console.log(this.isShow )
+            // debugger
+            // if(!this.isSoldOut) return;
+            this.isShow = true;
+            // console.log(this.isShow )
+        },
+        /** 
+         * 查询商品接口
+        */
+        phoneProductAjax(){
+            let _this = this ;
+            let activityId = _this.$route.params.activityId
+            activityId == 'undefined' ? activityId=0 : activityId;
+            this.commonFn.ajax({
+                'url': h5App.activeAPI.phoneProduct_getProduct_post,
+                'data':{
+                    url: _this.$store.state.loginDTO_URL,
+                    browerType: _this.$store.state.browerType,
+                    shopId : _this.$store.state.shopId,
+                    busId : _this.$store.state.busId,
+                    productId :  _this.$route.params.goodsId,
+                    type: _this.$route.params.type,
+                    activityId: activityId,
+                },
+                'success':function(data){
+                    console.log(data);
+                    if(data.code == -1){
+                        _this.$parent.$refs.bubble.show_tips(data.msg);//bubble_hint*/
+                        return
+                    }
+                    
+                    if(data.code == 1006 || data.code == 1007 || data.code == 1011){
+                        _this.isSoldOut = true;
+                        _this.SoldOut = data.msg;
+                    }
+
+                    _this.goodsData = data.data;
+                    _this.path = data.path;
+                    _this.imgUrl = data.imgUrl;
+                    _this.webPath = data.webPath;
+
+                    _this.goodsData.productPrice = _this.commonFn.moneySplit(data.data.productPrice)//价钱显示效果
+
+                    if(_this.type == 4){//拍卖，分割价钱
+                        let depositMoney = data.data.auctionResult.depositMoney
+                        _this.goodsData.auctionResult.depositMoney = _this.commonFn.moneySplit(depositMoney);
+                    }
+                    
+                    //"pfStatus"--//批发状态  0 未审核  1审核通过   -1 审核不通过  -2还未申请 
+                    if(_this.type == 7 ){//批发状态
+                        let _pfStatus = data.data.pifaResult.pfStatus;
+                        _this.pifaResult = data.data.pifaResult;
+                        _pfStatus < 0? _this.w_pfStatus = false : _this.w_pfStatus = true;
+                    }
+                    //商品详情请求
+                    _this.detailsAjax();
+                    //弹出规格初始数据--有规格匹配
+                    if(data.data.isSpecifica){
+                        let _type = _this.$route.params.type;
+                        if(_this.$route.params.type == 7){
+                            _this.wholesaleAjax({
+                                productId: _this.$route.params.goodsId,
+                                invId: data.data.invId,
+                                type: 7,
+                                activityId: activityId,
+                                isShowCommission: data.data.isShowCommission
+                            });//批发购买规格
+                            _type = 0;
+                        }
+                        _this.productDetailAjax({//根据类型购买价格 (_type = 0  是批发正常购买规格)
                             productId: _this.$route.params.goodsId,
                             invId: data.data.invId,
-                            type: 7,
+                            type: _type,
                             activityId: activityId,
                             isShowCommission: data.data.isShowCommission
-                         });//批发购买规格
-                         _type = 0;
+                        });
+                        return
                     }
-                     _this.productDetailAjax({//根据类型购买价格 (_type = 0  是批发正常购买规格)
-                        productId: _this.$route.params.goodsId,
-                        invId: data.data.invId,
-                        type: _type,
-                        activityId: activityId,
-                        isShowCommission: data.data.isShowCommission
-                    });
-                    return
-                }
-                
-                //弹出规格初始数据--无规格匹配
-                if(_this.$route.params.type == 7){
-                    //弹出框数据规定为 添加数据
-                    let _data = data.data;
                     
-                    _this.w_dialogData = {
-                        maxBuyNum:_data.maxBuyNum,//限购数量
-                        pfPrice:_data.pfPrice,//批发价格
-                        inv_num:_data.productStockTotal,//库存
-                        inv_code:_data.productCode,//默认编号
-                        isSpec: true, //没有数据判断
-                        productNum:1//购买数量
+                    //弹出规格初始数据--无规格匹配
+                    if(_this.$route.params.type == 7){
+                        //弹出框数据规定为 添加数据
+                        let _data = data.data;
+                        
+                        _this.w_dialogData = {
+                            maxBuyNum:_data.maxBuyNum,//限购数量
+                            pfPrice:_data.pfPrice,//批发价格
+                            inv_num:_data.productStockTotal,//库存
+                            inv_code:_data.productCode,//默认编号
+                            isSpec: true, //没有数据判断
+                            productNum:1//购买数量
+                        }
+                        //库存为0,购买数量默认为值判断
+                        _data.productStockTotal==0? _this.w_dialogData.productNum = 0:_this.w_dialogData.productNum = 1;
+                        //默认图片 主图显示
+                        let imageLists = _this.goodsData.imageList;
+                        imageLists.forEach((item,index)=>{
+                                if(item.isMainImages == 1){
+                                    _this.w_dialogData.specifica_img_url = item.imageUrl;
+                                }  
+                        })
+                        //console.log(_this.w_dialogData,'w_dialogData无规格')
                     }
-                    //库存为0,购买数量默认为值判断
-                    _data.productStockTotal==0? _this.w_dialogData.productNum = 0:_this.w_dialogData.productNum = 1;
-                    //默认图片 主图显示
+                    _this.dialogData = data.data;
+
+                    _this.dialogData.inv_price = data.data.productPrice;//价钱
+                    _this.dialogData.inv_code = data.data.productCode;//默认编号
+                    _this.dialogData.inv_num = data.data.productStockTotal;//默认库存
+                    _this.dialogData.values = '';
                     let imageLists = _this.goodsData.imageList;
                     imageLists.forEach((item,index)=>{
                             if(item.isMainImages == 1){
-                                _this.w_dialogData.specifica_img_url = item.imageUrl;
+                                _this.dialogData.specifica_img_url = item.imageUrl;
                             }  
                     })
-                    //console.log(_this.w_dialogData,'w_dialogData无规格')
+                    _this.dialogData.productStockTotal==0? _this.spec_num = 0:_this.spec_num = 1;
+                    console.log(_this.dialogData,'dialogData无规格');
+                    
+                    
                 }
-                _this.dialogData = data.data;
+            })
+        },
+        /** 
+         * 查询商品规格接口(规格弹出框调用) -- 批发
+         */
+        wholesaleAjax(data){
+            let _this = this;
+            let _data = data
+            this.commonFn.ajax({
+                'url': h5App.activeAPI.phoneProduct_getSpecifica_post,
+                'data':data,
+                'success':function(data){
+                    //console.log(data,'批发数据');
+                    _this.w_specificaList = data.data.specificaList;
+                    _this.w_guigePrice = data.data.guigePrice;
 
-                 _this.dialogData.inv_price = data.data.productPrice;//价钱
-                _this.dialogData.inv_code = data.data.productCode;//默认编号
-                _this.dialogData.inv_num = data.data.productStockTotal;//默认库存
-                _this.dialogData.values = '';
-                let imageLists = _this.goodsData.imageList;
-                imageLists.forEach((item,index)=>{
-                        if(item.isMainImages == 1){
-                            _this.dialogData.specifica_img_url = item.imageUrl;
-                        }  
-                })
-                _this.dialogData.productStockTotal==0? _this.spec_num = 0:_this.spec_num = 1;
-                console.log(_this.dialogData,'dialogData无规格');
-                
-                
-            }
-        })
-    },
-    /** 
-     * 查询商品规格接口(规格弹出框调用) -- 批发
-     */
-    wholesaleAjax(data){
-        let _this = this;
-        let _data = data
-        this.commonFn.ajax({
-            'url': h5App.activeAPI.phoneProduct_getSpecifica_post,
-            'data':data,
-            'success':function(data){
-                //console.log(data,'批发数据');
-                _this.w_specificaList = data.data.specificaList;
-                _this.w_guigePrice = data.data.guigePrice;
-
-                data.data.guigePrice.forEach((item,i)=>{//弹出规格初始值
-                    item.specifica_ids = item.specifica_ids.split(',');
-                    item.values = item.values.split(',');//批发 规格数组 分割
-                    item.productNum = 0;//每个规格集合添加默认数量
-                    if(item.id == _data.invId){
-                        _this.w_dialogData = item;
-                        
-                        if(data.data.specificaList.length>0){//批发 第一组数据 默认id
-                            _this.wholesaleId = item.specifica_ids[0];
+                    data.data.guigePrice.forEach((item,i)=>{//弹出规格初始值
+                        item.specifica_ids = item.specifica_ids.split(',');
+                        item.values = item.values.split(',');//批发 规格数组 分割
+                        item.productNum = 0;//每个规格集合添加默认数量
+                        if(item.id == _data.invId){
+                            _this.w_dialogData = item;
+                            
+                            if(data.data.specificaList.length>0){//批发 第一组数据 默认id
+                                _this.wholesaleId = item.specifica_ids[0];
+                            }
+                            if(!item.specifica_img_url){
+                                //判断是规格集合里面是否有匹配图片没有使用img主图
+                                let imageLists = _this.goodsData.imageList;
+                                    imageLists.forEach((item,index)=>{
+                                        if(item.isMainImages == 1){
+                                            _this.w_dialogData.specifica_img_url = item.imageUrl;
+                                        }  
+                                });
+                            }
                         }
-                        if(!item.specifica_img_url){
-                            //判断是规格集合里面是否有匹配图片没有使用img主图
-                            let imageLists = _this.goodsData.imageList;
-                                imageLists.forEach((item,index)=>{
-                                    if(item.isMainImages == 1){
-                                        _this.w_dialogData.specifica_img_url = item.imageUrl;
-                                    }  
-                            });
+                    })
+                }
+            })
+        },
+        /** 
+         * 查询商品规格接口(规格弹出框调用)
+         */
+        productDetailAjax(data){
+            let _this = this;
+            let _data = data;
+            let activityId = _this.$route.params.activityId;
+            this.commonFn.ajax({
+                'url': h5App.activeAPI.phoneProduct_getSpecifica_post,
+                'data':_data,
+                'success':function(data){
+                    // console.log(data,'不是批发规格数据');
+                    _this.specificaList = data.data.specificaList;
+                    _this.guigePrice = data.data.guigePrice;
+
+                    _this.guigePrice.forEach((item,i)=>{//弹出规格初始值
+                        item.specifica_ids = item.specifica_ids.split(',');
+                        item.productNum = 1;
+                        if(item.id == _data.invId){
+                            item.inv_price = _this.commonFn.moneySplit(item.inv_price);//分割价钱
+                            _this.dialogData = item;
+                            _this.spec_num = item.productNum
+                            if(!item.specifica_img_url){
+                                //判断是规格集合里面是否有匹配图片没有使用img主图
+                                let imageLists = _this.goodsData.imageList;
+                                    imageLists.forEach((item,index)=>{
+                                        if(item.isMainImages == 1){
+                                            _this.dialogData.specifica_img_url = item.imageUrl;
+                                        }  
+                                });
+                            }
                         }
-                    }
-                })
-            }
-        })
-    },
-    /** 
-     * 查询商品规格接口(规格弹出框调用)
-     */
-    productDetailAjax(data){
-        let _this = this;
-        let _data = data;
-        let activityId = _this.$route.params.activityId;
-        this.commonFn.ajax({
-            'url': h5App.activeAPI.phoneProduct_getSpecifica_post,
-            'data':_data,
-            'success':function(data){
-                // console.log(data,'不是批发规格数据');
-                _this.specificaList = data.data.specificaList;
-                _this.guigePrice = data.data.guigePrice;
+                    })
+                }
+            })
 
-                _this.guigePrice.forEach((item,i)=>{//弹出规格初始值
-                    item.specifica_ids = item.specifica_ids.split(',');
-                    item.productNum = 1;
-                    if(item.id == _data.invId){
-                        item.inv_price = _this.commonFn.moneySplit(item.inv_price);//分割价钱
-                        _this.dialogData = item;
-                        _this.spec_num = item.productNum
-                        if(!item.specifica_img_url){
-                            //判断是规格集合里面是否有匹配图片没有使用img主图
-                            let imageLists = _this.goodsData.imageList;
-                                imageLists.forEach((item,index)=>{
-                                    if(item.isMainImages == 1){
-                                        _this.dialogData.specifica_img_url = item.imageUrl;
-                                    }  
-                            });
-                        }
-                    }
-                })
-            }
-        })
-
-    },
-    /** 
-     * 规格数量加减--正常购买
-     */
-    addSpec_number(e){
-        let _this =this;
-        
-        //判断是否是input输入
-        let re = /^[0-9]+$/ ;
-        
-        if(!re.test(_this.spec_num)){
-             _this.$parent.$refs.bubble.show_tips('请输入大于0的整数');
-             _this.spec_num = 0 
-        };
-        //库存为0 
-        if( _this.dialogData.inv_num == 0){
-            _this.$parent.$refs.bubble.show_tips('商品已售罄');
-            return
-        }
-        if(_this.spec_num<0){
-            _this.$parent.$refs.bubble.show_tips('数量不能小于1');
-           _this.spec_num = 1;
-            return
-        }
-        if( e === '-'){//减小时，
-            if( _this.spec_num<=1){
-                 _this.$parent.$refs.bubble.show_tips('数量不能小于1');
-                return
-            }
-            _this.spec_num  --;
-        }else{//增减时
-            // 限购数量不为零时，购买数量不能超出限购数量
-            if(_this.goodsData.maxBuyNum && ( _this.spec_num >= _this.goodsData.maxBuyNum)){
-                _this.$parent.$refs.bubble.show_tips('超出限购数量');
-                return
-            }
-            //超出规格库存
-            if(_this.spec_num >= _this.dialogData.inv_num){
-                 _this.$parent.$refs.bubble.show_tips('超出现有库存量');
-                 _this.spec_num = _this.dialogData.inv_num
-                 return
-            }
-            if(e === '+'){
-                _this.spec_num  ++;
-                return
-            }
-        }
-    },
-     /** 
-     * 规格数量加减--批发手批
-     */
-    addw_specNum(c){
-        let _this =this;
-       //库存为0 
-        if( _this.w_specNum.inv_num == 0){
-            _this.w_specNum = 0;
-            _this.$parent.$refs.bubble.show_tips('商品已售罄');
-            return
-        }
-        if(_this.w_specNum < 0){
-            _this.$parent.$refs.bubble.show_tips('数量不能小于1');
-           _this.w_specNum = 1;
-            return
-        }
-        if( c === '-'){//减小时，
-            if( _this.w_specNum<=0){
-                 _this.$parent.$refs.bubble.show_tips('数量不能小于0');
-                return
-            }
-            _this.w_specNum  --;
-        }else{//增减时
-            // 限购数量不为零时，购买数量不能超出限购数量
-            if(_this.goodsData.maxBuyNum && ( _this.w_specNum >= _this.goodsData.maxBuyNum)){
-                _this.$parent.$refs.bubble.show_tips('超出限购数量');
-                return
-            }
-            //超出规格库存
-            if(_this.w_specNum >= _this.w_dialogData.inv_num){
-                 _this.$parent.$refs.bubble.show_tips('超出现有库存量');
-                 _this.w_specNum = _this.dialogData.inv_num
-                 return
-            }
-            if(c === '+'){
-                _this.w_specNum  ++;
-            }
-        }
-        _this.w_guigePrice.forEach((item,i)=>{
-            _this.pifaTotal += (_this.w_specNum * item.inv_price);
-        })
-        _this.pifaAmount = _this.w_specNum * _this.w_guigePrice.length;
-    },
-    /** 
-     * 规格数量加减--批发混批
-     */
-    w_addSpecNumber(e,index){
-        let _this =this;
-        let _data;//当前要改变的数据
-        //监听flag变化,input输入watch监听不了
-        _this.flag = !_this.flag;
-        /*
-        有规格 - 从返回规格列表中获取（w_guigePrice）
-        无规格 - 从初始默认数据中获取（w_dialogData）
-        */
-        _this.w_guigePrice == '' ?_data = _this.w_dialogData:_data =_this.w_guigePrice[index];
-
-        let re = /^[0-9]+$/ ;
-        
-        if(!re.test( _data.productNum)){
-             _this.$parent.$refs.bubble.show_tips('请输入大于0的整数');
-             _data.productNum = 0 
-        };
-        //库存为0 
-        if( _data.inv_num == 0){
-            _data.inv_num = 0 ;
-            if(_this.w_guigePrice == ''){
-                _this.$set(_this.w_dialogData,'productNum',0);
-                
-            }else{
-                _this.$set(_this.w_guigePrice,index,_data)
-            }
+        },
+        /** 
+         * 规格数量加减--正常购买
+         */
+        addSpec_number(e){
+            let _this =this;
             
-            _this.$parent.$refs.bubble.show_tips('商品已售罄');
-            return
-        }
-
-        if(_data.productNum < 0){
-            _this.$parent.$refs.bubble.show_tips('数量不能小于0');
-            _this.$set(_this.w_guigePrice[index],'productNum',0)
-            return
-        }
-        if( e === '-'){//减小时，
-            if( _data.productNum<=0){
-                 _this.$parent.$refs.bubble.show_tips('数量不能小于0');
+            //判断是否是input输入
+            let re = /^[0-9]+$/ ;
+            
+            if(!re.test(_this.spec_num)){
+                _this.$parent.$refs.bubble.show_tips('请输入大于0的整数');
+                _this.spec_num = 0 
+            };
+            //库存为0 
+            if( _this.dialogData.inv_num == 0){
+                _this.$parent.$refs.bubble.show_tips('商品已售罄');
                 return
             }
-
-            //_this.w_guigePrice[num].productNum=_data.productNum--;
-            _data.productNum--;
-            _this.$set(_this.w_guigePrice,index,_data)
-        }else{//增减时
-            //限购数量不为零时，购买数量不能超出限购数量
-            if(_this.goodsData.maxBuyNum && ( _data.productNum >= _this.goodsData.maxBuyNum)){
-                _this.$parent.$refs.bubble.show_tips('超出限购数量');
+            if(_this.spec_num<0){
+                _this.$parent.$refs.bubble.show_tips('数量不能小于1');
+            _this.spec_num = 1;
                 return
             }
-            //库存不为0，超出规格库存
-            if(_data.productNum >= _data.inv_num){
-                 _this.$parent.$refs.bubble.show_tips('超出现有库存量');
-                 _data.productNum = _data.inv_num;
-                 return
-            }
-            if(e === '+'){
-                _this.w_guigePrice[index].productNum = _data.productNum ++;
-                // _this.w_guigePrice.push([]);
-                // _this.w_guigePrice.pop();
-                _data.productNum++;
-                _this.$set(_this.w_guigePrice,index,_data)
-                
-                return
-            }
-        }
-    },
-    /** 
-     * 批发条件--判断批发资格
-     */
-    wholesaleShow(){
-        let _this = this;
-        let data = _this.goodsData.pifaResult;
-        console.log(data,'pifaResult');
-        //console.log(_this.w_dialogData,'w_dialogData',_this.w_guigePrice,_this.w_specificaList);
-        
-        //"pfStatus"--//批发状态  0 未审核  1审核通过   -1 审核不通过  -2还未申请
-        if(!_this.w_pfStatus){//跳转申请页
-            _this.$parent.$refs.bubble.show_tips(data.pfErrorMsg);
-            _this.$router.push('/wholesale/apply');
-            return
-        }
-        _this.isWholesale = true;
-    },
-    /**
-     * 选择规格 
-     * @param id 选择INV_id
-     */
-    choice_product(e,id){
-        let _this = this ;
-        let specs= [],invid;
-        if(id){
-            _this.wholesaleId = id;
-            console.log(id);
-        }
-        if(e){//获取选中值 存成数组
-            $(e.target).siblings().removeClass('shop-bg');
-            $(e.target).addClass('shop-bg');
-        }
-        for(var i = 0 ;i<$('.js-specValue .shop-bg').length;i++){
-            specs.push($('.js-specValue .shop-bg').eq(i).attr('value'));
-        }
-        //获取选中值的规格集合
-         _this.guigePrice.forEach((item,i) => {
-             //判断两个数组完全相等 转字符串比较
-             if(specs.toString() === item.specifica_ids.toString()){
-                
-                item.inv_price = _this.commonFn.moneySplit(item.inv_price);
-                if(!item.specifica_img_url){
-                    item.specifica_img_url = _this.dialogData.specifica_img_url;
+            if( e === '-'){//减小时，
+                if( _this.spec_num<=1){
+                    _this.$parent.$refs.bubble.show_tips('数量不能小于1');
+                    return
                 }
-                _this.dialogData = item;
-                //_this.selected_spec =  item.values.toString() 
+                _this.spec_num  --;
+            }else{//增减时
+                // 限购数量不为零时，购买数量不能超出限购数量
+                if(_this.goodsData.maxBuyNum && ( _this.spec_num >= _this.goodsData.maxBuyNum)){
+                    _this.$parent.$refs.bubble.show_tips('超出限购数量');
+                    return
+                }
+                //超出规格库存
+                if(_this.spec_num >= _this.dialogData.inv_num){
+                    _this.$parent.$refs.bubble.show_tips('超出现有库存量');
+                    _this.spec_num = _this.dialogData.inv_num
+                    return
+                }
+                if(e === '+'){
+                    _this.spec_num  ++;
+                    return
+                }
             }
-        })
-        
-        //切换时规格时 如果规格 购买数量大于库存数量 则等于库存数量
-        console.log(_this.spec_num,_this.dialogData.inv_num,'spec_num')
-        if( _this.spec_num  >= _this.dialogData.inv_num){
-            _this.spec_num = _this.dialogData.inv_num;
-        }
+        },
+        /** 
+         * 规格数量加减--批发手批
+         */
+        addw_specNum(c){
+            let _this =this;
+        //库存为0 
+            if( _this.w_specNum.inv_num == 0){
+                _this.w_specNum = 0;
+                _this.$parent.$refs.bubble.show_tips('商品已售罄');
+                return
+            }
+            if(_this.w_specNum < 0){
+                _this.$parent.$refs.bubble.show_tips('数量不能小于1');
+            _this.w_specNum = 1;
+                return
+            }
+            if( c === '-'){//减小时，
+                if( _this.w_specNum<=0){
+                    _this.$parent.$refs.bubble.show_tips('数量不能小于0');
+                    return
+                }
+                _this.w_specNum  --;
+            }else{//增减时
+                // 限购数量不为零时，购买数量不能超出限购数量
+                if(_this.goodsData.maxBuyNum && ( _this.w_specNum >= _this.goodsData.maxBuyNum)){
+                    _this.$parent.$refs.bubble.show_tips('超出限购数量');
+                    return
+                }
+                //超出规格库存
+                if(_this.w_specNum >= _this.w_dialogData.inv_num){
+                    _this.$parent.$refs.bubble.show_tips('超出现有库存量');
+                    _this.w_specNum = _this.dialogData.inv_num
+                    return
+                }
+                if(c === '+'){
+                    _this.w_specNum  ++;
+                }
+            }
+            _this.pifaTotal = 0;
+            _this.pifaAmount = 0;
+            console.log(_this.w_guigePrice,'_this.w_guigePrice')
+            _this.w_guigePrice.forEach((item,i)=>{
+                _this.pifaTotal += (_this.w_specNum * item.inv_price);
+            })
+            _this.pifaAmount = _this.w_specNum * _this.w_guigePrice.length;
+        },
+        /** 
+         * 规格数量加减--批发混批
+         */
+        w_addSpecNumber(e,index){
+            let _this =this;
+            let _data;//当前要改变的数据
+            //监听flag变化,input输入watch监听不了
+            _this.flag = !_this.flag;
+            /*
+            有规格 - 从返回规格列表中获取（w_guigePrice）
+            无规格 - 从初始默认数据中获取（w_dialogData）
+            */
+            _this.w_guigePrice == '' ?_data = _this.w_dialogData:_data =_this.w_guigePrice[index];
 
-    },
-    /** 
-     * 批发总件总数 单价 数量
-     * 
-     */
-    add_pifa(){
-        let _this = this;
-    },
-    /** 
-     * 添加购物车
-     */
-    addCard(e){
-        let data;
-        let  _this = this;
-        // if(e===1){
-        //     data = _this.guigePrice;
-        // }else{
-        //     data = _this.w_guigePrice;
-        //     let arr=[];
+            let re = /^[0-9]+$/ ;
+            
+            if(!re.test( _data.productNum)){
+                _this.$parent.$refs.bubble.show_tips('请输入大于0的整数');
+                _data.productNum = 0 
+            };
+            //库存为0 
+            if( _data.inv_num == 0){
+                _data.inv_num = 0 ;
+                if(_this.w_guigePrice == ''){
+                    _this.$set(_this.w_dialogData,'productNum',0);
+                    
+                }else{
+                    _this.$set(_this.w_guigePrice,index,_data)
+                }
+                
+                _this.$parent.$refs.bubble.show_tips('商品已售罄');
+                return
+            }
 
-        //     data.forEach((item,i)=>{
-        //         if(item.productNum > 0){
-        //             arr.push(item);
-        //         }
-        //     })
-        //     console.log(arr)
-        // }
-    },
-    /** 
-     * 收藏店铺
-     */
-    collectProductAjax(){
+            if(_data.productNum < 0){
+                _this.$parent.$refs.bubble.show_tips('数量不能小于0');
+                _this.$set(_this.w_guigePrice[index],'productNum',0)
+                return
+            }
+            if( e === '-'){//减小时，
+                if( _data.productNum<=0){
+                    _this.$parent.$refs.bubble.show_tips('数量不能小于0');
+                    return
+                }
+
+                //_this.w_guigePrice[num].productNum=_data.productNum--;
+                _data.productNum--;
+                _this.$set(_this.w_guigePrice,index,_data)
+            }else{//增减时
+                //限购数量不为零时，购买数量不能超出限购数量
+                if(_this.goodsData.maxBuyNum && ( _data.productNum >= _this.goodsData.maxBuyNum)){
+                    _this.$parent.$refs.bubble.show_tips('超出限购数量');
+                    return
+                }
+                //库存不为0，超出规格库存
+                if(_data.productNum >= _data.inv_num){
+                    _this.$parent.$refs.bubble.show_tips('超出现有库存量');
+                    _data.productNum = _data.inv_num;
+                    return
+                }
+                if(e === '+'){
+                    _this.w_guigePrice[index].productNum = _data.productNum ++;
+                    // _this.w_guigePrice.push([]);
+                    // _this.w_guigePrice.pop();
+                    _data.productNum++;
+                    _this.$set(_this.w_guigePrice,index,_data)
+                    
+                    return
+                }
+            }
+        },
+        /** 
+         * 批发条件--判断批发资格
+         */
+        wholesaleShow(){
+            let _this = this;
+            let data = _this.goodsData.pifaResult;
+            console.log(data,'pifaResult');
+            //console.log(_this.w_dialogData,'w_dialogData',_this.w_guigePrice,_this.w_specificaList);
+            
+            //"pfStatus"--//批发状态  0 未审核  1审核通过   -1 审核不通过  -2还未申请
+            if(!_this.w_pfStatus){//跳转申请页
+                _this.$parent.$refs.bubble.show_tips(data.pfErrorMsg);
+                _this.$router.push('/wholesale/apply');
+                return
+            }
+            _this.isWholesale = true;
+        },
+        /**
+         * 选择规格 
+         * @param id 选择INV_id
+         */
+        choice_product(e,id){
+            let _this = this ;
+            let specs= [],invid;
+            if(id){
+                _this.wholesaleId = id;
+                console.log(id);
+            }
+            if(e){//获取选中值 存成数组
+                $(e.target).siblings().removeClass('shop-bg');
+                $(e.target).addClass('shop-bg');
+            }
+            for(var i = 0 ;i<$('.js-specValue .shop-bg').length;i++){
+                specs.push($('.js-specValue .shop-bg').eq(i).attr('value'));
+            }
+            //获取选中值的规格集合
+            _this.guigePrice.forEach((item,i) => {
+                //判断两个数组完全相等 转字符串比较
+                if(specs.toString() === item.specifica_ids.toString()){
+                    
+                    item.inv_price = _this.commonFn.moneySplit(item.inv_price);
+                    if(!item.specifica_img_url){
+                        item.specifica_img_url = _this.dialogData.specifica_img_url;
+                    }
+                    _this.dialogData = item;
+                    //_this.selected_spec =  item.values.toString() 
+                }
+            })
+            
+            //切换时规格时 如果规格 购买数量大于库存数量 则等于库存数量
+            console.log(_this.spec_num,_this.dialogData.inv_num,'spec_num')
+            if( _this.spec_num  >= _this.dialogData.inv_num){
+                _this.spec_num = _this.dialogData.inv_num;
+            }
+
+        },
+        /** 
+         * 批发总件总数 单价 数量
+         * 
+         */
+        add_pifa(){
+            let _this = this;
+        },
+        /** 
+         * 添加购物车
+         */
+        addCard(e){
+            let data;
+            let  _this = this;
+            // if(e===1){
+            //     data = _this.guigePrice;
+            // }else{
+            //     data = _this.w_guigePrice;
+            //     let arr=[];
+
+            //     data.forEach((item,i)=>{
+            //         if(item.productNum > 0){
+            //             arr.push(item);
+            //         }
+            //     })
+            //     console.log(arr)
+            // }
+        },
+        /** 
+         * 收藏店铺
+         */
+        collectProductAjax(){
+            let _this = this;
+            _this.commonFn.ajax({
+                'url': h5App.activeAPI.phoneProduct_collectProduct_post,
+                'data':{
+                    busId: _this.$store.state.busId,
+                    url: _this.$store.state.loginDTO_URL,
+                    browerType: _this.$store.state.browerType,
+                    productId :  _this.$route.params.goodsId,
+                },
+                'success':function(data){
+                    if(data.code==1){
+                        _this.goodsData.isCollect = !_this.goodsData.isCollect;
+                        if(_this.goodsData.isCollect){
+                            _this.$parent.$refs.bubble.show_tips('收藏成功');
+                        }else{
+                            _this.$parent.$refs.bubble.show_tips('取消成功');
+                        }
+                    }
+                } 
+            })
+        },
+        /** 
+         * 切换副导航
+         * @param name 子路由名字
+        */
+        nav_change(name){
+            this.nav_choice = name;
+            this.isDetails = name
+            // let hash = window.location.hash.split('#')[1];
+            // let _name =  hash.split('/')[2];
+            // let _hash= hash.split(_name)[0]+name+hash.split(_name)[1];
+            // this.$router.push(_hash);
+        },
+        /**
+         * 商品详情请求
+         */
+        detailsAjax(){
         let _this = this;
         _this.commonFn.ajax({
-            'url': h5App.activeAPI.phoneProduct_collectProduct_post,
+            'url': h5App.activeAPI.phoneProduct_getProductDetail_post,
             'data':{
-                busId: _this.$store.state.busId,
-                url: _this.$store.state.loginDTO_URL,
-                browerType: _this.$store.state.browerType,
                 productId :  _this.$route.params.goodsId,
             },
             'success':function(data){
-                if(data.code==1){
-                    _this.goodsData.isCollect = !_this.goodsData.isCollect;
-                    if(_this.goodsData.isCollect){
-                        _this.$parent.$refs.bubble.show_tips('收藏成功');
-                    }else{
-                        _this.$parent.$refs.bubble.show_tips('取消成功');
-                    }
-                }
+                _this.detailsData = data.data;
             } 
         })
-    },
-    /** 
-     * 切换副导航
-     * @param name 子路由名字
-    */
-    nav_change(name){
-        this.nav_choice = name;
-        let hash = window.location.hash.split('#')[1];
-        let _name =  hash.split('/')[2];
-        let _hash= hash.split(_name)[0]+name+hash.split(_name)[1];
-        this.$router.push(_hash);
-    },
-    /**
-     * 商品详情请求
-     */
-    detailsAjax(){
-      let _this = this;
-      _this.commonFn.ajax({
-        'url': h5App.activeAPI.phoneProduct_getProductDetail_post,
-        'data':{
-            productId :  _this.$route.params.goodsId,
-        },
-        'success':function(data){
-            _this.detailsData = data.data;
-        } 
-      })
-    }
-  },
-  beforeCreate() {
-      this.$store.commit('show_footer',false);
-    },  
-  mounted () {
-        this.commonFn.setTitle( '商品详情');
-        this.goodsId = this.$route.params.goodsId;
-
-        this.phoneProductAjax();
-        this.type = this.$route.params.type;
-
-        let _name =  window.location.hash.split('/')[2];
-        this.nav_choice = _name;
-
-        if(_name == 'details'){
-            this.isDetails = true;
-        }else{
-            this.isDetails = false;
         }
-        
-  }
+    },
+    beforeCreate() {
+        this.$store.commit('show_footer',true);
+    },
+    beforeDestroy() {
+        this.$store.commit('show_footer',false);
+    },  
+    mounted () {
+            this.$store.commit('show_footer',false);
+            this.commonFn.setTitle( '商品详情');
+            this.goodsId = this.$route.params.goodsId;
+
+            this.phoneProductAjax();
+            this.type = this.$route.params.type;
+            
+    }
 }
 </script>
 
@@ -1267,7 +1301,7 @@ export default {
         position: fixed;
         bottom: 0;
         box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.1);
-        z-index: 1;
+        z-index: 2;
         .goods-footer-no{
             text-align: center;
             background: rgba(0, 0, 0, 0.6);

@@ -132,7 +132,7 @@ export default new Router({
         component: Goods_Comment
       }
       ]
-    }, {
+    },{
       path: '/wholesale/apply/:busId',
       name: 'Wholesale_Apply',
       component: Wholesale_Apply,

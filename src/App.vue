@@ -45,7 +45,7 @@ export default {
         busId:42,
         browerType: this.Messenger
       }
-      this.$store.commit('mutationData',_data);
+    this.$store.commit('mutationData',_data);
   },
   mounted(){
     // this.style = "<style>.aaa{color:red}</style>"

@@ -1,5 +1,5 @@
 <template>
-  <footer class="shop-footer-fixed">
+  <footer class="shop-footer-fixed" v-if="isFooter">
     <div class="footer-nav fs36">
         <div class="footer-itme" 
             :class="[ isShow == item.title ?'shopFont':'' ]"
@@ -50,6 +50,7 @@ export default {
                 }
             ],
             isShow:'',
+            isFooter:false
         }
     },
     mounted() {
@@ -78,6 +79,7 @@ export default {
                             }
                         })
                     }
+                    _this.isFooter = true;
                 }
             })
         },
