@@ -119,7 +119,7 @@
                         <i class="iconfont icon-jiantou-copy"></i>
                     </div>
                 </div>
-                <div class="my-list border"  @click="returnMyOrder(8);">
+                <div class="my-list border"  @click="returnMyOrder(7);">
                     <div>
                         <i class="iconfont icon-tuangou"></i>
                         我的团购
@@ -150,10 +150,7 @@
         </div>
      <technical-support v-if="$store.state.isAdvert == 1"></technical-support>
     </section>
-    <section class="shop-footer">
-        <div class="shop-logo"></div>
-    </section>
-    <footer-nav :navshow='isNavshow'></footer-nav> 
+    <!-- <footer-nav :navshow='isNavshow'></footer-nav>  -->
   </div>
 </template>
 
@@ -316,6 +313,7 @@ export default {
     }
   },
   mounted() {
+    this.commonFn.setTitle("我的");
     this.busId = this.$route.params.busId;
     this.loads();
   }
@@ -329,7 +327,7 @@ export default {
 .my-index {
   width: 100%;
   color: #666;
-  margin-bottom: 65 /@dev-Width *1rem;
+  margin-bottom: 148 /@dev-Width *1rem;
   .my-header {
     width: 100%;
     height: 520 /@dev-Width *1rem;

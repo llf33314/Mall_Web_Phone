@@ -40,6 +40,8 @@ const my_center = resolve => require(['pages/my/myApp'], resolve);
 //my_center =>我的
 const my_order_list = resolve => require(['pages/order/index'], resolve);
 //my_order_list =>订单列表
+const my_order_detail = resolve => require(['pages/order/order'], resolve);
+//my_order_detail => 订单详情
 
 Vue.use(Router)
 
@@ -114,7 +116,7 @@ export default new Router({
       meta: {
         title: '分享成功'
       }
-    },{
+    }, {
       path: '/goods/details/:shopId/:busId/:type/:goodsId/:activityId',
       name: 'goods',
       component: Goods,
@@ -122,15 +124,15 @@ export default new Router({
         title: '商品详情'
       },
       children: [{
-          path: '/goods/spec/:shopId/:busId/:type/:goodsId/:activityId',
-          component: Goods_Spec
-        },
-        {
-          path: '/goods/comment/:shopId/:busId/:type/:goodsId/:activityId',
-          component: Goods_Comment
-        }
+        path: '/goods/spec/:shopId/:busId/:type/:goodsId/:activityId',
+        component: Goods_Spec
+      },
+      {
+        path: '/goods/comment/:shopId/:busId/:type/:goodsId/:activityId',
+        component: Goods_Comment
+      }
       ]
-    },{
+    }, {
       path: '/wholesale/apply/:busId',
       name: 'Wholesale_Apply',
       component: Wholesale_Apply,
@@ -151,12 +153,19 @@ export default new Router({
       meta: {
         title: '超级营销员首页'
       }
-    },{
+    }, {
       path: '/order/list/:busId/:type',
       name: 'my_order_list',
       component: my_order_list,
       meta: {
         title: '我的订单'
+      }
+    }, {
+      path: '/order/detail/:orderId/:busId',
+      name: 'my_order_detail',
+      component: my_order_detail,
+      meta: {
+        title: '订单详情'
       }
     }
   ]

@@ -90,8 +90,20 @@
     phoneShopCart_addShopCart_post: '/phoneShopCart/79B4DE7C/addShopCart',
     /*获取我的页面数据*/
     my_center_post: '/phoneMember/L6tgXlBFeK/toUser',
+    /*获取商城首页数据 */
+    mall_index_post: '/phonePage/L6tgXlBFeK/getHomePageId',
+    /***********************   以下接口都是 订单相关的接口 ***********************/
     /*获取我的订单数据 */
-    order_list_post: '/phoneOrder/L6tgXlBFeK/orderList'
+    order_list_post: '/phoneOrder/L6tgXlBFeK/orderList',
+    /*确认收货接口 */
+    confirm_receipt_post: '/phoneOrder/L6tgXlBFeK/confirmReceipt',
+    /*撤销退款接口 */
+    close_return_post: '/phoneOrder/L6tgXlBFeK/closeReturnOrder',
+    /*获取订单详情数据 */
+    order_detail_post: '/phoneOrder/L6tgXlBFeK/orderDetail',
+    /*删除订单的接口 */
+    delete_order_post: '/phoneOrder/L6tgXlBFeK/deleteOrder'
+
   };
 
   window.h5App = h5App;

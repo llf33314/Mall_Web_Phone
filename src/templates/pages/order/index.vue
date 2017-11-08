@@ -1,8 +1,8 @@
 <template>
 <div id='app' class="shop-wrapper  order-wrapper">  
-    <header-nav :headers= "homeNav"></header-nav>  
-    <content-no :statu="statu" v-if="isShowNullContent"></content-no>
-    <section class="shop-main order-main" v-if="!isShowNullContent">
+    <header-nav :headers= "homeNav" v-if="homeNav != null && homeNav.length > 0"></header-nav>  
+    <content-no :statu="statu" :errorMsg="errorMsg" v-if="isShowNullContent"></content-no>
+    <section class="shop-main order-main" v-if="!isShowNullContent && orderList != null">
         <div class="order-box">
             <div class="order-item" v-for="(busItem,index) in orderList">
                 <div class="order-item-title fs40">
@@ -24,7 +24,7 @@
                     </p>
                 </div>
                 <div class="order-item-box " v-for="detail in busItem.detailResultList">
-                    <div class="order-item-content  border">
+                    <div class="order-item-content  border" @click="returnOrderDetail(busItem.orderId)">
                         <div class="order-item-img">
                             <default-img  
                                 :background="imgUrl+detail.productImageUrl"
@@ -41,12 +41,14 @@
                     </div>
                     <div class="order-item-button fs42 border"  v-if="detail.isShowApplyReturnButton == 1 || detail.isShowCommentButton == 1 ">
                         <div class="order-button shop-bg" 
-                            v-if="detail.isShowApplyReturnButton == 1">
+                            v-if="detail.isShowApplyReturnButton == 1"
+                            @click="returnApplyReturn(detail.orderDetailId)">
                             申请退款
                         </div>
                         <div class="order-button shop-bg"
-                            v-if="detail.isShowCommentButton == 1">
-                            评论
+                            v-if="detail.isShowCommentButton == 1"
+                            @click="returnToComment(detail.orderDetailId)">
+                            去评论
                         </div>
                     </div>
                 </div>
@@ -64,12 +66,13 @@
                 </div>
                 <div class="order-item-button fs42"  v-if="busItem.isShowGoPayButton == 1 || busItem.isShowReceiveGoodButton == 1 || busItem.isShowDaifuButton == 1">
                     <div class="order-button shop-bg" 
-                        v-if="busItem.isShowGoPayButton == 1">
+                        v-if="busItem.isShowGoPayButton == 1"
+                        @click="returnToPay(busItem.orderId)">
                         去支付
                     </div>
                     <div class="order-button shop-bg"
                         v-if="busItem.isShowReceiveGoodButton == 1"
-                        @click="sure_dialog">
+                        @click="sure_dialog(busItem.orderId)">
                         确定收货
                     </div>
                     <div class="order-button shop-bg" 
@@ -125,10 +128,11 @@ export default {
         { id: 3, name: "待收货" },
         { id: 4, name: "已完成" }
       ],
+      isNavshow: "my",
       statu: 1,
       bondStatu: 2,
       isShow: false,
-      isShowNullContent:true,
+      isShowNullContent: false,
       background:
         "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1501765343077&di=5d3652848769c1abd7eb25dea007bb1d&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D450%252C600%2Fsign%3Dcf8442791bd8bc3ec65d0eceb7bb8a28%2Fb3119313b07eca80c63dcea4932397dda14483bd.jpg",
       busId: 0, //商家id
@@ -138,7 +142,9 @@ export default {
       orderId: 0, //订单id
       orderList: [], //订单集合
       isMore: 1, //控制没有更多的显示 1显示 -1 不显示
-      imgUrl: "" //图片域名
+      imgUrl: "", //图片域名
+      errorMsg: "", //错误提示语
+      clickOrderId: "" //点击事件保存的订单id
     };
   },
   mounted() {
@@ -193,8 +199,8 @@ export default {
         busId: _this.busId, //商家id
         url: location.href, //当前页面地址
         browerType: _this.$store.state.browerType, //浏览器类型 1微信 99 其他浏览器
-        type: data.type == "" ? _this.type : data.type,
-        curPage: data.curPage
+        type: data.type >= 0 ? data.type : _this.type,
+        curPage: data.curPage > 0 ? data.curPage : 1
       };
       _this.commonFn.ajax({
         url: h5App.activeAPI.order_list_post,
@@ -203,15 +209,21 @@ export default {
           if (data.code == 1001) {
             location.href = data.url;
           }
+          if (data.code == 0) {
+            _this.orderList = null; //无数据清空
+          }
           if (data.code != 1) {
+            _this.errorMsg = data.msg;
+            _this.isShowNullContent = true; //有数据关闭
             return;
           }
-          let _returnData = data.data;
+          let _returnData = data.data; //定义返回数据
           _this.orderData = _returnData;
-          let newOrderList = _returnData.orderResultList;
-          _this.curPage = _returnData.curPage;
-          _this.pageCount = _returnData.pageCount;
-          _this.imgUrl = data.imgUrl;
+          let newOrderList = _returnData.orderResultList; //保存订单集合
+          _this.curPage = _returnData.curPage; //当前页数
+          _this.pageCount = _returnData.pageCount; //总页数
+          _this.imgUrl = data.imgUrl; //图片地址
+          //   循环设置 价钱
           newOrderList.forEach((item, index) => {
             item.orderMoney = _this.commonFn.moneySplit(item.orderMoney);
             item.detailResultList.forEach((detailItem, index2) => {
@@ -227,7 +239,7 @@ export default {
           } else {
             _this.orderList = _this.orderList.concat(newOrderList) || []; //拼接多页数据
           }
-          //_this.isShowNullContent = false;
+          _this.isShowNullContent = false;
         }
       });
     },
@@ -236,8 +248,9 @@ export default {
       $(".icon-up").toggleClass("shop-hide");
       $(".icon-jiantou").toggleClass("shop-hide");
     },
-    sure_dialog() {
+    sure_dialog(orderId) {
       var _this = this;
+      _this.clickOrderId = orderId;
       // _this.disableScroll();
       var msg = {
         //弹出框组件调用
@@ -248,17 +261,11 @@ export default {
         dialogTitle: "确认收货提示",
         callback: {
           btnOne: function() {
-            //关闭
-            //_this.allowScroll();
-          },
-          btnTow: function() {
-            //确定
-            //_this.allowScroll();
+            _this.confirmReceipt(_this.clickOrderId);
           }
         }
       };
-      console.log(_this.$refs);
-      _this.$refs.dialog.showDialog(msg); //弹出框
+      _this.$parent.$refs.dialog.showDialog(msg); //弹出框
     },
     revoke_dialog() {
       var _this = this;
@@ -274,20 +281,54 @@ export default {
           btnOne: function() {
             //确定
             //_this.allowScroll();
-          },
-          btnTow: function() {
-            //关闭
-            //_this.allowScroll();
           }
         }
       };
-      _this.$refs.dialog.showDialog(msg); //弹出框
+      _this.$parent.$refs.dialog.showDialog(msg); //弹出框
     },
-    returnMyOrder(type) {
-      this.$store.commit("mutationData", { busId: this.busId });
-      this.$router.push("/order/list/" + this.busId + "/" + type);
+    confirmReceipt(orderId) {
+      //确认收货请求
+      let _this = this;
+      _this.commonFn.ajax({
+        url: h5App.activeAPI.confirm_receipt_post,
+        data: {
+          busId: _this.busId, //商家id
+          url: location.href, //获取当前页面地址
+          browerType: _this.$store.state.browerType,
+          orderId: orderId
+        },
+        success: function(data) {
+          if (data.code == 1001) {
+            location.href = data.url;
+          }
+          if (data.code != 1) {
+            _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
+            return;
+          }
+          //请求成功重新请求新数据
+          _this.orderList = null;
+          _this.getOrderList({ curPage: 1 });
+        }
+      });
+    },
+    returnApplyReturn(orderDetailId) {
+      //跳转申请退款页面
+    },
+    returnToComment(orderDetailId) {
+      //跳转至去评价页面
+    },
+    returnToPay(orderId) {
+      //跳转至提交订单页面
+    },
+    returnDaifu(orderId) {
+      //跳转至代付详情页面
+    },
+    returnOrderDetail(orderId) {
+      //跳转至订单详情页面
+      this.$router.push("/order/detail/" + orderId + "/" + this.busId);
     },
     setTitle() {
+      //设置页头
       let _this = this;
       let titles = "我的订单";
       if (_this.type > 0 && _this.type < 5) {
@@ -301,8 +342,6 @@ export default {
       } else if (_this.type == 8) {
         titles = "秒杀订单";
       }
-      console.log(_this.type);
-      console.log(titles);
       this.commonFn.setTitle(titles);
     }
   }
@@ -371,7 +410,7 @@ export default {
   }
 }
 .order-main {
-  padding-top: 148/@dev-Width *1rem;
+  padding: 148/@dev-Width *1rem 0;
 }
 .order-main,
 .deltails-main {
