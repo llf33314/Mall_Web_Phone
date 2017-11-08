@@ -35,17 +35,28 @@
                 <p class="fs40">收货地址：{{memberAddress.memberAddress}}</p>
             </div>
         </div>
+        <div class="deltails-express-bottom clearfix" v-if="order.appointmentId != null && order.appointmentId > 0">
+            <div class="col-2">
+                <p class="fs40">提货人：{{order.appointmentUserName}}</p>
+                <p class="fs40">提货时间：{{order.appointmentDate}} {{order.appointmentStartTime}} {{order.appointmentEndTime}} </p>
+                <p class="fs40">自提点电话：{{order.appointmentUserPhone}}</p>
+                <p class="fs40">自提点地址：{{order.appointmentAddress}}</p>
+            </div>
+        </div>
     </section>
     <section class="shop-main deltails-main">
         <div class="order-box">
             <div class="order-item">
-                <div class="order-item-title fs40">
-                    <div class="order-title-img">
-                        <default-img :background="order.busImageUrl"
-                                    :isHeadPortrait="1">
-                        </default-img>
+                <div class="order-item-title fs40 shop-box-justify">
+                    <div class="shop-show">
+                      <div class="order-title-img shop-inblock">
+                          <default-img :background="order.busImageUrl"
+                                      :isHeadPortrait="1">
+                          </default-img>
+                      </div>
+                      <span>{{order.busName}}</span>
                     </div>
-                    <span>{{order.busName}}</span>
+                    <div class="shop-font">{{order.orderStatusName}}</div>
                 </div>
                 <div class="order-shop border">
                     <p class="order-shop-name">
@@ -264,8 +275,8 @@ export default {
             _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
             return;
           }
-          $(window).back(-1);
-          //   this.$router.push("/order/list/" + this.busId/0);
+          //$(window).back(-1);
+          _this.$router.push("/order/list/" + _this.busId + "/0");
         }
       });
     }
