@@ -433,7 +433,7 @@
                 <!--默认1手-->
                 <div class="fs40 goods-choice-Total fs36 shop-textr" v-if="pifaResult.pfType == 1">
                     <!--手批-->
-                    <span v-if="pifaResult.pfSetObj.isSpHand == 1 && pifaResult.pfSetObj.spHand != '' && pifaAmount >= pifaResult.pfSetObj.spHand">满{{pifaResult.pfSetObj.spHand}}手</span>
+                    <span v-if="pifaResult.pfSetObj.isSpHand == 1 && pifaResult.pfSetObj.spHand != '' && w_specNum >= pifaResult.pfSetObj.spHand">满{{pifaResult.pfSetObj.spHand}}手</span>
                     <span v-if="pifaResult.pfSetObj.isSpHand == 0 ">满1手</span>
                     <span v-if="w_specNum  < pifaResult.pfSetObj.spHand">还差{{pifaResult.pfSetObj.spHand-w_specNum }}手达到批发条件</span>
                     <span class="fs46 shop-font">￥{{pifaTotal}}</span>
@@ -940,6 +940,7 @@ export default {
 
             let newArr = _this.arrDialog || _this.newArrDialog();
             let arr=[];
+            _this.w_specNum =0
             newArr.forEach((e,j)=>{
                 //分类显示小图标个数 =  分类里任意一个数量* 分类下的规格length
                 if( e.id == id ){
@@ -948,7 +949,7 @@ export default {
                 
                  _this.w_specNum += e.num
             })
-            _this.w_specNum = _this.w_specNum/_data.length ;
+            _this.w_specNum = _this.w_specNum / _data.length ;
 
             _this.w_guigePrice.forEach((item,i)=>{
                 let n = _this.commonFn.keepTwoDecimalFull(item.productNum * Number(item.inv_price));
@@ -956,9 +957,10 @@ export default {
                 _this.pifaTotal = _this.pifaTotal + Number(n);
 
                 _this.pifaAmount +=  item.productNum;
+                
 
             })
-
+            _this.pifaTotal = _this.commonFn.keepTwoDecimalFull(_this.pifaTotal);
             _this.arrDialog = newArr;
         },
         /** 
