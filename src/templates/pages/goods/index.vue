@@ -364,7 +364,8 @@
                                         :key = "j">
                                         {{specValue.specValue}}
                                         <i v-for="data in newDialogData " 
-                                            v-if="data.values[0] == specValue.specValue">{{newDialogData[0].pifaAmount2}}</i>
+                                            v-if="data.values[0] == specValue.specValue"
+                                            v-show="data.pifaAmount2 > 0">{{data.pifaAmount2}}</i>
                                     </em>
                                 </div>
                             </div>
@@ -586,27 +587,35 @@ export default {
             _this.pifaAmount = 0;
             _this.pifaTotal = 0;
             let num = 0;
-            let specifica_ids = 0
+            let specifica_ids = 0;
+            let spec_index = 0;
 
             arr.forEach((item,i)=>{
-                console.log(specifica_ids*1 != item.specifica_ids[0]*1)
-                if(specifica_ids == 0){
+                console.log(spec_index,"----------")
+                if(item.pifaAmount2> 0){
+                    arr[i].pifaAmount2 = null;
+                }
+                if(specifica_ids*1 == 0){
                     specifica_ids = item.specifica_ids[0]; 
-                }else if(i+1 == arr.length){
-                    console.log(num)
-                    arr[i].pifaAmount2 = num;
-                }else if(specifica_ids*1 > 0 && specifica_ids*1 != item.specifica_ids[0]*1){
-                    debugger
-                    arr[i-1].pifaAmount2 = num;
+                    spec_index = i;
+                } 
+                if(specifica_ids*1 > 0 && specifica_ids*1 != item.specifica_ids[0]*1){
+                    arr[spec_index].pifaAmount2 = num;
                     num = 0;
                     specifica_ids = item.specifica_ids[0]; 
+                    spec_index = i;
                 }
                 num += item.productNum;
+                if(i+1 >= arr.length){
+                    console.log(num)
+                    arr[spec_index].pifaAmount2 = num;
+                }
 
                 _this.pifaAmount  += item.productNum;
                 _this.pifaTotal += ( item.inv_price * item.productNum);
+                console.log(arr);
             })
-            arr[0].pifaAmount2 = num;
+            // arr[0].pifaAmount2 = num;
             console.log(arr,'arr');
             _this.pifaTotal = _this.commonFn.keepTwoDecimalFull(_this.pifaTotal);
             _this.newDialogData =arr
