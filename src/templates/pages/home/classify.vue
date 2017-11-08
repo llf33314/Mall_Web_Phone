@@ -139,7 +139,9 @@ export default {
         loadMore: function () {
             console.log('加载更多');
             this.curPage++; //请求页数
+
             let pageCount = this.productList.pageCount;//总页数
+
             if(this.curPage > pageCount){
                 this.isMore = 3;
                 return
@@ -357,7 +359,7 @@ export default {
 
         $(window).bind('scroll', function () {
             if ($(window).scrollTop() > 0 && $(window).scrollTop() >= ($(document).height() - $(window).height()) - 1000) {
-            _this.loadMore();
+            _this.loadMore()
             }
         });
     }
