@@ -48,15 +48,15 @@
         <div class="order-box">
             <div class="order-item">
                 <div class="order-item-title fs40 shop-box-justify">
-                    <div class="shop-show">
-                      <div class="order-title-img shop-inblock">
+                  <div class="shop-box-center">
+                    <div class="order-title-img" style="">
                           <default-img :background="order.busImageUrl"
                                       :isHeadPortrait="1">
                           </default-img>
                       </div>
-                      <span>{{order.busName}}</span>
-                    </div>
-                    <div class="shop-font">{{order.orderStatusName}}</div>
+                    <span>{{order.busName}}</span>
+                  </div>
+                  <div class="shop-font ">{{order.orderStatusName}}</div>
                 </div>
                 <div class="order-shop border">
                     <p class="order-shop-name">
