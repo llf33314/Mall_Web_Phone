@@ -18,14 +18,16 @@
                 </div>
             </section>
             <section class="refund-state">
-                <div class="refund-list border" v-if="returnData.isShowCargoStatus == 1 && cargoStatusData!= null">
+                <div class="refund-list border" v-if="returnData.isShowCargoStatus == 1 && cargoStatusData!= null"
+                  @click="shoCargoStatus">
                     <p class="fs46">货物状态</p>
                     <p class="shopGray">
                         <span class="fs36">{{cargoStatusData.value}}</span>
                         <i class="iconfont icon-jiantou-copy"></i>
                     </p>
                 </div>
-                <div class="refund-list" v-if="returnReasonData != null">
+                <div class="refund-list" v-if="returnReasonData != null" 
+                  @click="showReturnReason">
                     <p class="fs46">退款原因</p>
                     <p class="shopGray">
                         <span class="fs36">{{returnReasonData.item_value}}</span>
@@ -67,50 +69,30 @@
                 <p class="fs42">上传凭证：</p>
                 <div class="refund-box comment-photo border clearfix"
                      style="padding:0;">
-                    <div class="comment-img" @click="removeImages(index)" v-if="imageArr != null" v-for="(image , index) in imageArr">
-                        <!-- <img src="imgUrl+image"/> -->
-                         <default-img :background="imgUrl+rimage"
+                    <div class="comment-img"  v-if="imageArr != null" v-for="(image , index) in imageArr" >
+                         <default-img :background="imgUrl+image"
                                  :isHeadPortrait="1">
-                    </default-img>
-                        <i class="iconfont icon-guanbi"></i>
+                        </default-img>
+                        <i class="iconfont icon-guanbi" @click="removeImages(index)"></i>
                     </div>
-                    <div class="comment-upload">
-                      <img-upload :imgURL="imgData" :maxNums="maxNum"></img-upload>
+                    <div class="comment-upload" v-if="imageArr != null && imageArr.length < 3">
+                      <img-upload :imgURL="imageArr" @returnUrl="returnUrl"></img-upload>
                     </div>
                 </div>
             </section>
             <section class="shop-footer-fixed comment-footer1">
+              <technical-support v-if="$store.state.isAdvert == 1" ></technical-support>
                 <div class="shop-max-button fs52 shop-bg">
                     提 交
                 </div>
             </section>
         </div>
-        <div class="refund-dialog shop-hide">
-            <div class="dialog-main">
-                <div class="dialog-content">
-                    <p class="fs46 dialog-title border">退款原因</p>
-                    <div class="dialog-ul">
-                        <div class="refund-list border">
-                            <p class="fs46">不喜欢/不想要</p>
-                            <p class="dialog-option">
-                                <i class="iconfont icon-dui"></i>
-                            </p>
-                        </div>
-                        <div class="refund-list ">
-                            <p class="fs46">其他</p>
-                            <p class="dialog-option">
-                                <i class="iconfont icon-dui"></i>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="shop-footer comment-footer1">
-                    <div class="shop-max-button fs52 shop-bg">
-                        关 闭
-                    </div>
-                </div>
-            </div>
-        </div>
+        <dialog-show v-if="returnReasonList != null" v-show="isShowReason" 
+          :selectData="returnReasonData"
+          :dialogList="returnReasonList"  
+          @selectEvent="selectDialogReason"
+          @closeDialog="closeDialogReason"></dialog-show>
+
     </div>
 </template>
 
@@ -118,6 +100,8 @@
 import defaultImg from "components/defaultImg";
 import imgUpload from "components/imgUpload";
 import divTextarea from "components/divTextarea";
+import dialogShow from "./component/selectDialog";
+import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   data() {
     return {
@@ -139,14 +123,17 @@ export default {
       returnTelphone: "", //退款手机号
       isTextareaRemark: false, //输入框显示条件
       isTextareaPhone: false, //手机号码输入框条件
-      imageArr: [] ,//上传图片的集合
-      maxNum:5
+      imageArr: ["---", "===", "+++++++"], //上传图片的集合
+      isShowReason: false, //是否显示退款原因弹出框
+      isShowCargo: false //是否显示货物状态
     };
   },
   components: {
     defaultImg,
     imgUpload,
-    divTextarea
+    divTextarea,
+    dialogShow,
+    technicalSupport
   },
   mounted() {
     this.$store.commit("show_footer", false); //隐藏底部导航栏
@@ -159,8 +146,9 @@ export default {
   },
   methods: {
     //组件图片接受
-    imgData(data) {
-      this.imgURL = data;
+    returnUrl(data) {
+      console.log("imgUrl", data);
+      this.imageArr = data;
     },
     loadDatas() {
       let _this = this;
@@ -194,6 +182,10 @@ export default {
           }
           if (myData.returnReasonList != null) {
             _this.returnReasonList = myData.returnReasonList; //退款原因
+            _this.returnReasonList.forEach((element, index) => {
+              element.id = element.item_key;
+              element.value = element.item_value;
+            });
           }
           if (_this.returnReasonList.length > 0) {
             //给默认的退款原因赋值
@@ -204,6 +196,7 @@ export default {
             _this.cargoStatusData = _this.cargoStatusList[0];
           }
           console.log(_this.returnReasonData);
+          console.log("_this.returnReasonList", _this.returnReasonList);
         }
       });
     },
@@ -217,7 +210,18 @@ export default {
     },
     removeImages(index) {
       //删除图片
-      this.imageArr.$remove(index);
+      this.imageArr.splice(index, 1);
+    },
+    showReturnReason() {
+      this.isShowReason = true;
+    },
+    selectDialogReason(data) {
+      console.log(data);
+      this.isShowReason = false;
+      this.returnReasonData = data;
+    },
+    closeDialogReason(data) {
+      this.isShowReason = data;
     }
   }
 };
@@ -237,7 +241,10 @@ export default {
   section {
     width: 100%;
     background: #fff;
-    margin-bottom: 30 / @dev-Width *1rem;
+    // margin-bottom: 30 / @dev-Width *1rem;
+  }
+  .technicalSupport {
+    background: #f0f2f5;
   }
   .refund-goods {
     padding: 25 / @dev-Width *1rem 15 / @dev-Width *1rem 25 / @dev-Width *1rem 40 / @dev-Width *1rem;
@@ -379,58 +386,6 @@ export default {
       }
     }
   }
-  .refund-dialog {
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    position: fixed;
-    z-index: 99;
-    top: 0;
-    left: 0;
-    .dialog-main {
-      width: 100%;
-      position: absolute;
-      background: #fff;
-      bottom: 0;
-      animation: dialogShow 0.2s;
-      -moz-animation: dialogShow 0.2s;
-      /* Firefox */
-      -webkit-animation: dialogShow 0.2s;
-    }
-    .dialog-content {
-      width: 100%;
-      padding: 35/@dev-Width *1rem 0 88/@dev-Width *1rem 50/@dev-Width *1rem;
-    }
-    .dialog-title {
-      width: 100%;
-      text-align: center;
-      padding-bottom: 50/@dev-Width *1rem;
-    }
-    .dialog-ul {
-      width: 100%;
-      .refund-list {
-        height: 117/@dev-Width *1rem;
-        padding-left: 0;
-      }
-      & > div:last-child {
-      }
-    }
-    .dialog-option {
-      width: 60/@dev-Width *1rem;
-      height: 60/@dev-Width *1rem;
-      .border-radius(100%);
-      border: 1px solid #c7c7cc;
-      text-align: center;
-      line-height: 60/@dev-Width *1rem;
-      & > i {
-        color: #fff;
-      }
-    }
-    .selected {
-      border: 0;
-      background: #e4393c;
-    }
-  }
 }
 .comment-footer1 {
   .shop-max-button {
@@ -475,6 +430,9 @@ export default {
         top: 0;
         left: 0;
         opacity: 0;
+      }
+      i {
+        z-index: 1;
       }
     }
     .comment-img {
