@@ -293,7 +293,7 @@
                 </div>
             </div>
             <div class="goods-dialog-footer">
-                <div class="goods-dialog-button fs52 shop-yellow" @click="addCard(2)">
+                <div class="goods-dialog-button fs52 shop-yellow" @click="addCard(1)">
                     加入购物车
                 </div>
                 <div class="goods-dialog-button fs52  shop-bg">
@@ -439,14 +439,14 @@
                     <span v-if="pifaResult.pfSetObj.isSpHand == 1 && pifaResult.pfSetObj.spHand != '' && w_specNum >= pifaResult.pfSetObj.spHand">满{{pifaResult.pfSetObj.spHand}}手</span>
                     <span v-if="pifaResult.pfSetObj.isSpHand == 0 ">满1手</span>
                     <span v-if="w_specNum  < pifaResult.pfSetObj.spHand">还差{{pifaResult.pfSetObj.spHand-w_specNum }}手达到批发条件</span>
-                    <span class="fs46 shop-font">￥{{pifaTotal}}</span>
+                    <span class="fs46 shop-font">￥{{pifaTotal | currency}}</span>
                     <span class="shop-font">.00 </span>共{{pifaAmount}}件
                 </div>
                 <div class="fs40 goods-choice-Total fs36 shop-textr" v-else>
                     <!--混批-->
                     <div class="shop-inblock" v-if="pifaResult.pfSetObj.hpMoney-pifaTotal > 0 || pifaAmount - pifaResult.pfSetObj.hpNum < 0">
                          还差<span v-if="pifaResult.pfSetObj.hpNum>0"> {{pifaResult.pfSetObj.hpNum-pifaAmount}} 件 或</span>
-                         <span>{{pifaResult.pfSetObj.hpMoney-pifaTotal}} 元达到批发条件,</span>
+                         <span>{{(pifaResult.pfSetObj.hpMoney-pifaTotal) | currency }} 元达到批发条件,</span>
                     </div>
                     <div class="shop-inblock" v-else>
                         满
@@ -455,7 +455,7 @@
                         <span v-if="pifaResult.pfSetObj.isHpMoney == 1 && pifaResult.pfSetObj.hpMoney != ''">{{pifaResult.pfSetObj.hpMoney}} 元</span>
                         <span v-if="pifaResult.pfSetObj.isHpNum ==0 && pifaResult.pfSetObj.isHpMoney == 0">1件</span>起批
                     </div>
-                    <span class="fs46 shop-font">￥{{pifaTotal}}</span>
+                    <span class="fs46 shop-font">￥{{pifaTotal | currency}}</span>
                     <span class="shop-font">元</span> 共{{pifaAmount}}件
                 </div>
             </div>
@@ -513,7 +513,7 @@ import banner from './child/banner';//倒计时
 import technicalSupport from 'components/technicalSupport' //技术支持
 import comment from './child/comment' //技术支持
 import spec from './child/spec' //技术支持
-
+import filter from '../../../lib/filters'// 价钱过滤器
 
 export default {
     components: {
@@ -582,7 +582,7 @@ export default {
         'flag'(){
             let _this = this;
             let arr=[]
-
+            //在所有规格中 获取已选择商品 数量>1的商品
             _this.w_guigePrice.forEach((item,i)=>{
                 if(item.productNum>0){
                     arr.push(item);
@@ -590,26 +590,25 @@ export default {
             })
             _this.pifaAmount = 0;
             _this.pifaTotal = 0;
-            
-        //    if(_this.w_specificaList.length> 1){
-        //        let newArr = _this.newArrDialog();
-        //    }
+
+            //切换规划分类数量显示
             let newArr = _this.newArrDialog();
-            
             arr.forEach((item,i)=>{
                 newArr.forEach((test,j)=>{
                     if(test.id == item.specifica_ids[0]){
                         test.num += item.productNum;
                     }
                 })
+                //计算总数
                 _this.pifaAmount  += item.productNum;
+                //计算总价
                 _this.pifaTotal += ( item.inv_price * item.productNum);
             })
 
             console.log(arr,'arr');
-            _this.pifaTotal = _this.commonFn.keepTwoDecimalFull(_this.pifaTotal);
 
             _this.arrDialog = newArr;
+            _this.newDialog = arr;
         }
         
     },
@@ -954,7 +953,7 @@ export default {
             _this.w_specNum = _this.w_specNum / _data.length ;
 
             _this.w_guigePrice.forEach((item,i)=>{
-                let n = _this.commonFn.keepTwoDecimalFull(item.productNum * Number(item.inv_price));
+                let n = item.productNum * Number(item.inv_price);
 
                 _this.pifaTotal = _this.pifaTotal + Number(n);
 
@@ -962,7 +961,6 @@ export default {
                 
 
             })
-            _this.pifaTotal = _this.commonFn.keepTwoDecimalFull(_this.pifaTotal);
             _this.arrDialog = newArr;
         },
         /** 
@@ -1127,24 +1125,18 @@ export default {
 
         },
         /** 
-         * 添加购物车
+         * 添加购物车 e==1正常购买，e==2 批发购买
          */
         addCard(e){
-            let data;
             let  _this = this;
-            // if(e===1){
-            //     data = _this.guigePrice;
-            // }else{
-            //     data = _this.w_guigePrice;
-            //     let arr=[];
-
-            //     data.forEach((item,i)=>{
-            //         if(item.productNum > 0){
-            //             arr.push(item);
-            //         }
-            //     })
-            //     console.log(arr)
-            // }
+            let data;//添加商品
+            if(e===1){
+                
+                console.log('正常购买')
+            }else{
+               console.log('批发购买')
+               data = _this.newDialog
+            }
         },
         /** 
          * 收藏店铺
