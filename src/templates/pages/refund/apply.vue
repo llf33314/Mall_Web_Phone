@@ -47,10 +47,19 @@
             </section>
             <section class="refund-state">
                <div class="refund-list">
+                    <div class="fs46">手机号码：</div>
+                    <div class="refund-textarea">
+                      <div-textarea v-if="isTextareaPhone"   :text="returnTelphone" @newText="changePhone"></div-textarea>
+                      <p class="fs46 shopGray" @click="isTextareaPhone = true" v-else>选填</p>
+                    </div>
+                </div>
+            </section>
+            <section class="refund-state">
+               <div class="refund-list">
                     <div class="fs46">退款说明：</div>
                     <div class="refund-textarea">
-                      <div-textarea v-if="isTextarea"></div-textarea>
-                      <span class="fs46 shopGray" @click="isTextarea = true" v-else>选填</span>
+                      <div-textarea v-if="isTextareaRemark"  :text="returnRemark" @newText="changeRemark"></div-textarea>
+                      <p class="fs46 shopGray" @click="isTextareaRemark = true" v-else>选填</p>
                     </div>
                 </div>
             </section>
@@ -58,24 +67,15 @@
                 <p class="fs42">上传凭证：</p>
                 <div class="refund-box comment-photo border clearfix"
                      style="padding:0;">
-                    <div class="comment-img">
-                        <img src="../../../assets/img/test/test1.jpg"/>
-                        <i class="iconfont icon-guanbi"></i>
-                    </div>
-                    <div class="comment-img">
-                        <img src="../../../assets/img/test/test1.jpg"/>
-                        <i class="iconfont icon-guanbi"></i>
-                    </div>
-                    <div class="comment-img">
-                        <img src="../../../assets/img/test/test1.jpg"/>
-                        <i class="iconfont icon-guanbi"></i>
-                    </div>
-                    <div class="comment-img">
-                        <img src="../../../assets/img/test/test1.jpg"/>
+                    <div class="comment-img" @click="removeImages(index)" v-if="imageArr != null" v-for="(image , index) in imageArr">
+                        <!-- <img src="imgUrl+image"/> -->
+                         <default-img :background="imgUrl+rimage"
+                                 :isHeadPortrait="1">
+                    </default-img>
                         <i class="iconfont icon-guanbi"></i>
                     </div>
                     <div class="comment-upload">
-                        <imgUpload :imgURL="imgData"></imgUpload>
+                      <img-upload :imgURL="imgData" :maxNums="maxNum"></img-upload>
                     </div>
                 </div>
             </section>
@@ -136,8 +136,11 @@ export default {
       isShowFreightMoney: false, //是否显示运费
       imgUrl: "", //图片域名
       returnRemark: "", //退款说明
-      returnTelphone: "" ,//退款手机号
-      isTextarea:false,//输入框显示条件
+      returnTelphone: "", //退款手机号
+      isTextareaRemark: false, //输入框显示条件
+      isTextareaPhone: false, //手机号码输入框条件
+      imageArr: [] ,//上传图片的集合
+      maxNum:5
     };
   },
   components: {
@@ -193,16 +196,28 @@ export default {
             _this.returnReasonList = myData.returnReasonList; //退款原因
           }
           if (_this.returnReasonList.length > 0) {
-            //给默认的退款id赋值
+            //给默认的退款原因赋值
             _this.returnReasonData = _this.returnReasonList[0];
           }
           if (_this.cargoStatusList.length > 0) {
-            //给默认的退款id赋值
+            //给默认的退款货物赋值
             _this.cargoStatusData = _this.cargoStatusList[0];
           }
           console.log(_this.returnReasonData);
         }
       });
+    },
+    changeRemark(returnRemark, msg) {
+      //改变退款说明
+      this.returnRemark = msg;
+    },
+    changePhone(msg) {
+      //改变手机号码时间
+      this.returnTelphone = msg;
+    },
+    removeImages(index) {
+      //删除图片
+      this.imageArr.$remove(index);
     }
   }
 };
@@ -274,7 +289,7 @@ export default {
       }
     }
   }
-  .refund-textarea{
+  .refund-textarea {
     width: 80%;
     height: auto;
   }

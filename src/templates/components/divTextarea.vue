@@ -20,7 +20,7 @@ export default {
     },
     methods: {
         table_focus(){
-            this.newText = '';
+            this.newText = this.text;
         },
         table_blur(e){
             var nowText = $(e.target).html();//输入的内容

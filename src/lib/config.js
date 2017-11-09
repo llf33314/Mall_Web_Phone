@@ -28,7 +28,7 @@
   //      * @type {String}
   //      * @memberof app.env
   //      */
-  //     // activeAPI: 'http://192.168.2.116:8080'
+  //     // activeAPI: '/api'
   //   },
   //   test: { // 测试环境
   //     debug: true,
@@ -51,12 +51,14 @@
   const h5App = {};
 
 
+  h5App.api ="/api";
+  // h5App.api ="";
+
   /**
    * 环境配置
    * @type {env.develop|{debug, API, WXCore, LoginUrl}}
    */
   // h5App.env = env.develop;
-
   h5App.activeAPI = {
     // phoneProduct_post: h5App.env.activeAPI + '/phoneProduct/L6tgXlBFeK/productAll',
     //商品详情
@@ -112,7 +114,9 @@
     /*保存退款物流的接口 */
     return_logistics_save_post: '/phoneOrder/L6tgXlBFeK/saveReturnLogistics',
     /*查询退款物流的接口 */
-    return_logistics_post: '/phoneOrder/L6tgXlBFeK/getReturnLogistics'
+    return_logistics_post: '/phoneOrder/L6tgXlBFeK/getReturnLogistics',
+    /*上传图片的接口 */ 
+    upload_image_post:'/phonePage/L6tgXlBFeK/uploadImage'
 
   };
 
