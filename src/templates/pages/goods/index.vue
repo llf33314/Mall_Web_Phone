@@ -211,6 +211,9 @@
             <div class="goods-footer-no fs40" v-if="isSoldOut">
                 商品已经下架啦~
             </div>
+            <div class="goods-footer-no fs40" v-if="isSoldOut">
+                活动已结束
+            </div>
             <div class="goods-footer-botton ui-col-2 fs50 shop-bg" v-if="type == 4 || type == 6 ">
                 交保证金报名
             </div>
@@ -441,15 +444,15 @@
                 </div>
                 <div class="fs40 goods-choice-Total fs36 shop-textr" v-else>
                     <!--混批-->
-                    <div class="shop-inblock" v-if="pifaAmount < pifaResult.pfSetObj.hpNum || pifaTotal<pifaResult.pfSetObj.hpMoney">
+                    <div class="shop-inblock" v-if="pifaResult.pfSetObj.hpMoney-pifaTotal > 0 || pifaAmount - pifaResult.pfSetObj.hpNum < 0">
                          还差<span v-if="pifaResult.pfSetObj.hpNum>0"> {{pifaResult.pfSetObj.hpNum-pifaAmount}} 件 或</span>
                          <span>{{pifaResult.pfSetObj.hpMoney-pifaTotal}} 元达到批发条件,</span>
                     </div>
                     <div class="shop-inblock" v-else>
                         满
-                        <span v-if="pifaResult.pfSetObj.isHpNum == 1 && pifaResult.pfSetObj.hpNum != ''">{{pifaResult.pfSetObj.hpNum}}件</span>
+                        <span v-if="pifaResult.pfSetObj.isHpNum == 1 && pifaResult.pfSetObj.hpNum != ''">{{pifaResult.pfSetObj.hpNum}}件 </span>
                         <span v-if="pifaResult.pfSetObj.isHpNum == 1 && pifaResult.pfSetObj.isHpMoney == 1">或</span>
-                        <span v-if="pifaResult.pfSetObj.isHpMoney == 1 && pifaResult.pfSetObj.hpMoney != ''">{{pifaResult.pfSetObj.hpMoney}}元</span>
+                        <span v-if="pifaResult.pfSetObj.isHpMoney == 1 && pifaResult.pfSetObj.hpMoney != ''">{{pifaResult.pfSetObj.hpMoney}} 元</span>
                         <span v-if="pifaResult.pfSetObj.isHpNum ==0 && pifaResult.pfSetObj.isHpMoney == 0">1件</span>起批
                     </div>
                     <span class="fs46 shop-font">￥{{pifaTotal}}</span>
@@ -585,7 +588,6 @@ export default {
                     arr.push(item);
                 }
             })
-
             _this.pifaAmount = 0;
             _this.pifaTotal = 0;
             
@@ -593,10 +595,10 @@ export default {
         //        let newArr = _this.newArrDialog();
         //    }
             let newArr = _this.newArrDialog();
-
+            
             arr.forEach((item,i)=>{
                 newArr.forEach((test,j)=>{
-                    if(test.value == item.values[0]){
+                    if(test.id == item.specifica_ids[0]){
                         test.num += item.productNum;
                     }
                 })
@@ -968,7 +970,7 @@ export default {
         */
         newArrDialog(){
             let _this = this;
-            let newArr=[];
+            let newArr= [];
             _this.w_specificaList[0].specValues.forEach((item,j)=> {
                 let obj ={
                             id:'',
@@ -991,6 +993,7 @@ export default {
                 })
                 newArr.push(obj);
             })
+            
             return newArr;
         },
         /** 
@@ -1000,7 +1003,9 @@ export default {
             let _this =this;
             let _data;//当前要改变的数据
             //监听flag变化,input输入watch监听不了
+
             _this.flag = !_this.flag;
+        
             /*
             有规格 - 从返回规格列表中获取（w_guigePrice）
             无规格 - 从初始默认数据中获取（w_dialogData）
@@ -1091,7 +1096,6 @@ export default {
             
             if(id){
                 _this.wholesaleId = id;
-                console.log(id);
             }
 
             if(e){//获取选中值 存成数组
@@ -1121,13 +1125,6 @@ export default {
                 _this.spec_num = _this.dialogData.inv_num;
             }
 
-        },
-        /** 
-         * 批发总件总数 单价 数量
-         * 
-         */
-        add_pifa(){
-            let _this = this;
         },
         /** 
          * 添加购物车
