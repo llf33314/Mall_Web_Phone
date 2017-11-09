@@ -45,7 +45,9 @@
                     </p>
                 </div>
                 <div class="refund-list">
-                    <p class="fs46">退款说明：<span class="shopGray">选填</span></p>
+                    <p class="fs46">退款说明：
+                      <div-textarea class="shopGray"></div-textarea>
+                    </p>
                 </div>
             </section>
             <section class="refund-photo comment-content">
@@ -111,6 +113,7 @@
 <script>
 import defaultImg from "components/defaultImg";
 import imgUpload from "components/imgUpload";
+import divTextarea from "components/divTextarea";
 export default {
   data() {
     return {
@@ -127,12 +130,15 @@ export default {
       returnReasonData: {}, //退款原因对象
       returnImageUrls: [], //退款图片
       isShowFreightMoney: false, //是否显示运费
-      imgUrl: "" //图片域名
+      imgUrl: "", //图片域名
+      returnRemark: "", //退款说明
+      returnTelphone: "" //退款手机号
     };
   },
   components: {
     defaultImg,
-    imgUpload
+    imgUpload,
+    divTextarea
   },
   mounted() {
     this.$store.commit("show_footer", false); //隐藏底部导航栏
@@ -171,8 +177,8 @@ export default {
           _this.imgUrl = data.imgUrl; //图片域名
           _this.returnData = data.data; //返回数据
           let myData = _this.returnData;
-          if(myData.returnPrice > 0){
-            _this.isShowFreightMoney  = true;
+          if (myData.returnPrice > 0) {
+            _this.isShowFreightMoney = true;
           }
           myData.returnPrice = _this.commonFn.moneySplit(myData.returnPrice);
           if (myData.cargoStatusList != null) {
@@ -363,7 +369,8 @@ export default {
       background: #fff;
       bottom: 0;
       animation: dialogShow 0.2s;
-      -moz-animation: dialogShow 0.2s; /* Firefox */
+      -moz-animation: dialogShow 0.2s;
+      /* Firefox */
       -webkit-animation: dialogShow 0.2s;
     }
     .dialog-content {
