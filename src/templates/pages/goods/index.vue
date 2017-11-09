@@ -320,7 +320,6 @@
                     <p class="fs36 shop-font" v-else>库存 0 件</p>
                     <p class="fs36 shop-font" v-if="w_dialogData.inv_code">商品编号: {{w_dialogData.inv_code}}</p>
                     <p class="fs36 shopGray"  v-if="w_dialogData.hpMoney">本商品{{dialogw_dialogDataData.hpMoney}}手起批</p>
-                    <p class="fs36">{{w_dialogData}}</p>
                 </div>
             </div>
             <div class="goods-dialog-choice">
@@ -343,8 +342,8 @@
                     <div class="goods-choice-list2 border" v-if="pifaResult.pfType == 1">
                         <div class="fs40">按一手货下单</div>
                         <div class="goods-choice-button">
-                            <span class="fs36" @click="addw_specNum('-')" :class="{'shopGray':w_specNum<=0}">减一手</span>
-                            <span class="fs36" @click="addw_specNum('+')" :class="{'shopGray':w_specNum>w_dialogData.inv_num}">加一手</span>
+                            <span class="fs36" @click="addw_specNum('-')" :class="{'shopGray':arrDialog == ''}">减一手</span>
+                            <span class="fs36" @click="addw_specNum('+')" >加一手</span>
                         </div>
                     </div>
                     <!--多规格-上部分-->
@@ -359,13 +358,14 @@
                                 <div v-for="(spec,index) in w_dialogData.specifica_ids" v-if="index == i" :key = "index">
                                     <em class="fs40 em-choice " v-for=" (specValue,j) in item.specValues"
                                         @click="choice_product($event,specValue.id)" 
-                                        :class="{'shop-bg':w_dialogData.specifica_ids[index] == specValue.id }"
+                                        :class="{'shop-bg': wholesaleId == specValue.id }"
                                         :value="specValue.id"
                                         :key = "j">
                                         {{specValue.specValue}}
-                                        <i v-for="data in newDialogData " 
-                                            v-if="data.values[0] == specValue.specValue"
-                                            v-show="data.pifaAmount2 > 0">{{data.pifaAmount2}}</i>
+                                        <i style="font-size:11px" v-for="data in arrDialog " 
+                                            v-if="data.value == specValue.specValue && data.num>0"
+                                            :key= "data.num"
+                                            >{{data.num}}</i>
                                     </em>
                                 </div>
                             </div>
@@ -398,7 +398,7 @@
                             <div class="fs36" v-if="test.inv_num">{{test.inv_num}}</div>
                             <div class="fs36" v-else>0</div>
                             <div class="fs36">{{test.inv_price}}</div>
-                            <div class="fs36" v-if="pifaResult.pfType==1">{{w_specNum}}</div>
+                            <div class="fs36" v-if="pifaResult.pfType==1">{{test.productNum}}</div>
                             <div class="goods-choice-box2" v-if="pifaResult.pfType==2">
                                 <em class="em-choice" @click="w_addSpecNumber('-',index)">-</em>
                                 <input class="em-choice" 
@@ -409,7 +409,7 @@
                             </div>
                         </div>
                         <!--多个规格显示-->
-                         <div class="goods-choice-li shop-box-justify" 
+                        <div class="goods-choice-li shop-box-justify" 
                             v-if=" test.specifica_ids[0] == wholesaleId && w_specificaList.length > 1"
                             v-for=" (test,index) in w_guigePrice" 
                             :key="index">
@@ -418,7 +418,7 @@
                             <div class="fs36" v-if="test.inv_num">{{test.inv_num}}</div>
                             <div class="fs36" v-else>0</div>
                             <div class="fs36">{{test.inv_price}}</div>
-                            <div class="fs36" v-if="pifaResult.pfType==1">{{w_specNum}}</div>
+                            <div class="fs36" v-if="pifaResult.pfType==1">{{test.productNum}}</div>
                             <div class="goods-choice-box2" v-if="pifaResult.pfType==2">
                                 <em class="em-choice" @click="w_addSpecNumber('-',index)">-</em>
                                 <input class="em-choice" 
@@ -433,11 +433,11 @@
                 <!--默认1手-->
                 <div class="fs40 goods-choice-Total fs36 shop-textr" v-if="pifaResult.pfType == 1">
                     <!--手批-->
-                    <span v-if="pifaResult.pfSetObj.isSpHand == 1 && pifaResult.pfSetObj.spHand != '' && pifaAmount >= pifaResult.pfSetObj.spHand">满{{pifaResult.pfSetObj.spHand}}手</span>
+                    <span v-if="pifaResult.pfSetObj.isSpHand == 1 && pifaResult.pfSetObj.spHand != '' && w_specNum >= pifaResult.pfSetObj.spHand">满{{pifaResult.pfSetObj.spHand}}手</span>
                     <span v-if="pifaResult.pfSetObj.isSpHand == 0 ">满1手</span>
-                    <span v-if="pifaAmount < pifaResult.pfSetObj.spHand">还差{{pifaResult.pfSetObj.spHand-pifaAmount}}手达到批发条件</span>
+                    <span v-if="w_specNum  < pifaResult.pfSetObj.spHand">还差{{pifaResult.pfSetObj.spHand-w_specNum }}手达到批发条件</span>
                     <span class="fs46 shop-font">￥{{pifaTotal}}</span>
-                    <span class="shop-font">.00 </span>共{{pifaAmount}}手
+                    <span class="shop-font">.00 </span>共{{pifaAmount}}件
                 </div>
                 <div class="fs40 goods-choice-Total fs36 shop-textr" v-else>
                     <!--混批-->
@@ -458,12 +458,12 @@
             </div>
             <div class="goods-dialog-footer" v-if="pifaResult.pfType == 1" >
                 <div class="goods-dialog-button fs52 shop-yellow" 
-                    :class="[pifaTotal-pifaResult.pfSetObj.spHand<0?'shopRgba':'']"
+                    :class="[w_specNum-pifaResult.pfSetObj.spHand<0?'shopRgba':'']"
                     @click="addCard(2)">
                     加入购物车 
                 </div>
                 <div class="goods-dialog-button fs52  shop-bg " 
-                   :class="[pifaTotal-pifaResult.pfSetObj.spHand<0?'shopRgba':'']">
+                   :class="[w_specNum-pifaResult.pfSetObj.spHand<0?'shopRgba':'']">
                     立刻批发 
                 </div> 
             </div>
@@ -571,13 +571,15 @@ export default {
                 }
             ],
             flag:false,
-            newDialogData:''
+            //newDialogData:'',
+            arrDialog:''
         }
     },
     watch: {
         'flag'(){
             let _this = this;
             let arr=[]
+
             _this.w_guigePrice.forEach((item,i)=>{
                 if(item.productNum>0){
                     arr.push(item);
@@ -586,39 +588,26 @@ export default {
 
             _this.pifaAmount = 0;
             _this.pifaTotal = 0;
-            let num = 0;
-            let specifica_ids = 0;
-            let spec_index = 0;
+            
+        //    if(_this.w_specificaList.length> 1){
+        //        let newArr = _this.newArrDialog();
+        //    }
+            let newArr = _this.newArrDialog();
 
             arr.forEach((item,i)=>{
-                console.log(spec_index,"----------")
-                if(item.pifaAmount2> 0){
-                    arr[i].pifaAmount2 = null;
-                }
-                if(specifica_ids*1 == 0){
-                    specifica_ids = item.specifica_ids[0]; 
-                    spec_index = i;
-                } 
-                if(specifica_ids*1 > 0 && specifica_ids*1 != item.specifica_ids[0]*1){
-                    arr[spec_index].pifaAmount2 = num;
-                    num = 0;
-                    specifica_ids = item.specifica_ids[0]; 
-                    spec_index = i;
-                }
-                num += item.productNum;
-                if(i+1 >= arr.length){
-                    console.log(num)
-                    arr[spec_index].pifaAmount2 = num;
-                }
-
+                newArr.forEach((test,j)=>{
+                    if(test.value == item.values[0]){
+                        test.num += item.productNum;
+                    }
+                })
                 _this.pifaAmount  += item.productNum;
                 _this.pifaTotal += ( item.inv_price * item.productNum);
-                console.log(arr);
             })
-            // arr[0].pifaAmount2 = num;
+
             console.log(arr,'arr');
             _this.pifaTotal = _this.commonFn.keepTwoDecimalFull(_this.pifaTotal);
-            _this.newDialogData =arr
+
+            _this.arrDialog = newArr;
         }
         
     },
@@ -758,6 +747,9 @@ export default {
                 'data':data,
                 'success':function(data){
                     //console.log(data,'批发数据');
+                    if(data.code == -1){
+                        _this.$parent.$refs.bubble.show_tips(data.msg);
+                    }
                     _this.w_specificaList = data.data.specificaList;
                     _this.w_guigePrice = data.data.guigePrice;
 
@@ -874,46 +866,132 @@ export default {
          */
         addw_specNum(c){
             let _this =this;
-        //库存为0 
-            if( _this.w_specNum.inv_num == 0){
-                _this.w_specNum = 0;
-                _this.$parent.$refs.bubble.show_tips('商品已售罄');
-                return
-            }
-            if(_this.w_specNum < 0){
-                _this.$parent.$refs.bubble.show_tips('数量不能小于1');
-            _this.w_specNum = 1;
-                return
-            }
-            if( c === '-'){//减小时，
-                if( _this.w_specNum<=0){
-                    _this.$parent.$refs.bubble.show_tips('数量不能小于0');
-                    return
+            //库存为0
+            let _data=[];
+
+            let id = this.wholesaleId;//当前id
+            /*
+            有规格 - 从返回规格列表中获取（w_guigePrice）
+            无规格 - 从初始默认数据中获取（w_dialogData）
+            */
+            //当前id过滤出
+            if(_this.w_guigePrice == ''){
+                if(id == _this.w_dialogData.specifica_ids[0]){
+                    _data.push(_this.w_dialogData);
                 }
-                _this.w_specNum  --;
-            }else{//增减时
-                // 限购数量不为零时，购买数量不能超出限购数量
-                if(_this.goodsData.maxBuyNum && ( _this.w_specNum >= _this.goodsData.maxBuyNum)){
-                    _this.$parent.$refs.bubble.show_tips('超出限购数量');
-                    return
-                }
-                //超出规格库存
-                if(_this.w_specNum >= _this.w_dialogData.inv_num){
-                    _this.$parent.$refs.bubble.show_tips('超出现有库存量');
-                    _this.w_specNum = _this.dialogData.inv_num
-                    return
-                }
-                if(c === '+'){
-                    _this.w_specNum  ++;
+            }else{
+                if(_this.w_guigePrice[0].specifica_ids.length == 1){
+                     _this.w_guigePrice.forEach((item,i)=>{
+                        _data.push(item);
+                    })
+                }else{
+                    _this.w_guigePrice.forEach((item,i)=>{
+                        if(id == item.specifica_ids[0]){
+                        _data.push(item);
+                        } 
+                    })
+
                 }
             }
-            _this.pifaTotal = 0;
-            _this.pifaAmount = 0;
-            console.log(_this.w_guigePrice,'_this.w_guigePrice')
-            _this.w_guigePrice.forEach((item,i)=>{
-                _this.pifaTotal += (_this.w_specNum * item.inv_price);
+            console.log(_data,'_data')
+            _data.forEach((item,i)=>{
+                //vue监听不到数组里面的数据，改变vue里面的数据，实现dom重新渲染；
+                _this.w_guigePrice.push([]);
+                _this.w_guigePrice.pop();
+
+                if( item.inv_num == 0){
+                    item.productNum = 0;
+                    _this.$parent.$refs.bubble.show_tips('商品已售罄');
+                    return
+                }
+                if( item.productNum < 0){
+                    _this.$parent.$refs.bubble.show_tips('数量不能小于1');
+                    item.productNum = 1;
+                    return
+                }
+
+                if( c === '-'){//减小时，
+                    if( item.productNum <= 0){
+                        _this.$parent.$refs.bubble.show_tips('数量不能小于0');
+                        return
+                    }
+                    item.productNum--;
+                }else{//增减时
+                    //超出规格库存
+                    if( item.productNum.num >= _data.inv_num){
+                        _this.$parent.$refs.bubble.show_tips('超出现有库存量');
+                        item.productNum = _data.inv_num
+                        return
+                    }
+                    // 限购数量不为零时，购买数量不能超出限购数量
+                    if(_this.goodsData.maxBuyNum && ( item.num  >= _this.goodsData.maxBuyNum)){
+                        _this.$parent.$refs.bubble.show_tips('超出限购数量');
+                        return
+                    }
+                    if(c === '+'){
+                        item.productNum ++;
+                    }
+                } 
             })
-            _this.pifaAmount = _this.w_specNum * _this.w_guigePrice.length;
+
+
+            _this.pifaTotal = 0;//总钱
+            _this.pifaAmount = 0;//总数
+
+            let newArr = _this.arrDialog || _this.newArrDialog();
+            let arr=[];
+            _this.w_specNum =0
+            newArr.forEach((e,j)=>{
+                //分类显示小图标个数 =  分类里任意一个数量* 分类下的规格length
+                if( e.id == id ){
+                    e.num = _data[0].productNum * _data.length;
+                }
+                
+                 _this.w_specNum += e.num
+            })
+            _this.w_specNum = _this.w_specNum / _data.length ;
+
+            _this.w_guigePrice.forEach((item,i)=>{
+                let n = _this.commonFn.keepTwoDecimalFull(item.productNum * Number(item.inv_price));
+
+                _this.pifaTotal = _this.pifaTotal + Number(n);
+
+                _this.pifaAmount +=  item.productNum;
+                
+
+            })
+            _this.pifaTotal = _this.commonFn.keepTwoDecimalFull(_this.pifaTotal);
+            _this.arrDialog = newArr;
+        },
+        /** 
+         * 多个规格时 选择上层导航数据整理
+        */
+        newArrDialog(){
+            let _this = this;
+            let newArr=[];
+            _this.w_specificaList[0].specValues.forEach((item,j)=> {
+                let obj ={
+                            id:'',
+                            value:'',
+                            num:0,
+                            inv_num:0
+                };
+                obj.id =  item.id;
+                obj.value =  item.specValue;
+
+                let a = null;
+
+                _this.w_guigePrice.forEach((test,i)=>{
+                    if(test.specifica_ids[0] == obj.id){
+                        if(a < test.inv_num){
+                            a = test.inv_num;
+                            obj.inv_num = a;
+                        }
+                    }   
+                })
+                newArr.push(obj);
+            })
+            return newArr;
         },
         /** 
          * 规格数量加减--批发混批
@@ -1010,10 +1088,12 @@ export default {
         choice_product(e,id){
             let _this = this ;
             let specs= [],invid;
+            
             if(id){
                 _this.wholesaleId = id;
                 console.log(id);
             }
+
             if(e){//获取选中值 存成数组
                 $(e.target).siblings().removeClass('shop-bg');
                 $(e.target).addClass('shop-bg');
@@ -1036,7 +1116,7 @@ export default {
             })
             
             //切换时规格时 如果规格 购买数量大于库存数量 则等于库存数量
-            console.log(_this.spec_num,_this.dialogData.inv_num,'spec_num')
+
             if( _this.spec_num  >= _this.dialogData.inv_num){
                 _this.spec_num = _this.dialogData.inv_num;
             }

@@ -1,7 +1,7 @@
 <template>
   <section class="more-main">
     <p v-show="isMore == 2">加载中，请稍等……</p>
-    <p v-show="isMore == 3">抱歉,没有更多商品了</p>
+    <p v-show="isMore == 3">抱歉,没有更多了</p>
     <!-- <p v-show="isMore == 4">网络繁忙，请稍后试试吧</p> -->
   </section>
 </template>
