@@ -71,7 +71,9 @@
                         </div>
                     </div>
                     <div class="order-shop border " v-if="detail.returnTypeDesc != null || detail.returnStatusDesc != null">
-                      <p class="fs42">{{detail.returnTypeDesc}}</p><!-- 左边显示 -->
+                      <p class="fs42">
+                        <i class="iconfont icon-tuikuan shop-font" style="font-size: 0.4rem;vertical-align: -0.04rem;"></i>
+                        <i class="iconfont icon-tuihuo shop-font" style="font-size: 0.36rem"></i>{{detail.returnTypeDesc}}</p><!-- 左边显示 -->
                       <p class="shop-font fs42">{{detail.returnStatusDesc}}</p><!-- 右边显示 -->
                   </div>
                 </div>

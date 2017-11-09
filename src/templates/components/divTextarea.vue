@@ -1,6 +1,7 @@
 <template>
-    <div class="table" contenteditable="true"
+    <div class="table fs42" contenteditable="true"
         v-text="newText"
+        placeholder="选填"
         @click="table_focus"
         @blur="table_blur($event)">
     </div>
@@ -44,6 +45,7 @@ export default {
     border: 0;
     outline: 0;
     word-wrap: break-word;
+    border: 1px solid #ddd;
 }
 
 </style>

@@ -44,10 +44,14 @@
                      <span v-if="returnData.productFreight > 0">含，发货运费￥{{returnData.productFreight}}</span>
                     </p>
                 </div>
-                <div class="refund-list">
-                    <p class="fs46">退款说明：
-                      <div-textarea class="shopGray"></div-textarea>
-                    </p>
+            </section>
+            <section class="refund-state">
+               <div class="refund-list">
+                    <div class="fs46">退款说明：</div>
+                    <div class="refund-textarea">
+                      <div-textarea v-if="isTextarea"></div-textarea>
+                      <span class="fs46 shopGray" @click="isTextarea = true" v-else>选填</span>
+                    </div>
                 </div>
             </section>
             <section class="refund-photo comment-content">
@@ -132,7 +136,8 @@ export default {
       isShowFreightMoney: false, //是否显示运费
       imgUrl: "", //图片域名
       returnRemark: "", //退款说明
-      returnTelphone: "" //退款手机号
+      returnTelphone: "" ,//退款手机号
+      isTextarea:false,//输入框显示条件
     };
   },
   components: {
@@ -268,6 +273,10 @@ export default {
         margin-right: 20 / @dev-Width *1rem;
       }
     }
+  }
+  .refund-textarea{
+    width: 80%;
+    height: auto;
   }
   .refund-input {
     width: 80%;
