@@ -3,38 +3,46 @@
         <div class="refund-main comment-main">
             <section class="refund-goods clearfix">
                 <div class="goods-img">
-                    <default-img :background="background"
+                    <default-img :background="imgUrl+returnData.productImageUrl"
                                  :isHeadPortrait="1">
                     </default-img>
                 </div>
                 <div class="goods-delt">
-                    <p class="fs40">Apple iPhone 7 Plus (A1661) 128GB 玫瑰金 色 移动联通电信4G手机</p>
-                    <p class="fs36 shopGray">规格：玫瑰金/128GB</p>
-                    <p class="fs36 shop-font shop-textr">退款金额：￥7,199.00</p>
+                    <p class="fs40">{{returnData.productName}}</p>
+                    <p class="fs36 shopGray" v-if="returnData.productSpecifica != null">
+                      规格：{{returnData.productSpecifica}}
+                    </p>
+                    <p class="fs36 shop-font shop-textr" v-if="returnData.returnPrice != null">
+                      退款金额：￥{{returnData.returnPrice[0]}}.<span class="fs32">{{returnData.returnPrice[1]}}</span>
+                    </p>
                 </div>
             </section>
             <section class="refund-state">
-                <div class="refund-list border">
+                <div class="refund-list border" v-if="returnData.isShowCargoStatus == 1 && cargoStatusData!= null">
                     <p class="fs46">货物状态</p>
                     <p class="shopGray">
-                        <span class="fs36">请选择</span>
+                        <span class="fs36">{{cargoStatusData.value}}</span>
                         <i class="iconfont icon-jiantou-copy"></i>
                     </p>
                 </div>
-                <div class="refund-list" v-if="false">
+                <div class="refund-list" v-if="returnReasonData != null">
                     <p class="fs46">退款原因</p>
                     <p class="shopGray">
-                        <span class="fs36">请选择</span>
+                        <span class="fs36">{{returnReasonData.item_value}}</span>
                         <i class="iconfont icon-jiantou-copy"></i>
                     </p>
                 </div>
             </section>
             <section class="refund-money">
-                <div class="refund-list border">
-                    <p class="fs46">退款金额：<span class="shop-font">￥7199.00</span></p>
+                <div class="refund-list border" v-if="returnData.returnPrice != null">
+                    <p class="fs46">
+                      退款金额：<span class="shop-font">￥{{returnData.returnPrice[0]}}.<span class="fs32">{{returnData.returnPrice[1]}}</span></span>
+                    </p>
                 </div>
-                <div class="refund-list">
-                    <p class="fs40">最多可退￥7199.00含，发货运费￥1.00</p>
+                <div class="refund-list" v-if="isShowFreightMoney">
+                    <p class="fs40">最多可退￥{{returnData.returnPrice[0]}}.{{returnData.returnPrice[1]}}
+                     <span v-if="returnData.productFreight > 0">含，发货运费￥{{returnData.productFreight}}</span>
+                    </p>
                 </div>
                 <div class="refund-list">
                     <p class="fs46">退款说明：<span class="shopGray">选填</span></p>
@@ -101,290 +109,368 @@
 </template>
 
 <script>
-    import Lib from 'assets/js/Lib';
-    import defaultImg from 'components/defaultImg'
-    import imgUpload from 'components/imgUpload'
-    export default {
-
-        data () {
-            return {
-                isShow: false,
-                background:''
-            }
-        },
-        components:{
-            defaultImg,imgUpload
-        },
-        mounted() {
-
-        },
-        methods: {
-            //组件图片接受
-            imgData(data){
-                this.imgURL = data;
-            }
+import defaultImg from "components/defaultImg";
+import imgUpload from "components/imgUpload";
+export default {
+  data() {
+    return {
+      isShow: false,
+      background: "",
+      busId: this.$route.params.busId, //商家id
+      orderDetailId: this.$route.params.orderDetailId, //订单详情id
+      returnType: this.$route.params.returnType, //退款方式
+      returnId: this.$route.params.returnId, //退款id
+      returnData: {}, //查询退款信息返回的数据
+      cargoStatusList: [], //货物状态
+      cargoStatusData: {}, //获取状态对象
+      returnReasonList: [], //退款原因
+      returnReasonData: {}, //退款原因对象
+      returnImageUrls: [], //退款图片
+      isShowFreightMoney: false, //是否显示运费
+      imgUrl: "" //图片域名
+    };
+  },
+  components: {
+    defaultImg,
+    imgUpload
+  },
+  mounted() {
+    this.$store.commit("show_footer", false); //隐藏底部导航栏
+    this.loadDatas(); //初始化申请退款
+    this.commonFn.setTitle("申请退款");
+  },
+  beforeDestroy() {
+    //离开后的操作
+    this.$store.commit("show_footer", true); //显示底部导航栏
+  },
+  methods: {
+    //组件图片接受
+    imgData(data) {
+      this.imgURL = data;
+    },
+    loadDatas() {
+      let _this = this;
+      let _data = {
+        busId: _this.busId, //商家id
+        url: location.href, //当前页面的地址
+        browerType: _this.$store.state.browerType, //浏览器类型
+        orderDetailId: _this.orderDetailId, //订单详情
+        returnId: _this.returnId //退款id
+      };
+      _this.commonFn.ajax({
+        url: h5App.activeAPI.return_post,
+        data: _data,
+        success: function(data) {
+          if (data.code == 1001) {
+            location.href = data.url;
+          }
+          if (data.code != 1) {
+            _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
+            return;
+          }
+          _this.imgUrl = data.imgUrl; //图片域名
+          _this.returnData = data.data; //返回数据
+          let myData = _this.returnData;
+          if(myData.returnPrice > 0){
+            _this.isShowFreightMoney  = true;
+          }
+          myData.returnPrice = _this.commonFn.moneySplit(myData.returnPrice);
+          if (myData.cargoStatusList != null) {
+            _this.cargoStatusList = myData.cargoStatusList; //货物状态集合
+          }
+          if (myData.returnReasonList != null) {
+            _this.returnReasonList = myData.returnReasonList; //退款原因
+          }
+          if (_this.returnReasonList.length > 0) {
+            //给默认的退款id赋值
+            _this.returnReasonData = _this.returnReasonList[0];
+          }
+          if (_this.cargoStatusList.length > 0) {
+            //给默认的退款id赋值
+            _this.cargoStatusData = _this.cargoStatusList[0];
+          }
+          console.log(_this.returnReasonData);
         }
+      });
     }
+  }
+};
 </script>
 
 <style lang="less" scoped>
+@import "../../../assets/css/mixins.less";
+@import "../../../assets/css/base.less";
 
-    @import '../../../assets/css/mixins.less';
-    @import '../../../assets/css/base.less';
-
-    .refund-wrapper{
+.refund-wrapper {
+  width: 100%;
+  .refund-main {
+    position: relative;
+    width: 100%;
+    padding-bottom: 165 / @dev-Width *1rem;
+  }
+  section {
+    width: 100%;
+    background: #fff;
+    margin-bottom: 30 / @dev-Width *1rem;
+  }
+  .refund-goods {
+    padding: 25 / @dev-Width *1rem 15 / @dev-Width *1rem 25 / @dev-Width *1rem 40 / @dev-Width *1rem;
+    .goods-img {
+      float: left;
+      width: 267 / @dev-Width *1rem;
+      height: 267 / @dev-Width *1rem;
+      background-size: cover;
+      background-position: center;
+    }
+    .goods-delt {
+      width: 72%;
+      float: left;
+      margin-left: 20 / @dev-Width *1rem;
+      text-align: justify;
+      p {
+        margin: 20 / @dev-Width *1rem 0;
+      }
+    }
+  }
+  .refund-state {
+    width: 100%;
+  }
+  .refund-list,
+  .refund-list2 {
+    font-size: 0;
+    width: 100%;
+    height: 145 / @dev-Width *1rem;
+    .ik-box;
+    .ik-box-pack(justify);
+    .ik-box-align(center);
+    padding-left: 50/@dev-Width *1rem;
+    padding-right: 40/@dev-Width *1rem;
+    i {
+      color: #c7c7cc;
+      font-size: 42/@dev-Width *1rem;
+    }
+  }
+  .refund-list2 {
+    height: 240 / @dev-Width *1rem;
+    .list-txt {
+      .ik-box;
+      .ik-box-pack(justify);
+      .ik-box-align(center);
+      & > i {
+        color: #e4393c;
+        font-size: 68 / @dev-Width *1rem;
+        margin-right: 20 / @dev-Width *1rem;
+      }
+    }
+  }
+  .refund-input {
+    width: 80%;
+    display: block;
+    height: 100%;
+    border: 0;
+  }
+  .refund-money {
+    width: 100%;
+    & > div:nth-child(2) {
+      background: #ededed;
+      color: #999;
+    }
+  }
+  .refund-photo {
+    width: 100%;
+    padding: 47/@dev-Width *1rem;
+  }
+  .refund-passheader {
+    width: 100%;
+    height: 380/@dev-Width *1rem;
+    padding: 0 60/@dev-Width *1rem;
+    .ik-box;
+    .ik-box-pack(center);
+    .ik-box-orient(vertical);
+    background-image: -webkit-gradient(
+        linear,
+        50% 0,
+        0 100%,
+        from(transparent),
+        color-stop(0.5, transparent),
+        color-stop(0.5, #f0f2f5),
+        to(#f0f2f5)
+      ),
+      -webkit-gradient(linear, 50% 0, 100% 100%, from(transparent), color-stop(0.5, transparent), color-stop(0.5, #f0f2f5), to(#f0f2f5));
+    background-image: -moz-linear-gradient(
+        50% 0 -45deg,
+        transparent,
+        transparent 50%,
+        #f0f2f5 50%,
+        #f0f2f5
+      ),
+      -moz-linear-gradient(50% 0 -135deg, transparent, transparent 50%, #f0f2f5
+            50%, #f0f2f5);
+    background-size: 11px 7px;
+    background-repeat: repeat-x;
+    background-position: 0 100%;
+    .header-title {
+      font-weight: bold;
+      margin-bottom: 60/@dev-Width *1rem;
+      i {
+        border: 2px solid #e4393c;
+        .border-radius(100%);
+        color: #e4393c;
+        font-weight: 100;
+        padding: 9/@dev-Width *1rem;
+        font-size: 48/@dev-Width *1rem;
+        margin-right: 20/@dev-Width *1rem;
+      }
+    }
+    & > p {
+      width: 100%;
+      margin: 5/@dev-Width *1rem 0;
+    }
+  }
+  .shop-footer-fixed {
+    position: fixed;
+    width: 100%;
+    background: #fff;
+    .footer-nav,
+    .header-nav {
+      .ik-box;
+      .footer-itme,
+      .header-itme {
+        position: relative;
+        .ik-box;
+        .ik-box-align(center);
+        .ik-box-pack(center);
+        .ik-box-flex(1);
+        .ik-box-orient(vertical);
+      }
+      a {
+        display: block;
+        text-align: center;
+      }
+    }
+  }
+  .refund-dialog {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    z-index: 99;
+    top: 0;
+    left: 0;
+    .dialog-main {
+      width: 100%;
+      position: absolute;
+      background: #fff;
+      bottom: 0;
+      animation: dialogShow 0.2s;
+      -moz-animation: dialogShow 0.2s; /* Firefox */
+      -webkit-animation: dialogShow 0.2s;
+    }
+    .dialog-content {
+      width: 100%;
+      padding: 35/@dev-Width *1rem 0 88/@dev-Width *1rem 50/@dev-Width *1rem;
+    }
+    .dialog-title {
+      width: 100%;
+      text-align: center;
+      padding-bottom: 50/@dev-Width *1rem;
+    }
+    .dialog-ul {
+      width: 100%;
+      .refund-list {
+        height: 117/@dev-Width *1rem;
+        padding-left: 0;
+      }
+      & > div:last-child {
+      }
+    }
+    .dialog-option {
+      width: 60/@dev-Width *1rem;
+      height: 60/@dev-Width *1rem;
+      .border-radius(100%);
+      border: 1px solid #c7c7cc;
+      text-align: center;
+      line-height: 60/@dev-Width *1rem;
+      & > i {
+        color: #fff;
+      }
+    }
+    .selected {
+      border: 0;
+      background: #e4393c;
+    }
+  }
+}
+.comment-footer1 {
+  .shop-max-button {
+    height: 134/@dev-Width *1rem;
+    .border-radius(0);
+  }
+}
+.comment-content {
+  font-size: 0;
+  background: #fff;
+  padding: 40/@dev-Width *1rem 0 0;
+  width: 100%;
+  .comment-textarea {
+    width: 92%;
+    margin: 0 auto;
+    display: block;
+    height: 620/@dev-Width *1rem;
+    border: 1px solid #ededed;
+    background: 0;
+    padding: 10/@dev-Width *1rem;
+  }
+  .comment-photo {
+    width: 100%;
+    text-align: justify;
+    padding: 40/@dev-Width *1rem;
+    .comment-upload,
+    .comment-img {
+      //display: inline-block;
+      float: left;
+      position: relative;
+      width: 22%;
+      height: 230/@dev-Width *1rem;
+      background-size: cover;
+      background-position: center;
+      margin-top: 40/@dev-Width *1rem;
+      margin-right: 30/@dev-Width *1rem;
+      input {
+        position: absolute;
         width: 100%;
-        .refund-main{
-            position: relative;
-            width: 100%;
-            padding-bottom: 165 / @dev-Width *1rem;
-        }
-        section{
-            width: 100%;
-            background: #fff;
-            margin-bottom: 30 / @dev-Width *1rem;
-        }
-        .refund-goods{
-            padding:25 / @dev-Width *1rem 15 / @dev-Width *1rem 25 / @dev-Width *1rem 40 / @dev-Width *1rem;
-            .goods-img{
-                float: left;
-                width: 267 / @dev-Width *1rem;
-                height: 267 / @dev-Width *1rem;
-                background-size:cover;
-                background-position: center;
-            }
-            .goods-delt{
-                width: 72%;
-                float: left;
-                margin-left: 20 / @dev-Width *1rem;
-                text-align: justify;
-                p{
-                    margin: 20 / @dev-Width *1rem 0;
-                }
-            }
-        }
-        .refund-state{
-            width: 100%;
-        }
-        .refund-list,.refund-list2{
-            font-size: 0;
-            width: 100%;
-            height: 145 / @dev-Width *1rem;
-            .ik-box;
-            .ik-box-pack(justify);
-            .ik-box-align(center);
-            padding-left: 50/@dev-Width *1rem;
-            padding-right: 40/@dev-Width *1rem;
-            i{
-                color: #c7c7cc;
-                font-size: 42/@dev-Width *1rem;
-            }
-        }
-        .refund-list2{
-            height: 240 / @dev-Width *1rem;
-            .list-txt{
-                .ik-box;
-                .ik-box-pack(justify);
-                .ik-box-align(center);
-                &>i{
-                    color: #e4393c;
-                    font-size: 68 / @dev-Width *1rem;
-                    margin-right: 20 / @dev-Width *1rem;
-                }
-            }
-        }
-        .refund-input{
-            width: 80%;
-            display: block;
-            height: 100%;
-            border: 0;
-        }
-        .refund-money{
-            width: 100%;
-            &>div:nth-child(2){
-                background: #ededed;
-                color:#999;
-            }
-        }
-        .refund-photo{
-            width: 100%;
-            padding: 47/@dev-Width *1rem;
-        }
-        .refund-passheader{
-            width: 100%;
-            height: 380/@dev-Width *1rem;
-            padding: 0 60/@dev-Width *1rem;
-            .ik-box;
-            .ik-box-pack(center);
-            .ik-box-orient(vertical);
-            background-image:-webkit-gradient(linear,50% 0,0 100%,from(transparent), color-stop(.5,transparent),color-stop(.5,#f0f2f5),to(#f0f2f5)),
-            -webkit-gradient(linear,50% 0,100% 100%,from(transparent), color-stop(.5,transparent),color-stop(.5,#f0f2f5),to(#f0f2f5));
-            background-image:-moz-linear-gradient(50% 0 -45deg,transparent,transparent 50%,#f0f2f5 50%,#f0f2f5),
-            -moz-linear-gradient(50% 0 -135deg,transparent,transparent 50%,#f0f2f5 50%,#f0f2f5);
-            background-size:11px 7px;
-            background-repeat:repeat-x;
-            background-position:0 100%;
-            .header-title{
-                font-weight: bold;
-                margin-bottom: 60/@dev-Width *1rem;
-                i{
-                    border: 2px solid #e4393c;
-                    .border-radius(100%);
-                    color: #e4393c;
-                    font-weight: 100;
-                    padding: 9/@dev-Width *1rem;
-                    font-size: 48/@dev-Width *1rem;
-                    margin-right: 20/@dev-Width *1rem;
-                }
-            }
-            &>p{
-                width: 100%;
-                margin:  5/@dev-Width *1rem 0;
-            }
-
-        }
-        .shop-footer-fixed{
-            position: fixed;
-            width: 100%;
-            background: #fff;
-            .footer-nav,.header-nav{
-                .ik-box;
-                .footer-itme,.header-itme{
-                    position: relative;
-                    .ik-box;
-                    .ik-box-align(center);
-                    .ik-box-pack(center);
-                    .ik-box-flex(1);
-                    .ik-box-orient(vertical);
-                }
-                a{
-                    display: block;
-                    text-align: center
-                }
-            }
-        }
-        .refund-dialog{
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            position: fixed;
-            z-index: 99;
-            top: 0;
-            left: 0;
-            .dialog-main{
-                width: 100%;
-                position: absolute;
-                background: #fff;
-                bottom: 0;
-                animation: dialogShow 0.2s;
-                -moz-animation: dialogShow 0.2s;	/* Firefox */
-                -webkit-animation: dialogShow 0.2s;
-            }
-            .dialog-content{
-                width: 100%;
-                padding: 35/@dev-Width *1rem 0 88/@dev-Width *1rem 50/@dev-Width *1rem;
-            }
-            .dialog-title{
-                width: 100%;
-                text-align: center;
-                padding-bottom: 50/@dev-Width *1rem;
-            }
-            .dialog-ul{
-                width: 100%;
-                .refund-list{
-                    height: 117/@dev-Width *1rem;
-                    padding-left: 0;
-                }
-                &>div:last-child{
-
-                }
-            }
-            .dialog-option{
-                width: 60/@dev-Width *1rem;
-                height: 60/@dev-Width *1rem;
-                .border-radius(100%);
-                border: 1px solid #c7c7cc;
-                text-align: center;
-                line-height: 60/@dev-Width *1rem;
-                &>i{
-                    color: #fff;
-                }
-            }
-            .selected{
-                border: 0;
-                background: #e4393c;
-            }
-        }
+        height: 100%;
+        display: block;
+        top: 0;
+        left: 0;
+        opacity: 0;
+      }
     }
-    .comment-footer1{
-        .shop-max-button{
-            height: 134/@dev-Width *1rem;
-            .border-radius(0);
-        }
+    .comment-img {
+      position: relative;
+      i {
+        width: 60/@dev-Width *1rem;
+        height: 60/@dev-Width *1rem;
+        text-align: center;
+        line-height: 60/@dev-Width *1rem;
+        background: rgba(0, 0, 0, 0.6);
+        color: #e0e0e8;
+        font-size: 36/@dev-Width *1rem;
+        .border-radius(100%);
+        position: absolute;
+        top: -8%;
+        right: -8%;
+      }
     }
-    .comment-content{
-        font-size: 0;
-        background: #fff;
-        padding: 40/@dev-Width *1rem 0 0;
-        width: 100%;
-        .comment-textarea{
-            width: 92%;
-            margin: 0 auto;
-            display: block;
-            height: 620/@dev-Width *1rem;
-            border: 1px solid #ededed;
-            background: 0;
-            padding: 10/@dev-Width *1rem;
-        }
-        .comment-photo{
-            width: 100%;
-            text-align: justify;
-            padding: 40/@dev-Width *1rem;
-            .comment-upload,.comment-img{
-                //display: inline-block;
-                float: left;
-                position: relative;
-                width: 22%;
-                height: 230/@dev-Width *1rem;
-                background-size: cover;
-                background-position: center;
-                margin-top: 40/@dev-Width *1rem;
-                margin-right: 30/@dev-Width *1rem;
-                input{
-                    position: absolute;
-                    width: 100%;
-                    height: 100%;
-                    display: block;
-                    top: 0;
-                    left: 0;
-                    opacity: 0;
-                }
-            }
-            .comment-img{
-                position: relative;
-                i{
-                    width: 60/@dev-Width *1rem;
-                    height: 60/@dev-Width *1rem;
-                    text-align: center;
-                    line-height: 60/@dev-Width *1rem;
-                    background: rgba(0,0,0,0.6);
-                    color:#e0e0e8;
-                    font-size: 36/@dev-Width *1rem;
-                    .border-radius(100%);
-                    position: absolute;
-                    top:-8%;
-                    right: -8%;
-                }
-            }
-            .border-img{
-                border:1px solid #ededed;
-                width:26%;
-                height: 280/@dev-Width *1rem;
-            }
-        }
-        .comment-txt{
-            width: 100%;
-            padding: 0 40/@dev-Width *1rem;
-        }
+    .border-img {
+      border: 1px solid #ededed;
+      width: 26%;
+      height: 280/@dev-Width *1rem;
     }
+  }
+  .comment-txt {
+    width: 100%;
+    padding: 0 40/@dev-Width *1rem;
+  }
+}
 </style>

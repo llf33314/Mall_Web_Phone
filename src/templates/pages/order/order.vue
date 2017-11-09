@@ -68,8 +68,8 @@
                         共计{{order.totalNum}}个商品
                     </p>
                 </div>
-                <div class="order-item-box " v-for=" detail in orderDetailList">
-                    <div class="order-item-content">
+                <div class="order-item-box" v-for=" detail in orderDetailList">
+                    <div class="order-item-content" @click="toProductDetail(detail.productId,detail.shopId,order.busId)">
                         <div class="order-item-img">
                             <default-img :background="imgUrl+detail.productImageUrl"
                                     :isHeadPortrait="1">
@@ -84,61 +84,55 @@
                         </div>
                     </div>
                     <div class="deltails-item-button">
-                        <div class="deltails-button shop-bg fs36" v-if="detail.isShowApplyReturnButton == 1">
+                        <div class="deltails-button shop-bg fs36" v-if="detail.isShowApplyReturnButton == 1"
+                          @click="goApplyReturn(detail.orderDetailId)">
                             申请退款
                         </div> 
-                        <div class="deltails-button shop-bg fs36" v-if="detail.isShowApplySaleButton == 1">
+                        <div class="deltails-button shop-bg fs36" v-if="detail.isShowApplySaleButton == 1"
+                          @click="goApplyReturn(detail.orderDetailId)">
                             申请售后
                         </div>
-                        <div class="deltails-button shop-bg fs36" v-if="detail.isShowReturnWuLiuButton == 1">
+                        <div class="deltails-button shop-bg fs36" v-if="detail.isShowReturnWuLiuButton == 1"
+                         @click="goReturnWuliu(detail.orderDetailId)">
                             填写退货物流
                         </div>
-                        <div class="deltails-button shop-bg fs36" v-if="detail.isShowUpdateReturnButton == 1">
+                        <div class="deltails-button shop-bg fs36" v-if="detail.isShowUpdateReturnButton == 1"
+                         @click="goUpdateReturn(detail.orderDetailId)">
                             修改退款
                         </div>
-                        <div class="deltails-button shop-bg fs36" v-if="detail.isShowCloseReturnButton == 1">
+                        <div class="deltails-button shop-bg fs36" v-if="detail.isShowCloseReturnButton == 1"
+                         @click="goCloseReturn(detail.returnId)">
                             撤销退款
                         </div>
-                        <div class="deltails-button shop-bg fs36" v-if="detail.isShowCommentButton == 1">
+                        <div class="deltails-button shop-bg fs36" v-if="detail.isShowCommentButton == 1"
+                         @click="goComment(detail.orderDetailId)">
                             去评价
                         </div>
                     </div>
                 </div>
-                <!-- <div class="deltails-item-button">
-                    <div class="deltails-button shop-bg fs36">
-                        填写退货物流
-                    </div>
-                    <div class="deltails-button shop-bg fs36">
-                        修改退款
-                    </div>
-                    <div class="deltails-button shop-bg fs36">
-                        撤销退款
-                    </div>
-                    <div class="deltails-button shop-bg fs36">
-                        申请退款
-                    </div>
-                    <div class="deltails-button shop-bg fs36">
-                        申请售后
-                    </div>
-                     <div class="deltails-button shop-bg fs36">
-                        去评价
-                    </div>
-                </div> -->
                 <div class="deltails-del border">
                     <p class="fs40">
                         <span>商品金额</span>
                         <span class="shop-font">￥{{order.productTotalMoney}}</span>
                     </p>
-                    <p class="fs40">
+                    <p class="fs40" v-if="order.orderFreightMoney != null && order.orderFreightMoney  > 0" >
                         <span>运费</span>
                         <span class="shop-font">+￥{{order.orderFreightMoney}}</span>
                     </p>
-                    <p class="fs40">
+                    <p class="fs40" v-if="order.orderYouhuiMoney != null && order.orderYouhuiMoney  > 0">
                         <span>优惠</span>
                         <span class="shop-font">-￥{{order.orderYouhuiMoney}}</span>
                     </p>
+                    <p class="fs40" v-if="order.buyerMessage != null">
+                        <span>买家留言</span>
+                        <span class="shop-font">{{order.buyerMessage}}</span>
+                    </p>
+                    <p class="fs40" v-if="order.busMessage != null">
+                        <span>商家留言</span>
+                        <span class="shop-font">{{order.busMessage}}</span>
+                    </p>
                 </div>
-                <div class="deltails-money fs40">
+                <div class="deltails-money fs40 border">
                     实付金额：<span class="shop-font">￥{{order.orderMoney}}</span>
                 </div>  
             </div>
@@ -147,16 +141,20 @@
     </section>
     <section class="shop-footer-fixed deltails-footer"
     v-if="order.isShowKanWuLiuButton == 1 || order.isShowReceiveGoodButton == 1 || order.isShowGoPayButton == 1 || order.isShowDeleteButton == 1">
-        <div class="deltails-button fs40 shop-bg" v-if="order.isShowKanWuLiuButton == 1">
+        <div class="deltails-button fs40 shop-bg" v-if="order.isShowKanWuLiuButton == 1"
+          >
             查看物流
         </div>
-        <div class="deltails-button fs40 shop-bg" v-if="order.isShowReceiveGoodButton == 1">
+        <div class="deltails-button fs40 shop-bg" v-if="order.isShowReceiveGoodButton == 1" 
+          @click="confirmReceipt(order.orderId)">
             确认收货
         </div>
-        <div class="deltails-button fs40 shop-bg" v-if="order.isShowGoPayButton == 1">
+        <div class="deltails-button fs40 shop-bg" v-if="order.isShowGoPayButton == 1" 
+          @click="returnGoPay(order.orderId)">
             去支付
         </div>
-        <div class="deltails-button fs40 shop-bg" v-if="order.isShowDeleteButton == 1" @click="showDialogDelete">
+        <div class="deltails-button fs40 shop-bg" v-if="order.isShowDeleteButton == 1" 
+        @click="showDialogDelete(order.orderId)">
             删除订单
         </div>
     </section>
@@ -170,6 +168,7 @@
 import footerNav from "components/footerNav";
 import defaultImg from "components/defaultImg";
 import technicalSupport from "components/technicalSupport"; //技术支持
+import orderCommon from "./js/orderCommon"; //公用的订单业务js
 
 export default {
   name: "my",
@@ -179,12 +178,14 @@ export default {
       isShow: false,
       background:
         "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1501765343077&di=5d3652848769c1abd7eb25dea007bb1d&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D450%252C600%2Fsign%3Dcf8442791bd8bc3ec65d0eceb7bb8a28%2Fb3119313b07eca80c63dcea4932397dda14483bd.jpg",
-      orderId: 0, //订单id
-      busId: 0, //商家id
+      orderId: this.$route.params.orderId, //订单id
+      busId: this.$route.params.busId, //商家id
       order: {}, //订单数据
       orderDetailList: [], //订单详情数据
       memberAddress: {}, //收货地址
       logistics: {}, //物流数据
+      orderType: 0, //活动类型 1.团购商品 3.秒杀商品 4.拍卖商品 5 粉币商品 6预售商品 7批发商品
+      activityId: 0, //活动id
       imgUrl: "" //图片域名
     };
   },
@@ -196,8 +197,6 @@ export default {
   mounted() {
     let _this = this;
     //把路由带来的参数保存到页面
-    _this.orderId = _this.$route.params.orderId;
-    _this.busId = _this.$route.params.busId;
     _this.loadOrderDetail(); //初始化订单详情数据
     _this.$store.commit("show_footer", false); //隐藏底部导航栏
   },
@@ -235,50 +234,53 @@ export default {
           _this.orderDetailList.forEach((item, index2) => {
             item.productPrice = _this.commonFn.moneySplit(item.productPrice);
           });
+          _this.orderType = order.orderType;//活动类型
+          _this.activityId = order.activityId;//活动id
         }
       });
     },
-    showDialogDelete() {
-      let _this = this;
-      //弹出询问框
-      _this.$parent.$refs.dialog.showDialog({
-        //弹出框组件调用
-        btnNum: "2",
-        dialogMsg: "如您主动删除此订单，您以后将无法看到此订单，请务必谨慎操作？",
-        btnOne: "确定",
-        btnTow: "关闭",
-        dialogTitle: "删除订单提示",
-        callback: {
-          btnOne: function() {
-            _this.deleteOrder();
-          }
-        }
-      });
+    showDialogDelete(orderId) {
+      //弹出删除订单的弹出框
+      this.showDeleteOrderDialog(orderId);
     },
-    deleteOrder() {
-      //删除订单接口
-      let _this = this;
-      let _data = {
-        browerType: _this.$store.state.browerType,
-        busId: _this.busId,
-        url: location.href,
-        orderId: this.orderId
-      };
-      _this.commonFn.ajax({
-        url: h5App.activeAPI.delete_order_post,
-        data: _data,
-        success: function(data) {
-          if (data.code == 1001) {
-            location.href = data.url;
-          }
-          if (data.code != 1) {
-            _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
-            return;
-          }
-          //$(window).back(-1);
-          _this.$router.push("/order/list/" + _this.busId + "/0");
-        }
-      });
+    returnGoPay() {
+      //去支付跳转
+    },
+    confirmReceipt(orderId) {
+      //确认收货
+      this.showConfirmDialogs(orderId);
+    },
+    goApplyReturn(orderDetailId) {
+      //跳入申请退款的页面
+      this.$router.push("/return/classify/" + this.busId + "/" + orderDetailId);
+    },
+    goReturnWuliu(orderDetailId) {
+      //跳入填写物流的页面
+    },
+    goUpdateReturn(orderDetailId) {
+      //跳入修改退款页面
+    },
+    goCloseReturn(returnId) {
+      //调用关闭退款的接口
+      this.showCloseReturnDialog(returnId);
+    },
+    goComment(orderDetailId) {
+      //跳入去评价的页面
+    },
+    toProductDetail(productId, shopId, busId) {
+      //跳转至商品详情页面
+      this.$router.push(
+        "/goods/details/" +
+          shopId +
+          "/" +
+          busId +
+          "/" +
+          this.orderType +
+          "/" +
+          productId +
+          "/" +
+          this.activityId
+      );
     }
   }
 };

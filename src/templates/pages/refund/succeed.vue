@@ -34,8 +34,7 @@
 </template>
 
 <script>
-import Lib from 'assets/js/Lib';
-import divTextarea from '../../../components/divTextarea'
+import divTextarea from 'components/divTextarea'
 export default {
     name: 'address',	
     data () {

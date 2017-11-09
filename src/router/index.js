@@ -38,10 +38,25 @@ const Wholesale_Apply = resolve => require(['pages/wholesale/apply'], resolve);
 
 const my_center = resolve => require(['pages/my/myApp'], resolve);
 //my_center =>我的
+/***************      订单相关页面     ******************/
 const my_order_list = resolve => require(['pages/order/index'], resolve);
 //my_order_list =>订单列表
 const my_order_detail = resolve => require(['pages/order/order'], resolve);
 //my_order_detail => 订单详情
+
+const return_classify = resolve => require(['pages/refund/index'], resolve);
+//return_classify => 申请退款类型
+const return_list = resolve => require(['pages/refund/list'], resolve);
+//return_list => 退款列表
+const apply_return = resolve => require(['pages/refund/apply'], resolve);
+//apply_return =>申请退款
+const detail_return = resolve => require(['pages/refund/succeed'], resolve);
+//detail_return => 退款完成(完成)
+const consult_return = resolve => require(['pages/refund/consult'], resolve);
+//my_order_detail => 协商(完成)
+const logistics_return = resolve => require(['pages/refund/logistics'], resolve);
+//my_order_detail => 物流信息（上传未完成）
+
 
 Vue.use(Router)
 
@@ -132,7 +147,7 @@ export default new Router({
         component: Goods_Comment
       }
       ]
-    },{
+    }, {
       path: '/wholesale/apply/:busId',
       name: 'Wholesale_Apply',
       component: Wholesale_Apply,
@@ -161,12 +176,56 @@ export default new Router({
         title: '我的订单'
       }
     }, {
-      path: '/order/detail/:orderId/:busId',
+      path: '/order/detail/:busId/:orderId',
       name: 'my_order_detail',
       component: my_order_detail,
       meta: {
         title: '订单详情'
       }
+    }, {
+      path: '/return/list/:busId',
+      name: 'return_list',
+      component: return_list,
+      meta: {
+        title: '退款/售后列表'
+      }
+    }, {
+      path: '/return/succeed',
+      name: 'detail_return',
+      component: detail_return,
+      meta: {
+        title: '退款详情'
+      }
+    }, {
+      path: '/return/classify/:busId/:orderDetailId',
+      name: 'return_classify',
+      component: return_classify,
+      meta: {
+        title: '退款类型'
+      }
+    }, {
+      path: '/return/apply/:busId/:orderDetailId/:returnType/:returnId',
+      name: 'apply_return',
+      component: apply_return,
+      meta: {
+        title: '申请退款'
+      }
+    }, {
+      path: '/return/logistics',
+      name: 'logistics_return',
+      component: logistics_return,
+      meta: {
+        title: '物流信息（上传未完成)'
+      }
+    }, {
+      path: '/return/consult',
+      name: 'consult_return',
+      component: consult_return,
+      meta: {
+        title: '协商(完成)'
+      }
     }
+
+
   ]
 })

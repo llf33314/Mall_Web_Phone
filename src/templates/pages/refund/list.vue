@@ -1,6 +1,5 @@
 <template>
 <div id='app' class="shop-wrapper  order-wrapper">  
-    <header-nav :headers= "homeNav" v-if="homeNav != null && homeNav.length > 0"></header-nav>  
     <content-no :statu="statu" :errorMsg="errorMsg" v-if="isShowNullContent"></content-no>
     <section class="shop-main order-main" v-if="!isShowNullContent && orderList != null">
         <div class="order-box">
@@ -19,12 +18,12 @@
                         <span class="fs36">{{busItem.shopName}}</span>
                         <i class="iconfont icon-you"></i>
                     </p>
-                    <p class="shop-font fs42">
-                        {{busItem.orderStatusName}}
-                    </p>
+                    <!-- <p class="shop-font fs42">
+                        {{busItem.returnStatusDesc}}
+                    </p> -->
                 </div>
                 <div class="order-item-box " v-for="detail in busItem.detailResultList">
-                    <div class="order-item-content  border" @click="returnOrderDetail(busItem.orderId)">
+                    <div class="order-item-content  border"  @click="toProductDetail(detail.productId,detail.shopId,busItem.busId,busItem.orderType,busItem.activityId)">
                         <div class="order-item-img">
                             <default-img  
                                 :background="imgUrl+detail.productImageUrl"
@@ -33,74 +32,49 @@
                         </div>
                         <div class="order-item-txt">
                             <p class="fs42">{{detail.productName}}</p>
-                            <p class="fs42 shop-font">¥{{detail.productPrice[0]}}.<span class="fs32">{{detail.productPrice[1]}}</span></p>
                             <p class="fs36 shopGray">
                                 <span v-if="detail.productSpecificaValue != ''">{{detail.productSpecificaValue}}/</span>
                                 {{detail.productNum}}件</p>
+                            <p class="fs42 shop-font shop-textr">退款金额：¥{{detail.returnMoney[0]}}.<span class="fs32">{{detail.returnMoney[1]}}</span></p>
                         </div>
                     </div>
-                    <div class="order-item-button fs42 border"  v-if="detail.isShowApplyReturnButton == 1 || detail.isShowCommentButton == 1 ">
+                    <div class="order-item-button fs42 border" >
                         <div class="order-button shop-bg" 
-                            v-if="detail.isShowApplyReturnButton == 1"
+                            v-if="detail.isShowApplyReturnButton == 1 || detail.isShowApplySaleButton == 1"
                             @click="returnApplyReturn(detail.orderDetailId)">
                             申请退款
                         </div>
-                        <div class="order-button shop-bg"
-                            v-if="detail.isShowCommentButton == 1"
-                            @click="returnToComment(detail.orderDetailId)">
-                            去评论
+                        <div class="order-button shop-bg" 
+                            v-if="detail.isShowUpdateReturnButton == 1"
+                            @click="returnUpdateReturn(detail.returnId,detail.orderDetailId)">
+                            修改退款
+                        </div>
+                         <div class="order-button shop-bg" 
+                            v-if="detail.isShowReturnWuliuButton == 1"
+                            @click="closeApplyReturn(detail.orderDetailId)">
+                            填写退货物流
+                        </div>
+                        <div class="order-button shop-bg" 
+                            v-if="detail.isShowKanJinduButton == 1"
+                            @click="closeApplyReturn(detail.orderDetailId)">
+                            查看进度
+                        </div>
+                         <div class="order-button shop-bg" 
+                            v-if="detail.isShowCloseReturnButton == 1"
+                            @click="closeApplyReturn(detail.returnId)">
+                            撤销退款
+                        </div>
+                        <div class="order-button shop-bg" 
+                            v-if="detail.isShowReturnDetailButton == 1"
+                            @click="showReturnDetail(detail.returnId,detail.orderDetailId)">
+                            查看详情
                         </div>
                     </div>
+                    <div class="order-shop border " v-if="detail.returnTypeDesc != null || detail.returnStatusDesc != null">
+                      <p class="fs42">{{detail.returnTypeDesc}}</p><!-- 左边显示 -->
+                      <p class="shop-font fs42">{{detail.returnStatusDesc}}</p><!-- 右边显示 -->
+                  </div>
                 </div>
-                
-                <div class="order-number-time border">
-                    <div class="order-number fs42">
-                        订单号：<span>{{busItem.orderNo}}</span>
-                    </div>
-                    <div class="order-time fs42">
-                        下单时间：<span>{{busItem.orderCreateTime}}</span>
-                    </div>
-                </div>
-                <div class="order-item-total border fs42">
-                    共计{{busItem.totalNum}}件商品 合计：￥{{busItem.orderMoney[0]}}.{{busItem.orderMoney[1]}}
-                </div>
-                <div class="order-item-button fs42"  v-if="busItem.isShowGoPayButton == 1 || busItem.isShowReceiveGoodButton == 1 || busItem.isShowDaifuButton == 1">
-                    <div class="order-button shop-bg" 
-                        v-if="busItem.isShowGoPayButton == 1"
-                        @click="returnToPay(busItem.orderId)">
-                        去支付
-                    </div>
-                    <div class="order-button shop-bg"
-                        v-if="busItem.isShowReceiveGoodButton == 1"
-                        @click="sure_dialog(busItem.orderId)">
-                        确定收货
-                    </div>
-                    <div class="order-button shop-bg" 
-                        v-if="busItem.isShowDaifuButton == 1">
-                        代付详情
-                    </div>
-                </div>
-                <!-- <div class="order-item-button fs42">
-                    <div class="order-button shop-bg">
-                        查看订单
-                    </div>
-                </div>
-                <div class="order-item-button fs42">
-                    <span>更多</span>
-                    <div class="order-button shop-bg">
-                        退货物流
-                    </div>
-                    <div class="order-button shop-bg">
-                        查看物流
-                    </div>
-                    <div class="order-button shop-bg">
-                        修改退订
-                    </div>
-                    <div class="order-button shop-bg"
-                       @click="revoke_dialog">
-                        撤销退款
-                    </div>
-                </div> -->
             </div>
         </div>
         <more :is-more="isMore"></more>
@@ -114,23 +88,15 @@
 
 <script>
 import contentNo from "components/contentNo";
-import headerNav from "components/headerNav";
 import shopDialog from "components/shopDialog";
 import defaultImg from "components/defaultImg";
+import orderCommon from "../order/js/orderCommon"; //公用的订单业务js
 import more from "components/more"; //加载更多
-import orderCommon from "./js/orderCommon"; //公用的订单业务js
 
 export default {
   name: "myorder",
   data() {
     return {
-      homeNav: [
-        { id: 0, name: "全部" },
-        { id: 1, name: "待付款" },
-        { id: 2, name: "待发货" },
-        { id: 3, name: "待收货" },
-        { id: 4, name: "已完成" }
-      ],
       isNavshow: "my",
       statu: 1,
       bondStatu: 2,
@@ -139,7 +105,7 @@ export default {
       background:
         "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1501765343077&di=5d3652848769c1abd7eb25dea007bb1d&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D450%252C600%2Fsign%3Dcf8442791bd8bc3ec65d0eceb7bb8a28%2Fb3119313b07eca80c63dcea4932397dda14483bd.jpg",
       busId: this.$route.params.busId, //商家id
-      type: this.$route.params.type, //查看订单类型 0查看全部订单 1待付款订单 2待发货订单 3已发货订单 4已完成订单 5 待评价 6 退款 7团购 8 秒杀
+      type: 6, //查看订单类型 0查看全部订单 1待付款订单 2待发货订单 3已发货订单 4已完成订单 5 待评价 6 退款 7团购 8 秒杀
       curPage: 0, //当前页数
       pageCount: 1, //页面总数
       orderId: 0, //订单id
@@ -164,7 +130,11 @@ export default {
         _this.loadMore();
       }
     });
-    _this.setTitle();
+    this.$store.commit("show_footer", false); //隐藏底部导航栏
+  },
+  beforeDestroy() {
+    //离开后的操作
+    this.$store.commit("show_footer", true); //显示底部导航栏
   },
   watch: {
     $route(a, b) {
@@ -177,7 +147,6 @@ export default {
     }
   },
   components: {
-    headerNav,
     contentNo,
     shopDialog,
     defaultImg,
@@ -195,12 +164,11 @@ export default {
         this.isMore = -1;
         return;
       }
+      console.log("加载更多", this.isMore);
       this.isMore = 2;
-      console.log("加载更多");
       this.getOrderList({
         curPage: this.curPage
       });
-      this.setTitle();
     },
     getOrderList(data) {
       let _this = this;
@@ -236,8 +204,8 @@ export default {
           newOrderList.forEach((item, index) => {
             item.orderMoney = _this.commonFn.moneySplit(item.orderMoney);
             item.detailResultList.forEach((detailItem, index2) => {
-              detailItem.productPrice = _this.commonFn.moneySplit(
-                detailItem.productPrice
+              detailItem.returnMoney = _this.commonFn.moneySplit(
+                detailItem.returnMoney
               ); //价钱显示效果
             });
           });
@@ -257,44 +225,41 @@ export default {
       $(".icon-up").toggleClass("shop-hide");
       $(".icon-jiantou").toggleClass("shop-hide");
     },
-    sure_dialog(orderId) {
-      this.showConfirmDialogs(orderId);
+    closeApplyReturn(returnId) {
+      //撤销退款
+      this.showCloseReturnDialog(returnId);
     },
-    revoke_dialog() {},
     returnApplyReturn(orderDetailId) {
       //跳转申请退款页面
+    },
+    returnUpdateReturn(returnId, orderDetailId) {
+      //跳转修改退款页面
+    },
+    showReturnDetail(returnId) {
+      //跳转至退款详情页面
+    },
+    showReturnDetail(returnId, orderDetailId) {
+      //跳转至订单详情页面
       this.isMore = -1;
       this.$router.push("/return/classify/" + this.busId + "/" + orderDetailId);
     },
-    returnToComment(orderDetailId) {
-      //跳转至去评价页面
-    },
-    returnToPay(orderId) {
-      //跳转至提交订单页面
-    },
-    returnDaifu(orderId) {
-      //跳转至代付详情页面
-    },
-    returnOrderDetail(orderId) {
-      //跳转至订单详情页面
-      this.$router.push("/order/detail/" + this.busId + "/" + orderId);
+    toProductDetail(productId, shopId, busId,orderType,activityId) {
+      //跳转至商品详情页面
+      this.$router.push(
+        "/goods/details/" +
+          shopId +
+          "/" +
+          busId +
+          "/" +
+         orderType +
+          "/" +
+          productId +
+          "/" +
+          activityId
+      );
     },
     setTitle() {
-      //设置页头
-      let _this = this;
-      let titles = "我的订单";
-      if (_this.type > 0 && _this.type < 5) {
-        titles = _this.homeNav[_this.type].name + "订单";
-      } else if (_this.type == 5) {
-        titles = "待评价订单";
-      } else if (_this.type == 6) {
-        titles = "退款订单";
-      } else if (_this.type == 7) {
-        titles = "团购订单";
-      } else if (_this.type == 8) {
-        titles = "秒杀订单";
-      }
-      this.commonFn.setTitle(titles);
+      this.commonFn.setTitle("退货/售后");
     }
   }
 };
@@ -361,9 +326,9 @@ export default {
     }
   }
 }
-.order-main {
-  padding: 148/@dev-Width *1rem 0;
-}
+// .order-main {
+//   padding: 148/@dev-Width *1rem 0;
+// }
 .order-main,
 .deltails-main {
   position: relative;
@@ -445,7 +410,7 @@ export default {
     }
   }
 }
-.more-main{
-  margin-bottom:0px;
+.more-main {
+  margin-bottom: 0px;
 }
 </style>

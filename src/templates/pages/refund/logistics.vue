@@ -82,7 +82,6 @@
     </div>
 </template>
  <script>
-import Lib from 'assets/js/Lib';
 import imgUpload from 'components/imgUpload'
 export default {
   components: {

@@ -102,7 +102,17 @@
     /*获取订单详情数据 */
     order_detail_post: '/phoneOrder/L6tgXlBFeK/orderDetail',
     /*删除订单的接口 */
-    delete_order_post: '/phoneOrder/L6tgXlBFeK/deleteOrder'
+    delete_order_post: '/phoneOrder/L6tgXlBFeK/deleteOrder',
+    /*获取退款类型的接口 */
+    return_style_post: '/phoneOrder/L6tgXlBFeK/getReturnStyle',
+    /*获取退款信息的接口 */
+    return_post: '/phoneOrder/L6tgXlBFeK/getReturn',
+    /*保存退款的接口 */
+    return_save_post: '/phoneOrder/L6tgXlBFeK/saveReturnContent',
+    /*保存退款物流的接口 */
+    return_logistics_save_post: '/phoneOrder/L6tgXlBFeK/saveReturnLogistics',
+    /*查询退款物流的接口 */
+    return_logistics_post: '/phoneOrder/L6tgXlBFeK/getReturnLogistics'
 
   };
 

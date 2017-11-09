@@ -38,7 +38,7 @@
                         <i class="iconfont icon-daipingjia"></i>
                         <p>待评价</p>
                     </li>
-                    <li  @click="returnMyOrder(6);">
+                    <li  @click="returnRefundOrder();">
                         <i class="iconfont icon-tuikuan"></i>
                         <p>退款/售后</p>
                     </li>   
@@ -165,7 +165,7 @@ export default {
 
   data() {
     return {
-      busId: 0,
+      busId: this.$route.params.busId,
       isNavshow: "my",
       myData: null,
       memberName: "未知用户", //用户名
@@ -179,6 +179,10 @@ export default {
     footerNav,
     defaultImg,
     technicalSupport
+  },
+  mounted() {
+    this.commonFn.setTitle("我的");
+    this.loads();
   },
   methods: {
     loads() {
@@ -310,12 +314,11 @@ export default {
     returnMyOrder(type) {
       this.$store.commit("mutationData", { busId: this.busId });
       this.$router.push("/order/list/" + this.busId + "/" + type);
+    },
+    returnRefundOrder() {
+      this.$store.commit("mutationData", { busId: this.busId });
+      this.$router.push("/return/list/" + this.busId);
     }
-  },
-  mounted() {
-    this.commonFn.setTitle("我的");
-    this.busId = this.$route.params.busId;
-    this.loads();
   }
 };
 </script>
