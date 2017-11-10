@@ -57,6 +57,8 @@ const consult_return = resolve => require(['pages/refund/consult'], resolve);
 const logistics_return = resolve => require(['pages/refund/logistics'], resolve);
 //my_order_detail => 物流信息（上传未完成）
 
+const shoppingCart = resolve => require(['pages/shoppingCart/index'], resolve);
+//my_order_detail => 物流信息（上传未完成）
 
 Vue.use(Router)
 
@@ -223,6 +225,13 @@ export default new Router({
       component: consult_return,
       meta: {
         title: '协商(完成)'
+      }
+    }, {
+      path: '/cart/:shopId/:busId',
+      name: 'shoppingCart',
+      component: shoppingCart,
+      meta: {
+        title: '购物车'
       }
     }
 

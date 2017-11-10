@@ -193,6 +193,136 @@ var Rxports = {
         });
         return newText;
 	},
+	
+	/*-------------正则验证-----------------*/
+	/**
+	 * 检验电话
+	 * @param {Number} num
+	 * @returns {Boolean}
+	 */
+	validPhone:function(num) {
+		let phoneReg = /^((\+?86)|(\(\+86\)))?(13[0123456789][0-9]{8}|15[0123456789][0-9]{8}|17[0123456789][0-9]{8}|18[0123456789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;
+		return phoneReg.test(num);
+	},
+	/**
+	 * url
+	 */
+	validURL:function (url) {
+		let regex = /^(https?:\/\/)?[\u4e00-\u9fa50-9a-zA-Z][-\u4e00-\u9fa50-9a-zA-Z]{0,62}(\.[-\u4e00-\u9fa50-9a-zA-Z]{1,63})*(\.[-\u4e00-\u9fa50-9a-zA-Z]{0,62}[\u4e00-\u9fa50-9a-zA-Z])(:[0-9]{0,5})?(\/[\w\.-]*)*(#[^#\s]*)?$/i;
+		if (url.length < 1 || url.length > 256) {
+			return false;
+		}
+		return regex.test(url);
+	},
+	/**
+	 * 校验邮箱
+	 * @param {String} email
+	 * @returns {Boolean}
+	 */
+	validEmail:function (email) {
+		let emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		//let emailReg = /^\w+[-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+		return emailReg.test(email);
+	},
+	/**
+	 * 校验价格
+	 * @param {String} money
+	 * @returns {Boolean}
+	 */
+	validMoney:function (money) { 
+		//不超过6位整数且保留2位小数
+	   let moneyReg = /^\d{0,6}(.[0-9]{2})?$/;
+	   return moneyReg.test(money);
+   },
+	/**
+	 * 校验身份证
+	 * @param {String} IDcard
+	 * @returns {Boolean}
+	 */
+	
+	validIDnumber:function (IDcard) { 
+		var factorArr = new Array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2, 1);
+		var parityBit = new Array("1", "0", "X", "9", "8", "7", "6", "5", "4", "3", "2");
+		var varArray = new Array();
+		var intValue;
+		var lngProduct = 0;
+		var intCheckDigit;
+		var intStrLen = IDcard.length;
+		var idNumber = IDcard;
+		// initialize
+		if ((intStrLen != 15) && (intStrLen != 18)) {
+		return false;
+		}
+		// check and set value
+		for (let i = 0; i < intStrLen; i++) {
+		varArray[i] = idNumber.charAt(i);
+		if ((varArray[i] < '0' || varArray[i] > '9') && (i != 17)) {
+			return false;
+		} else if (i < 17) {
+			varArray[i] = varArray[i] * factorArr[i];
+		}
+		}
+		if (intStrLen == 18) {
+		// check date
+		var date8 = idNumber.substring(6, 14);
+		if (Rxports.isDate8(date8) == false) {
+			return false;
+		}
+		// calculate the sum of the products
+		for ( let i = 0; i < 17; i++) {
+			lngProduct = lngProduct + varArray[i];
+		}
+		// calculate the check digit
+		intCheckDigit = parityBit[lngProduct % 11];
+		// check last digit
+		if (varArray[17] != intCheckDigit) {
+			return false;
+		}
+		} else { // length is 15
+		// check date
+		var date6 = idNumber.substring(6, 12);
+		if (Rxports.isDate6(date6) == false) {
+			return false;
+		}
+		}
+		return true;
+		// let IDcardReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+		// return IDcardReg.test(IDcard);
+	},
+	//15位身份证
+	isDate6:function(sDate) {
+		if (!/^[0-9]{6}$/.test(sDate)) {
+		return false;
+		}
+		var year, month, day;
+		year = sDate.substring(0, 4);
+		month = sDate.substring(4, 6);
+		if (year < 1700 || year > 2500)
+		return false
+		if (month < 1 || month > 12)
+		return false
+		return true
+	},
+	//18位身份证
+	isDate8:function(sDate) {
+		if (!/^[0-9]{8}$/.test(sDate)) {
+		return false;
+		}
+		var year, month, day;
+		year = sDate.substring(0, 4);
+		month = sDate.substring(4, 6);
+		day = sDate.substring(6, 8);
+		var iaMonthDays = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ]
+		if (year < 1700 || year > 2500)
+		return false
+		if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0))
+		iaMonthDays[1] = 29;
+		if (month < 1 || month > 12)
+		return false
+		if (day < 1 || day > iaMonthDays[month - 1])
+		return false
+		return true
+	}
 };
 
 Vue.prototype.commonFn = Rxports;

@@ -75,6 +75,7 @@
     /*商家id获取底部菜单*/
     phonePage_footerMenu_post: '/phonePage/L6tgXlBFeK/footerMenu',
     /*店铺列表相关接口 */
+     /***********************   以下接口都是 商品详情页面相关接口 ***********************/
     phonePage_shopList_post: '/phonePage/L6tgXlBFeK/shopList',
     /*查询商品接口*/
     phoneProduct_getProduct_post: '/phoneProduct/L6tgXlBFeK/getProduct',
@@ -89,11 +90,16 @@
     /*查询商品规格参数接口*/
     phoneProduct_getProductParams_post: '/phoneProduct/L6tgXlBFeK/getProductParams',
     /*加入购物车接口*/
-    phoneShopCart_addShopCart_post: '/phoneShopCart/79B4DE7C/addShopCart',
-    /*获取我的页面数据*/
-    my_center_post: '/phoneMember/L6tgXlBFeK/toUser',
-    /*获取商城首页数据 */
-    mall_index_post: '/phonePage/L6tgXlBFeK/getHomePageId',
+    phoneShopCart_addShopCart_post: '/phoneShopCart/L6tgXlBFeK/addShopCart',
+    /***********************   以下接口都是 购物车页面相关接口 ***********************/
+    /*查询购物车接口 */
+    phoneShopCart_getShopCartx_post: '/phoneShopCart/L6tgXlBFeK/getShopCart',
+
+    
+     /*获取我的页面数据*/
+     my_center_post: '/phoneMember/L6tgXlBFeK/toUser',
+     /*获取商城首页数据 */
+     mall_index_post: '/phonePage/L6tgXlBFeK/getHomePageId',
     /***********************   以下接口都是 订单相关的接口 ***********************/
     /*获取我的订单数据 */
     order_list_post: '/phoneOrder/L6tgXlBFeK/orderList',
