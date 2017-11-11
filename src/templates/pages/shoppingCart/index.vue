@@ -1,27 +1,30 @@
 <template>
 <div id='app' class="shop-wrapper order-wrapper">
-    <header-nav :headers= 'homeNav'></header-nav>
+    <header-nav :headers= "homeNav" :status="'cart'" style="z-index:3"></header-nav>
     <section class="shop-main-no fs40 my-bond" v-if="isShow">
         <content-no :statu='bondStatu'></content-no>
     </section>
     <section class="shop-main order-main shoopCart-main" v-else>
         <div class="order-box">
-            <div class="order-item">
+            <div class="order-item" v-for=" (cart,i) in shopCartList"
+                :key = "i">
                 <div class="order-item-title fs40">
                     <i class="iconfont icon-dui"></i>
                     <div class="order-title-img">
-                      <default-img :background="background"
+                      <default-img :background="cart.userImageUrl"
                                   :isHeadPortrait="1">
                       </default-img>
                     </div>
-                    <span>广东谷通科技有限公司</span>
+                    <span>{{cart.userName}}</span>
                 </div>
-                <div class="shopping-box">
+                <div class="shopping-box" 
+                    v-for="(shop,j) in cart.shopResultList"
+                    :key="j">
                     <div class="order-shop border">
                         <p class="order-shop-name">
                             <i class="iconfont icon-dui"></i>
                             <i class="iconfont icon-dianpu"></i>
-                            <span class="fs36">江北店</span>
+                            <span class="fs36">{{shop.shopName}}</span>
                             <i class="iconfont icon-you"></i>
                         </p>
                         <p class="fs42 shopGray">
@@ -29,53 +32,34 @@
                         </p>
                     </div>
                     <div class="order-item-box">
-                        <div class="order-item-content  border"
-                            style="width:120%" @touchmove="delete_show($event)"
-                            @touchstart="delete_a($event)">
+                        <delete-slide class="order-item-content"
+                                       v-for="(goods,index) in shop.productResultList"
+                                       :key="index"
+                                        @delete="delete_dialog(index)" 
+                                        :scope="index">
                             <div class="shoopCart-content">
                                 <div class="order-item-img">
-                                  <default-img :background="background"
+                                  <default-img :background="imgUrl+goods.productImageUrl"
                                                 :isHeadPortrait="0">
                                   </default-img>
                                     <i class="iconfont icon-dui"></i>
                                 </div>
                                 <div class="order-item-txt">
-                                    <p class="fs42">Apple iPhone 7 Plus (A1661) 128GB 玫瑰金 色 移动联通电信4G手机</p>
-                                    <p class="fs36 shopGray">玫瑰金/128GB/1件/包邮</p>
-                                    <p class="fs42 shop-font">¥7,199.<span class="fs32">00</span></p>
+                                    <p class="fs42">{{goods.productName}}</p>
+                                    <p class="fs36 shopGray">
+                                        <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
+                                        <span>{{goods.productNum}}份</span>
+                                    </p>
+                                    <p class="fs42 shop-font" v-if="goods.productHyPrice>0">¥{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
+                                    <p class="fs42 shop-font" v-else>¥{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
                                 </div>
                             </div>
-                            <div class="shoopCart-delete fs42 shop-bg"
-                                @click.stop="delete_dialog">
-                                删除
-                            </div>
-                        </div>
-                        <div class="order-item-content  border"
-                            style="width:120%" @touchmove="delete_show($event)"
-                            @touchstart="delete_a($event)">
-                            <div class="shoopCart-content">
-                                <div class="order-item-img">
-                                  <default-img :background="background"
-                                                :isHeadPortrait="0">
-                                  </default-img>
-                                  <i class="iconfont icon-dui"></i>
-                                </div>
-                                <div class="order-item-txt">
-                                    <p class="fs42">Apple iPhone 7 Plus (A1661) 128GB 玫瑰金 色 移动联通电信4G手机</p>
-                                    <p class="fs36 shopGray">玫瑰金/128GB/1件/包邮</p>
-                                    <p class="fs42 shop-font">¥7,199.<span class="fs32">00</span></p>
-                                </div>
-                            </div>
-                            <div class="shoopCart-delete fs42 shop-bg"
-                                    @click.stop="delete_dialog">
-                                删除
-                            </div>
-                        </div>
+                        </delete-slide>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="shopping-footer clearfix">
+        <div class="shopping-footer clearfix" style="z-index:2">
             <div class="shopping-footer-l fs40">
                 <i class="iconfont icon-dui"></i>
                 合计：<span class="shop-font">￥7,199.00</span>
@@ -90,83 +74,110 @@
             </div>
         </div>
     </section>
-    <shop-dialog ref="dialog"></shop-dialog>
-    <footer-nav :navshow="isNavshow"></footer-nav> 
 </div>
 </template>
 
 <script>
+
 import defaultImg from 'components/defaultImg'
 import headerNav from 'components/headerNav'
-import footerNav from 'components/footerNav'
-import shopDialog from 'components/shopDialog'
 import contentNo from 'components/contentNo'
+import deleteSlide from './component/deleteSlide'
+import filter from '../../../lib/filters'// 过滤器
 export default {
   name: 'shippingCart',	
   data(){
     return{
-      isPhoto: false,
-      homeNav:['购物车', '批发商购物车'],
-      isNavshow: 'shop',
-      isShow: false,
-      bondStatu: 3,
-      isdeltaX:'',
-      background:''
+        isPhoto: false,
+        homeNav:[
+            { id: 0, name: "购物车" },
+            { id: 1, name: "批发商购物车" }
+        ],
+        isNavshow: 'cart',
+        isShow: false,
+        bondStatu: 3,
+        hpMoney:'', //混批最低金额
+        hpNum:'',//混批最低数量
+        spHand:'',//手批最低数量
+        shopCartList:'',//购物车集合
+        imgUrl: '',
+        path: '',
+        webPath: '',
+
     }
   },
   components:{
-	  footerNav,defaultImg,shopDialog,headerNav,contentNo
+	  defaultImg,headerNav,contentNo,deleteSlide
   },
-  methods:{
-      //删除弹出窗
+  watch: {
+    '$route'(a,b){
+        this.cartAjax();
+    }  
+  },
+    methods:{
+    /**
+     * 购物车请求
+     */
+    cartAjax(){
+        let _this = this;
+        let _data = {
+            url: _this.$store.state.loginDTO_URL,
+            browerType:_this.$store.state.browerType,
+            busId:_this.$route.params.busId,
+            shopId: _this.$route.params.shopId
+        }
+        let _type = _this.$route.params.type;
+        if(_type == 1){
+            _data.type = _type;
+        }
+        console.log(_data,'_data');
+        _this.commonFn.ajax({
+            'url': h5App.activeAPI.phoneShopCart_getShopCartx_post,
+            'data':_data,
+            'success':(data)=>{
+                _this.imgUrl = data.imgUrl;
+                _this.path = data.path;
+                _this.webPath = data.webPath;
+
+                console.log(data,'购物车数据');
+                _this.hpMoney=data.data.hpMoney;
+                _this.hpNum=data.data.hpNum;
+                _this.spHand=data.data.spHand;
+                _this.shopCartList=data.data.shopCartList;//购物车集合
+                                    
+                
+            }
+        })
+      },
+      /** 
+       * 删除弹出窗
+       */
       delete_dialog(e){
-          var _this = this;
-          _this.disableScroll();
-          var msg = {//弹出框组件调用
-              'btnNum': '2',
-              'dialogMsg': '是否删除该商品？',
-              'btnOne': '是',
-              'btnTow': '否',
-              'dialogTitle':'提示',
-              'callback': {
-                  'btnOne': function () {
-                      //关闭
-                      //_this.allowScroll();
-                      console.log('确定');
-                      $(e.target).parents('.order-item-content').remove(); 
-                  },
-                  'btnTow': function () {
-                      //确定
-                      //_this.allowScroll();
-                      console.log('取消');
-                      $(e.target).parents('.order-item-content').animate({left:"0%"},300);
-                  }
-              }
-          }
-          _this.$refs.dialog.showDialog(msg);//弹出框
+         console.log(e);
+        //  _this.commonFn.ajax({
+        //     'url': h5App.activeAPI.phoneShopCart_removeShopCart_post,
+        //     'data':_data,
+        //     'success':(data)=>{
+        //         _this.imgUrl = data.imgUrl;
+        //         _this.path = data.path;
+        //         _this.webPath = data.webPath;
+
+        //         console.log(data,'购物车数据');
+        //         _this.hpMoney=data.data.hpMoney;
+        //         _this.hpNum=data.data.hpNum;
+        //         _this.spHand=data.data.spHand;
+        //         _this.shopCartList=data.data.shopCartList;//购物车集合
+                                    
+                
+        //     }
+        // })
       },
-      delete_show(e){
-          var deltaX;//保存X移动距离
-          if (e.targetTouches.length == 1) {
-      　　　　 e.preventDefault();// 阻止浏览器默认事件，重要 
-              var touch = e.targetTouches[0];
-              deltaX = touch.pageX-this.isdeltaX;
-              if(deltaX<0){
-                  //向左
-                  $(e.target).parents('.order-item-content').animate({left:"-20%"});
-                  return;
-              }else{
-                  //向右
-                  $(e.target).parents('.order-item-content').animate({left:"0%"});
-                  return;
-              }
-          }
-      },
-      delete_a(e){
-          //获取初始值；
-          var touch = e.targetTouches[0];
-          this.isdeltaX = touch.pageX;
-      }
+  },
+  mounted () {
+    let type = this.$route.params.type;
+    type==0?this.commonFn.setTitle( '购物车'):this.commonFn.setTitle( '批发商购物车');
+     
+    this.cartAjax();
   }
 }
 </script>
@@ -176,10 +187,12 @@ export default {
 @import '../../../assets/css/base.less';
 
 .order-main{
-      padding-top: 148/@dev-Width *1rem;
+    padding-top: 148/@dev-Width *1rem;
+    padding-bottom: 360/@dev-Width *1rem;;
   }
   .order-main,.deltails-main{
       position: relative;
+      
       .order-box{
           width: 100%;
       }
@@ -200,6 +213,7 @@ export default {
               .border-radius(100%);
               border: 1px solid #efefef;
               background-size: cover;
+              overflow: hidden;
           }
           span{
               margin-left: 20 /@dev-Width *1rem;
@@ -260,10 +274,10 @@ export default {
         background: #fff;
     }
     .order-item-content{
-        width: 120%;
+        width: 100%;
     }
     .shoopCart-content{
-        width: 85%;
+        width: 100%;
         .ik-box;
         .ik-box-pack(justify);
     }
@@ -272,6 +286,7 @@ export default {
         color: #fff;
         margin-right: 20/@dev-Width *1rem;
         padding: 3px;
+        z-index: 1;
     }
     .order-box{
         width: 100%;
@@ -284,13 +299,6 @@ export default {
             top:0;
             left: 0;
         }
-    }
-    .shoopCart-delete{
-        width: 15%;
-        height: 300/@dev-Width *1rem;
-        color: #fff;
-        text-align: center;
-        line-height: 300/@dev-Width *1rem;
     }
     .shopping-footer{
         width: 100%;

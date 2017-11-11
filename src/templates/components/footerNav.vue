@@ -5,7 +5,7 @@
             :class="[ isShow == item.title ?'shopFont':'' ]"
             v-for="item in footerData"
             v-if="item.statu"
-            @click="jump(item.title,item.router)"
+            @click="jump(item.title)"
             >
                 <i class="iconfont"
                     :class="item.icon"></i>
@@ -22,14 +22,12 @@ export default {
             footerData: [
                 {
                     name:'首页',
-                    router:'/home',
                     icon: 'icon-shouye',
                     statu:'home',
                     title:'home'
                 },
                 {
                     name:'分类',
-                    router:'/classify/0/k=k',
                     icon: 'icon-fenlei3',
                     statu:'group',
                     title:'classify'
@@ -43,7 +41,6 @@ export default {
                 },
                 {
                     name:'我的',
-                    router:'/my/center/42',
                     icon: 'icon-ren1',
                     statu:'my',
                     title:'my'
@@ -58,6 +55,12 @@ export default {
         let _nav = window.location.hash.split('/')[1];
         console.log(_nav);
         this.isShow = _nav;
+    },
+    watch: {
+       'router'(){
+            let _nav = window.location.hash.split('/')[1];
+            this.isShow = _nav;
+       } 
     },
     methods: {
         /** 
@@ -86,9 +89,20 @@ export default {
         /**
          * 跳转路由
          */
-        jump(name,router){
+        jump(name){
             this.isShow = name;
-            this.$router.push(router);
+            let busId = this.$route.params.busId;
+            let shopId = this.$route.params.shopId;
+            console.log(name,shopId,busId);
+            if( name == 'home'){
+                //this.$router.push('/home/'+shopId+'/'+busId);
+            }else if( name == 'classify'){
+                this.$router.push('/classify/'+shopId+'/'+busId+'/'+'0/k=k');
+            }else if( name == 'cart'){
+                this.$router.push('/cart/'+busId+'/0');
+            }else if( name=='my'){
+                this.$router.push('/my/center/'+busId);
+            }
         }
     }
 }

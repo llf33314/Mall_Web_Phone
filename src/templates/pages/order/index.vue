@@ -1,6 +1,6 @@
 <template>
 <div id='app' class="shop-wrapper  order-wrapper">  
-    <header-nav :headers= "homeNav" v-if="homeNav != null && homeNav.length > 0"></header-nav>  
+    <header-nav :headers= "homeNav" v-if="homeNav != null && homeNav.length > 0" :status="'order'"></header-nav>  
     <content-no :statu="statu" :errorMsg="errorMsg" v-if="isShowNullContent"></content-no>
     <section class="shop-main order-main" v-if="!isShowNullContent && orderList != null">
         <div class="order-box">

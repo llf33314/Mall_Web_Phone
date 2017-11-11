@@ -4,7 +4,7 @@
             <div class="header-itme"  
                 v-for="header in headers"
                 @click="selects(header.id)"
-                :class="{'shop-font':header.id==selectNav}"
+                :class="{'shop-font':header.id == selectNav}"
                 :key = "header.id">
                 <p v-text="header.name"></p>
                 <em class="shop-bg"></em>
@@ -14,7 +14,7 @@
 </template>
 <script>
 export default {
-  props: ["headers"],
+  props: ["headers","status"],
   data: function() {
     return {
       selectNav: ""
@@ -27,7 +27,17 @@ export default {
     selects(e) {
       this.selectNav = e;
       let busId = this.$route.params.busId;
-      this.$router.push("/order/list/" + busId + "/" + e);
+      let shopId = this.$route.params.shopId;
+      
+      if(this.status === 'order' ){
+        this.$router.push('/order/list/'+ busId + "/" + e);
+        return
+      }
+      if(this.status === 'cart' ){
+        console.log('cart',e)
+        this.$router.push('/cart/'+shopId+'/'+ busId + "/" + e);
+        return
+      }
     }
   }
 };

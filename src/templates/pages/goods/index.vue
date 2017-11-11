@@ -77,7 +77,7 @@
         </section>
         <section class="goods-selected"
                 v-if="goodsData.isShowCardRecevie == 1"
-                @click="isCardRecevie = true">
+                @click="isCardRecevie=true">
             <div class="goods-selected-main" >
                 <div class="fs40">
                     查看所含优惠卷
@@ -222,7 +222,7 @@
                     <i class="iconfont icon-xiaoxi shop-font"></i>
                     客服
                 </div >
-                <div class="goods-footer-botton ui-col-1 fs32 border-left">
+                <div class="goods-footer-botton ui-col-1 fs32 border-left" @click="shoppingCart">
                     <i class="iconfont icon-yinhang"></i>
                     购物车
                     <em class="goods-footer-num shop-bg" v-if="goodsData.shopCartNum">{{goodsData.shopCartNum }}
@@ -462,7 +462,7 @@
             <div class="goods-dialog-footer" v-if="pifaResult.pfType == 1" >
                 <div class="goods-dialog-button fs52 shop-yellow" 
                     :class="[w_specNum-pifaResult.pfSetObj.spHand<0?'shopRgba':'']"
-                    @click="addCard(2)">
+                    @click="addCard(2,$event)">
                     加入购物车 
                 </div>
                 <div class="goods-dialog-button fs52  shop-bg " 
@@ -473,7 +473,7 @@
             <div class="goods-dialog-footer" v-if="pifaResult.pfType == 2" >
                 <div class="goods-dialog-button fs52 shop-yellow " 
                     :class="[(pifaResult.pfSetObj.hpMoney-pifaTotal > 0 || pifaAmount - pifaResult.pfSetObj.hpNum < 0) ?'shopRgba':'']"
-                    @click="addCard(2)">
+                    @click="addCard(2,$event)">
                     加入购物车 
                 </div>
                 <div class="goods-dialog-button fs52  shop-bg "
@@ -483,26 +483,19 @@
             </div>
         </div>
     </div>
-    <div class="goods-dialog" 
-        v-if="isCardRecevie"
-        @click.self="isCardRecevie =false">
-         <div class="goods-dialog-main">
-             <div class="goods-dialog-title  border">
-                <span class="text-overflow fs40">卡券包</span>
-                <i class="iconfont icon-guanbi fs40"
-                @click.self="isCardRecevie =false"></i>
+    <sp-dialog 
+        :title="'卡卷包'"
+        :visible.sync="isCardRecevie">
+        <div class="goods-dialog-main">
+            <div class="goods-dialog-choice shop-box-justify" 
+                style="padding: 0.2rem;"
+                v-for="item in goodsData.cardRecevieArr"
+                :key="item.cardId">
+                <div class="fs42">{{item.cardName}}</div>
+                <div class="fs42">{{item.num}}</div>
             </div>
-            <div>
-                <div class="goods-dialog-choice shop-box-justify" 
-                    style="padding: 0.2rem;"
-                    v-for="item in goodsData.cardRecevieArr"
-                    :key="item.cardId">
-                    <div class="fs42">{{item.cardName}}</div>
-                    <div class="fs42">{{item.num}}</div>
-                </div>
-            </div>
-         </div>
-    </div>
+        </div>
+    </sp-dialog>
 </div>
 </template>
 <script>
@@ -514,10 +507,11 @@ import technicalSupport from 'components/technicalSupport' //技术支持
 import comment from './child/comment' //技术支持
 import spec from './child/spec' //技术支持
 import filter from '../../../lib/filters'// 价钱过滤器
+import spDialog from 'components/spDialog' //技术支持
 
 export default {
     components: {
-        defaultImg,countDown,technicalSupport,banner,comment,spec
+        defaultImg,countDown,technicalSupport,banner,comment,spec,spDialog
     },
     data () {
         return {
@@ -609,6 +603,21 @@ export default {
 
             _this.arrDialog = newArr;
             _this.newDialog = arr;
+        },
+        'isShow'(a,b){
+            console.log(this.isCardRecevie,'isCardRecevie')
+            if(a){
+                this.commonFn.disableScroll();
+            }else{
+                this.commonFn.allowScroll();
+            }
+        },
+        'isWholesale'(a,b){
+             if(a){
+                this.commonFn.disableScroll();
+            }else{
+                this.commonFn.allowScroll();
+            }
         }
         
     },
@@ -743,7 +752,7 @@ export default {
         wholesaleAjax(data){
             let _this = this;
             let _data = data
-            this.commonFn.ajax({
+            _this.commonFn.ajax({
                 'url': h5App.activeAPI.phoneProduct_getSpecifica_post,
                 'data':data,
                 'success':function(data){
@@ -1103,6 +1112,7 @@ export default {
             for(var i = 0 ;i<$('.js-specValue .shop-bg').length;i++){
                 specs.push($('.js-specValue .shop-bg').eq(i).attr('value'));
             }
+            console.log(specs,'specs');
             //获取选中值的规格集合
             _this.guigePrice.forEach((item,i) => {
                 //判断两个数组完全相等 转字符串比较
@@ -1127,16 +1137,47 @@ export default {
         /** 
          * 添加购物车 e==1正常购买，e==2 批发购买
          */
-        addCard(e){
+        addCard(c,e){
             let  _this = this;
             let data;//添加商品
-            if(e===1){
-                
-                console.log('正常购买')
+            let ajaxdata={//请求数据
+                busId: _this.$store.state.busId,
+                url: _this.$store.state.loginDTO_URL,
+                browerType: _this.$store.state.browerType,
+                productId :  _this.$route.params.goodsId,
+            };
+            if(c===1){
+                //正常购买
+                data = _this.dialogData;
+                ajaxdata.productNum = data.productNum;
+                ajaxdata.price = data.inv_price[0]+'.'+data.inv_price[1];
             }else{
-               console.log('批发购买')
-               data = _this.newDialog
-            }
+                if($(e.target).hasClass('shopRgba')) return;
+                //批发购买
+                data = _this.newDialog;
+                let arr = {}
+                data.forEach((item,i)=>{
+                    arr[item.specifica_ids] = {
+                        num:item.productNum,
+                        value:item.values.toString(),
+                        price:item.inv_price
+                    } 
+                })
+                ajaxdata.proSpecId = JSON.stringify(arr);
+                ajaxdata.productNum=_this.pifaAmount;
+                ajaxdata.price = _this.goodsData.pfPrice;
+            } 
+
+            _this.commonFn.ajax({
+                'url': h5App.activeAPI.phoneShopCart_addShopCart_post,
+                'data':ajaxdata,
+                'success':function(data){
+                    console.log(data)
+                    if(data.code == 1){
+                         _this.$parent.$refs.bubble.show_tips('加入成功');
+                    }
+                } 
+            })
         },
         /** 
          * 收藏店铺
@@ -1165,15 +1206,11 @@ export default {
         },
         /** 
          * 切换副导航
-         * @param name 子路由名字
+         * @param name 名字
         */
         nav_change(name){
             this.nav_choice = name;
             this.isDetails = name
-            // let hash = window.location.hash.split('#')[1];
-            // let _name =  hash.split('/')[2];
-            // let _hash= hash.split(_name)[0]+name+hash.split(_name)[1];
-            // this.$router.push(_hash);
         },
         /**
          * 商品详情请求
@@ -1187,8 +1224,16 @@ export default {
             },
             'success':function(data){
                 _this.detailsData = data.data;
-            } 
-        })
+                } 
+            })
+        },
+        /**
+         * 购物车跳转
+         */
+        shoppingCart(){
+            let shopId =  this.$route.params.shopId;
+            let busId =  this.$route.params.busId;
+            this.$router.push('/cart/'+shopId+'/'+busId+'/0');
         }
     },
     beforeCreate() {
@@ -1204,7 +1249,13 @@ export default {
 
             this.phoneProductAjax();
             this.type = this.$route.params.type;
-            
+            var buf = new Buffer("test测试","utf8");
+		
+		console.log(buf,'buf');
+		
+		console.log(buf.length,'buf');
+		
+		console.log(buf.toString("utf8"),'buf');
     }
 }
 </script>
@@ -1452,15 +1503,16 @@ export default {
             font-size: 0;
             width: 100%;
             padding-left:  30/@dev-Width *1rem;
-            &>span{
+            .ik-box;
+            .ik-box-pack(justify);
+            .ik-box-align(center);
+            div{
                 padding: 30/@dev-Width *1rem 0;
                 width: 90%;
-                display: inline-block;
             }
-            &>i{
+            i{
                 padding: 30/@dev-Width *1rem;
-                display: inline-block;
-                vertical-align: top;
+                display: block;
             }
         }
         .goods-dialog-detl{

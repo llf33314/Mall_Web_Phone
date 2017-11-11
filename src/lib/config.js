@@ -94,12 +94,13 @@
     /***********************   以下接口都是 购物车页面相关接口 ***********************/
     /*查询购物车接口 */
     phoneShopCart_getShopCartx_post: '/phoneShopCart/L6tgXlBFeK/getShopCart',
-
-
-    /*获取我的页面数据*/
-    my_center_post: '/phoneMember/L6tgXlBFeK/toUser',
-    /*获取商城首页数据 */
-    mall_index_post: '/phonePage/L6tgXlBFeK/getHomePageId',
+    /*删除购物车接口 */
+    phoneShopCart_removeShopCart_post:'/phoneShopCart/L6tgXlBFeK/removeShopCart',
+    
+     /*获取我的页面数据*/
+     my_center_post: '/phoneMember/L6tgXlBFeK/toUser',
+     /*获取商城首页数据 */
+     mall_index_post: '/phonePage/L6tgXlBFeK/getHomePageId',
     /***********************   以下接口都是 订单相关的接口 ***********************/
     /*获取我的订单数据 */
     order_list_post: '/phoneOrder/L6tgXlBFeK/orderList',
