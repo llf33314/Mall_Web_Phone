@@ -94,7 +94,8 @@
     /***********************   以下接口都是 购物车页面相关接口 ***********************/
     /*查询购物车接口 */
     phoneShopCart_getShopCartx_post: '/phoneShopCart/L6tgXlBFeK/getShopCart',
-
+    /*删除购物车接口 */
+    phoneShopCart_removeShopCart_post:'/phoneShopCart/L6tgXlBFeK/removeShopCart',
     
      /*获取我的页面数据*/
      my_center_post: '/phoneMember/L6tgXlBFeK/toUser',

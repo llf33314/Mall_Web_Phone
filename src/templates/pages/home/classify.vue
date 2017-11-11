@@ -349,7 +349,7 @@ export default {
         let _this = this;
         _this.type = _this.$route.params.type;
         _this.$store.commit('mutationData',{type:_this.type});
-        
+        _this.$store.commit('show_footer',0);
         let _keyword = this.$store.state.keywords || this.$route.params.keywords;
         _keyword === 'k=k'?_this.keyWord = '':_this.keyWord = _keyword || '';
         

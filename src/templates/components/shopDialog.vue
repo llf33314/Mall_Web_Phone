@@ -49,7 +49,7 @@ export default {
     methods: {
         //关闭弹窗
         dialogClose: function (num) {
-            //allowScroll();todo
+            this.allowScroll();
             this.isShow = false;
             if(num === 1 && Number(this.btnNum) === 2){
                 return this.callback.btnTow && !this.callback.btnTow();
@@ -58,7 +58,7 @@ export default {
         //确定
         dialogConfirm: function () {
             this.isShow = false;
-            //allowScroll();todo
+            this.allowScroll();
             if(this.callback !== undefined &&　this.callback　!== ''){
                 return this.callback.btnOne && !this.callback.btnOne();
             }
@@ -73,6 +73,22 @@ export default {
             vm.btnTow = msg.btnTow || '取消';
             vm.callback = msg.callback;
             vm.isShow = true;
+            
+            vm.disableScroll();
+        },
+        /**
+         * 禁止页面滚动
+         */
+        disableScroll: function () {
+            $(window).bind("touchmove", function (e) {
+                e.preventDefault();
+            });
+        },
+        /**
+         * 允许页面滚动
+         */
+        allowScroll: function () {
+            $(window).unbind("touchmove");
         }
     }    
 }

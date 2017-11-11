@@ -227,7 +227,7 @@ export default new Router({
         title: '协商(完成)'
       }
     }, {
-      path: '/cart/:shopId/:busId',
+      path: '/cart/:shopId/:busId/:type',
       name: 'shoppingCart',
       component: shoppingCart,
       meta: {
