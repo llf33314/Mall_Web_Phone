@@ -34,8 +34,8 @@ module.exports = {
     proxyTable: {
       //打包时注释
       '/api':{
-        //target: 'http://mall.yifriend.net/',
-        target: 'http://192.168.2.100:8081/',
+        target: 'http://mall.yifriend.net/',
+        //target: 'http://192.168.2.100:8081/',
         changeOrigin: true,
         pathRewrite: {
           '^/api': '/'

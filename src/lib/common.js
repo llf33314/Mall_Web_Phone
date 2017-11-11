@@ -16,19 +16,20 @@ var Rxports = {
 	  * @param {Function} error		发送请求前
 	  * @param return 
 	*/
-	ajax(opt){
 	
+	ajax(opt){
 		var opts = opt || {};
 		
 		if (!opts.url) {
 			alert('请填写接口地址');
 			return false;
 		}
+	
 		axios({
 			method: opts.type || 'post',
 			url: opts.url,
 			params: opts.data || {},
-			headers: opts.headers || {
+			headers:  {
 				//'Content-Type':'application/x-www-form-urlencoded',
 				'Content-Type':'application/json;charset=utf-8',
 				// 'Access-Control-Allow-Origin': '*'
@@ -322,6 +323,20 @@ var Rxports = {
 		if (day < 1 || day > iaMonthDays[month - 1])
 		return false
 		return true
+	},
+	/**
+	 * 禁止页面滚动
+	 */
+	disableScroll: function () {
+		$(window).bind("touchmove", function (e) {
+			e.preventDefault();
+		});
+	},
+	/**
+	 * 允许页面滚动
+	 */
+	allowScroll: function () {
+		$(window).unbind("touchmove");
 	}
 };
 
