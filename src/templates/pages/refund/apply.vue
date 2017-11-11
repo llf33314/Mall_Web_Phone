@@ -297,7 +297,9 @@ export default {
     },
     submitData() {
       let _this = this;
-      if (this.returnReasonData == null || this.returnReasonData.id == null) {
+      let data = _this.returnReasonData;
+      let returnType = _this.returnType;
+      if (data == null || data == null || data.id == "") {
         _this.$parent.$refs.bubble.show_tips("请选择退款原因");
         return;
       }
@@ -307,7 +309,7 @@ export default {
       if (!_this.blurPhone()) {
         return;
       }
-      if (_this.returnType == null || _this.returnType == 0) {
+      if (returnType == null || returnType == 0 || returnType == "") {
         _this.$parent.$refs.bubble.show_tips("请选择处理方式");
       }
       if (!this.blurRemark()) {
@@ -321,7 +323,7 @@ export default {
         orderId: _this.returnData.orderId,
         orderDetailId: _this.orderDetailId,
         shopId: _this.returnData.shopId,
-        retHandlingWay: _this.returnType,
+        retHandlingWay: returnType,
         retReasonId: _this.returnReasonData.id,
         retReason: _this.returnReasonData.value,
         retRemark: _this.returnRemark,

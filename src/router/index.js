@@ -220,11 +220,11 @@ export default new Router({
         title: '物流信息（上传未完成)'
       }
     }, {
-      path: '/return/consult',
+      path: '/return/consult/:busId/:returnId',
       name: 'consult_return',
       component: consult_return,
       meta: {
-        title: '协商(完成)'
+        title: '协商详情'
       }
     }, {
       path: '/cart/:shopId/:busId/:type',

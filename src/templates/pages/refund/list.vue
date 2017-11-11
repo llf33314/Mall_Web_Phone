@@ -55,7 +55,8 @@
                             填写退货物流
                         </div>
                         <div class="order-button shop-bg" 
-                            v-if="detail.isShowKanJinduButton == 1" >
+                            v-if="detail.isShowKanJinduButton == 1" 
+                            @click="returnXieDetail(detail.returnId)">
                             查看进度
                         </div>
                          <div class="order-button shop-bg" 
@@ -276,6 +277,11 @@ export default {
     },
     setTitle() {
       this.commonFn.setTitle("退货/售后");
+    },
+    returnXieDetail(returnId) {
+      //跳转至协商详情页面
+      this.isMore = -1;
+      this.$router.push("/return/consult/" + this.busId + "/" + returnId);
     }
   }
 };

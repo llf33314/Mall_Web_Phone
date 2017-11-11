@@ -243,7 +243,8 @@ export default {
     submitData() {
       //提交退款信息
       let _this = this;
-      if (_this.selectDialogData == null || _this.selectDialogData.id == null) {
+      let data = _this.selectDialogData;
+      if (data == null || data.id == null || data.id == "") {
         _this.$parent.$refs.bubble.show_tips("请选择物流公司");
         return false;
       } else if (

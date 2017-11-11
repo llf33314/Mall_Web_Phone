@@ -1,15 +1,19 @@
 <template>
-    <div class="shop-wrapper refund-wrapper" v-if="returnData != null">
+    <div class="shop-wrapper refund-wrapper" v-if="returnData != null ">
         <div class="refund-main comment-main">
             <section class="refund-passheader clearfix">
                 <div class="header-title fs46">
                     <i class="iconfont icon-dui"></i>退款完成
                 </div>
-                <p class="fs46">退款金额: <span class="shopGray">￥{{returnData.returnPrice}}</span></p>
-                <p class="fs46">退款时间: <span class="shopGray">2017-6-27  16:58</span></p>
+                <p class="fs46" v-if="returnData.returnPrice != null">
+                    退款金额: <span class="shopGray">￥{{returnData.returnPrice | moneySplit1}}.{{returnData.returnPrice | moneySplit2}}</span>
+                </p>
+                <p class="fs46" v-if="returnData.createTime != null">
+                    退款时间: <span class="shopGray">{{returnData.createTime | formatNotM}}</span>
+                </p>
             </section>
             <section class="refund-pass">
-                <div class="refund-list border">
+                <div class="refund-list border" @click="returnXieDetail">
                     <p class="fs46">协商详情：</p>
                     <i class="iconfont icon-jiantou-copy"></i>
                 </div>
@@ -19,8 +23,19 @@
                 <div class="refund-list border">
                     <p class="fs46"><span class="shopGray">退款类型</span> {{returnData.typeName}}</p>
                 </div>
+                <div class="refund-list border" v-if="returnData.returnPrice != null">
+                    <p class="fs46">
+                        <span class="shopGray">退款金额</span> ￥{{returnData.returnPrice | moneySplit1}}.{{returnData.returnPrice | moneySplit2}}
+                    </p>
+                </div>
                 <div class="refund-list border">
-                    <p class="fs46"><span class="shopGray">退款金额</span> ￥{{returnData.returnPrice}}</p>
+                    <p class="fs46"><span class="shopGray">退款原因</span> {{returnData.retReasonName}}</p>
+                </div>
+                <div class="refund-list border">
+                    <p class="fs46"><span class="shopGray">退款说明</span> {{returnData.retRemark}}</p>
+                </div>
+                <div class="refund-list border">
+                    <p class="fs46" v-if="returnData.createTime != null"><span class="shopGray">申请时间</span> {{returnData.createTime | formatNotM}}</p>
                 </div>
             </section>
 
@@ -34,9 +49,9 @@
 </template>
 
 <script>
-import price from "../../../lib/filters";
+import filte from "../../../lib/filters";
 export default {
-  name: "address",
+  name: "successd",
   data() {
     return {
       busId: this.$route.params.busId, //商家di
@@ -44,7 +59,6 @@ export default {
       returnData: {} //初始化数据
     };
   },
-  components: {},
   mounted() {
     this.loadDatas(); //初始化申请退款数据
     this.commonFn.setTitle("退款完成详情");
@@ -82,9 +96,18 @@ export default {
           } else if (_this.returnData.retHandlingWay == 2) {
             _this.returnData.typeName = "退货退款";
           }
-          console.log(_this.returnData);
+          if (
+            _this.returnData.retRemark == null ||
+            _this.returnData.retRemark == ""
+          ) {
+            _this.returnData.retRemark = "无";
+          }
         }
       });
+    },
+    returnXieDetail() {
+      //跳转至协商详情页面
+      this.$router.push("/return/consult/" + this.busId + "/" + this.returnId);
     }
   }
 };
