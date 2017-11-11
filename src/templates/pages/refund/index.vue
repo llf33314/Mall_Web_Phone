@@ -18,7 +18,7 @@
                 <div class="refund-list2 border" v-for="way in wayList"
                 @click="toReturn(way.id)">
                     <div class="fs46 list-txt">
-                        <i class="iconfont icon-tuikuan" :class="cla"></i>
+                        <i class="iconfont" :class="way.cla"></i>
                         <div>
                             <p class="fs40">{{way.name}}</p>
                             <p class="fs36 shopGray">{{way.nameMsg}}</p>
@@ -330,56 +330,5 @@ export default {
 }
 .refund-wrapper .shop-footer-fixed {
   margin: 0;
-}
-.refund-wrapper .refund-dialog {
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  z-index: 99;
-  top: 0;
-  left: 0;
-}
-.refund-wrapper .refund-dialog .dialog-main {
-  width: 100%;
-  position: absolute;
-  background: #fff;
-  bottom: 0;
-  animation: dialogShow 0.2s;
-  -moz-animation: dialogShow 0.2s; /* Firefox */
-  -webkit-animation: dialogShow 0.2s;
-}
-.refund-wrapper .refund-dialog .dialog-content {
-  width: 100%;
-  padding: 0.23333333rem 0 0.58666667rem 0.33333333rem;
-}
-.refund-wrapper .refund-dialog .dialog-title {
-  width: 100%;
-  text-align: center;
-  padding-bottom: 0.33333333rem;
-}
-.refund-wrapper .refund-dialog .dialog-ul {
-  width: 100%;
-}
-.refund-wrapper .refund-dialog .dialog-ul .refund-list {
-  height: 0.78rem;
-  padding-left: 0;
-}
-.refund-wrapper .refund-dialog .dialog-option {
-  width: 0.4rem;
-  height: 0.4rem;
-  -webkit-border-radius: 100%;
-  -moz-border-radius: 100%;
-  border-radius: 100%;
-  border: 1px solid #c7c7cc;
-  text-align: center;
-  line-height: 0.4rem;
-}
-.refund-wrapper .refund-dialog .dialog-option > i {
-  color: #fff;
-}
-.refund-wrapper .refund-dialog .selected {
-  border: 0;
-  background: #e4393c;
 }
 </style>

@@ -192,7 +192,7 @@ export default new Router({
         title: '退款/售后列表'
       }
     }, {
-      path: '/return/succeed',
+      path: '/return/succeed/:busId/:returnId',
       name: 'detail_return',
       component: detail_return,
       meta: {
@@ -213,18 +213,18 @@ export default new Router({
         title: '申请退款'
       }
     }, {
-      path: '/return/logistics',
+      path: '/return/logistics/:busId/:returnId',
       name: 'logistics_return',
       component: logistics_return,
       meta: {
         title: '物流信息（上传未完成)'
       }
     }, {
-      path: '/return/consult',
+      path: '/return/consult/:busId/:returnId',
       name: 'consult_return',
       component: consult_return,
       meta: {
-        title: '协商(完成)'
+        title: '协商详情'
       }
     }, {
       path: '/cart/:shopId/:busId/:type',

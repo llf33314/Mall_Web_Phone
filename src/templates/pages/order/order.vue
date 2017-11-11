@@ -85,19 +85,19 @@
                     </div>
                     <div class="deltails-item-button">
                         <div class="deltails-button shop-bg fs36" v-if="detail.isShowApplyReturnButton == 1"
-                          @click="goApplyReturn(detail.orderDetailId)">
+                          @click="goApplyReturn(detail.orderDetailId,detail.detailStauts,detail.returnId)">
                             申请退款
                         </div> 
                         <div class="deltails-button shop-bg fs36" v-if="detail.isShowApplySaleButton == 1"
-                          @click="goApplyReturn(detail.orderDetailId)">
+                          @click="goApplyReturn(detail.orderDetailId,detail.detailStauts,detail.returnId)">
                             申请售后
                         </div>
                         <div class="deltails-button shop-bg fs36" v-if="detail.isShowReturnWuLiuButton == 1"
-                         @click="goReturnWuliu(detail.orderDetailId)">
+                         @click="goReturnWuliu(detail.returnId,detail.detailStauts)">
                             填写退货物流
                         </div>
                         <div class="deltails-button shop-bg fs36" v-if="detail.isShowUpdateReturnButton == 1"
-                         @click="goUpdateReturn(detail.orderDetailId)">
+                         @click="goApplyReturn(detail.orderDetailId,detail.detailStauts,detail.returnId)">
                             修改退款
                         </div>
                         <div class="deltails-button shop-bg fs36" v-if="detail.isShowCloseReturnButton == 1"
@@ -141,10 +141,10 @@
     </section>
     <section class="shop-footer-fixed deltails-footer"
     v-if="order.isShowKanWuLiuButton == 1 || order.isShowReceiveGoodButton == 1 || order.isShowGoPayButton == 1 || order.isShowDeleteButton == 1">
-        <div class="deltails-button fs40 shop-bg" v-if="order.isShowKanWuLiuButton == 1"
+        <!-- <div class="deltails-button fs40 shop-bg" v-if="order.isShowKanWuLiuButton == 1"
           >
             查看物流
-        </div>
+        </div> -->
         <div class="deltails-button fs40 shop-bg" v-if="order.isShowReceiveGoodButton == 1" 
           @click="confirmReceipt(order.orderId)">
             确认收货
@@ -234,8 +234,8 @@ export default {
           _this.orderDetailList.forEach((item, index2) => {
             item.productPrice = _this.commonFn.moneySplit(item.productPrice);
           });
-          _this.orderType = order.orderType;//活动类型
-          _this.activityId = order.activityId;//活动id
+          _this.orderType = order.orderType; //活动类型
+          _this.activityId = order.activityId; //活动id
         }
       });
     },
@@ -250,12 +250,27 @@ export default {
       //确认收货
       this.showConfirmDialogs(orderId);
     },
-    goApplyReturn(orderDetailId) {
+    goApplyReturn(detailId, detailStatus, returnId) {
       //跳入申请退款的页面
-      this.$router.push("/return/classify/" + this.busId + "/" + orderDetailId);
+      sessionStorage.setItem("refundReturnUrl", location.href);
+      //退款类型url
+      let _typeUrl = "/return/classify/" + this.busId + "/" + detailId;
+      //退款申请页面
+      let _applyUrl =
+        "/return/apply/" + this.busId + "/" + detailId + "/-1/" + returnId;
+
+      if (detailStatus == -3) {
+        //申请退款 跳转到选择退款类型页面
+        this.$router.push(_typeUrl);
+      } else if (detailStatus == -1) {
+        //商家拒绝退款  跳转到修改退款页面
+        this.$router.push(_applyUrl);
+      }
     },
-    goReturnWuliu(orderDetailId) {
+    goReturnWuliu(returnId, detailStatus) {
       //跳入填写物流的页面
+      this.isMore = -1;
+      this.$router.push("/return/logistics/" + this.busId + "/" + returnId);
     },
     goUpdateReturn(orderDetailId) {
       //跳入修改退款页面

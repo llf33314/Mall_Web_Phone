@@ -51,7 +51,7 @@
   const h5App = {};
 
 
-  h5App.api ="/api";
+  h5App.api = "/api";
   // h5App.api ="";
 
   /**
@@ -74,8 +74,10 @@
     phonePage_getCustomer_post: '/phonePage/L6tgXlBFeK/getCustomer',
     /*商家id获取底部菜单*/
     phonePage_footerMenu_post: '/phonePage/L6tgXlBFeK/footerMenu',
+    /*上传图片的接口 */
+    upload_image_post: '/phonePage/L6tgXlBFeK/uploadImage',
     /*店铺列表相关接口 */
-     /***********************   以下接口都是 商品详情页面相关接口 ***********************/
+    /***********************   以下接口都是 商品详情页面相关接口 ***********************/
     phonePage_shopList_post: '/phonePage/L6tgXlBFeK/shopList',
     /*查询商品接口*/
     phoneProduct_getProduct_post: '/phoneProduct/L6tgXlBFeK/getProduct',
@@ -95,12 +97,12 @@
     /*查询购物车接口 */
     phoneShopCart_getShopCartx_post: '/phoneShopCart/L6tgXlBFeK/getShopCart',
     /*删除购物车接口 */
-    phoneShopCart_removeShopCart_post:'/phoneShopCart/L6tgXlBFeK/removeShopCart',
-    
-     /*获取我的页面数据*/
-     my_center_post: '/phoneMember/L6tgXlBFeK/toUser',
-     /*获取商城首页数据 */
-     mall_index_post: '/phonePage/L6tgXlBFeK/getHomePageId',
+    phoneShopCart_removeShopCart_post: '/phoneShopCart/L6tgXlBFeK/removeShopCart',
+
+    /*获取我的页面数据*/
+    my_center_post: '/phoneMember/L6tgXlBFeK/toUser',
+    /*获取商城首页数据 */
+    mall_index_post: '/phonePage/L6tgXlBFeK/getHomePageId',
     /***********************   以下接口都是 订单相关的接口 ***********************/
     /*获取我的订单数据 */
     order_list_post: '/phoneOrder/L6tgXlBFeK/orderList',
@@ -120,10 +122,14 @@
     return_save_post: '/phoneOrder/L6tgXlBFeK/saveReturnContent',
     /*保存退款物流的接口 */
     return_logistics_save_post: '/phoneOrder/L6tgXlBFeK/saveReturnLogistics',
-    /*查询退款物流的接口 */
+    /*查询物流公司的接口 */
     return_logistics_post: '/phoneOrder/L6tgXlBFeK/getReturnLogistics',
-    /*上传图片的接口 */ 
-    upload_image_post:'/phonePage/L6tgXlBFeK/uploadImage'
+    /*查询物流公司的接口 */
+    return_logistics_detail_post: '/phoneOrder/L6tgXlBFeK/getReturnLogisticsDetail',
+    /*查看退款详情的接口 */
+    return_finish_detail_post: '/phoneOrder/L6tgXlBFeK/returnDetail',
+    /*查看协商详情的接口 */
+    return_log_post: '/phoneOrder/L6tgXlBFeK/returnLogList'
 
   };
 

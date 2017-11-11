@@ -12,20 +12,22 @@
                     <p class="fs36 shopGray" v-if="returnData.productSpecifica != null">
                       规格：{{returnData.productSpecifica}}
                     </p>
-                    <p class="fs36 shop-font shop-textr" v-if="returnData.returnPrice != null">
-                      退款金额：￥{{returnData.returnPrice[0]}}.<span class="fs32">{{returnData.returnPrice[1]}}</span>
-                    </p>
+                    <!-- <p class="fs36 shop-font shop-textr" v-if="returnData.returnMoneys != null">
+                      退款金额：￥{{returnData.returnMoneys[0]}}.<span class="fs32">{{returnData.returnMoneys[1]}}</span>
+                    </p> -->
                 </div>
             </section>
             <section class="refund-state">
-                <div class="refund-list border" v-if="returnData.isShowCargoStatus == 1 && cargoStatusData!= null">
+                <div class="refund-list border" v-if="returnData.isShowCargoStatus == 1 && cargoStatusData!= null"
+                  @click="showDialogs(cargoStatusData,cargoStatusList,1,'货物状态')">
                     <p class="fs46">货物状态</p>
                     <p class="shopGray">
                         <span class="fs36">{{cargoStatusData.value}}</span>
                         <i class="iconfont icon-jiantou-copy"></i>
                     </p>
                 </div>
-                <div class="refund-list" v-if="returnReasonData != null">
+                <div class="refund-list" v-if="returnReasonData != null" 
+                  @click="showDialogs(returnReasonData,returnReasonList,2,'退款原因')">
                     <p class="fs46">退款原因</p>
                     <p class="shopGray">
                         <span class="fs36">{{returnReasonData.item_value}}</span>
@@ -34,9 +36,9 @@
                 </div>
             </section>
             <section class="refund-money">
-                <div class="refund-list border" v-if="returnData.returnPrice != null">
+                <div class="refund-list border" v-if="returnData.returnMoneys != null">
                     <p class="fs46">
-                      退款金额：<span class="shop-font">￥{{returnData.returnPrice[0]}}.<span class="fs32">{{returnData.returnPrice[1]}}</span></span>
+                      退款金额：<span class="shop-font">￥{{returnData.returnMoneys[0]}}.<span class="fs32">{{returnData.returnMoneys[1]}}</span></span>
                     </p>
                 </div>
                 <div class="refund-list" v-if="isShowFreightMoney">
@@ -49,17 +51,17 @@
                <div class="refund-list">
                     <div class="fs46">手机号码：</div>
                     <div class="refund-textarea">
-                      <div-textarea v-if="isTextareaPhone"   :text="returnTelphone" @newText="changePhone"></div-textarea>
-                      <p class="fs46 shopGray" @click="isTextareaPhone = true" v-else>选填</p>
+                      <input class="v-input fs46" placeholder="必填" v-model="returnTelphone" 
+                        @blur="blurPhone"/>
                     </div>
                 </div>
             </section>
-            <section class="refund-state">
-               <div class="refund-list">
+            <section class="refund-state " >
+               <div class=" refund-list3" >
                     <div class="fs46">退款说明：</div>
                     <div class="refund-textarea">
-                      <div-textarea v-if="isTextareaRemark"  :text="returnRemark" @newText="changeRemark"></div-textarea>
-                      <p class="fs46 shopGray" @click="isTextareaRemark = true" v-else>选填</p>
+                       <textarea class="table fs46"  placeholder="选填" v-model="returnRemark"
+                        @blur="blurRemark"></textarea>
                     </div>
                 </div>
             </section>
@@ -67,57 +69,41 @@
                 <p class="fs42">上传凭证：</p>
                 <div class="refund-box comment-photo border clearfix"
                      style="padding:0;">
-                    <div class="comment-img" @click="removeImages(index)" v-if="imageArr != null" v-for="(image , index) in imageArr">
-                        <!-- <img src="imgUrl+image"/> -->
-                         <default-img :background="imgUrl+rimage"
+                    <div class="comment-img"  v-if="imageArr != null" v-for="(image , index) in imageArr" >
+                         <default-img :background="imgUrl+image"
                                  :isHeadPortrait="1">
-                    </default-img>
-                        <i class="iconfont icon-guanbi"></i>
+                        </default-img>
+                        <i class="iconfont icon-guanbi" @click="removeImages(index)"></i>
                     </div>
-                    <div class="comment-upload">
-                      <img-upload :imgURL="imgData" :maxNums="maxNum"></img-upload>
+                    <div class="comment-upload" v-if="imageArr != null && imageArr.length < 3">
+                      <img-upload :imgURL="imageArr" @returnUrl="returnUrl"></img-upload>
                     </div>
                 </div>
             </section>
-            <section class="shop-footer-fixed comment-footer1">
-                <div class="shop-max-button fs52 shop-bg">
+             <technical-support v-if="$store.state.isAdvert == 1" ></technical-support>
+            <div class="shop-footer-fixed comment-footer1">
+                <div class="shop-max-button fs52 shop-bg" @click="submitData">
                     提 交
-                </div>
-            </section>
-        </div>
-        <div class="refund-dialog shop-hide">
-            <div class="dialog-main">
-                <div class="dialog-content">
-                    <p class="fs46 dialog-title border">退款原因</p>
-                    <div class="dialog-ul">
-                        <div class="refund-list border">
-                            <p class="fs46">不喜欢/不想要</p>
-                            <p class="dialog-option">
-                                <i class="iconfont icon-dui"></i>
-                            </p>
-                        </div>
-                        <div class="refund-list ">
-                            <p class="fs46">其他</p>
-                            <p class="dialog-option">
-                                <i class="iconfont icon-dui"></i>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="shop-footer comment-footer1">
-                    <div class="shop-max-button fs52 shop-bg">
-                        关 闭
-                    </div>
                 </div>
             </div>
         </div>
+        <dialog-show v-if=" isShowDialog"  
+          :selectData="selectDialogData"
+          :dialogList="selectDialogList"
+          :dialogType="selectType"
+          :dialogTitle="selectTitle"
+          @selectEvent="selectDialogs"
+          @closeDialog="closeDialogs"></dialog-show>
+
     </div>
 </template>
 
 <script>
+import axios from "axios";
 import defaultImg from "components/defaultImg";
 import imgUpload from "components/imgUpload";
-import divTextarea from "components/divTextarea";
+import dialogShow from "./component/selectDialog";
+import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   data() {
     return {
@@ -137,31 +123,41 @@ export default {
       imgUrl: "", //图片域名
       returnRemark: "", //退款说明
       returnTelphone: "", //退款手机号
-      isTextareaRemark: false, //输入框显示条件
-      isTextareaPhone: false, //手机号码输入框条件
-      imageArr: [] ,//上传图片的集合
-      maxNum:5
+      imageArr: [], //上传图片的集合
+      isShowDialog: false, //是否显示退款原因弹出框
+      isShowCargo: false, //是否显示货物状态
+      submitReturnUrl: "", //提交数据后调回页面
+      selectDialogData: {}, //弹出框选中的对象
+      selectDialogList: [], //弹出框集合
+      selectType: 1, //弹出框类型
+      selectTitle: "" //弹出框标题
     };
   },
   components: {
     defaultImg,
     imgUpload,
-    divTextarea
+    dialogShow,
+    technicalSupport
   },
   mounted() {
-    this.$store.commit("show_footer", false); //隐藏底部导航栏
-    this.loadDatas(); //初始化申请退款
     this.commonFn.setTitle("申请退款");
+    this.$store.commit("show_footer", false); //隐藏底部导航栏
+    this.submitReturnUrl = sessionStorage.getItem("refundReturnUrl");
+    if (this.submitReturnUrl != null && this.submitReturnUrl != "") {
+      let obj = this.submitReturnUrl.split("#");
+      if (obj != null && obj.length > 1) {
+        this.submitReturnUrl = obj[1];
+      }
+    } else {
+      this.submitReturnUrl = "/order/list/" + this.busId + "/0";
+    }
+    this.loadDatas(); //初始化申请退款数据
   },
   beforeDestroy() {
     //离开后的操作
     this.$store.commit("show_footer", true); //显示底部导航栏
   },
   methods: {
-    //组件图片接受
-    imgData(data) {
-      this.imgURL = data;
-    },
     loadDatas() {
       let _this = this;
       let _data = {
@@ -188,36 +184,178 @@ export default {
           if (myData.returnPrice > 0) {
             _this.isShowFreightMoney = true;
           }
-          myData.returnPrice = _this.commonFn.moneySplit(myData.returnPrice);
+          myData.returnMoneys = _this.commonFn.moneySplit(myData.returnPrice);
           if (myData.cargoStatusList != null) {
             _this.cargoStatusList = myData.cargoStatusList; //货物状态集合
           }
           if (myData.returnReasonList != null) {
             _this.returnReasonList = myData.returnReasonList; //退款原因
+            _this.returnReasonList.forEach((element, index) => {
+              element.id = element.item_key;
+              element.value = element.item_value;
+            });
           }
           if (_this.returnReasonList.length > 0) {
             //给默认的退款原因赋值
             _this.returnReasonData = _this.returnReasonList[0];
+            if (myData.retReasonId != null && myData.retReasonId > 0) {
+              _this.returnReasonList.forEach((item, index) => {
+                if (item.id == myData.retReasonId) {
+                  _this.returnReasonData = item;
+                }
+              });
+            }
           }
           if (_this.cargoStatusList.length > 0) {
-            //给默认的退款货物赋值
+            //给默认的货物状态赋值
             _this.cargoStatusData = _this.cargoStatusList[0];
+            if (myData.cargoStatus != null && myData.cargoStatus >= 0) {
+              _this.cargoStatusList.forEach((item, index) => {
+                if (item.id == myData.cargoStatus) {
+                  _this.cargoStatusData = item;
+                }
+              });
+            }
           }
-          console.log(_this.returnReasonData);
+          if (myData.retRemark != null) {
+            _this.returnRemark = myData.retRemark;
+          }
+          if (myData.returnPhone != null) {
+            _this.returnTelphone = myData.returnPhone;
+          }
+          if (myData.returnId != null) {
+            _this.returnId = myData.returnId;
+          }
+          if (myData.returnWay != null && myData.returnWay > 0) {
+            _this.returnType = myData.returnWay;
+          }
+          if (
+            myData.returnImageUrls != null &&
+            myData.returnImageUrls.length > 0
+          ) {
+            myData.returnImageUrls.forEach((item, index) => {
+              _this.$set(_this.imageArr, _this.imageArr.length, item);
+            });
+          }
         }
       });
     },
-    changeRemark(returnRemark, msg) {
-      //改变退款说明
-      this.returnRemark = msg;
+    blurPhone() {
+      //改变手机号事件
+      let flag = this.commonFn.validPhone(this.returnTelphone);
+      if (!flag) {
+        this.$parent.$refs.bubble.show_tips("请填写正确的手机号码");
+      }
+      return flag;
     },
-    changePhone(msg) {
-      //改变手机号码时间
-      this.returnTelphone = msg;
+    blurRemark() {
+      //验证退款说明
+      let remark = this.returnRemark;
+      if (remark.length > 200) {
+        this.$parent.$refs.bubble.show_tips("退款说明不能超过200个字");
+        return false;
+      }
+      return true;
+    },
+    //组件图片接受
+    returnUrl(data) {
+      let _this = this;
+      if (_this.imageArr != null && data != null) {
+        data.forEach((item, index) => {
+          //重新给图片集合赋值
+          _this.$set(_this.imageArr, _this.imageArr.length, item);
+        });
+      } else if (data != null) {
+        _this.imageArr = data;
+      }
     },
     removeImages(index) {
       //删除图片
-      this.imageArr.$remove(index);
+      this.imageArr.splice(index, 1);
+    },
+    showDialogs(data, list, type, title) {
+      //显示弹出框
+      this.isShowDialog = true;
+      this.selectDialogData = data;
+      this.selectDialogList = list;
+      this.selectType = type;
+      this.selectTitle = title;
+    },
+    selectDialogs(data) {
+      if (data[0] == 1) {
+        //货物状态
+        this.cargoStatusData = data[1];
+      } else if (data[0] == 2) {
+        //退款原因
+        this.returnReasonData = data[1];
+      }
+      this.isShowDialog = false;
+    },
+    closeDialogs() {
+      //关闭弹出框
+      this.isShowDialog = false;
+    },
+    submitData() {
+      let _this = this;
+      let data = _this.returnReasonData;
+      let returnType = _this.returnType;
+      if (data == null || data == null || data.id == "") {
+        _this.$parent.$refs.bubble.show_tips("请选择退款原因");
+        return;
+      }
+      if (_this.returnTelphone == null || _this.returnTelphone == "") {
+        _this.$parent.$refs.bubble.show_tips("请填写手机号码");
+      }
+      if (!_this.blurPhone()) {
+        return;
+      }
+      if (returnType == null || returnType == 0 || returnType == "") {
+        _this.$parent.$refs.bubble.show_tips("请选择处理方式");
+      }
+      if (!this.blurRemark()) {
+        return;
+      }
+      let _data = {
+        busId: _this.busId,
+        url: location.href,
+        browerType: _this.$store.state.browerType,
+        id: _this.returnId,
+        orderId: _this.returnData.orderId,
+        orderDetailId: _this.orderDetailId,
+        shopId: _this.returnData.shopId,
+        retHandlingWay: returnType,
+        retReasonId: _this.returnReasonData.id,
+        retReason: _this.returnReasonData.value,
+        retRemark: _this.returnRemark,
+        retMoney: _this.returnData.returnPrice,
+        retTelephone: _this.returnTelphone
+      };
+      if (_this.cargoStatusData != null) {
+        //货物状态
+        _data.cargoStatus = _this.cargoStatusData.id;
+      }
+      if (_this.imageArr != null) {
+        //退款图片
+        _data.imagesUrl = _this.imageArr.toString();
+      }
+      console.log(_data);
+      _this.commonFn.ajax({
+        url: h5App.activeAPI.return_save_post,
+        data: _data,
+        success: function(data) {
+          if (data.code == 1001) {
+            location.href = data.url;
+          }
+          if (data.code != 1) {
+            _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
+            return;
+          }
+          if (_this.submitReturnUrl == null || _this.submitReturnUrl == "") {
+            _this.submitReturnUrl = "/order/list/" + this.busId + "/0";
+          }
+          _this.$router.push(_this.submitReturnUrl);
+        }
+      });
     }
   }
 };
@@ -238,6 +376,9 @@ export default {
     width: 100%;
     background: #fff;
     margin-bottom: 30 / @dev-Width *1rem;
+  }
+  .technicalSupport {
+    background: #f0f2f5;
   }
   .refund-goods {
     padding: 25 / @dev-Width *1rem 15 / @dev-Width *1rem 25 / @dev-Width *1rem 40 / @dev-Width *1rem;
@@ -262,7 +403,8 @@ export default {
     width: 100%;
   }
   .refund-list,
-  .refund-list2 {
+  .refund-list2,
+  .refund-list3 {
     font-size: 0;
     width: 100%;
     height: 145 / @dev-Width *1rem;
@@ -275,6 +417,12 @@ export default {
       color: #c7c7cc;
       font-size: 42/@dev-Width *1rem;
     }
+  }
+  .refund-list3 {
+    height: 250 / @dev-Width *1rem;
+    .ik-box-align(stretch);
+    padding-top: 20/@dev-Width *1rem;
+    padding-bottom: 20/@dev-Width *1rem;
   }
   .refund-list2 {
     height: 240 / @dev-Width *1rem;
@@ -379,58 +527,6 @@ export default {
       }
     }
   }
-  .refund-dialog {
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    position: fixed;
-    z-index: 99;
-    top: 0;
-    left: 0;
-    .dialog-main {
-      width: 100%;
-      position: absolute;
-      background: #fff;
-      bottom: 0;
-      animation: dialogShow 0.2s;
-      -moz-animation: dialogShow 0.2s;
-      /* Firefox */
-      -webkit-animation: dialogShow 0.2s;
-    }
-    .dialog-content {
-      width: 100%;
-      padding: 35/@dev-Width *1rem 0 88/@dev-Width *1rem 50/@dev-Width *1rem;
-    }
-    .dialog-title {
-      width: 100%;
-      text-align: center;
-      padding-bottom: 50/@dev-Width *1rem;
-    }
-    .dialog-ul {
-      width: 100%;
-      .refund-list {
-        height: 117/@dev-Width *1rem;
-        padding-left: 0;
-      }
-      & > div:last-child {
-      }
-    }
-    .dialog-option {
-      width: 60/@dev-Width *1rem;
-      height: 60/@dev-Width *1rem;
-      .border-radius(100%);
-      border: 1px solid #c7c7cc;
-      text-align: center;
-      line-height: 60/@dev-Width *1rem;
-      & > i {
-        color: #fff;
-      }
-    }
-    .selected {
-      border: 0;
-      background: #e4393c;
-    }
-  }
 }
 .comment-footer1 {
   .shop-max-button {
@@ -476,6 +572,9 @@ export default {
         left: 0;
         opacity: 0;
       }
+      i {
+        z-index: 1;
+      }
     }
     .comment-img {
       position: relative;
@@ -503,5 +602,20 @@ export default {
     width: 100%;
     padding: 0 40/@dev-Width *1rem;
   }
+}
+.table {
+  width: 98%;
+  height: 220 / @dev-Width *1rem;
+  border: 0;
+  outline: 0;
+  word-wrap: break-word;
+  // border: 1px solid #ddd;
+}
+.v-input {
+  width: 98%;
+  height: 100 / @dev-Width *1rem;
+  border: 0;
+  outline: 0;
+  word-wrap: break-word;
 }
 </style>

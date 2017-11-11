@@ -49,6 +49,21 @@ Vue.filter('formatNot',(value)=>{
     let m = time.getMonth()+1;
     let d = time.getDate();
     return y+'-'+add0(m)+'-'+add0(d);
+});
+/**
+ * 时间戳转换日期（无秒）  
+ * @param date 时间戳  
+ */
+Vue.filter('formatNotM',(value)=>{
+    let add0 = (m) => m<10?'0'+m:m;
+    //时间轴是整数，否则要parseInt转换
+    let time = new Date(value);
+    let y = time.getFullYear();
+    let m = time.getMonth()+1;
+    let d = time.getDate();
+    let h = time.getHours();
+    let mm = time.getMinutes();
+    return y+'-'+add0(m)+'-'+add0(d)+' '+add0(h)+':'+add0(mm);
 })
 /**
      * 价格分割正数位

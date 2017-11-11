@@ -41,22 +41,22 @@
                     <div class="order-item-button fs42 border" >
                         <div class="order-button shop-bg" 
                             v-if="detail.isShowApplyReturnButton == 1 || detail.isShowApplySaleButton == 1"
-                            @click="returnApplyReturn(detail.orderDetailId)">
+                            @click="returnApplyReturn(detail.orderDetailId,detail.detailStauts)">
                             申请退款
                         </div>
                         <div class="order-button shop-bg" 
                             v-if="detail.isShowUpdateReturnButton == 1"
-                            @click="returnUpdateReturn(detail.returnId,detail.orderDetailId)">
+                            @click="returnApplyReturn(detail.orderDetailId,detail.detailStauts,detail.returnId)">
                             修改退款
                         </div>
-                         <div class="order-button shop-bg" 
+                         <div class="order-button shop-bg" style="width:2rem;"
                             v-if="detail.isShowReturnWuliuButton == 1"
-                            @click="closeApplyReturn(detail.orderDetailId)">
+                            @click="returnWuliu(detail.returnId,detail.detailStauts)">
                             填写退货物流
                         </div>
                         <div class="order-button shop-bg" 
-                            v-if="detail.isShowKanJinduButton == 1"
-                            @click="closeApplyReturn(detail.orderDetailId)">
+                            v-if="detail.isShowKanJinduButton == 1" 
+                            @click="returnXieDetail(detail.returnId)">
                             查看进度
                         </div>
                          <div class="order-button shop-bg" 
@@ -66,14 +66,13 @@
                         </div>
                         <div class="order-button shop-bg" 
                             v-if="detail.isShowReturnDetailButton == 1"
-                            @click="showReturnDetail(detail.returnId,detail.orderDetailId)">
+                            @click="showReturnDetail(detail.returnId)">
                             查看详情
                         </div>
                     </div>
                     <div class="order-shop border " v-if="detail.returnTypeDesc != null || detail.returnStatusDesc != null">
                       <p class="fs42">
-                        <i class="iconfont icon-tuikuan shop-font" style="font-size: 0.4rem;vertical-align: -0.04rem;"></i>
-                        <i class="iconfont icon-tuihuo shop-font" style="font-size: 0.36rem"></i>{{detail.returnTypeDesc}}</p><!-- 左边显示 -->
+                        <i class="iconfont  shop-font" style="font-size: 0.36rem" :class="[detail.returnType == 2?'icon-tuihuo':'icon-tuikuan']"></i> {{detail.returnTypeDesc}}</p><!-- 左边显示 -->
                       <p class="shop-font fs42">{{detail.returnStatusDesc}}</p><!-- 右边显示 -->
                   </div>
                 </div>
@@ -112,7 +111,7 @@ export default {
       pageCount: 1, //页面总数
       orderId: 0, //订单id
       orderList: [], //订单集合
-      isMore: 1, //控制没有更多的显示 1显示 -1 不显示
+      isMore: 2, //控制没有更多的显示 1 未加载；2 加载中 ；3 没有更多了；4 出错了
       imgUrl: "", //图片域名
       errorMsg: "", //错误提示语
       clickOrderId: "" //点击事件保存的订单id
@@ -211,7 +210,6 @@ export default {
               ); //价钱显示效果
             });
           });
-          _this.isMore = 1;
           if (_this.curPage === 1) {
             //第一页数据
             _this.orderList = newOrderList;
@@ -219,6 +217,10 @@ export default {
             _this.orderList = _this.orderList.concat(newOrderList) || []; //拼接多页数据
           }
           _this.isShowNullContent = false;
+          _this.isMore = 2;
+          if (_this.curPage >= _this.pageCount) {
+            _this.isMore = 3; //没有更多
+          }
         }
       });
     },
@@ -231,21 +233,34 @@ export default {
       //撤销退款
       this.showCloseReturnDialog(returnId);
     },
-    returnApplyReturn(orderDetailId) {
-      //跳转申请退款页面
-    },
-    returnUpdateReturn(returnId, orderDetailId) {
-      //跳转修改退款页面
-    },
-    showReturnDetail(returnId) {
-      //跳转至退款详情页面
+    returnApplyReturn(detailId, detailStatus, returnId) {
+      //跳转申请退款页面.
+      console.log(detailStatus);
+      sessionStorage.setItem("refundReturnUrl", location.href);
+      let _typeUrl = "/return/classify/" + this.busId + "/" + detailId;
+      let _applyUrl =
+        "/return/apply/" + this.busId + "/" + detailId + "/-1/" + returnId;
+
+      this.isMore = -1;
+      if (detailStatus == -3) {
+        //申请退款 跳转到选择退款类型页面
+        this.$router.push(_typeUrl);
+      } else if (detailStatus == -1) {
+        //商家拒绝退款  跳转到修改退款页面
+        this.$router.push(_applyUrl);
+      }
     },
     showReturnDetail(returnId, orderDetailId) {
-      //跳转至订单详情页面
+      //跳转至退款详情页面
       this.isMore = -1;
-      this.$router.push("/return/classify/" + this.busId + "/" + orderDetailId);
+      this.$router.push("/return/succeed/" + this.busId + "/" + returnId);
     },
-    toProductDetail(productId, shopId, busId,orderType,activityId) {
+    returnWuliu(returnId, detailStatus) {
+      //填写退货物流
+      this.isMore = -1;
+      this.$router.push("/return/logistics/" + this.busId + "/" + returnId);
+    },
+    toProductDetail(productId, shopId, busId, orderType, activityId) {
       //跳转至商品详情页面
       this.$router.push(
         "/goods/details/" +
@@ -253,7 +268,7 @@ export default {
           "/" +
           busId +
           "/" +
-         orderType +
+          orderType +
           "/" +
           productId +
           "/" +
@@ -262,6 +277,11 @@ export default {
     },
     setTitle() {
       this.commonFn.setTitle("退货/售后");
+    },
+    returnXieDetail(returnId) {
+      //跳转至协商详情页面
+      this.isMore = -1;
+      this.$router.push("/return/consult/" + this.busId + "/" + returnId);
     }
   }
 };

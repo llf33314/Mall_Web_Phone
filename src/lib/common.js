@@ -16,65 +16,63 @@ var Rxports = {
 	  * @param {Function} error		发送请求前
 	  * @param return 
 	*/
-	
-	ajax(opt){
+	ajax(opt) {
+
 		var opts = opt || {};
-		
+
 		if (!opts.url) {
 			alert('请填写接口地址');
 			return false;
 		}
-	
+		//配置请求头
 		axios({
-			method: opts.type || 'post',
-			url: opts.url,
-			params: opts.data || {},
-			headers:  {
-				//'Content-Type':'application/x-www-form-urlencoded',
-				'Content-Type':'application/json;charset=utf-8',
-				// 'Access-Control-Allow-Origin': '*'
+			"method": opts.type || 'post',
+			"url": window.h5App.api + opts.url,
+			"params": opts.data || {},
+			"headers": {
+				"Content-type": "application/json;charset=UTF-8"
 			},
 			// `baseURL` 将自动加在 `url` 前面，除非 `url` 是一个绝对 URL。
-  			// 它可以通过设置一个 `baseURL` 便于为 axios 实例的方法传递相对 URL
-			baseURL:window.h5App.api,//打包时注释
-			timeout: opts.time || 10*1000,
-			responseType: opts.dataType || 'json'
-		}).then(function(res){
+			// 它可以通过设置一个 `baseURL` 便于为 axios 实例的方法传递相对 URL
+			//"baseURL": window.h5App.api,//打包时注释
+			"timeout": opts.time || 10 * 1000,
+			"responseType": opts.dataType || 'json'
+		}).then(function (res) {
 
-			if(res.status == 200 ){
+			if (res.status == 200) {
 
-				if(opts.success){
-					
-					opts.success(res.data,res);
+				if (opts.success) {
+
+					opts.success(res.data, res);
 				}
-				
-			}else{
-				
+
+			} else {
+
 				if (data.error) {
 					opts.error(error);
-				}else{
+				} else {
 					console.log('error');
 				}
-				
+
 			}
-				
-		}).catch(function (error){
+
+		}).catch(function (error) {
 			console.log(error);
 			if (opts.error) {
 				opts.error(error);
-			}else{
+			} else {
 				console.log('catch');
 			}
 		});
-			
+
 	},
 	/**
      * 设置根字体
      * 750设计稿  设计稿尺寸 / 100
      * 1242设计稿 设计稿尺寸 / 150
      */
-    setFontSize(){
-		
+	setFontSize() {
+
 		//var max_w = $(window).width(),page1 = 320, meta = $("meta[name=viewport]");
 		//meta.attr("content", "width="+page1+",initial-scale=" + max_w / page1 + ", minimum-scale=" + max_w / page1 + ", maximum-scale=" + max_w / page1 + ", user-scalable=no");
 		var width = document.documentElement.clientWidth;
@@ -90,7 +88,7 @@ var Rxports = {
 	 * @rteurn {String}
 	 */
 	getQueryString: function (name) {
-		if (!name)return null;
+		if (!name) return null;
 		return window.location.href.split('?' + name + '=')[1];
 		/*var reg = new RegExp('(^|&|\\?)' + name + '=([^&]*)(&|$)'), array = location.search.match(reg);
 		return array ? decodeURIComponent(array[2]) : null;*/
@@ -101,41 +99,41 @@ var Rxports = {
 		return json;
 	},
 	//进入焦点事件不显示横竖屏
-	input_focus(){
+	input_focus() {
 		$('#app').css('display', 'block');
 		$('.landscape').css('display', 'none');
 		$('.main .footer-nav').addClass('hide');
 	},
 	//失去焦点
-	input_blur(){
+	input_blur() {
 		$('.main .footer-nav').removeClass('hide');
 	},
 	//判断ios和安卓系统
-	isSystem(e){
+	isSystem(e) {
 		let u = navigator.userAgent;
 		let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
 		if (isAndroid) {
 		}
 	},
 	//判断微信浏览器类型
-	checkPlatform(){
-		if(/MicroMessenger/i.test(navigator.userAgent)){
+	checkPlatform() {
+		if (/MicroMessenger/i.test(navigator.userAgent)) {
 			//这是微信平台下浏览器
 			return 'Messenger'
 		}
-		if(/android/i.test(navigator.userAgent)){
+		if (/android/i.test(navigator.userAgent)) {
 			//这是Android平台下浏览器
 			return 'Android'
 		}
-		if(/iphone os/i.test(navigator.userAgent)){
+		if (/iphone os/i.test(navigator.userAgent)) {
 			//这是iOS平台下浏览器
 			return 'iOS'
 		}
-		if(/Linux/i.test(navigator.userAgent)){
+		if (/Linux/i.test(navigator.userAgent)) {
 			//这是Linux平台下浏览器
 			return 'Linux'
 		}
-		if(/Linux/i.test(navigator.platform)){
+		if (/Linux/i.test(navigator.platform)) {
 			//这是Linux操作系统平台
 			return 'Linux'
 		}
@@ -144,71 +142,71 @@ var Rxports = {
      * 修改页面标题
      * @param title 标题
      */
-    setTitle(title) {
+	setTitle(title) {
 		var u = navigator.userAgent
 		var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1
 		var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
 		if (isAndroid) {
-		 document.title = title
+			document.title = title
 		} else if (isiOS) {
-		 var $body = $('body')
-		 document.title = title
-		 var $iframe = $('<iframe src="/favicon.ico"></iframe>')
-		 $iframe.on('load', function () {
-		  window.setTimeout(function () {
-		   $iframe.off('load').remove()
-		  }, 0)
-		 }).appendTo($body)
+			var $body = $('body')
+			document.title = title
+			var $iframe = $('<iframe src="/favicon.ico"></iframe>')
+			$iframe.on('load', function () {
+				window.setTimeout(function () {
+					$iframe.off('load').remove()
+				}, 0)
+			}).appendTo($body)
 		}
-	  },
+	},
 	/**
      * 价格分割
      * @param money 标题
      */
-	moneySplit(money){
+	moneySplit(money) {
 		let arr = [];
-		let str = money+"";
-		
-		if(str.indexOf(".")==-1){
-			arr = [money,'00'];
-		}else{
+		let str = money + "";
+
+		if (str.indexOf(".") == -1) {
+			arr = [money, '00'];
+		} else {
 			arr = str.split('.');
 		}
-		arr[0] = parseFloat(arr[0] ).toLocaleString()
+		arr[0] = parseFloat(arr[0]).toLocaleString()
 		return arr
 	},
-	 /** 
-     * 含有表情符号字符串 处理 
-     * @param text 接受字符串
-     * @param imgUrl 图片域名
-     */
-    emoji(text,imgUrl){
-        let _this = this;
-        let oText = text.split('/images/');
-        let newText='';
-        oText.forEach(function(itme,index) {
-            if(index < oText.length-1){
-                itme = itme+ imgUrl+'images/';
-            }
-            newText += itme;
-        });
-        return newText;
+	/** 
+	* 含有表情符号字符串 处理 
+	* @param text 接受字符串
+	* @param imgUrl 图片域名
+	*/
+	emoji(text, imgUrl) {
+		let _this = this;
+		let oText = text.split('/images/');
+		let newText = '';
+		oText.forEach(function (itme, index) {
+			if (index < oText.length - 1) {
+				itme = itme + imgUrl + 'images/';
+			}
+			newText += itme;
+		});
+		return newText;
 	},
-	
+
 	/*-------------正则验证-----------------*/
 	/**
 	 * 检验电话
 	 * @param {Number} num
 	 * @returns {Boolean}
 	 */
-	validPhone:function(num) {
+	validPhone: function (num) {
 		let phoneReg = /^((\+?86)|(\(\+86\)))?(13[0123456789][0-9]{8}|15[0123456789][0-9]{8}|17[0123456789][0-9]{8}|18[0123456789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;
 		return phoneReg.test(num);
 	},
 	/**
 	 * url
 	 */
-	validURL:function (url) {
+	validURL: function (url) {
 		let regex = /^(https?:\/\/)?[\u4e00-\u9fa50-9a-zA-Z][-\u4e00-\u9fa50-9a-zA-Z]{0,62}(\.[-\u4e00-\u9fa50-9a-zA-Z]{1,63})*(\.[-\u4e00-\u9fa50-9a-zA-Z]{0,62}[\u4e00-\u9fa50-9a-zA-Z])(:[0-9]{0,5})?(\/[\w\.-]*)*(#[^#\s]*)?$/i;
 		if (url.length < 1 || url.length > 256) {
 			return false;
@@ -220,7 +218,7 @@ var Rxports = {
 	 * @param {String} email
 	 * @returns {Boolean}
 	 */
-	validEmail:function (email) {
+	validEmail: function (email) {
 		let emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		//let emailReg = /^\w+[-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
 		return emailReg.test(email);
@@ -230,18 +228,18 @@ var Rxports = {
 	 * @param {String} money
 	 * @returns {Boolean}
 	 */
-	validMoney:function (money) { 
+	validMoney: function (money) {
 		//不超过6位整数且保留2位小数
-	   let moneyReg = /^\d{0,6}(.[0-9]{2})?$/;
-	   return moneyReg.test(money);
-   },
+		let moneyReg = /^\d{0,6}(.[0-9]{2})?$/;
+		return moneyReg.test(money);
+	},
 	/**
 	 * 校验身份证
 	 * @param {String} IDcard
 	 * @returns {Boolean}
 	 */
-	
-	validIDnumber:function (IDcard) { 
+
+	validIDnumber: function (IDcard) {
 		var factorArr = new Array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2, 1);
 		var parityBit = new Array("1", "0", "X", "9", "8", "7", "6", "5", "4", "3", "2");
 		var varArray = new Array();
@@ -252,77 +250,78 @@ var Rxports = {
 		var idNumber = IDcard;
 		// initialize
 		if ((intStrLen != 15) && (intStrLen != 18)) {
-		return false;
+			return false;
 		}
 		// check and set value
 		for (let i = 0; i < intStrLen; i++) {
-		varArray[i] = idNumber.charAt(i);
-		if ((varArray[i] < '0' || varArray[i] > '9') && (i != 17)) {
-			return false;
-		} else if (i < 17) {
-			varArray[i] = varArray[i] * factorArr[i];
-		}
+			varArray[i] = idNumber.charAt(i);
+			if ((varArray[i] < '0' || varArray[i] > '9') && (i != 17)) {
+				return false;
+			} else if (i < 17) {
+				varArray[i] = varArray[i] * factorArr[i];
+			}
 		}
 		if (intStrLen == 18) {
-		// check date
-		var date8 = idNumber.substring(6, 14);
-		if (Rxports.isDate8(date8) == false) {
-			return false;
-		}
-		// calculate the sum of the products
-		for ( let i = 0; i < 17; i++) {
-			lngProduct = lngProduct + varArray[i];
-		}
-		// calculate the check digit
-		intCheckDigit = parityBit[lngProduct % 11];
-		// check last digit
-		if (varArray[17] != intCheckDigit) {
-			return false;
-		}
+			// check date
+			var date8 = idNumber.substring(6, 14);
+			if (Rxports.isDate8(date8) == false) {
+				return false;
+			}
+			// calculate the sum of the products
+			for (let i = 0; i < 17; i++) {
+				lngProduct = lngProduct + varArray[i];
+			}
+			// calculate the check digit
+			intCheckDigit = parityBit[lngProduct % 11];
+			// check last digit
+			if (varArray[17] != intCheckDigit) {
+				return false;
+			}
 		} else { // length is 15
-		// check date
-		var date6 = idNumber.substring(6, 12);
-		if (Rxports.isDate6(date6) == false) {
-			return false;
-		}
+			// check date
+			var date6 = idNumber.substring(6, 12);
+			if (Rxports.isDate6(date6) == false) {
+				return false;
+			}
 		}
 		return true;
 		// let IDcardReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
 		// return IDcardReg.test(IDcard);
 	},
 	//15位身份证
-	isDate6:function(sDate) {
+	isDate6: function (sDate) {
 		if (!/^[0-9]{6}$/.test(sDate)) {
-		return false;
+			return false;
 		}
 		var year, month, day;
 		year = sDate.substring(0, 4);
 		month = sDate.substring(4, 6);
 		if (year < 1700 || year > 2500)
-		return false
+			return false
 		if (month < 1 || month > 12)
-		return false
+			return false
 		return true
 	},
 	//18位身份证
-	isDate8:function(sDate) {
+	isDate8: function (sDate) {
 		if (!/^[0-9]{8}$/.test(sDate)) {
-		return false;
+			return false;
 		}
 		var year, month, day;
 		year = sDate.substring(0, 4);
 		month = sDate.substring(4, 6);
 		day = sDate.substring(6, 8);
-		var iaMonthDays = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ]
+		var iaMonthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 		if (year < 1700 || year > 2500)
-		return false
+			return false
 		if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0))
-		iaMonthDays[1] = 29;
+			iaMonthDays[1] = 29;
 		if (month < 1 || month > 12)
-		return false
+			return false
 		if (day < 1 || day > iaMonthDays[month - 1])
-		return false
+			return false
 		return true
+<<<<<<< HEAD
 	},
 	/**
 	 * 禁止页面滚动
@@ -337,6 +336,13 @@ var Rxports = {
 	 */
 	allowScroll: function () {
 		$(window).unbind("touchmove");
+=======
+	}, validateWuliuNo: function (wuliuNo) {
+		if(!/[a-z-A-Z-0-9]{1,30}$/.test(wuliuNo)){
+			return false;
+		}
+		return true;
+>>>>>>> 8a4195bc8d8268a8c06fcb3f11fecb75dec16adc
 	}
 };
 
