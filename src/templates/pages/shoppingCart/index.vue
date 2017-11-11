@@ -96,7 +96,6 @@
 </template>
 
 <script>
-import Lib from 'assets/js/Lib';
 import defaultImg from 'components/defaultImg'
 import headerNav from 'components/headerNav'
 import footerNav from 'components/footerNav'

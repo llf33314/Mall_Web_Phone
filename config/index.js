@@ -27,7 +27,7 @@ module.exports = {
   },
   dev: {
     env: require('./dev.env'),
-    port: process.env.PORT || 8080,
+    port: process.env.PORT || 8082,
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
@@ -36,6 +36,7 @@ module.exports = {
       '/api':{
         //target: 'http://mall.yifriend.net/',
         target: 'http://192.168.2.100:8081/',
+        // target: 'http://192.168.2.241:8080/',
         changeOrigin: true,
         pathRewrite: {
           '^/api': '/'

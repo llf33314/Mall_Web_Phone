@@ -144,7 +144,7 @@ export default {
       pageCount: 1, //页面总数
       orderId: 0, //订单id
       orderList: [], //订单集合
-      isMore: 1, //控制没有更多的显示 1显示 -1 不显示
+      isMore: 2, //控制没有更多的显示 1 未加载；2 加载中 ；3 没有更多了；4 出错了
       imgUrl: "", //图片域名
       errorMsg: "", //错误提示语
       clickOrderId: "" //点击事件保存的订单id
@@ -241,7 +241,6 @@ export default {
               ); //价钱显示效果
             });
           });
-          _this.isMore = 1;
           if (_this.curPage === 1) {
             //第一页数据
             _this.orderList = newOrderList;
@@ -249,6 +248,10 @@ export default {
             _this.orderList = _this.orderList.concat(newOrderList) || []; //拼接多页数据
           }
           _this.isShowNullContent = false;
+          _this.isMore = 2;
+          if (_this.curPage >= _this.pageCount) {
+            _this.isMore = 3; //没有更多
+          }
         }
       });
     },
@@ -263,6 +266,7 @@ export default {
     revoke_dialog() {},
     returnApplyReturn(orderDetailId) {
       //跳转申请退款页面
+       sessionStorage.setItem('refundReturnUrl', location.href);
       this.isMore = -1;
       this.$router.push("/return/classify/" + this.busId + "/" + orderDetailId);
     },
@@ -445,7 +449,7 @@ export default {
     }
   }
 }
-.more-main{
-  margin-bottom:0px;
+.more-main {
+  margin-bottom: 0px;
 }
 </style>

@@ -25,7 +25,6 @@ export default {
   },
   methods: {
     imageValidate() {
-      console.log(this.imgData.length + "--" + this.maxNum);
       if (this.imgData.length >= this.maxNum) {
         this.$parent.$parent.$refs.bubble.show_tips(
           "图片最多上传" + this.maxNum + "张"
@@ -34,14 +33,14 @@ export default {
       }
     },
     readFile(e) {
+      let file = e.target.files;
       let _this = this;
-      if (_this.imgData.length >= _this.maxNum) {
+      if (_this.imgData.length + file.length > _this.maxNum) {
         _this.$parent.$parent.$refs.bubble.show_tips(
           "图片最多上传" + this.maxNum + "张"
         ); //调用气泡显示
         return;
       }
-      let file = e.target.files;
       //创建form对象
       let formData = new FormData();
       formData.append("busId", _this.$store.state.busId); //添加form表单中其他数据

@@ -2,13 +2,13 @@
     <div class="refund-dialog shop-show" v-if="dialogList != null" >
         <div class="dialog-main">
             <div class="dialog-content">
-                <p class="fs46 dialog-title border">退款原因</p>
+                <p class="fs46 dialog-title border">{{dialogTitle}}</p>
                 <div class="dialog-ul">
                     <div class="refund-list border" v-for="item in dialogList"
                     @click="selectDialog(item)">
                         <p class="fs46">{{item.value}}</p>
-                        <p class="dialog-option">
-                            <i class="iconfont" :class="[data.id == item.id,'icon-yes','icon-dui']"></i>
+                        <p class="dialog-option " :class="{'option-border':data.id != item.id}">
+                            <i class="iconfont icon-yes" :class="[data.id == item.id?'selected':'']"></i>
                         </p>
                     </div>
                 </div>
@@ -23,12 +23,13 @@
 </template>
 <script>
 module.exports = {
-  props: ["dialogList", "selectData"],
+  props: ["selectData", "dialogList", "dialogType", "dialogTitle"],
   data: function() {
     return {
       list: [],
       isShowDialog: false,
-      data: {}
+      data: {},
+      type: 0
     };
   },
   watch: {
@@ -39,14 +40,14 @@ module.exports = {
   mounted() {
     this.list = this.dialogList;
     this.data = this.selectData;
-    console.log(this.selectData, "selectData");
+    this.type = this.dialogType;
   },
   methods: {
     selectDialog(data) {
-      this.$emit("selectEvent", data);
+      this.$emit("selectEvent", [this.type, data]);
     },
     closeDialog() {
-      this.$emit("closeDialog", false);
+      this.$emit("closeDialog");
     }
   }
 };
@@ -93,16 +94,20 @@ module.exports = {
     width: 60/@dev-Width *1rem;
     height: 60/@dev-Width *1rem;
     .border-radius(100%);
-    border: 1px solid #c7c7cc;
     text-align: center;
     line-height: 60/@dev-Width *1rem;
     & > i {
       color: #fff;
     }
+    .selected {
+      border: none;
+      color: #e4393c;
+      font-size: 60/@dev-Width *1rem;
+      background: none;
+    }
   }
-  .selected {
-    border: 0;
-    background: #e4393c;
+  .option-border {
+    border: 1px solid #c7c7cc;
   }
 }
 .refund-list {

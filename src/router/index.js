@@ -192,7 +192,7 @@ export default new Router({
         title: '退款/售后列表'
       }
     }, {
-      path: '/return/succeed',
+      path: '/return/succeed/:busId/:returnId',
       name: 'detail_return',
       component: detail_return,
       meta: {
@@ -213,7 +213,7 @@ export default new Router({
         title: '申请退款'
       }
     }, {
-      path: '/return/logistics',
+      path: '/return/logistics/:busId/:returnId',
       name: 'logistics_return',
       component: logistics_return,
       meta: {
