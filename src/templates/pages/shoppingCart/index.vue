@@ -33,10 +33,10 @@
                     </div>
                     <div class="order-item-box">
                         <delete-slide class="order-item-content"
-                                       v-for="(goods,index) in shop.productResultList"
-                                       :key="index"
-                                        @delete="delete_dialog(index)" 
-                                        :scope="index">
+                            v-for="(goods,index) in shop.productResultList"
+                            :key="index"
+                            @delete="delete_dialog(index,goods)" 
+                            :scope="index">
                             <div class="shoopCart-content">
                                 <div class="order-item-img">
                                   <default-img :background="imgUrl+goods.productImageUrl"
@@ -151,9 +151,10 @@ export default {
       },
       /** 
        * 删除弹出窗
+       * @param index  当前要删除的对象
        */
-      delete_dialog(e){
-         console.log(e);
+      delete_dialog(index,goods){
+         console.log(index,goods);
         //  _this.commonFn.ajax({
         //     'url': h5App.activeAPI.phoneShopCart_removeShopCart_post,
         //     'data':_data,
