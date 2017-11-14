@@ -740,7 +740,7 @@ export default {
                             }  
                     })
                     _this.dialogData.productStockTotal==0? _this.spec_num = 0:_this.spec_num = 1;
-                    console.log(_this.dialogData,'dialogData无规格');
+                    //console.log(_this.dialogData,'dialogData无规格');
                     
                     
                 }

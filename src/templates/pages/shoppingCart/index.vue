@@ -9,7 +9,9 @@
             <div class="order-item" v-for=" (cart,i) in shopCartList"
                 :key = "i">
                 <div class="order-item-title fs40">
-                    <i class="iconfont icon-dui"></i>
+                    <i class="iconfont icon-dui" 
+                    :class="{'js-font': i == selectCart}"
+                        @click="select_Cart($event)"></i>
                     <div class="order-title-img">
                       <default-img :background="cart.userImageUrl"
                                   :isHeadPortrait="1">
@@ -22,10 +24,11 @@
                     :key="j">
                     <div class="order-shop border">
                         <p class="order-shop-name">
-                            <i class="iconfont icon-dui"></i>
+                            <i class="iconfont icon-dui" :class="{'js-font': j == selectShop}"
+                            @click="select_Shop(j)"></i>
                             <i class="iconfont icon-dianpu"></i>
                             <span class="fs36">{{shop.shopName}}</span>
-                            <i class="iconfont icon-you"></i>
+                            <i class="iconfont icon-you" ></i>
                         </p>
                         <p class="fs42 shopGray">
                             编辑
@@ -42,7 +45,8 @@
                                   <default-img :background="imgUrl+goods.productImageUrl"
                                                 :isHeadPortrait="0">
                                   </default-img>
-                                    <i class="iconfont icon-dui"></i>
+                                   <i class="iconfont icon-dui" :class="{'js-font':selectGoods[index]}"
+                                    @click="select_Goods(index,goods.id)"></i>
                                 </div>
                                 <div class="order-item-txt">
                                     <p class="fs42">{{goods.productName}}</p>
@@ -62,14 +66,14 @@
         <div class="shopping-footer clearfix" style="z-index:2">
             <div class="shopping-footer-l fs40">
                 <i class="iconfont icon-dui"></i>
-                合计：<span class="shop-font">￥7,199.00</span>
+                合计：<span class="shop-font">￥{{pifaTotal}}</span>
             </div>
             <div class="shopping-footer-r">
                 <div class="shopping-buttom fs50 shop-yellow">
                     继续选购
                 </div>
                 <div class="shopping-buttom fs50 shop-bg">
-                    去结算(1)
+                    去结算({{pifaAmount}})
                 </div>
             </div>
         </div>
@@ -103,6 +107,13 @@ export default {
         imgUrl: '',
         path: '',
         webPath: '',
+        type:'',//0正常购买，1批发购买,
+        pifaTotal:'0.00',
+        pifaAmount: 0,
+        selectCart:'',//选中的商家
+        selectShop:'',//选中的店铺
+        selectGoods:[],//选中的商品
+        flag:false,
 
     }
   },
@@ -111,14 +122,17 @@ export default {
   },
   watch: {
     '$route'(a,b){
-        this.cartAjax();
+        this.shopCartList = {};
+        
+        this.cartAjax(this.$route.params.type);
     }  
   },
-    methods:{
+  methods:{
     /**
      * 购物车请求
+     * @param type 批发购买条件
      */
-    cartAjax(){
+    cartAjax(type){
         let _this = this;
         let _data = {
             url: _this.$store.state.loginDTO_URL,
@@ -126,15 +140,22 @@ export default {
             busId:_this.$route.params.busId,
             shopId: _this.$route.params.shopId
         }
-        let _type = _this.$route.params.type;
-        if(_type == 1){
-            _data.type = _type;
+        if(type == 1){
+            _data.type = type;
         }
-        console.log(_data,'_data');
+        
         _this.commonFn.ajax({
             'url': h5App.activeAPI.phoneShopCart_getShopCartx_post,
             'data':_data,
             'success':(data)=>{
+                if(data.code == -1){
+                    let msg ={
+                        type:'error',
+                        msg:data.msg
+                    }
+                    _this.$parent.$refs.bubble.show_tips(msg);
+                    return
+                }
                 _this.imgUrl = data.imgUrl;
                 _this.path = data.path;
                 _this.webPath = data.webPath;
@@ -144,41 +165,95 @@ export default {
                 _this.hpNum=data.data.hpNum;
                 _this.spHand=data.data.spHand;
                 _this.shopCartList=data.data.shopCartList;//购物车集合
-                                    
-                
+
+                let pifaTotal = 0;
+                _this.shopCartList.forEach((item,i)=>{
+                    item.shopResultList.forEach((test,j)=>{
+                        test.productResultList.forEach((e,n)=>{
+                            pifaTotal += e.productNum*e.productHyPrice;
+                            _this.pifaAmount += e.productNum;
+                        })
+                    })
+                });          
+                console.log(pifaTotal,'pifaTotal')
+                _this.pifaTotal = pifaTotal;
             }
         })
       },
-      /** 
-       * 删除弹出窗
-       * @param index  当前要删除的对象
-       */
-      delete_dialog(index,goods){
-         console.log(index,goods);
-        //  _this.commonFn.ajax({
-        //     'url': h5App.activeAPI.phoneShopCart_removeShopCart_post,
-        //     'data':_data,
-        //     'success':(data)=>{
-        //         _this.imgUrl = data.imgUrl;
-        //         _this.path = data.path;
-        //         _this.webPath = data.webPath;
+    /** 
+     * 删除弹出窗
+     * @param index  当前要删除的对象
+     */
+    delete_dialog(index,goods){
+        console.log(index,goods);
+        let _id = goods.id;
+        this.deleteAjax(_id);
+    },
+    /** 
+     * 删除购物车请求
+     * @param id 删除购物车id
+     */
+    deleteAjax(id){
+        let _this = this;
+        let _data = {};
+        _data.ids = id;
+        if(_this.type == 1){
+            _data.pifaSpecificaList = {
+                id:'', //批发购物车id integer
+                productId:'', //商品id integer
+                productNum:'', //商品数量 integer
+                specificaValueIds:'' //规格值id Array[string]
+            }
+            
+        }
+        console.log(_data,'_data删除数据');
+        _this.commonFn.ajax({
+            'url': h5App.activeAPI.phoneShopCart_removeShopCart_post,
+            'data':_data,
+            'success':(data)=>{
+                if(data.code == -1){
+                     let msg={
+                        type :'error',
+                        msg :  data.msg
+                    }
+                    _this.$parent.$refs.bubble.show_tips(msg);
+                    return
+                }
 
-        //         console.log(data,'购物车数据');
-        //         _this.hpMoney=data.data.hpMoney;
-        //         _this.hpNum=data.data.hpNum;
-        //         _this.spHand=data.data.spHand;
-        //         _this.shopCartList=data.data.shopCartList;//购物车集合
-                                    
-                
-        //     }
-        // })
-      },
+                let msg={
+                    type :'success',
+                    msg :  '删除成功'
+                }
+                _this.$parent.$refs.bubble.show_tips(msg);
+            }
+        })
+    },
+    /** 
+     * 选择商店
+     * @param i  选中的索引
+     */
+    select_Cart(i){
+        this.selectCart = i ;
+        console.log('cart')
+    },
+    select_Shop(j){
+        this.selectShop = j ;
+        console.log('Shop')
+    },
+    /** 
+     * 选择商品 id 商品id
+     * @param id 商品id
+     */
+    select_Goods(index,id){
+        this.selectGoods[index]?this.$set(this.selectGoods,index,false):this.$set(this.selectGoods,index,true);
+        console.log('id---selectGoods',this.selectGoods);
+    },
   },
   mounted () {
     let type = this.$route.params.type;
     type==0?this.commonFn.setTitle( '购物车'):this.commonFn.setTitle( '批发商购物车');
-     
-    this.cartAjax();
+
+    this.cartAjax(type);
   }
 }
 </script>
@@ -288,6 +363,9 @@ export default {
         margin-right: 20/@dev-Width *1rem;
         padding: 3px;
         z-index: 1;
+    }
+    .js-font{
+        background: #e4393c!important;
     }
     .order-box{
         width: 100%;
