@@ -361,7 +361,7 @@
                                 <div v-for="(spec,index) in w_dialogData.specifica_ids" v-if="index == i" :key = "index">
                                     <em class="fs40 em-choice " v-for=" (specValue,j) in item.specValues"
                                         @click="choice_product($event,specValue.id)" 
-                                        :class="{'shop-bg': wholesaleId == specValue.id }"
+                                        :class="{'shop-bg': wholesaleId == specValue.id}"
                                         :value="specValue.id"
                                         :key = "j">
                                         {{specValue.specValue}}

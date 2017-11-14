@@ -10,8 +10,8 @@
                 :key = "i">
                 <div class="order-item-title fs40">
                     <i class="iconfont icon-dui" 
-                    :class="{'js-font': i == selectCart}"
-                        @click="select_Cart($event)"></i>
+                    :class="{'js-font': cart.show}"
+                        @click="select_Cart(i)"></i>
                     <div class="order-title-img">
                       <default-img :background="cart.userImageUrl"
                                   :isHeadPortrait="1">
@@ -24,8 +24,8 @@
                     :key="j">
                     <div class="order-shop border">
                         <p class="order-shop-name">
-                            <i class="iconfont icon-dui" :class="{'js-font': j == selectShop}"
-                            @click="select_Shop(j)"></i>
+                            <i class="iconfont icon-dui" :class="{'js-font':shop.show}"
+                            @click="select_Shop(j,i)"></i>
                             <i class="iconfont icon-dianpu"></i>
                             <span class="fs36">{{shop.shopName}}</span>
                             <i class="iconfont icon-you" ></i>
@@ -45,8 +45,8 @@
                                   <default-img :background="imgUrl+goods.productImageUrl"
                                                 :isHeadPortrait="0">
                                   </default-img>
-                                   <i class="iconfont icon-dui" :class="{'js-font':selectGoods[index]}"
-                                    @click="select_Goods(index,goods.id)"></i>
+                                   <i class="iconfont icon-dui" :class="{'js-font':goods.show}"
+                                    @click="select_Goods(index,j,i)"></i>
                                 </div>
                                 <div class="order-item-txt">
                                     <p class="fs42">{{goods.productName}}</p>
@@ -65,8 +65,10 @@
         </div>
         <div class="shopping-footer clearfix" style="z-index:2">
             <div class="shopping-footer-l fs40">
-                <i class="iconfont icon-dui"></i>
-                合计：<span class="shop-font">￥{{pifaTotal}}</span>
+                <i class="iconfont icon-dui"
+                :class="{'js-font':isPifaAmount}" 
+                ></i>
+                合计：<span class="shop-font">￥{{pifaTotal | currency}}</span>
             </div>
             <div class="shopping-footer-r">
                 <div class="shopping-buttom fs50 shop-yellow">
@@ -110,11 +112,11 @@ export default {
         type:'',//0正常购买，1批发购买,
         pifaTotal:'0.00',
         pifaAmount: 0,
+        isPifaAmount: true,
         selectCart:'',//选中的商家
         selectShop:'',//选中的店铺
         selectGoods:[],//选中的商品
-        flag:false,
-
+        selectClass:[],//选中的商品
     }
   },
   components:{
@@ -125,7 +127,52 @@ export default {
         this.shopCartList = {};
         
         this.cartAjax(this.$route.params.type);
-    }  
+    },
+    'shopCartList'(a,b){
+        let _this = this;
+        let pifaTotal = 0;
+        _this.pifaAmount = 0;
+        _this.shopCartList.forEach((item,i)=>{
+            item.shopResultList.forEach((test,j)=>{
+                test.productResultList.forEach((e,n)=>{
+                    if(e.show){
+                    pifaTotal = e.productNum*e.productHyPrice
+                    _this.productNum += e.productNum;
+                    }
+                })
+            })
+        });    
+        // _this.shopCartList.forEach((item,i)=>{
+        //     console.log(item.show,'item');
+        //     if(!item.show){
+        //         _this.isPifaAmount = false;
+        //         item.shopResultList.forEach((test,j)=>{
+        //             test.show = false;
+        //             test.productResultList.forEach((e,n)=>{
+        //                 e.show = false
+        //             })
+        //         })
+        //     }else{
+        //         item.shopResultList.forEach((test,j)=>{
+        //              //test.show 不等于 true ,店铺所有商品为不选中
+        //             if(!test.show){
+        //                 test.productResultList.forEach((e,n)=>{
+        //                     e.show = false;
+        //                 })
+        //             }else{
+        //                 test.productResultList.forEach((e,n)=>{
+        //                     if(e.show){
+        //                         _this.isPifaAmount = true;
+        //                         pifaTotal = e.productNum*e.productHyPrice
+        //                         _this.productNum += e.productNum;
+        //                     }
+        //                 })
+        //             }
+        //         })
+        //     }
+        // });  
+         _this.pifaTotal = pifaTotal;
+    }
   },
   methods:{
     /**
@@ -167,15 +214,19 @@ export default {
                 _this.shopCartList=data.data.shopCartList;//购物车集合
 
                 let pifaTotal = 0;
+                //全选后的总价
                 _this.shopCartList.forEach((item,i)=>{
+                    item.show = true;
                     item.shopResultList.forEach((test,j)=>{
+                        test.show = true;
                         test.productResultList.forEach((e,n)=>{
+                            e.show = true;
                             pifaTotal += e.productNum*e.productHyPrice;
                             _this.pifaAmount += e.productNum;
                         })
                     })
                 });          
-                console.log(pifaTotal,'pifaTotal')
+
                 _this.pifaTotal = pifaTotal;
             }
         })
@@ -233,20 +284,28 @@ export default {
      * @param i  选中的索引
      */
     select_Cart(i){
-        this.selectCart = i ;
+        this.shopCartList.push([]);
+        this.shopCartList.pop();
+        this.shopCartList[i].show = !this.shopCartList[i].show;
         console.log('cart')
     },
-    select_Shop(j){
-        this.selectShop = j ;
+    select_Shop(j,i){
+        this.shopCartList.push([]);
+        this.shopCartList.pop();
+        this.shopCartList[i].shopResultList[j].show = !this.shopCartList[i].shopResultList[j].show;
         console.log('Shop')
     },
     /** 
      * 选择商品 id 商品id
-     * @param id 商品id
+     * @param index 当前索引
+     * @param j 父级索引
      */
-    select_Goods(index,id){
-        this.selectGoods[index]?this.$set(this.selectGoods,index,false):this.$set(this.selectGoods,index,true);
-        console.log('id---selectGoods',this.selectGoods);
+    select_Goods(index,j,i){
+        this.shopCartList.push([]);
+        this.shopCartList.pop();
+        let obj = this.shopCartList[i].shopResultList[j].productResultList[index].show;
+        this.shopCartList[i].shopResultList[j].productResultList[index].show = !obj;
+        
     },
   },
   mounted () {
