@@ -321,7 +321,15 @@ var Rxports = {
 		if (day < 1 || day > iaMonthDays[month - 1])
 			return false
 		return true
-<<<<<<< HEAD
+	},
+	/**
+	 * 验证物流
+	 */
+	validateWuliuNo: function (wuliuNo) {
+		if(!/[a-z-A-Z-0-9]{1,30}$/.test(wuliuNo)){
+			return false;
+		}
+		return true;
 	},
 	/**
 	 * 禁止页面滚动
@@ -336,14 +344,8 @@ var Rxports = {
 	 */
 	allowScroll: function () {
 		$(window).unbind("touchmove");
-=======
-	}, validateWuliuNo: function (wuliuNo) {
-		if(!/[a-z-A-Z-0-9]{1,30}$/.test(wuliuNo)){
-			return false;
-		}
-		return true;
->>>>>>> 8a4195bc8d8268a8c06fcb3f11fecb75dec16adc
-	}
+	}, 
+	
 };
 
 Vue.prototype.commonFn = Rxports;
