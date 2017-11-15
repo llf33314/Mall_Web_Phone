@@ -1,53 +1,19 @@
 <template>
      <sp-dialog 
         :title="name"
-        :visible.sync="isCardRecevie"
+        :visible.sync="isShow"
         :center="'center'">
-        <div class="payment-dialog-main"  v-if="list != null && list.length > 0">
+        <div class="payment-dialog-main"  v-if="dialogList != null && dialogList.length > 0">
             
             <div class="payment-dialog-list shop-box-center border"
-                v-for="obj in list">
+                v-for="obj in dialogList"
+                @click="selectDialog(obj)" >
                 <div class="payment-dialog-title shop-box-center">
-                    <i class="iconfont icon-alipay"></i>
-                    <span class="fs42">支付宝支付</span>
+                    <i class="iconfont " :class="'icon-'+obj.claName"></i>
+                    <span class="fs42">{{obj.wayName}}</span>
                 </div>
                 <i class="iconfont icon-jiantou-copy fs40"></i>
             </div>
-            <!-- <div class="payment-dialog-list shop-box-center border">
-                <div class="payment-dialog-title shop-box-center">
-                    <i class="iconfont icon-weixinzhifu"></i>
-                    <span class="fs42">微信支付</span>
-                </div>
-                <i class="iconfont icon-jiantou-copy fs40"></i>
-            </div>
-                <div class="payment-dialog-list shop-box-center border">
-                <div class="payment-dialog-title shop-box-center">
-                    <i class="iconfont icon-daifukuan-"></i>
-                    <span class="fs42">找人代付</span>
-                </div>
-                <i class="iconfont icon-jiantou-copy fs40"></i>
-            </div>
-            <div class="payment-dialog-list shop-box-center border">
-                <div class="payment-dialog-title shop-box-center">
-                    <i class="iconfont icon-chuzhiqia"></i>
-                    <span class="fs42">储值卡支付</span>
-                </div>
-                <i class="iconfont icon-jiantou-copy fs40"></i>
-            </div>
-            <div class="payment-dialog-list shop-box-center border">
-                <div class="payment-dialog-title shop-box-center">
-                    <i class="iconfont icon-fen"></i>
-                    <span class="fs42">粉币支付</span>
-                </div>
-                <i class="iconfont icon-jiantou-copy fs40"></i>
-            </div>
-            <div class="payment-dialog-list shop-box-center border">
-                <div class="payment-dialog-title shop-box-center">
-                    <i class="iconfont icon-huodaofukuan"></i>
-                    <span class="fs42">货到付款</span>
-                </div>
-                <i class="iconfont icon-jiantou-copy fs40"></i>
-            </div> -->
         </div>
      </sp-dialog>
 </template>
@@ -55,20 +21,33 @@
 import spDialog from "components/spDialog";
 export default {
   name: "payWayDialog",
-  props: ["name", "dialogList"],
+  props: ["name", "dialogList", "type","busId"],
   data: function() {
     return {
       list: [],
       isShowDialog: false,
       data: {},
-      type: 0
+      isShow: true
     };
   },
   components: {
     spDialog
   },
-  methods: {},
-  mounted() {}
+  watch: {
+    isShow() {
+      this.$emit("update:closeDialog", this.isShow);
+      this.$emit("closeDialog-change", this.isShow);
+    }
+  },
+  methods: {
+      selectDialog(obj){
+          this.$emit("selectDialog",[this.type,obj,this.busId]);
+          this.isShow = false;
+      }
+  },
+  mounted() {
+    this.isShow = true;
+  }
 };
 </script>
 <style lang="less" scoped>
@@ -96,13 +75,15 @@ export default {
     .icon-alipay {
       color: #08aaeb;
     }
-    .icon-weixinzhifu {
+    .icon-weixinzhifu,
+    .icon-daodianzhifu,
+    .icon-miankuaidi {
       color: #00c901;
     }
-    .icon-fen,
-    .icon-daifukuan-,
+    .icon-fenbizhifu,
+    .icon-daifukuan,
     .icon-huodaofukuan,
-    .icon-chuzhiqia {
+    .icon-chuzhika {
       color: #f7ba2a;
     }
   }

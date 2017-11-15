@@ -72,7 +72,8 @@
                     </div>
                 </div>
                 <div class="border orderTotal-list-box">
-                    <div class="orderTotal-list border" v-if="bus.deliveryWayList != null">
+                    <div class="orderTotal-list border" v-if="bus.deliveryWayList != null && bus.deliveryWayList.length > 0"
+                      @click="showDialogs(bus.deliveryWayList,2,bus.busId)">
                         <p class="fs40">配送方式</p>
                         <p class="fs40">
                             {{bus.selectDelivery.wayName}}
@@ -108,7 +109,11 @@
                             </p>
                         </div>
                         <div class="orderTotal-list border" v-if="bus.isCanUseFenbiDiscount == 1">
-                            <p class="fs40"> 粉币抵扣</p>
+                            <p class="fs40"> 粉币抵扣
+                              <em class="shop-font" v-if="bus.fenbiMoney > 0 && bus.fenbiNum > 0">
+                                有{{bus.fenbiNum}}粉币，可抵扣¥{{bus.fenbiMoney}}
+                              </em>
+                            </p>
                             <p class="fs40">
                                 <input class="switch small-switch shop-switch" type="checkbox" value="1"
                                   v-model="bus.isSelectFenbi"
@@ -116,7 +121,11 @@
                             </p>
                         </div>
                         <div class="orderTotal-list border" v-if="bus.isCanUseJifenDiscount == 1">
-                            <p class="fs40">积分抵扣</p>
+                            <p class="fs40">积分抵扣
+                              <em class="shop-font" v-if="bus.jifenMoney > 0 && bus.jifenNum > 0">
+                                有{{bus.jifenNum}}积分，可抵扣¥{{bus.jifenMoney}}
+                              </em>
+                            </p>
                             <p class="fs40">
                                 <input class="switch small-switch shop-switch" type="checkbox" value="1"
                                   v-model="bus.isSelectJifen" 
@@ -134,11 +143,11 @@
                     <div class="deltails-del border" style="padding-top: 0.2rem;">
                     <p class="fs40">
                         <span>商品金额</span>
-                        <span class="shop-font">￥{{bus.totalMoney}}</span>
+                        <span class="shop-font">￥{{bus.productTotalMoney}}</span>
                     </p>
-                    <p class="fs40" v-if="bus.totalFreightMoney != null && bus.totalFreightMoney > 0">
+                    <p class="fs40" v-if="bus.productFreightMoney != null && bus.productFreightMoney > 0">
                         <span>运费</span>
-                        <span class="shop-font">+￥{{bus.totalFreightMoney}}</span>
+                        <span class="shop-font">+￥{{bus.productFreightMoney }}</span>
                     </p>
                     <p class="fs40" v-if="bus.isCanUseUnionDiscount == 1 ">
                         <span>联盟折扣</span>
@@ -146,7 +155,7 @@
                     </p>
                     <p class="fs40" v-if="bus.isCanUseMemberDiscount == 1 ">
                         <span>会员折扣</span>
-                        <span class="shop-font">-￥{{bus.memberYouhuiMoney > 0 ? bus.memberYouhuiMoney : 0}}</span>
+                        <span class="shop-font">-￥{{bus.memberYouhuiMoney  > 0 ? bus.memberYouhuiMoney : 0 }}</span>
                     </p>
                     <p class="fs40" v-if="bus.isCanUseCouponDiscount == 1 ">
                         <span>优惠券抵扣</span>
@@ -170,7 +179,7 @@
         </div>
         <div class="border orderTotal-list-box" style="background-color:#fff;" 
           v-if="orderData.payWayList != null && orderData.payWayList.length > 0">
-          <div class="orderTotal-list border" >
+          <div class="orderTotal-list border" @click="showDialogs(orderData.payWayList,1,-1)">
               <p class="fs40">支付方式</p>
               <p class="fs40">
                   {{selectPayWay.wayName}}
@@ -183,8 +192,8 @@
     </section>
     <section class="orderTotal-footer clearfix" v-if="orderList != null && orderList.length > 0">
         <div class="orderTotal-fr fs40 ">
-            <p>合计：<span class="shop-font">￥{{orderData.totalMoney | moneySplit1}}</i>.{{orderData.totalMoney | moneySplit2}}</span></p>
-            <span>总额:￥{{orderData.totalPayMoney | moneySplit1}}</i>.{{orderData.totalPayMoney | moneySplit2}}</span>
+            <p>合计：<span class="shop-font">￥{{orderData.totalPayMoney | moneySplit1}}</i>.{{orderData.totalPayMoney | moneySplit2}}</span></p>
+            <span>总额:￥{{orderData.totalMoney | moneySplit1}}</i>.{{orderData.totalMoney | moneySplit2}}</span>
             <span>总优惠:￥{{orderData.totalYouHuiMoney | moneySplit1}}</i>.{{orderData.totalYouHuiMoney | moneySplit2}}</span>
         </div>
         <div class="orderTotal-button fs40 shop-bg">
@@ -193,6 +202,12 @@
     </section>
     <section class="shop-main-no fs40 my-bond" v-if="bondStatu > 0">
         <content-no :statu='bondStatu'></content-no>
+    </section>
+    <section class="shop-main-no fs40 my-bond" v-if="isShow && dialogArr != null && dialogArr.length > 0">
+        <pay-way-dialog :name="dialogName" :dialogList="dialogArr" :type="dialogType"  :busId="dialogBusId"
+          :closeDialog.sync="isShow"
+          @selectDialog="selectDialogChange"
+        ></pay-way-dialog>
     </section>
     <shop-dialog ref="dialog"></shop-dialog>
 </div>
@@ -203,6 +218,7 @@
 import footerNav from "components/footerNav";
 import defaultImg from "components/defaultImg";
 import shopDialog from "components/shopDialog";
+import payWayDialog from "components/payWayDialog";
 import filte from "../../../lib/filters";
 import technicalSupport from "components/technicalSupport"; //技术支持
 import calculation from "./js/calculationOrder"; //技术支持
@@ -224,14 +240,19 @@ export default {
       orderList: [], //订单集合
       orderData: {}, //订单对象
       imgUrl: "", //图片域名
-      selectPayWay: 0 //选中的支付方式
+      selectPayWay: 0, //选中的支付方式
+      dialogName: "支付方式", //标题
+      dialogArr: [], //弹出框集合
+      dialogType: 1,
+      dialogBusId: 0 //弹出框需要的商家id
     };
   },
   components: {
     footerNav,
     defaultImg,
     shopDialog,
-    technicalSupport
+    technicalSupport,
+    payWayDialog
   },
   mounted() {
     this.loadDatas(); //初始化协商详情数据
@@ -244,6 +265,11 @@ export default {
   beforeDestroy() {
     //离开后的操作
     this.$store.commit("show_footer", true); //显示底部导航栏
+  },
+  watch: {
+    "orderList"() {
+      console.log(this.orderList, "_this.orderList---------");
+    }
   },
   methods: {
     order_ulShow() {
@@ -297,6 +323,39 @@ export default {
           _this.caculationOrder(0); //初始化计算订单
         }
       });
+    },
+    //显示弹出框
+    showDialogs(list, type, busId) {
+      let titleNames = "";
+      if (type == 1) {
+        //选择支付方式
+        titleNames = "选择支付方式";
+      } else if (type == 2) {
+        titleNames = "选择配送方式";
+      }
+      this.dialogName = titleNames;
+      this.dialogArr = list;
+      this.isShow = true;
+      this.dialogType = type;
+      if (busId > 0) {
+        this.dialogBusId = busId;
+      }
+    },
+    //选中弹出框内容
+    selectDialogChange(data) {
+      let _this = this;
+      //改变选中对象
+      if (data[0] == 1) {
+        //选择支付方式
+        this.selectPayWay = data[1];
+      } else if (data[0] == 2) {
+        //选择配送方式
+        _this.orderList.forEach((item, index) => {
+          if (item.busId == data[2]) {
+            item.selectDelivery = data[1];
+          }
+        });
+      }
     }
   }
 };
