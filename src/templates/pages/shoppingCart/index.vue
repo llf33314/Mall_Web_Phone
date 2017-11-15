@@ -9,8 +9,8 @@
             <div class="order-item" v-for=" (cart,i) in shopCartList"
                 :key = "i">
                 <div class="order-item-title fs40">
-                    <i class="iconfont icon-dui" 
-                    :class="{'js-font': cart.show}"
+                    <i  class="iconfont icon-dui"
+                        :class="{'js-font': cart.show}"
                         @click="select_Cart(i)"></i>
                     <div class="order-title-img">
                       <default-img :background="cart.userImageUrl"
@@ -19,7 +19,7 @@
                     </div>
                     <span>{{cart.userName}}</span>
                 </div>
-                <div class="shopping-box" 
+                <div class="shopping-box"
                     v-for="(shop,j) in cart.shopResultList"
                     :key="j">
                     <div class="order-shop border">
@@ -30,15 +30,16 @@
                             <span class="fs36">{{shop.shopName}}</span>
                             <i class="iconfont icon-you" ></i>
                         </p>
-                        <p class="fs42 shopGray">
-                            编辑
+                        <p class="fs42 shopGray" @click="edit()">
+                            <span v-if="!shop.edit">编辑</span>
+                            <span v-else>完成</span>
                         </p>
                     </div>
                     <div class="order-item-box">
                         <delete-slide class="order-item-content"
                             v-for="(goods,index) in shop.productResultList"
                             :key="index"
-                            @delete="delete_dialog(index,goods)" 
+                            @delete="delete_dialog(index,goods)"
                             :scope="index">
                             <div class="shoopCart-content">
                                 <div class="order-item-img">
@@ -50,12 +51,21 @@
                                 </div>
                                 <div class="order-item-txt">
                                     <p class="fs42">{{goods.productName}}</p>
-                                    <p class="fs36 shopGray">
-                                        <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
-                                        <span>{{goods.productNum}}份</span>
-                                    </p>
-                                    <p class="fs42 shop-font" v-if="goods.productHyPrice>0">¥{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
-                                    <p class="fs42 shop-font" v-else>¥{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
+                                    <div v-if="!goods.edit">
+                                        <p class="fs36 shopGray">
+                                            <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
+                                            <span>{{goods.productNum}}份</span>
+                                        </p>
+                                        <p class="fs42 shop-font" v-if="goods.productHyPrice>0">¥{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
+                                        <p class="fs42 shop-font" v-else>¥{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
+                                    </div>
+                                    <div class="goods-choice-box2" c-es>
+                                        <em class="em-choice">-</em>
+                                        <input class="em-choice"
+                                         v-model="goods.productNum">
+                                        </input>
+                                        <em class="em-choice">+</em>
+                                    </div>
                                 </div>
                             </div>
                         </delete-slide>
@@ -66,7 +76,7 @@
         <div class="shopping-footer clearfix" style="z-index:2">
             <div class="shopping-footer-l fs40">
                 <i class="iconfont icon-dui"
-                :class="{'js-font':isPifaAmount}" 
+                :class="{'js-font':isPifaAmount}"
                 ></i>
                 合计：<span class="shop-font">￥{{pifaTotal | currency}}</span>
             </div>
@@ -91,7 +101,7 @@ import contentNo from 'components/contentNo'
 import deleteSlide from './component/deleteSlide'
 import filter from '../../../lib/filters'// 过滤器
 export default {
-  name: 'shippingCart',	
+  name: 'shippingCart',
   data(){
     return{
         isPhoto: false,
@@ -123,9 +133,8 @@ export default {
 	  defaultImg,headerNav,contentNo,deleteSlide
   },
   watch: {
-    '$route'(a,b){
+    '$route'(){
         this.shopCartList = {};
-        
         this.cartAjax(this.$route.params.type);
     },
     'shopCartList'(a,b){
@@ -136,41 +145,12 @@ export default {
             item.shopResultList.forEach((test,j)=>{
                 test.productResultList.forEach((e,n)=>{
                     if(e.show){
-                    pifaTotal = e.productNum*e.productHyPrice
+                    pifaTotal += e.productNum * e.productHyPrice
                     _this.productNum += e.productNum;
                     }
                 })
             })
-        });    
-        // _this.shopCartList.forEach((item,i)=>{
-        //     console.log(item.show,'item');
-        //     if(!item.show){
-        //         _this.isPifaAmount = false;
-        //         item.shopResultList.forEach((test,j)=>{
-        //             test.show = false;
-        //             test.productResultList.forEach((e,n)=>{
-        //                 e.show = false
-        //             })
-        //         })
-        //     }else{
-        //         item.shopResultList.forEach((test,j)=>{
-        //              //test.show 不等于 true ,店铺所有商品为不选中
-        //             if(!test.show){
-        //                 test.productResultList.forEach((e,n)=>{
-        //                     e.show = false;
-        //                 })
-        //             }else{
-        //                 test.productResultList.forEach((e,n)=>{
-        //                     if(e.show){
-        //                         _this.isPifaAmount = true;
-        //                         pifaTotal = e.productNum*e.productHyPrice
-        //                         _this.productNum += e.productNum;
-        //                     }
-        //                 })
-        //             }
-        //         })
-        //     }
-        // });  
+        });
          _this.pifaTotal = pifaTotal;
     }
   },
@@ -190,7 +170,7 @@ export default {
         if(type == 1){
             _data.type = type;
         }
-        
+
         _this.commonFn.ajax({
             'url': h5App.activeAPI.phoneShopCart_getShopCartx_post,
             'data':_data,
@@ -219,19 +199,20 @@ export default {
                     item.show = true;
                     item.shopResultList.forEach((test,j)=>{
                         test.show = true;
+                        test.edit = false;
                         test.productResultList.forEach((e,n)=>{
                             e.show = true;
                             pifaTotal += e.productNum*e.productHyPrice;
                             _this.pifaAmount += e.productNum;
                         })
                     })
-                });          
+                });
 
                 _this.pifaTotal = pifaTotal;
             }
         })
       },
-    /** 
+    /**
      * 删除弹出窗
      * @param index  当前要删除的对象
      */
@@ -240,7 +221,7 @@ export default {
         let _id = goods.id;
         this.deleteAjax(_id);
     },
-    /** 
+    /**
      * 删除购物车请求
      * @param id 删除购物车id
      */
@@ -255,7 +236,7 @@ export default {
                 productNum:'', //商品数量 integer
                 specificaValueIds:'' //规格值id Array[string]
             }
-            
+
         }
         console.log(_data,'_data删除数据');
         _this.commonFn.ajax({
@@ -274,38 +255,73 @@ export default {
                 let msg={
                     type :'success',
                     msg :  '删除成功'
-                }
+                };
                 _this.$parent.$refs.bubble.show_tips(msg);
             }
         })
     },
-    /** 
+    /**
      * 选择商店
      * @param i  选中的索引
      */
     select_Cart(i){
-        this.shopCartList.push([]);
-        this.shopCartList.pop();
-        this.shopCartList[i].show = !this.shopCartList[i].show;
-        console.log('cart')
+      let _this = this;
+      _this.shopCartList.push([]);
+      _this.shopCartList.pop();
+      let obj = this.shopCartList[i]
+      if(obj.show){
+        obj.show = false;
+        obj.shopResultList.forEach((test,j)=>{
+            test.show = false;
+            test.productResultList.forEach((e,n)=>{
+              e.show = false;
+            })
+          })
+      }else {
+        obj.show = true;
+        obj.shopResultList.forEach((test,j)=>{
+            test.show = true;
+            test.productResultList.forEach((e,n)=>{
+              e.show = true;
+            })
+        })
+      }
     },
     select_Shop(j,i){
+        let _this = this;
         this.shopCartList.push([]);
         this.shopCartList.pop();
-        this.shopCartList[i].shopResultList[j].show = !this.shopCartList[i].shopResultList[j].show;
-        console.log('Shop')
+        let obj = this.shopCartList[i].shopResultList[j];
+        if(obj.show){
+          this.shopCartList[i].show = false;
+          obj.show = false;
+          obj.productResultList.forEach((e,n)=>{
+            e.show = false;
+          })
+        }else {
+          obj.show = true;
+          obj.productResultList.forEach((e,n)=>{
+            e.show = true;
+          })
+        }
     },
-    /** 
+    /**
      * 选择商品 id 商品id
      * @param index 当前索引
      * @param j 父级索引
      */
     select_Goods(index,j,i){
+        let _this = this;
         this.shopCartList.push([]);
         this.shopCartList.pop();
-        let obj = this.shopCartList[i].shopResultList[j].productResultList[index].show;
-        this.shopCartList[i].shopResultList[j].productResultList[index].show = !obj;
-        
+        let obj = this.shopCartList[i].shopResultList[j].productResultList[index];
+        if(obj.show){
+          this.shopCartList[i].show = false;
+          this.shopCartList[i].shopResultList[j].show = false;
+          obj.show = false;
+        }else {
+          obj.show = true;
+        }
     },
   },
   mounted () {
@@ -327,7 +343,7 @@ export default {
   }
   .order-main,.deltails-main{
       position: relative;
-      
+
       .order-box{
           width: 100%;
       }
@@ -378,7 +394,7 @@ export default {
           .order-item-img{
               width: 265  /@dev-Width *1rem;
               height: 265 /@dev-Width *1rem;
-              background-size: cover; 
+              background-size: cover;
           }
           .order-item-txt{
               width: 73%;
@@ -388,7 +404,7 @@ export default {
           }
       }
       .order-item-total,.order-item-button,.order-number-time{
-          width: 100%; 
+          width: 100%;
           padding: 38/@dev-Width *1rem 30/@dev-Width *1rem  38/@dev-Width *1rem 40/@dev-Width *1rem;
           text-align: right;
           .order-button{
@@ -468,6 +484,38 @@ export default {
                 .ik-box-align(center);
             }
         }
+    }
+}
+.goods-choice-box2{
+    font-size: 0;
+    em,input{
+        padding: 0;
+        line-height: 90/ @dev-Width *1rem;
+        color: #87858f;
+        width: 98/ @dev-Width *1rem;
+        height: 90/ @dev-Width *1rem;
+        text-align: center;
+        margin-right: 2px;
+        .border-radius(0);
+        font-weight: bold;
+        font-size: 68/ @dev-Width *1rem;
+        vertical-align: top;
+    }
+    &>em:first-of-type{
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+    }
+    input{
+        font-size: 40/ @dev-Width *1rem;
+        font-weight:normal;
+        color: #333;
+        width: 128/ @dev-Width *1rem;
+        border: 0;
+        margin-right: 2px;
+    }
+    &>em:last-of-type{
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
     }
 }
 </style>

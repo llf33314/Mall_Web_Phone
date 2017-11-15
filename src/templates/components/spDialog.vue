@@ -1,8 +1,13 @@
 <template>
     <div class="sp-dialog" v-show="visible" @click.self="handleClose">
         <div class="sp-dialog-main">
-            <div class="sp-dialog-title border">
-                    <div class="text-overflow fs40">{{title}}</div>
+            <div class="sp-dialog-title-center border" v-if="center == 'center'">
+                    <div class="text-overflow fs46">{{title}}</div>
+                    <i class="iconfont icon-guanbi fs40"
+                    @click="handleClose"></i>
+            </div>
+             <div class="sp-dialog-title border" v-else>
+                    <div class="text-overflow fs40" :style="'text-align:'+center">{{title}}</div>
                     <i class="iconfont icon-guanbi fs40"
                      @click="handleClose"></i>
             </div>
@@ -19,14 +24,18 @@
   export default {
     name: 'splDialog',
     props: {
-      title: {
-        type: String,
-        default: true
-      },
-      visible: {
-        type: Boolean,
-        default: true
-      },
+        center:{
+            type: String,
+            default: 'left'
+        },
+        title: {
+            type: String,
+            default: true
+        },
+        visible: {
+            type: Boolean,
+            default: true
+        },
     },
 
     watch: {
@@ -51,7 +60,12 @@
     },
 
     mounted() {
-      
+      /** 
+       * 使用
+       * :title="标题"字符串 必传
+        :visible.sync="isCardRecevie" //条件
+        :center="'center'" // 标题显示   居中center   默认局左letf
+       */
     }
   };
 </script>
@@ -89,6 +103,24 @@
         &>i{
             padding: 30/@dev-Width *1rem;
             display: block;
+        }
+    }
+    .sp-dialog-title-center{
+        font-size: 0;
+        width: 100%;
+        position: relative;
+        padding:  30/@dev-Width *1rem;
+        div{
+            margin: 0 auto;
+            width: 85%;
+            text-align: center;
+        }
+        &>i{
+            position: absolute;
+            display: block;
+            right: 0;
+            top: 0;
+            padding: 30/@dev-Width *1rem;
         }
     }
 }

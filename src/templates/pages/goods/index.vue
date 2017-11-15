@@ -485,7 +485,8 @@
     </div>
     <sp-dialog 
         :title="'卡卷包'"
-        :visible.sync="isCardRecevie">
+        :visible.sync="isCardRecevie"
+        :center="'center'">
         <div class="goods-dialog-main">
             <div class="goods-dialog-choice shop-box-justify" 
                 style="padding: 0.2rem;"
@@ -1761,6 +1762,7 @@ export default {
         border-bottom-right-radius: 3px;
     }
 }
+
 @keyframes dialogShow{
     from {bottom: -100%;}
     to {bottom: 0%;}
