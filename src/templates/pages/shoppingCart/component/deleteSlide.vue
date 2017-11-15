@@ -106,12 +106,11 @@
               'callback': {
                   'btnOne': function () {
                       //关闭
-                      //_this.allowScroll();
                       _this.$emit('delete',_this.scope);
+                      _this.deleteSlider = "transform:translateX(0px)";
                   },
                   'btnTow': function () {
                       //确定
-                      //_this.allowScroll();
                       _this.deleteSlider = "transform:translateX(0px)";
                   }
               }

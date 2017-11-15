@@ -9,7 +9,9 @@
             <div class="order-item" v-for=" (cart,i) in shopCartList"
                 :key = "i">
                 <div class="order-item-title fs40">
-                    <i class="iconfont icon-dui"></i>
+                    <i  class="iconfont icon-dui"
+                        :class="{'js-font': cart.show}"
+                        @click="select_Cart(i)"></i>
                     <div class="order-title-img">
                       <default-img :background="cart.userImageUrl"
                                   :isHeadPortrait="1">
@@ -17,41 +19,53 @@
                     </div>
                     <span>{{cart.userName}}</span>
                 </div>
-                <div class="shopping-box" 
+                <div class="shopping-box"
                     v-for="(shop,j) in cart.shopResultList"
                     :key="j">
                     <div class="order-shop border">
                         <p class="order-shop-name">
-                            <i class="iconfont icon-dui"></i>
+                            <i class="iconfont icon-dui" :class="{'js-font':shop.show}"
+                            @click="select_Shop(j,i)"></i>
                             <i class="iconfont icon-dianpu"></i>
                             <span class="fs36">{{shop.shopName}}</span>
-                            <i class="iconfont icon-you"></i>
+                            <i class="iconfont icon-you" ></i>
                         </p>
-                        <p class="fs42 shopGray">
-                            编辑
+                        <p class="fs42 shopGray" @click="edit()">
+                            <span v-if="!shop.edit">编辑</span>
+                            <span v-else>完成</span>
                         </p>
                     </div>
                     <div class="order-item-box">
                         <delete-slide class="order-item-content"
-                                       v-for="(goods,index) in shop.productResultList"
-                                       :key="index"
-                                        @delete="delete_dialog(index)" 
-                                        :scope="index">
+                            v-for="(goods,index) in shop.productResultList"
+                            :key="index"
+                            @delete="delete_dialog(index,goods)"
+                            :scope="index">
                             <div class="shoopCart-content">
                                 <div class="order-item-img">
                                   <default-img :background="imgUrl+goods.productImageUrl"
                                                 :isHeadPortrait="0">
                                   </default-img>
-                                    <i class="iconfont icon-dui"></i>
+                                   <i class="iconfont icon-dui" :class="{'js-font':goods.show}"
+                                    @click="select_Goods(index,j,i)"></i>
                                 </div>
                                 <div class="order-item-txt">
                                     <p class="fs42">{{goods.productName}}</p>
-                                    <p class="fs36 shopGray">
-                                        <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
-                                        <span>{{goods.productNum}}份</span>
-                                    </p>
-                                    <p class="fs42 shop-font" v-if="goods.productHyPrice>0">¥{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
-                                    <p class="fs42 shop-font" v-else>¥{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
+                                    <div v-if="!goods.edit">
+                                        <p class="fs36 shopGray">
+                                            <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
+                                            <span>{{goods.productNum}}份</span>
+                                        </p>
+                                        <p class="fs42 shop-font" v-if="goods.productHyPrice>0">¥{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
+                                        <p class="fs42 shop-font" v-else>¥{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
+                                    </div>
+                                    <div class="goods-choice-box2" c-es>
+                                        <em class="em-choice">-</em>
+                                        <input class="em-choice"
+                                         v-model="goods.productNum">
+                                        </input>
+                                        <em class="em-choice">+</em>
+                                    </div>
                                 </div>
                             </div>
                         </delete-slide>
@@ -61,15 +75,17 @@
         </div>
         <div class="shopping-footer clearfix" style="z-index:2">
             <div class="shopping-footer-l fs40">
-                <i class="iconfont icon-dui"></i>
-                合计：<span class="shop-font">￥7,199.00</span>
+                <i class="iconfont icon-dui"
+                :class="{'js-font':isPifaAmount}"
+                ></i>
+                合计：<span class="shop-font">￥{{pifaTotal | currency}}</span>
             </div>
             <div class="shopping-footer-r">
                 <div class="shopping-buttom fs50 shop-yellow">
                     继续选购
                 </div>
                 <div class="shopping-buttom fs50 shop-bg">
-                    去结算(1)
+                    去结算({{pifaAmount}})
                 </div>
             </div>
         </div>
@@ -85,7 +101,7 @@ import contentNo from 'components/contentNo'
 import deleteSlide from './component/deleteSlide'
 import filter from '../../../lib/filters'// 过滤器
 export default {
-  name: 'shippingCart',	
+  name: 'shippingCart',
   data(){
     return{
         isPhoto: false,
@@ -103,22 +119,47 @@ export default {
         imgUrl: '',
         path: '',
         webPath: '',
-
+        type:'',//0正常购买，1批发购买,
+        pifaTotal:'0.00',
+        pifaAmount: 0,
+        isPifaAmount: true,
+        selectCart:'',//选中的商家
+        selectShop:'',//选中的店铺
+        selectGoods:[],//选中的商品
+        selectClass:[],//选中的商品
     }
   },
   components:{
 	  defaultImg,headerNav,contentNo,deleteSlide
   },
   watch: {
-    '$route'(a,b){
-        this.cartAjax();
-    }  
+    '$route'(){
+        this.shopCartList = {};
+        this.cartAjax(this.$route.params.type);
+    },
+    'shopCartList'(a,b){
+        let _this = this;
+        let pifaTotal = 0;
+        _this.pifaAmount = 0;
+        _this.shopCartList.forEach((item,i)=>{
+            item.shopResultList.forEach((test,j)=>{
+                test.productResultList.forEach((e,n)=>{
+                    if(e.show){
+                    pifaTotal += e.productNum * e.productHyPrice
+                    _this.productNum += e.productNum;
+                    }
+                })
+            })
+        });
+         _this.pifaTotal = pifaTotal;
+    }
   },
-    methods:{
+  methods:{
     /**
      * 购物车请求
+     * @param type 批发购买条件
      */
-    cartAjax(){
+    cartAjax(type){
         let _this = this;
         let _data = {
             url: _this.$store.state.loginDTO_URL,
@@ -126,15 +167,22 @@ export default {
             busId:_this.$route.params.busId,
             shopId: _this.$route.params.shopId
         }
-        let _type = _this.$route.params.type;
-        if(_type == 1){
-            _data.type = _type;
+        if(type == 1){
+            _data.type = type;
         }
-        console.log(_data,'_data');
+
         _this.commonFn.ajax({
             'url': h5App.activeAPI.phoneShopCart_getShopCartx_post,
             'data':_data,
             'success':(data)=>{
+                if(data.code == -1){
+                    let msg ={
+                        type:'error',
+                        msg:data.msg
+                    }
+                    _this.$parent.$refs.bubble.show_tips(msg);
+                    return
+                }
                 _this.imgUrl = data.imgUrl;
                 _this.path = data.path;
                 _this.webPath = data.webPath;
@@ -144,40 +192,143 @@ export default {
                 _this.hpNum=data.data.hpNum;
                 _this.spHand=data.data.spHand;
                 _this.shopCartList=data.data.shopCartList;//购物车集合
-                                    
-                
+
+                let pifaTotal = 0;
+                //全选后的总价
+                _this.shopCartList.forEach((item,i)=>{
+                    item.show = true;
+                    item.shopResultList.forEach((test,j)=>{
+                        test.show = true;
+                        test.edit = false;
+                        test.productResultList.forEach((e,n)=>{
+                            e.show = true;
+                            pifaTotal += e.productNum*e.productHyPrice;
+                            _this.pifaAmount += e.productNum;
+                        })
+                    })
+                });
+
+                _this.pifaTotal = pifaTotal;
             }
         })
       },
-      /** 
-       * 删除弹出窗
-       */
-      delete_dialog(e){
-         console.log(e);
-        //  _this.commonFn.ajax({
-        //     'url': h5App.activeAPI.phoneShopCart_removeShopCart_post,
-        //     'data':_data,
-        //     'success':(data)=>{
-        //         _this.imgUrl = data.imgUrl;
-        //         _this.path = data.path;
-        //         _this.webPath = data.webPath;
+    /**
+     * 删除弹出窗
+     * @param index  当前要删除的对象
+     */
+    delete_dialog(index,goods){
+        console.log(index,goods);
+        let _id = goods.id;
+        this.deleteAjax(_id);
+    },
+    /**
+     * 删除购物车请求
+     * @param id 删除购物车id
+     */
+    deleteAjax(id){
+        let _this = this;
+        let _data = {};
+        _data.ids = id;
+        if(_this.type == 1){
+            _data.pifaSpecificaList = {
+                id:'', //批发购物车id integer
+                productId:'', //商品id integer
+                productNum:'', //商品数量 integer
+                specificaValueIds:'' //规格值id Array[string]
+            }
 
-        //         console.log(data,'购物车数据');
-        //         _this.hpMoney=data.data.hpMoney;
-        //         _this.hpNum=data.data.hpNum;
-        //         _this.spHand=data.data.spHand;
-        //         _this.shopCartList=data.data.shopCartList;//购物车集合
-                                    
-                
-        //     }
-        // })
-      },
+        }
+        console.log(_data,'_data删除数据');
+        _this.commonFn.ajax({
+            'url': h5App.activeAPI.phoneShopCart_removeShopCart_post,
+            'data':_data,
+            'success':(data)=>{
+                if(data.code == -1){
+                     let msg={
+                        type :'error',
+                        msg :  data.msg
+                    }
+                    _this.$parent.$refs.bubble.show_tips(msg);
+                    return
+                }
+
+                let msg={
+                    type :'success',
+                    msg :  '删除成功'
+                };
+                _this.$parent.$refs.bubble.show_tips(msg);
+            }
+        })
+    },
+    /**
+     * 选择商店
+     * @param i  选中的索引
+     */
+    select_Cart(i){
+      let _this = this;
+      _this.shopCartList.push([]);
+      _this.shopCartList.pop();
+      let obj = this.shopCartList[i]
+      if(obj.show){
+        obj.show = false;
+        obj.shopResultList.forEach((test,j)=>{
+            test.show = false;
+            test.productResultList.forEach((e,n)=>{
+              e.show = false;
+            })
+          })
+      }else {
+        obj.show = true;
+        obj.shopResultList.forEach((test,j)=>{
+            test.show = true;
+            test.productResultList.forEach((e,n)=>{
+              e.show = true;
+            })
+        })
+      }
+    },
+    select_Shop(j,i){
+        let _this = this;
+        this.shopCartList.push([]);
+        this.shopCartList.pop();
+        let obj = this.shopCartList[i].shopResultList[j];
+        if(obj.show){
+          this.shopCartList[i].show = false;
+          obj.show = false;
+          obj.productResultList.forEach((e,n)=>{
+            e.show = false;
+          })
+        }else {
+          obj.show = true;
+          obj.productResultList.forEach((e,n)=>{
+            e.show = true;
+          })
+        }
+    },
+    /**
+     * 选择商品 id 商品id
+     * @param index 当前索引
+     * @param j 父级索引
+     */
+    select_Goods(index,j,i){
+        let _this = this;
+        this.shopCartList.push([]);
+        this.shopCartList.pop();
+        let obj = this.shopCartList[i].shopResultList[j].productResultList[index];
+        if(obj.show){
+          this.shopCartList[i].show = false;
+          this.shopCartList[i].shopResultList[j].show = false;
+          obj.show = false;
+        }else {
+          obj.show = true;
+        }
+    },
   },
   mounted () {
     let type = this.$route.params.type;
     type==0?this.commonFn.setTitle( '购物车'):this.commonFn.setTitle( '批发商购物车');
-     
-    this.cartAjax();
+
+    this.cartAjax(type);
   }
 }
 </script>
@@ -192,7 +343,7 @@ export default {
   }
   .order-main,.deltails-main{
       position: relative;
-      
+
       .order-box{
           width: 100%;
       }
@@ -243,7 +394,7 @@ export default {
           .order-item-img{
               width: 265  /@dev-Width *1rem;
               height: 265 /@dev-Width *1rem;
-              background-size: cover; 
+              background-size: cover;
           }
           .order-item-txt{
               width: 73%;
@@ -253,7 +404,7 @@ export default {
           }
       }
       .order-item-total,.order-item-button,.order-number-time{
-          width: 100%; 
+          width: 100%;
           padding: 38/@dev-Width *1rem 30/@dev-Width *1rem  38/@dev-Width *1rem 40/@dev-Width *1rem;
           text-align: right;
           .order-button{
@@ -287,6 +438,9 @@ export default {
         margin-right: 20/@dev-Width *1rem;
         padding: 3px;
         z-index: 1;
+    }
+    .js-font{
+        background: #e4393c!important;
     }
     .order-box{
         width: 100%;
@@ -330,6 +484,38 @@ export default {
                 .ik-box-align(center);
             }
         }
+    }
+}
+.goods-choice-box2{
+    font-size: 0;
+    em,input{
+        padding: 0;
+        line-height: 90/ @dev-Width *1rem;
+        color: #87858f;
+        width: 98/ @dev-Width *1rem;
+        height: 90/ @dev-Width *1rem;
+        text-align: center;
+        margin-right: 2px;
+        .border-radius(0);
+        font-weight: bold;
+        font-size: 68/ @dev-Width *1rem;
+        vertical-align: top;
+    }
+    &>em:first-of-type{
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+    }
+    input{
+        font-size: 40/ @dev-Width *1rem;
+        font-weight:normal;
+        color: #333;
+        width: 128/ @dev-Width *1rem;
+        border: 0;
+        margin-right: 2px;
+    }
+    &>em:last-of-type{
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
     }
 }
 </style>

@@ -363,7 +363,7 @@
                                 <div v-for="(spec,index) in w_dialogData.specifica_ids" v-if="index == i" :key = "index">
                                     <em class="fs40 em-choice " v-for=" (specValue,j) in item.specValues"
                                         @click="choice_product($event,specValue.id)" 
-                                        :class="{'shop-bg': wholesaleId == specValue.id }"
+                                        :class="{'shop-bg': wholesaleId == specValue.id}"
                                         :value="specValue.id"
                                         :key = "j">
                                         {{specValue.specValue}}
@@ -487,7 +487,8 @@
     </div>
     <sp-dialog 
         :title="'卡卷包'"
-        :visible.sync="isCardRecevie">
+        :visible.sync="isCardRecevie"
+        :center="'center'">
         <div class="goods-dialog-main">
             <div class="goods-dialog-choice shop-box-justify" 
                 style="padding: 0.2rem;"
@@ -740,7 +741,7 @@ export default {
                             }  
                     })
                     _this.dialogData.productStockTotal==0? _this.spec_num = 0:_this.spec_num = 1;
-                    console.log(_this.dialogData,'dialogData无规格');
+                    //console.log(_this.dialogData,'dialogData无规格');
                     
                     
                 }
@@ -1802,6 +1803,7 @@ export default {
         border-bottom-right-radius: 3px;
     }
 }
+
 @keyframes dialogShow{
     from {bottom: -100%;}
     to {bottom: 0%;}

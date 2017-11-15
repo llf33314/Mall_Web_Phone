@@ -50,5 +50,11 @@ new Vue({
  * 气泡调用
  * 使用方法
  * @param xxx 显示内容,'内容' 
-    _this.$parent.$refs.bubble.show_tips(xxx);//调用方法
+ * ----需要icon 
+ * let msg={
+ *    type:'', //success 成功 √ ，error 失败 ×  warning警告 ！
+      hint_msg:''
+ * }
+ * ----不需要icon   直接传入 显示的 文本
+    _this.$parent.$refs.bubble.show_tips(xxx); //调用方法
  */

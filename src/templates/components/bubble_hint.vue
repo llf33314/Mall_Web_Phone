@@ -1,6 +1,11 @@
 <template>
     <div class="bubble" v-show="show">
-      <p>{{hint_msg}}</p>
+      <p>
+        <i class="iconfont icon-dui1" v-if=" msg.type == 'success'"></i>
+        <i class="iconfont icon-guanbi" v-if=" msg.type == 'error'"></i>
+        <i v-if=" msg.type == 'warning'">!</i>
+        {{msg.msg}}
+      </p>
     </div>
  
 </template>
@@ -9,20 +14,27 @@
     data: function () {
       return {
         show: false,
-        hint_msg: '',
-        msg_queue: []
+        msg: {
+          type:'',
+          msg:''
+        },
       }
     },
     methods: {
       show_tips: function (msg) {
-        var self = this;
-        self.hint_msg = msg;
-        self.show = true;
+        var _this = this;
+        if(msg.type){
+           _this.msg= msg;
+        }else{
+          _this.msg.type= '';
+          _this.msg.msg= msg;
+        }
+        _this.show = true;
         $('.bubble').fadeIn(200);
         setTimeout(function () {
           $('.bubble').fadeOut(200,function(){
-            self.hint_msg = '';
-            self.show = false;
+            _this.hint_msg = '';
+            _this.show = false;
           });
         }, 1500);
       }
@@ -54,7 +66,12 @@
     background: rgba(0, 0, 0, .5);
     display: inline-block;
     border-radius: 5px
+    
   }
-  
+  .bubble p i{
+    font-size: 28px;
+    display: block;
+    margin: 0 auto;
+  }
   /*气泡提示完---------------------------------------------------------------------------------------------*/
 </style>
