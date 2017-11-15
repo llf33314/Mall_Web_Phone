@@ -487,8 +487,7 @@
     </div>
     <sp-dialog 
         :title="'卡卷包'"
-        :visible.sync="isCardRecevie"
-        :center="'center'">
+        :visible.sync="isCardRecevie">
         <div class="goods-dialog-main">
             <div class="goods-dialog-choice shop-box-justify" 
                 style="padding: 0.2rem;"
@@ -1279,26 +1278,18 @@ export default {
         }
     },
     beforeCreate() {
-        this.$store.commit('show_footer',true);
+        this.$store.commit('show_footer',false);
     },
     beforeDestroy() {
-        console.log(111111111111111)
-        this.$store.commit('show_footer',false);
+        this.$store.commit('show_footer',true);
+
     },  
     mounted () {
-            this.$store.commit('show_footer',false);
-            this.commonFn.setTitle( '商品详情');
-            this.goodsId = this.$route.params.goodsId;
+        this.commonFn.setTitle( '商品详情');
+        this.goodsId = this.$route.params.goodsId;
 
-            this.phoneProductAjax();
-            this.type = this.$route.params.type;
-            var buf = new Buffer("test测试","utf8");
-		
-		console.log(buf,'buf');
-		
-		console.log(buf.length,'buf');
-		
-		console.log(buf.toString("utf8"),'buf');
+        this.phoneProductAjax();
+        this.type = this.$route.params.type;
     }
 }
 </script>

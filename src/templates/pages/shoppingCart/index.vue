@@ -30,7 +30,7 @@
                             <span class="fs36">{{shop.shopName}}</span>
                             <i class="iconfont icon-you" ></i>
                         </p>
-                        <p class="fs42 shopGray" @click="edit()">
+                        <p class="fs42 shopGray" @click="edit(i,j)">
                             <span v-if="!shop.edit">编辑</span>
                             <span v-else>完成</span>
                         </p>
@@ -59,7 +59,7 @@
                                         <p class="fs42 shop-font" v-if="goods.productHyPrice>0">¥{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
                                         <p class="fs42 shop-font" v-else>¥{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
                                     </div>
-                                    <div class="goods-choice-box2" c-es>
+                                    <div class="goods-choice-box2" v-else>
                                         <em class="em-choice">-</em>
                                         <input class="em-choice"
                                          v-model="goods.productNum">
@@ -77,6 +77,7 @@
             <div class="shopping-footer-l fs40">
                 <i class="iconfont icon-dui"
                 :class="{'js-font':isPifaAmount}"
+                @click="select_PifaAmount()"
                 ></i>
                 合计：<span class="shop-font">￥{{pifaTotal | currency}}</span>
             </div>
@@ -142,11 +143,24 @@ export default {
         let pifaTotal = 0;
         _this.pifaAmount = 0;
         _this.shopCartList.forEach((item,i)=>{
+            debugger
+            if(item.show){
+                _this.isPifaAmount = true;
+            }else{
+                _this.isPifaAmount = false;
+            }
             item.shopResultList.forEach((test,j)=>{
+                if(test.show){
+                    item.show = true;
+                }else{
+                    item.show = false;
+                }
                 test.productResultList.forEach((e,n)=>{
                     if(e.show){
-                    pifaTotal += e.productNum * e.productHyPrice
-                    _this.productNum += e.productNum;
+                        pifaTotal += e.productNum * e.productHyPrice
+                        _this.productNum += e.productNum;
+                    }else{
+                        test.show = false;
                     }
                 })
             })
@@ -217,7 +231,6 @@ export default {
      * @param index  当前要删除的对象
      */
     delete_dialog(index,goods){
-        console.log(index,goods);
         let _id = goods.id;
         this.deleteAjax(_id);
     },
@@ -262,7 +275,9 @@ export default {
     },
     /**
      * 选择商店
-     * @param i  选中的索引
+     * @param i  Cart选中的索引
+     * @param index Goods索引
+     * @param j Shop索引
      */
     select_Cart(i){
       let _this = this;
@@ -270,6 +285,7 @@ export default {
       _this.shopCartList.pop();
       let obj = this.shopCartList[i]
       if(obj.show){
+        this.isPifaAmount = false;
         obj.show = false;
         obj.shopResultList.forEach((test,j)=>{
             test.show = false;
@@ -293,11 +309,12 @@ export default {
         this.shopCartList.pop();
         let obj = this.shopCartList[i].shopResultList[j];
         if(obj.show){
-          this.shopCartList[i].show = false;
-          obj.show = false;
-          obj.productResultList.forEach((e,n)=>{
-            e.show = false;
-          })
+            this.isPifaAmount = false;
+            this.shopCartList[i].show = false;
+            obj.show = false;
+            obj.productResultList.forEach((e,n)=>{
+                e.show = false;
+            })
         }else {
           obj.show = true;
           obj.productResultList.forEach((e,n)=>{
@@ -305,24 +322,44 @@ export default {
           })
         }
     },
-    /**
-     * 选择商品 id 商品id
-     * @param index 当前索引
-     * @param j 父级索引
-     */
     select_Goods(index,j,i){
         let _this = this;
         this.shopCartList.push([]);
         this.shopCartList.pop();
         let obj = this.shopCartList[i].shopResultList[j].productResultList[index];
         if(obj.show){
-          this.shopCartList[i].show = false;
-          this.shopCartList[i].shopResultList[j].show = false;
-          obj.show = false;
+            this.isPifaAmount = false;
+            this.shopCartList[i].show = false;
+            this.shopCartList[i].shopResultList[j].show = false;
+            obj.show = false;
         }else {
-          obj.show = true;
+            obj.show = true;
         }
     },
+    select_PifaAmount(){
+        console.log(111);
+        this.shopCartList.push([]);
+        this.shopCartList.pop();
+        this.isPifaAmount = true;
+        this.shopCartList.forEach((item,i)=>{
+            item.show = true;
+            item.shopResultList.forEach((test,j)=>{
+                test.show = true;
+                test.productResultList.forEach((e,n)=>{
+                    e.show = true;
+                })
+            })
+        });
+    },
+    /** 
+     * 编辑按钮
+     * @param j 当前索引
+     */
+    edit(i,j){
+        console.log(i,j)
+        let obj = this.shopCartList[i].shopResultList[j];
+        this.$set(obj,'edit',!obj);
+    }
   },
   mounted () {
     let type = this.$route.params.type;

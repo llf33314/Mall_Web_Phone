@@ -7,10 +7,12 @@
                 </div>
                 <!--其他分类-->
                 <div class="classify-goods clearfix">
-                    <div class="goods-item" v-for="item in goodsData">
+                    <div class="goods-item" v-for="(item,index) in goodsData"
+                    :key="index" 
+                    @click="goods_jump(item.group_name)">
                         <div class="goods-img">
                             <default-img :background="imgurl+item.image_url"
-                                :isHeadPortrait="0">
+                                :isHeadPortrait="1">
                             </default-img>
                         </div>
                         <p class="fs36" v-text="item.group_name"></p>
@@ -70,9 +72,21 @@ export default {
         }
     },
     mounted(){
-        console.log(this.imgurl,this.goodsData,'sidebar')
+
     },
-    methods: {}
+    methods: {
+        goods_jump(e){
+            let type = this.$store.state.type || 0;//活动类型
+            let shopId = this.$store.state.shopId || 'shopId';//店铺id
+            let busId = this.$store.state.busId || 'busId';//店铺id
+
+            this.$store.commit('mutationData',{keywords:e});
+            this.$router.push('/classify/'+shopId+'/'+busId+'/'+type+'/'+e);
+
+            this.$emit('isContentNav',e)
+        },
+
+    }
 }
 </script>
 <style lang="less" scoped>
