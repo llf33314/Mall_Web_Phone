@@ -1241,6 +1241,7 @@ export default {
         this.$store.commit('show_footer',true);
     },
     beforeDestroy() {
+        console.log(111111111111111)
         this.$store.commit('show_footer',false);
     },  
     mounted () {
