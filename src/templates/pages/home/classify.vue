@@ -52,7 +52,8 @@
         <sidebar-b :imgurl="imgUrl" 
                     :goodsData="classGoods"
                     :name="group_name" 
-                    v-if="isGoods">
+                    v-if="isGoods"
+                    @isContentNav="ContentNav">
         </sidebar-b>
     </section>
     <section class="clearfix" 
@@ -203,12 +204,11 @@ export default {
                 'type':    data.type|| 0,  //	类型，1.团购 3.秒杀 4.拍卖 5 粉币 6预售 7批发	可不传
                 'curPage': data.curPage||''//	当前页	可不传
             }
-            console.log(typeof _data.loginDTO)
             this.commonFn.ajax({
                 'url': h5App.activeAPI.phoneProduct_productAll_post,
                 'data':_data,
                 'success':function(data){
-                    console.log(data)
+                    console.log(data,'aa-----------aa')
                     if(data.code == '-1'){//接口失败显示
                         _this.subList = [];
                         return
@@ -271,11 +271,14 @@ export default {
             let  title = {1:'团购',3:'秒杀',4:'拍卖',5:'粉币',6:'预售',7:'批发'}
             _this.commonFn.setTitle(title[this.type] || '分类详情');
 
+            let _keyword = this.$route.params.keywords || this.$store.state.keywords ;
+            _keyword === 'k=k'?_this.keyWord = '':_this.keyWord = _keyword || '';
+
             this.productAjax({
                 sort: 'new',
                 curPage: 1,
                 type : _this.$route.params.type,
-                searchContent: encodeURI(_this.keyWord)
+                searchContent: _this.keyWord
             });
         },
         /**
@@ -328,6 +331,9 @@ export default {
                 _this.classGoods ='';
                 _this.isNav = false;
                 $('.wrapper').removeAttr("style");
+                if(Id==''){//是0的 就是全部分类
+                    _this.$router.push('/classify/'+this.$route.params.shopId+'/'+this.$route.params.busId+'/'+this.$route.params.type+'/'+'k=k');
+                }
                 _this.productAjax({
                     groupId: Id
                 });
@@ -346,16 +352,20 @@ export default {
                 type : type,
             });
             this.$router.push('/goods/details/'+shopId+'/'+busId+'/'+type+'/'+id+'/'+activity);
+        },
+        /** 
+         *关闭分类
+        */
+        ContentNav(e){
+            this.showNav();
         }
     },
     mounted () {
         let _this = this;
         _this.type = _this.$route.params.type;
         _this.$store.commit('mutationData',{type:_this.type});
-        _this.$store.commit('show_footer',0);
         let _keyword = this.$store.state.keywords || this.$route.params.keywords;
         _keyword === 'k=k'?_this.keyWord = '':_this.keyWord = _keyword || '';
-        
         _this.setTitle();
 
         _this.classAllAjax();
