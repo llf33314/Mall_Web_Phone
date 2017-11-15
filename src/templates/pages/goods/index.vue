@@ -15,13 +15,15 @@
                         <span v-else-if="type== 1">团购价:</span>
                         <span v-else-if="type== 4">当前价:</span>
                         <span v-else-if="type== 6">预售价:</span>
-                        <span class="fs50" v-else-if="type== 5">{{goodsData.productPrice[0]}}积分</span>
+                        <span class="fs50" v-else-if="type== 5">
+                            {{goodsData.productPrice | moneySplit1}}.{{goodsData.productPrice | moneySplit2}}积分
+                        </span>
                         <span v-else >价格:</span>
-                        ￥<span class="fs50">{{goodsData.productPrice[0]}}</span>.{{goodsData.productPrice[1]}}
+                        ￥<span class="fs50">{{goodsData.productPrice | moneySplit1}}</span>.{{goodsData.productPrice | moneySplit2}}
                         <span v-if="type== 7">批发价：￥{{goodsData.pfPrice}}</span>
                         <span class="shopGray" v-if="goodsData.auctionResult >= 0 ">抢拍{{goodsData.auctionResult.auctionNumber}}次</span>
                     </div>
-                    <span class="fs50 shop-font" v-else>{{goodsData.productPrice[0]}} 积分</span>
+                    <span class="fs50 shop-font" v-else>{{goodsData.productPrice | moneySplit1}}.{{goodsData.productPrice | moneySplit2}} 积分</span>
                     <count-down :times="goodsData.activityTimes"
                     ></count-down>
                 </div>
@@ -32,7 +34,7 @@
                     </div>
                     <div class="shop-font" v-if="goodsData.auctionResult != '' &&  type == 4">
                         <span >保证金：</span>
-                        ￥<span class="fs50" >{{goodsData.auctionResult.depositMoney[0]}}</span>.{{goodsData.auctionResult.depositMoney[1]}}
+                        ￥<span class="fs50" >{{goodsData.auctionResult.depositMoney | moneySplit1 }}</span>.{{goodsData.auctionResult.depositMoney | moneySplit2}}
                         <span class="shopGray">不成拍卖后退还</span>
                     </div>
                     <div class="fs36 shopGray" v-if=" type != 7">{{goodsData.auctionResult.marginNumber}}人已报名</div>
@@ -59,7 +61,7 @@
                 <p class="fs40 ">
                     <span>起拍价：￥{{goodsData.auctionResult.aucStartPrice}}</span>
                     <span v-if="goodsData.auctionResult.aucLowestPrice>=0">保留价：￥{{goodsData.auctionResult.aucLowestPrice}}</span>
-                    <span v-if="goodsData.auctionResult.aucLowestPrice>=0">保证金：￥{{goodsData.auctionResult.depositMoney[0]+'.'+goodsData.auctionResult.depositMoney[1]}}</span>
+                    <span v-if="goodsData.auctionResult.aucLowestPrice>=0">保证金：￥{{goodsData.auctionResult.depositMoney}}</span>
                 </p>
                 <p class="fs40 ">
                     <span v-if="goodsData.auctionResult.aucType == 2 ">加价幅度：￥{{goodsData.auctionResult.aucAddPrice}}</span>
@@ -258,7 +260,7 @@
                 </div>
                 <div class="goods-dialog-txt">
                     <p class="fs42 shop-font">
-                        <span class="fs32">¥</span>{{dialogData.inv_price[0]}}<span class="fs32">.{{dialogData.inv_price[1]}}</span>
+                        <span class="fs32">¥</span>{{dialogData.inv_price | moneySplit1}}<span class="fs32">.{{dialogData.inv_price | moneySplit2}}</span>
 
                         <span class="fs36 " v-if="dialogData.hyPrice"> 会员价 :{{dialogData.hyPrice}}</span>
                     </p>
@@ -296,8 +298,8 @@
                 <div class="goods-dialog-button fs52 shop-yellow" @click="addCard(1)">
                     加入购物车
                 </div>
-                <div class="goods-dialog-button fs52  shop-bg">
-                    立刻购买
+                <div class="goods-dialog-button fs52  shop-bg" @click="lijiBuy(1)">
+                    立即购买
                 </div> 
             </div>
         </div>
@@ -666,11 +668,9 @@ export default {
                     _this.imgUrl = data.imgUrl;
                     _this.webPath = data.webPath;
 
-                    _this.goodsData.productPrice = _this.commonFn.moneySplit(data.data.productPrice)//价钱显示效果
 
                     if(_this.type == 4){//拍卖，分割价钱
                         let depositMoney = data.data.auctionResult.depositMoney
-                        _this.goodsData.auctionResult.depositMoney = _this.commonFn.moneySplit(depositMoney);
                     }
                     
                     //"pfStatus"--//批发状态  0 未审核  1审核通过   -1 审核不通过  -2还未申请 
@@ -807,7 +807,6 @@ export default {
                         item.specifica_ids = item.specifica_ids.split(',');
                         item.productNum = 1;
                         if(item.id == _data.invId){
-                            item.inv_price = _this.commonFn.moneySplit(item.inv_price);//分割价钱
                             _this.dialogData = item;
                             _this.spec_num = item.productNum
                             if(!item.specifica_img_url){
@@ -1119,7 +1118,6 @@ export default {
                 //判断两个数组完全相等 转字符串比较
                 if(specs.toString() === item.specifica_ids.toString()){
                     
-                    item.inv_price = _this.commonFn.moneySplit(item.inv_price);
                     if(!item.specifica_img_url){
                         item.specifica_img_url = _this.dialogData.specifica_img_url;
                     }
@@ -1151,7 +1149,7 @@ export default {
                 //正常购买
                 data = _this.dialogData;
                 ajaxdata.productNum = data.productNum;
-                ajaxdata.price = data.inv_price[0]+'.'+data.inv_price[1];
+                ajaxdata.price = data.inv_price;
             }else{
                 if($(e.target).hasClass('shopRgba')) return;
                 //批发购买
@@ -1235,6 +1233,49 @@ export default {
             let shopId =  this.$route.params.shopId;
             let busId =  this.$route.params.busId;
             this.$router.push('/cart/'+shopId+'/'+busId+'/0');
+        },
+        //立即购买
+        lijiBuy(){
+            // let price = 
+            let _this = this;
+            console.log(_this.dialogData)
+            let _data = {
+                productId:_this.goodsId,//商品id，必传
+                busId:_this.$route.params.busId,//商家id，必传
+                productNum:_this.spec_num,//productNum	商品数量，必传	 
+                price: _this.dialogData.inv_price,//商品价格，必传
+                type:_this.type//查看商品类型，1.团购商品 3.秒杀商品 4.拍卖商品 5 粉币商品 6预售商品 7批发商品
+
+            };
+            if(_this.dialogData.xsid != null){
+             _data.productSpecificas = _this.dialogData.xsid.toString();
+            }
+            if(_this.dialogData.id != null){
+                _data.invId = _this.dialogData.id;
+            }
+            if(_this.type != null && _this.$route.params.activityId != null){
+                _data.activityId = _this.$route.params.activityId;//活动id
+            }
+            if(_this.$route.params.joinActivityId != null){
+                _data.joinActivityId = _this.$route.params.joinActivityId;
+            }
+            console.log(_data)
+              _this.commonFn.ajax({
+                url: h5App.activeAPI.liji_buy_post,
+                data: _data,
+                success: function(data) {
+                    if (data.code == 1001) {
+                        location.href = data.url;
+                    }
+                    if (data.code != 1) {
+                        _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
+                        return;
+                    }
+                    //跳转到提交订单的页面
+                    _this.$router.push("/order/settlement/"+_this.$route.params.busId+"/0");
+                }
+            });
+            
         }
     },
     beforeCreate() {

@@ -321,31 +321,19 @@ var Rxports = {
 		if (day < 1 || day > iaMonthDays[month - 1])
 			return false
 		return true
-	},
-	/**
-	 * 验证物流
-	 */
-	validateWuliuNo: function (wuliuNo) {
+	}, validateWuliuNo: function (wuliuNo) {
 		if(!/[a-z-A-Z-0-9]{1,30}$/.test(wuliuNo)){
 			return false;
 		}
 		return true;
 	},
-	/**
-	 * 禁止页面滚动
-	 */
-	disableScroll: function () {
-		$(window).bind("touchmove", function (e) {
-			e.preventDefault();
-		});
-	},
-	/**
-	 * 允许页面滚动
-	 */
-	allowScroll: function () {
-		$(window).unbind("touchmove");
-	}, 
-	
+	//验证是否是小数
+	validateDouble(data){
+		if(data == null || data == "" || typeof(data) == "undefined"){
+			return false;
+		}
+		return true;
+	}
 };
 
 Vue.prototype.commonFn = Rxports;

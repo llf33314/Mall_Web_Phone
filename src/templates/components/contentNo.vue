@@ -5,7 +5,7 @@
         <div class="shop-no-icon">
           <i class="iconfont icon-order"></i>
         </div>
-        <p class="fs52">{{errorMsg}}</p>
+        <p class="fs52">{{msg}}</p>
         <a class="fs36" @click="lockMall"> 可以去逛逛哦~</a>
       </div>
       <div class="no-news" v-if="statu == 2">
@@ -31,7 +31,9 @@ export default {
     return { msg: "您还没有相关的订单" };
   },
   mounted() {
-    // if(this.)
+    if (this.errorMsg != null) {
+      this.msg = this.errorMsg;
+    }
   },
   methods: {
     //逛商城

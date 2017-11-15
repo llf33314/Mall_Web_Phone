@@ -39,6 +39,8 @@ const Wholesale_Apply = resolve => require(['pages/wholesale/apply'], resolve);
 const my_center = resolve => require(['pages/my/myApp'], resolve);
 //my_center =>我的
 /***************      订单相关页面     ******************/
+const subtmit_order_list = resolve => require(['pages/order/settlement'], resolve);
+//subtmit_order_list =>提交订单页面
 const my_order_list = resolve => require(['pages/order/index'], resolve);
 //my_order_list =>订单列表
 const my_order_detail = resolve => require(['pages/order/order'], resolve);
@@ -169,6 +171,13 @@ export default new Router({
       component: Sale_index,
       meta: {
         title: '超级营销员首页'
+      }
+    }, {
+      path: '/order/settlement/:busId/:from',
+      name: 'subtmit_order_list',
+      component: subtmit_order_list,
+      meta: {
+        title: '提交订单'
       }
     }, {
       path: '/order/list/:busId/:type',
