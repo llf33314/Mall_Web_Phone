@@ -1,48 +1,82 @@
 <template>
-    <div id='app' class="shop-wrapper consult-wrapper">
-        <div class="consult-main">
+    <div id='app' class="shop-wrapper consult-wrapper" >
+        <div class="consult-main" v-if="returnArr != null && returnArr.length > 0">
             <!--buy买家
                 system系统
                 sell卖家-->
-            <div class="consult-item buy">
+            <div class="consult-item buy" v-for="refund in returnArr" 
+              :class="[{'buy':refund.operator==0},{'sell':refund.operator==1},{'system':refund.operator==2}]">
                 <div class="consult-time fs32">
-                    2017-02-27 15:22
+                   {{refund.createTime | formatNotM}}
                 </div>
                 <div class="consult-content">
                     <div class="consult-title fs56">
-                        卖家发起了退货并退款申请
+                        {{refund.statusContent }}
                     </div>
-                    <div>
+                    <!-- getData 0不需要 1退货申请 2卖家退货地址 3买家回寄的物流信息 -->
+                    <!-- 系统消息 等待卖家处理 -->
+                  <div v-if="refund.getData == 0 && refund.remark != null">
                         <div class="consult-txt">
-                            <p class="fs46">退货地址：广东省惠州市惠城区东平桥东街道赛格大厦 10楼1004室,13288888888</p>
-                            <p class="fs46" 退款说明：请将配件全数寄回并保证</p>
-                            <p class="fs46">商家电话：13288888888</p>
+                            <p class="fs46" v-html="refund.remark"></p>
                         </div>
-                        <div class="consult-txt2">
-                            <p class="fs46">退款金额:7,199.00元</p>
-                            <p class="fs46">• 退回微信 <span>7,199.00元</span></p>
+                    </div>
+                    <!-- 退货申请，取退货数据  -->
+                    <div v-if="refund.getData == 1">
+                        <div class="consult-txt">
+                            <p class="fs46" v-if="refund.refundType != null">退款类型：{{refund.refundType}}</p>
+                            <p class="fs46">货物状态：请将配件全数寄回并保证</p>
+                            <p class="fs46" v-if="refund.retReason != null">退款原因：{{refund.retReason}}</p>
+                            <p class="fs46" v-if="refund.retMoney != null">退款金额：{{refund.retMoney|moneySplit1}}.{{refund.retMoney|moneySplit2}}元</p>
+                            <p class="fs46" v-if="refund.retRemark != null">退款说明：{{refund.retRemark}}</p>
                         </div>
-                        <div class="consult-footer">
-                            <div class="consult-botton fs46">修改退款申请</div>
+                    </div>
+                     <!-- 卖家已同意，取卖家退货地址  -->
+                    <div v-if="refund.getData == 2">
+                        <div class="consult-txt">
+                            <p class="fs46" v-if="refund.stoAddress != null">退货地址：{{refund.stoAddress}}</p>
+                            <p class="fs46" v-if="refund.returnExplain != null">退货说明：{{refund.returnExplain}}</p>
+                            <p class="fs46" v-if="refund.stoPhone != null">商家电话：{{refund.stoPhone}}</p>
                         </div>
+                    </div>
+                     <!-- 买家回寄的物流信息 取买家物流信息  -->
+                    <div v-if="refund.getData == 3">
+                        <div class="consult-txt">
+                            <p class="fs46" v-if="refund.wlCompany != null">物流公司：{{refund.wlCompany}}</p>
+                            <p class="fs46" v-if="refund.wlNo != null">退货单号：{{refund.wlNo}}</p>
+                            <p class="fs46" v-if="refund.returnAddress != null">退货地址：{{refund.returnAddress}}</p>
+                        </div>
+                    </div>
+                    <!-- 退款成功 -- >
+                    <!-- <div class="consult-txt2">
+                        <p class="fs46">退款金额:{{refund.retMoney|moneySplit1}}.{{refund.retMoney|moneySplit2}}元</p>
+                        <p class="fs46">• 退回微信 <span>7,199.00元</span></p>
+                    </div> -->
+                    <!-- 显示按钮 -->
+                    <div class="consult-footer">
+                        <div class="consult-botton fs46">修改退款申请</div>
                     </div>
                 </div>
             </div>
         </div>
+        <content-no :statu="status" :errorMsg="errorMsg" v-if="(returnArr == null || returnArr.length == 0 && status != -1)"></content-no>
     </div>
 </template>
  <script>
 import defaultImg from "components/defaultImg";
+import contentNo from "components/contentNo";
 import filte from "../../../lib/filters";
 export default {
   components: {
-    defaultImg
+    defaultImg,
+    contentNo
   },
   data() {
     return {
       busId: this.$route.params.busId, //商家di
       returnId: this.$route.params.returnId, //退款id
-      returnData: {} //初始化数据
+      returnArr: [], //初始化数据
+      status: -1,
+      errorMsg:"暂无协商详情"
     };
   },
   mounted() {
@@ -74,8 +108,21 @@ export default {
             _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
             return;
           }
-          _this.returnData = data.data; //返回数据
+          if (data.data == null || data.data.length == 0) {
+            _this.status = 1;
+            return;
+          }
+          _this.returnArr = data.data; //返回数据
           console.log(_this.returnData);
+          _this.returnArr.forEach((item, index) => {
+            if (item.retHandlingWay == 2) {
+              //我要退款退货
+              item.refundType = "退货并退款";
+            } else {
+              //我要退款
+              item.refundType = "仅退款";
+            }
+          });
         }
       });
     }

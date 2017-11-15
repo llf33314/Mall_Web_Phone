@@ -326,6 +326,13 @@ var Rxports = {
 			return false;
 		}
 		return true;
+	},
+	//验证是否是小数
+	validateDouble(data){
+		if(data == null || data == "" || typeof(data) == "undefined"){
+			return false;
+		}
+		return true;
 	}
 };
 

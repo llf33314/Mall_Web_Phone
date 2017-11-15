@@ -93,6 +93,8 @@
     phoneProduct_getProductParams_post: '/phoneProduct/L6tgXlBFeK/getProductParams',
     /*加入购物车接口*/
     phoneShopCart_addShopCart_post: '/phoneShopCart/L6tgXlBFeK/addShopCart',
+     /*加入购物车接口*/
+     liji_buy_post: '/phoneOrder/L6tgXlBFeK/buyNow',
     /***********************   以下接口都是 购物车页面相关接口 ***********************/
     /*查询购物车接口 */
     phoneShopCart_getShopCartx_post: '/phoneShopCart/L6tgXlBFeK/getShopCart',
@@ -104,6 +106,8 @@
     /*获取商城首页数据 */
     mall_index_post: '/phonePage/L6tgXlBFeK/getHomePageId',
     /***********************   以下接口都是 订单相关的接口 ***********************/
+    /*获取提交订单的数据 */
+    to_order_post: '/phoneOrder/L6tgXlBFeK/toOrder',
     /*获取我的订单数据 */
     order_list_post: '/phoneOrder/L6tgXlBFeK/orderList',
     /*确认收货接口 */

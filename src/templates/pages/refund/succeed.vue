@@ -40,7 +40,7 @@
             </section>
 
             <section class="shop-footer-fixed comment-footer1">
-                <div class="shop-max-button fs52 shop-bg">
+                <div class="shop-max-button fs52 shop-bg" @click="finish">
                     完成
                 </div>
             </section>
@@ -108,6 +108,10 @@ export default {
     returnXieDetail() {
       //跳转至协商详情页面
       this.$router.push("/return/consult/" + this.busId + "/" + this.returnId);
+    },
+    finish() {
+      //点击完成返回到上一级的页面
+      history.go(-1);
     }
   }
 };

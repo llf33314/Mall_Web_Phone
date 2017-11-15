@@ -334,6 +334,9 @@ export default {
             }
         },
         goods_jump(id,activity){
+            if(activity == null || activity == '' || typeof(activity) == "undefined"){
+                activity = 0;
+            }
             let shopId =  this.$store.state.shopId || this.$route.params.shopId;
             let busId =  this.$store.state.busId || this.$route.params.busId;
             let type = this.$store.state.type || this.$route.params.type;
