@@ -111,24 +111,28 @@
                         </div>
                         <div class="orderTotal-list border" v-if="bus.isCanUseFenbiDiscount == 1">
                             <p class="fs40"> 粉币抵扣
-                              <em class="shop-font" v-if="bus.fenbiMoney > 0 && bus.fenbiNum > 0">
+                              <em class="shop-font" v-if="bus.fenbiMoney > 0 && bus.fenbiNum > 0 && bus.fenbiDisabled == 0">
                                 有{{bus.fenbiNum}}粉币，可抵扣¥{{bus.fenbiMoney}}
                               </em>
+                              <em class="shop-font" v-else>不可用</em>
                             </p>
                             <p class="fs40">
                                 <input class="switch small-switch shop-switch" type="checkbox" value="1"
+                                  :disabled = "bus.fenbiDisabled == 1 ? true : false"
                                   v-model="bus.isSelectFenbi"
                                   @change="caculationOrder(3)"/>
                             </p>
                         </div>
                         <div class="orderTotal-list border" v-if="bus.isCanUseJifenDiscount == 1">
                             <p class="fs40">积分抵扣
-                              <em class="shop-font" v-if="bus.jifenMoney > 0 && bus.jifenNum > 0">
+                              <em class="shop-font" v-if="bus.jifenMoney > 0 && bus.jifenNum > 0 && bus.jifenDisabled == 0">
                                 有{{bus.jifenNum}}积分，可抵扣¥{{bus.jifenMoney}}
                               </em>
+                              <em class="shop-font" v-else>不可用</em>
                             </p>
                             <p class="fs40">
                                 <input class="switch small-switch shop-switch" type="checkbox" value="1"
+                                 :disabled = "bus.jifenDisabled == 1 ? true : false"
                                   v-model="bus.isSelectJifen" 
                                   @change="caculationOrder(4)"/>
                             </p>
@@ -158,7 +162,7 @@
                         <span>会员折扣</span>
                         <span class="shop-font">-￥{{bus.memberYouhuiMoney  > 0 ? bus.memberYouhuiMoney : 0 }}</span>
                     </p>
-                    <p class="fs40" v-if="bus.isCanUseCouponDiscount == 1 ">
+                    <p class="fs40" v-if="bus.isCanUseYhqDiscount == 1 ">
                         <span>优惠券抵扣</span>
                         <span class="shop-font">-￥{{bus.couponYouhuiMoney > 0 ? bus.couponYouhuiMoney : 0}}</span>
                     </p>
@@ -308,7 +312,7 @@ export default {
           if (data.code == 1001) {
             location.href = data.url;
           }
-          if (data.code != 1) {
+          if (data.code != 0) {
             _this.bondStatu = 1;
             _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
             return;

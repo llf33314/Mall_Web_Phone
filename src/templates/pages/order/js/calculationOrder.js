@@ -19,6 +19,8 @@ Vue.mixin({
 						product.totalNewPrice = product.totalPrice;
 					});
 				});
+				bus.jifenMoneyOld = bus.jifenMoneyOld || bus.jifenMoney;
+				bus.fenbiMoneyOld = bus.fenbiMoneyOld || bus.fenbiMoney;
 				//联盟卡计算
 				bus = _this.caculationUnion(bus);
 				if (_commonFm.validateDouble(bus.unionYouhuiMoney)) {
@@ -128,7 +130,7 @@ Vue.mixin({
 			if (memberDiscount == null || memberDiscount == "" || memberDiscount < 0 || memberDiscount >= 1) {
 				return bus;
 			}
-			console.log("bus.isSelectDiscount", bus.isSelectDiscount)
+			// console.log("bus.isSelectDiscount", bus.isSelectDiscount)
 			let busCanUseDiscountProductPrice = 0;//定义能使用会员折扣的商品总价
 			//循环店铺  统计能使用会员折扣的金额
 			bus.shopResultList.forEach((shop, index) => {
@@ -173,10 +175,7 @@ Vue.mixin({
 		caculationFenbiDiscount(bus) {
 			let _this = this;
 			let _commonFm = _this.commonFn;
-			if (!bus.isSelectFenbi) {
-				bus.fenbiYouhuiMoney = 0;
-				return bus;
-			}
+
 			let busCanUseFenbiProductPrice = 0;//保存能使用粉币的商品总额
 			let busCanUseFenbiProductNum = 0;//保存能使用粉币的商品数量
 			//循环店铺
@@ -190,14 +189,15 @@ Vue.mixin({
 					}
 				});
 			});
-			// console.log(busCanUseFenbiProductPrice, "----", busCanUseFenbiProductNum)
-			if (busCanUseFenbiProductPrice == 0 || busCanUseFenbiProductNum == 0) {//能使用粉币的商品总价和商品总数 = 0
+			//重新获取粉币能抵扣的金额和数量
+			_this.getJifenFenbiRule(busCanUseFenbiProductNum, busCanUseFenbiProductPrice, 2, bus, bus.isSelectFenbi);
+			console.log(busCanUseFenbiProductPrice, "----", busCanUseFenbiProductNum)
+			if (busCanUseFenbiProductPrice == 0 || busCanUseFenbiProductNum == 0 || !bus.isSelectFenbi) {//能使用粉币的商品总价和商品总数 = 0
 				bus.fenbiYouhuiMoney = 0;
 				bus.isSelectFenbi = false;//关闭粉币选择
 				return bus;
 			}
-			//重新获取粉币能抵扣的金额和数量
-			_this.getJifenFenbiRule(busCanUseFenbiProductNum, busCanUseFenbiProductPrice, 2, bus);
+
 			if (bus.fenbiNum == 0 || bus.fenbiMoney == 0) {
 				bus.fenbiYouhuiMoney = 0;
 				bus.isSelectFenbi = false;//关闭粉币选择
@@ -210,17 +210,19 @@ Vue.mixin({
 			bus.shopResultList.forEach((shop, index) => {
 				//循环商品
 				shop.productResultList.forEach((product, index) => {
-					if (product.isCanUseFenbi == 1) {
+					let isEndCanUseFenbi = useFenbiTotalNum == busCanUseFenbiProductNum && useFenbiTotalPrice == busCanUseFenbiProductPrice;
+					if (product.isCanUseFenbi == 1 && !isEndCanUseFenbi) {
 						let productTotalPrice = product.totalNewPrice;//商品优惠前的总价
-						let productYouHuiHouTotalPrice;//商品优惠后的总价
+						let productYouHuiHouTotalPrice = 0;//商品优惠后的总价
 						let fenbiYouhuiPrice = 0;//粉币优惠的金额
 						if (useFenbiTotalNum + 1 == busCanUseFenbiProductNum) {//最后一个能使用粉币的商品
 							fenbiYouhuiPrice = _commonFm.floatSub(bus.fenbiMoney, useFenbiTotalPrice);//单个商品使用粉币优惠的金额 =  粉币优惠的总额 - 已使用粉币的优惠金额
 						} else {
 							//单个商品使用粉币优惠的金额 = （（商品的总价 / 能使用粉币的商品总价） * 粉币总共能优惠的金额）
-							fenbiYouhuiPrice = _commonFm.floatMul(CommonUtil.div(product.totalNewPrice, busCanUseFenbiProductPrice, 10), bus.fenbiMoney);
+							fenbiYouhuiPrice = _commonFm.floatMul(_commonFm.floatDiv(product.totalNewPrice, busCanUseFenbiProductPrice, 10), bus.fenbiMoney);
 						}
 						productYouHuiHouTotalPrice = _commonFm.floatSub(productTotalPrice, fenbiYouhuiPrice);
+						console.log("使用粉币后的商品金额,", productYouHuiHouTotalPrice)
 						product.totalNewPrice = productYouHuiHouTotalPrice;
 
 						useFenbiTotalPrice = _commonFm.floatAdd(useFenbiTotalPrice, fenbiYouhuiPrice);
@@ -240,10 +242,7 @@ Vue.mixin({
 		caculationJifenDiscount(bus) {
 			let _this = this;
 			let _commonFm = _this.commonFn;
-			if (!bus.isSelectJifen) {
-				bus.jifenYouhuiMoney = 0;
-				return bus;
-			}
+
 			let busCanUseJifenProductPrice = 0;//保存能使用粉币的商品总额
 			let busCanUseJifenProductNum = 0;//保存能使用粉币的商品数量
 			//循环店铺
@@ -259,12 +258,13 @@ Vue.mixin({
 					}
 				});
 			});
-			if (busCanUseJifenProductNum == 0 || busCanUseJifenProductPrice == 0) {
+			_this.getJifenFenbiRule(busCanUseJifenProductNum, busCanUseJifenProductPrice, 1, bus, bus.isSelectJifen);
+			console.log("能使用积分的商品总额", busCanUseJifenProductPrice);
+			if (busCanUseJifenProductNum == 0 || busCanUseJifenProductPrice == 0 || !bus.isSelectJifen) {
 				bus.jifenYouhuiMoney = 0;
 				bus.isSelectJifen = false;//关闭积分选择
 				return bus;
 			}
-			_this.getJifenFenbiRule(busCanUseJifenProductNum, busCanUseJifenProductPrice, 1, bus);
 			if (bus.jifenNum == 0 || bus.jifenMoney == 0) {
 				bus.jifenYouhuiMoney = 0;
 				bus.isSelectJifen = false;//关闭积分选择
@@ -289,10 +289,10 @@ Vue.mixin({
 							jifenYouhuiPrice = _commonFm.floatSub(bus.jifenMoney, useJifenTotalPrice);
 						} else {
 							//单个商品使用积分优惠的金额 = （（商品的总价 / 能使用积分的商品总价） * 积分总共能优惠的金额）
-							jifenYouhuiPrice = _commonFm.floatMul(CommonUtil.div(product.getProductNewTotalPrice(), busCanUseJifenProductPrice, 10), bus.jifenMoney);
+							jifenYouhuiPrice = _commonFm.floatMul(_commonFm.floatDiv(product.totalNewPrice, busCanUseJifenProductPrice, 10), bus.jifenMoney);
 						}
 						productYouHuiHouTotalPrice = _commonFm.floatSub(productTotalPrice, jifenYouhuiPrice);
-						console.log("粉币优惠的价格：", productYouHuiHouTotalPrice);
+						console.log("积分优惠的价格：", productYouHuiHouTotalPrice);
 						product.totalNewPrice = productYouHuiHouTotalPrice;
 
 						useJifenTotalPrice = _commonFm.floatAdd(useJifenTotalPrice, jifenYouhuiPrice);//累积积分优惠的价格
@@ -312,6 +312,8 @@ Vue.mixin({
 				let shop = bus.shopResultList[i];
 				let coupons = shop.selectCoupon;//选中的优惠券对象
 				if (coupons == null || coupons == "") {//没有选中优惠券直接跳出循环
+					shop.selectCoupon = null;
+					bus.couponYouhuiMoney = 0;
 					continue;
 				}
 				let canUseCouponProductPrice = 0;//能使用优惠券的商品金额
@@ -323,8 +325,9 @@ Vue.mixin({
 					}
 				});
 				if (canUseCouponProductPrice == 0 || canUseCouponProductNum == 0) {//能使用优惠券的商品总价和商品总数 = 0  则跳出当前循环
-					shop.selectCoupon = null;
 					_this.$parent.$refs.bubble.show_tips("您不能使用优惠券的商品");
+					shop.selectCoupon = null;
+					bus.couponYouhuiMoney = 0;
 					continue;
 				}
 				let cardFrom = coupons.couponsFrom;//优惠券来源（ 1 微信优惠券  2多粉优惠券 ）
@@ -335,11 +338,12 @@ Vue.mixin({
 				if (cardType == 0 && bus.isSelectDiscount == 1) {
 					_this.$parent.$refs.bubble.show_tips("会员折扣和折扣券不能同时使用");
 					shop.selectCoupon = null;
+					bus.couponYouhuiMoney = 0;
 					continue;
 				}
+				console.log("coupons", coupons)
 				//计算店铺下使用商品优惠券的 优惠总额
 				if (cardType == 0 && bus.isSelectDiscount != 1) {
-					
 					//计算店铺下 折扣券 优惠的总额
 					let youhuiHouPrice = _commonFm.floatMul(canUseCouponProductPrice, coupons.discount);//折扣券优惠后的 商品金额
 					shopYouhuiHouTotalPrice = _commonFm.floatSub(canUseCouponProductPrice, youhuiHouPrice);//店铺下商品使用优惠券 的优惠总额 = 能使用折扣券的商品总额 - 折扣优惠后的商品金额
@@ -348,17 +352,17 @@ Vue.mixin({
 					shopYouhuiHouTotalPrice = coupons.reduceCost;//店铺下商品使用优惠券 的优惠总额  = 减免券优惠的总额
 					//判断是否多粉优惠券 且可以叠加
 					if (cardFrom == 2 && addUse == 1 && couponNum > 1) {
-						if (coupons.getCashLeastCost() > 0) {//使用优惠券的条件
+						if (coupons.cashLeastCost > 0) {//使用优惠券的条件
 							couponNum = _commonFm.floatDiv(canUseCouponProductPrice, coupons.cashLeastCost); // 优惠券的叠加数量 =  店铺下 能使用优惠券的商品总额 /  使用优惠券的条件
 							couponNum = parseInt(couponNum);
 						} else {
 							//优惠的金额  乘以 叠加数量 （优惠的总额） 大于 能使用优惠券的商品数量
-							if (coupons.reduceCost() * couponNum > canUseCouponProductPrice) {
-								let aa  = _commonFm.floatDiv(canUseCouponProductPrice, coupons.reduceCost); //优惠券叠加的数量 =  店铺下能使用优惠券的商品总额 / 减免券优惠的金额
+							if (coupons.reduceCost * couponNum > canUseCouponProductPrice) {
+								let aa = _commonFm.floatDiv(canUseCouponProductPrice, coupons.reduceCost); //优惠券叠加的数量 =  店铺下能使用优惠券的商品总额 / 减免券优惠的金额
 								couponNum = parseInt(couponNum);
 							}
 						}
-						shopYouhuiHouTotalPrice = _commonFm.floatMul(coupons.getReduceCost(), couponNum);
+						shopYouhuiHouTotalPrice = _commonFm.floatMul(coupons.reduceCost, couponNum);
 					}
 					if (coupons.cashLeastCost > canUseCouponProductPrice) {//满减条件  大于能 使用优惠券的商品金额
 						continue;
@@ -368,10 +372,54 @@ Vue.mixin({
 					}
 				}
 				if (shopYouhuiHouTotalPrice == 0) {//优惠的金额 = 0 没必要计算
+					shop.selectCoupon = null;
+					bus.couponYouhuiMoney = 0;
 					continue;
 				}
-				console.log("优惠券总共能优惠",shopYouhuiHouTotalPrice,"优惠券价格：",canUseCouponProductPrice);
-				
+
+				let useCouponTotalPrice = 0;//已使用优惠券的商品金额
+				let useCouponTotalNum = 0;//已使用优惠券的商品数量
+				let shopProductNewTotal = 0;//保存订单优惠后的商品总额
+				let totalYouhuiMoney = 0;//保存使用优惠券优惠的金额
+				for (let j = 0; j < shop.productResultList.length; j++) {
+					let product = shop.productResultList[j];
+					let isEndCanUseYhq = useCouponTotalNum == canUseCouponProductNum && useCouponTotalPrice == shopYouhuiHouTotalPrice;
+					if (product.isCanUseYhq == 1 && !isEndCanUseYhq) {
+						let productTotalPrice = product.totalNewPrice;//商品优惠前的总价
+						let productYouHuiHouTotalPrice = productTotalPrice;//商品优惠后的总价
+						let couponYouhuiPrice = 0;//优惠券优惠的金额
+						//能使用优惠券的商品
+						if (cardType == 0 && bus.isSelectDiscount != 1) {
+							/* 折扣券的计算 */
+							//计算单个商品优惠的价格（ 折扣券）
+							productYouHuiHouTotalPrice = _commonFm.floatMul(productTotalPrice, coupons.discount);// 折扣券优惠后的 商品金额
+							couponYouhuiPrice = _commonFm.floatSub(productTotalPrice, productYouHuiHouTotalPrice);//优惠的金额
+						} else if (cardType == 1) {
+							/* 减免券的计算 */
+							//单个商品的总价/ 店铺下能使用优惠券的商品总价  * 能够优惠的价格 （减免券）
+							couponYouhuiPrice = _commonFm.floatMul(_commonFm.floatDiv(productTotalPrice, canUseCouponProductPrice, 10), shopYouhuiHouTotalPrice);
+							productYouHuiHouTotalPrice = _commonFm.floatSub(productTotalPrice, couponYouhuiPrice);
+						}
+						if (productYouHuiHouTotalPrice < 0) {//商品优惠后的商品总额 小于 0
+							productYouHuiHouTotalPrice = 0;//优惠后的价格  = 0
+							couponYouhuiPrice = productTotalPrice;//商品优惠的金额  = 优惠前的总额
+						}
+						if (useCouponTotalNum + 1 == canUseCouponProductNum) {//最后一个商品
+							couponYouhuiPrice = _commonFm.floatSub(shopYouhuiHouTotalPrice, useCouponTotalPrice);//商品优惠的金额 =  店铺下商品使用优惠券 的优惠总额
+						}
+						if (couponYouhuiPrice + useCouponTotalPrice > shopYouhuiHouTotalPrice) {//商品优惠的金额 + 已经优惠的商品总价 > 店铺下优惠的总额
+							couponYouhuiPrice = _commonFm.floatSub(shopYouhuiHouTotalPrice, useCouponTotalPrice);//商品优惠的金额 = 店铺下优惠的总额 - 已经优惠的总价
+							productYouHuiHouTotalPrice = _commonFm.floatSub(productTotalPrice, couponYouhuiPrice);//商品优惠后的总价 = 商品优惠前的总价 - 商品优惠的金额
+						}
+						useCouponTotalPrice += couponYouhuiPrice;
+						useCouponTotalNum++;
+						product.totalNewPrice = productYouHuiHouTotalPrice;
+
+						totalYouhuiMoney = _commonFm.floatAdd(totalYouhuiMoney, couponYouhuiPrice);
+					}
+				}
+				console.log("优惠券总共能优惠", totalYouhuiMoney, "优惠后价格：", shopProductNewTotal);
+				bus.couponYouhuiMoney = totalYouhuiMoney;
 			}
 			return bus;
 		},
@@ -381,7 +429,7 @@ Vue.mixin({
 		 * @param {能使用抵扣的商品金额} canUseDiscountMoney 
 		 * @param {类型 1 积分 2 粉币} type 
 		 */
-		getJifenFenbiRule(canUseDiscountNum, canUseDiscountMoney, type, bus) {
+		getJifenFenbiRule(canUseDiscountNum, canUseDiscountMoney, type, bus, isSelect) {
 			let _this = this;
 			let _commonFm = _this.commonFn;
 			if (bus.jifenFenbiRule == null || bus.jifenFenbiRule == "") {
@@ -389,11 +437,25 @@ Vue.mixin({
 			}
 			let jifenFenbiRule = bus.jifenFenbiRule;
 			if (type == 1) {
-				//积分
-				if (canUseDiscountMoney < bus.jifenMoney && bus.jifenMoney > 0) {//起兑的商品金额小于
-					bus.jifenNum = _commonFm.floatMul(jifenFenbiRule.jifenRatio, canUseDiscountMoney);
-					bus.jifenMoney = canUseDiscountMoney;
+				console.log(bus.jifenMoneyOld)
+				if (jifenFenbiRule.jifenStartMoney > 0 && jifenFenbiRule.jifenStartMoney < canUseDiscountMoney && canUseDiscountMoney > 0) {
+					//积分
+					if (canUseDiscountMoney < bus.jifenMoneyOld && bus.jifenMoneyOld > 0) {//起兑的商品金额小于
+						bus.jifenNum = _commonFm.floatMul(jifenFenbiRule.jifenRatio, canUseDiscountMoney);
+						bus.jifenMoney = canUseDiscountMoney;
+					}
+					bus.jifenDisabled = 0;//启用积分抵扣选择
+				} else {
+					bus.jifenDisabled = 1;//禁用积分抵扣选择
+					bus.isSelectJifen = false;//关闭积分选择
+					// bus.jifenNum = 0;
+					// bus.jifenMoney = 0;
+					if (isSelect) {
+						//选中抵扣才能提醒
+						_this.$parent.$refs.bubble.show_tips("能使用积分抵扣的商品金额为" + canUseDiscountMoney + "，没达到起兑金额");
+					}
 				}
+
 			} else if (type == 2) {
 				//粉币
 				if (jifenFenbiRule.fenbiStartMoney > 0 && jifenFenbiRule.fenbiStartMoney < canUseDiscountMoney && canUseDiscountMoney > 0) {
@@ -410,6 +472,16 @@ Vue.mixin({
 						bus.fenbiNum = _commonFm.floatMul(jifenFenbiRule.fenbiRatio, fenbiMoney);
 						//fenbiMoney * jifenFenbiRule.fenbiStartMoney
 						bus.fenbiMoney = _commonFm.floatMul(fenbiMoney, jifenFenbiRule.fenbiStartMoney);
+					}
+					bus.fenbiDisabled = 0;//启用粉币抵扣选择
+				} else {
+					bus.fenbiDisabled = 1;//禁用粉币抵扣选择
+					bus.isSelectFenbi = false;//关闭粉币选择
+					// bus.fenbiNum = 0;
+					// bus.fenbiMoney = 0;
+					if (isSelect) {
+						//选中抵扣才能提醒
+						_this.$parent.$refs.bubble.show_tips("能使用粉币抵扣的商品金额为" + canUseDiscountMoney + "，没达到起兑金额");
 					}
 				}
 			}

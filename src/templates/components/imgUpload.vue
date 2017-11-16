@@ -60,18 +60,17 @@ export default {
         let data = response.data;
         if (data.code == 1001) {
           location.href = data.url;
+          return;
         }
-        if (data.code != 1) {
+        if (data.code != 0) {
           _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
           return;
         }
-        if (data.code == 1) {
-          let _imageUrl = data.data;
+        let _imageUrl = data.data;
 
-          _this.imgData = _imageUrl.split(",");
+        _this.imgData = _imageUrl.split(",");
 
-          _this.$emit("returnUrl", _this.imgData);
-        }
+        _this.$emit("returnUrl", _this.imgData);
       });
     }
   }

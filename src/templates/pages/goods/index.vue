@@ -652,7 +652,7 @@ export default {
                 },
                 'success':function(data){
                     console.log(data);
-                    if(data.code == -1){
+                    if(data.code == 1){
                         _this.$parent.$refs.bubble.show_tips(data.msg);//bubble_hint*/
                         return
                     }
@@ -757,7 +757,7 @@ export default {
                 'data':data,
                 'success':function(data){
                     //console.log(data,'批发数据');
-                    if(data.code == -1){
+                    if(data.code == 1){
                         _this.$parent.$refs.bubble.show_tips(data.msg);
                     }
                     _this.w_specificaList = data.data.specificaList;
@@ -1266,10 +1266,11 @@ export default {
                     if (data.code == 1001) {
                         location.href = data.url;
                     }
-                    if (data.code != 1) {
+                    if (data.code != 0) {
                         _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
                         return;
                     }
+                    _this.commonFn.allowScroll();
                     //跳转到提交订单的页面
                     _this.$router.push("/order/settlement/"+_this.$route.params.busId+"/0");
                 }
@@ -1279,6 +1280,7 @@ export default {
     },
     beforeCreate() {
         this.$store.commit('show_footer',false);
+        
     },
     beforeDestroy() {
         this.$store.commit('show_footer',true);
