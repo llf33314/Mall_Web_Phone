@@ -305,6 +305,74 @@ Vue.mixin({
 		},
 		//计算优惠券抵扣
 		caculationYhqDiscount(bus) {
+			let _this = this;
+			let _commonFm = _this.commonFn;
+			//循环店铺
+			for (let i = 0; i < bus.shopResultList.length; i++) {
+				let shop = bus.shopResultList[i];
+				let coupons = shop.selectCoupon;//选中的优惠券对象
+				if (coupons == null || coupons == "") {//没有选中优惠券直接跳出循环
+					continue;
+				}
+				let canUseCouponProductPrice = 0;//能使用优惠券的商品金额
+				let canUseCouponProductNum = 0;//能使用优惠券的商品数量
+				shop.productResultList.forEach((product, index) => {//循环商品集合
+					if (product.isCanUseYhq == 1 && product.totalNewPrice > 0) {
+						canUseCouponProductPrice = _commonFm.floatAdd(canUseCouponProductPrice, product.totalNewPrice);
+						canUseCouponProductNum++;
+					}
+				});
+				if (canUseCouponProductPrice == 0 || canUseCouponProductNum == 0) {//能使用优惠券的商品总价和商品总数 = 0  则跳出当前循环
+					shop.selectCoupon = null;
+					_this.$parent.$refs.bubble.show_tips("您不能使用优惠券的商品");
+					continue;
+				}
+				let cardFrom = coupons.couponsFrom;//优惠券来源（ 1 微信优惠券  2多粉优惠券 ）
+				let cardType = coupons.cardType;//卡券类型 0折扣券 1减免券
+				let addUse = coupons.addUser;//是否允许叠加 0不允许 1已允许 (多粉优惠券也可以)
+				let couponNum = coupons.couponNum//叠加的数量
+				let shopYouhuiHouTotalPrice = 0;//保存 店铺下 商品优惠后的总额
+				if (cardType == 0 && bus.isSelectDiscount == 1) {
+					_this.$parent.$refs.bubble.show_tips("会员折扣和折扣券不能同时使用");
+					shop.selectCoupon = null;
+					continue;
+				}
+				//计算店铺下使用商品优惠券的 优惠总额
+				if (cardType == 0 && bus.isSelectDiscount != 1) {
+					
+					//计算店铺下 折扣券 优惠的总额
+					let youhuiHouPrice = _commonFm.floatMul(canUseCouponProductPrice, coupons.discount);//折扣券优惠后的 商品金额
+					shopYouhuiHouTotalPrice = _commonFm.floatSub(canUseCouponProductPrice, youhuiHouPrice);//店铺下商品使用优惠券 的优惠总额 = 能使用折扣券的商品总额 - 折扣优惠后的商品金额
+				} else if (cardType == 1) {
+					//计算店铺下 减免券 优惠的总额
+					shopYouhuiHouTotalPrice = coupons.reduceCost;//店铺下商品使用优惠券 的优惠总额  = 减免券优惠的总额
+					//判断是否多粉优惠券 且可以叠加
+					if (cardFrom == 2 && addUse == 1 && couponNum > 1) {
+						if (coupons.getCashLeastCost() > 0) {//使用优惠券的条件
+							couponNum = _commonFm.floatDiv(canUseCouponProductPrice, coupons.cashLeastCost); // 优惠券的叠加数量 =  店铺下 能使用优惠券的商品总额 /  使用优惠券的条件
+							couponNum = parseInt(couponNum);
+						} else {
+							//优惠的金额  乘以 叠加数量 （优惠的总额） 大于 能使用优惠券的商品数量
+							if (coupons.reduceCost() * couponNum > canUseCouponProductPrice) {
+								let aa  = _commonFm.floatDiv(canUseCouponProductPrice, coupons.reduceCost); //优惠券叠加的数量 =  店铺下能使用优惠券的商品总额 / 减免券优惠的金额
+								couponNum = parseInt(couponNum);
+							}
+						}
+						shopYouhuiHouTotalPrice = _commonFm.floatMul(coupons.getReduceCost(), couponNum);
+					}
+					if (coupons.cashLeastCost > canUseCouponProductPrice) {//满减条件  大于能 使用优惠券的商品金额
+						continue;
+					}
+					if (shopYouhuiHouTotalPrice > canUseCouponProductPrice) {//优惠的总额  大于 能使用优惠券的商品金额，则 优惠券的金额 = 能使用优惠券的商品金额
+						shopYouhuiHouTotalPrice = canUseCouponProductPrice;
+					}
+				}
+				if (shopYouhuiHouTotalPrice == 0) {//优惠的金额 = 0 没必要计算
+					continue;
+				}
+				console.log("优惠券总共能优惠",shopYouhuiHouTotalPrice,"优惠券价格：",canUseCouponProductPrice);
+				
+			}
 			return bus;
 		},
 		/**

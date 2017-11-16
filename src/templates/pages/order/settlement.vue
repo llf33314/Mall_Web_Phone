@@ -62,10 +62,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="border orderTotal-list-box" v-if="shop.isCanUseYhqDiscount == 1">
-                      <div class="orderTotal-list border">
+                    <div class="border orderTotal-list-box" v-if="shop.isCanUseYhqDiscount == 1 && shop.couponList != null">
+                      <div class="orderTotal-list border" @click="showDialogs(shop.couponList,3,shop.shopId,bus.isSelectDiscount)">
                           <p class="fs40"> 优惠券</p>
                           <p class="fs40">
+                              <span v-if="shop.selectCoupon != null">{{shop.selectCoupon.couponsName || ""}}</span>
                               <i class="iconfont icon-jiantou-copy shopGray"></i>
                           </p>
                       </div>
@@ -91,8 +92,8 @@
                         </p>
                     </div>
                     <div class="orderTotal-ul"
-                    v-if="bus.isCanUseUnionDiscount == 1 || bus.isCanUseMemberDiscount == 1 || bus.isCanUseFenbiDiscount == 1 || bus.isCanUseJifenDiscount == 1">
-                       <div class="orderTotal-list border" v-if="bus.isCanUseUnionDiscount == 1"  >
+                    v-if="(bus.isCanUseUnionDiscount == 1 && bus.unionStatus == 1) || bus.isCanUseMemberDiscount == 1 || bus.isCanUseFenbiDiscount == 1 || bus.isCanUseJifenDiscount == 1">
+                       <div class="orderTotal-list border" v-if="bus.isCanUseUnionDiscount == 1 && bus.unionStatus == 1"  >
                             <p class="fs40">联盟折扣</p>
                             <p class="fs40">
                                 <input class="switch small-switch shop-switch" type="checkbox" value="1"
@@ -203,11 +204,22 @@
     <section class="shop-main-no fs40 my-bond" v-if="bondStatu > 0">
         <content-no :statu='bondStatu'></content-no>
     </section>
-    <section class="shop-main-no fs40 my-bond" v-if="isShow && dialogArr != null && dialogArr.length > 0">
+    <!-- 支付方式  和 配送方式弹出框 -->
+    <section class="shop-main-no fs40 my-bond" 
+      v-if="isShow && dialogArr != null && dialogArr.length > 0 && (dialogType == 1 || dialogType == 2)">
         <pay-way-dialog :name="dialogName" :dialogList="dialogArr" :type="dialogType"  :busId="dialogBusId"
           :closeDialog.sync="isShow"
           @selectDialog="selectDialogChange"
         ></pay-way-dialog>
+    </section>
+    <!-- 优惠券弹出框 -->
+    <section class="shop-main-no fs40 my-bond" 
+      v-if="isShow && dialogArr != null && dialogArr.length > 0 && dialogType == 3">
+        <coupon-dialog :name="dialogName" :dialogList="dialogArr" :type="dialogType"  :busId="dialogBusId"
+          :isSelectDiscount = "isUseMemberDiscount"
+          :closeDialog.sync="isShow"
+          @selectDialog="selectDialogChange"
+        ></coupon-dialog>
     </section>
     <shop-dialog ref="dialog"></shop-dialog>
 </div>
@@ -222,6 +234,7 @@ import payWayDialog from "components/payWayDialog";
 import filte from "../../../lib/filters";
 import technicalSupport from "components/technicalSupport"; //技术支持
 import calculation from "./js/calculationOrder"; //技术支持
+import couponDialog from "./componet/couponDialog"; //优惠券弹出框
 
 export default {
   name: "my",
@@ -241,10 +254,11 @@ export default {
       orderData: {}, //订单对象
       imgUrl: "", //图片域名
       selectPayWay: 0, //选中的支付方式
-      dialogName: "支付方式", //标题
+      dialogName: "选择支付方式", //标题
       dialogArr: [], //弹出框集合
       dialogType: 1,
-      dialogBusId: 0 //弹出框需要的商家id
+      dialogBusId: 0, //弹出框需要的商家id
+      isUseMemberDiscount: 0 //是否选择了会员折扣
     };
   },
   components: {
@@ -252,7 +266,8 @@ export default {
     defaultImg,
     shopDialog,
     technicalSupport,
-    payWayDialog
+    payWayDialog,
+    couponDialog
   },
   mounted() {
     this.loadDatas(); //初始化协商详情数据
@@ -267,7 +282,7 @@ export default {
     this.$store.commit("show_footer", true); //显示底部导航栏
   },
   watch: {
-    "orderList"() {
+    orderList() {
       console.log(this.orderList, "_this.orderList---------");
     }
   },
@@ -325,13 +340,17 @@ export default {
       });
     },
     //显示弹出框
-    showDialogs(list, type, busId) {
+    showDialogs(list, type, busId, isSelectDiscount) {
       let titleNames = "";
       if (type == 1) {
         //选择支付方式
         titleNames = "选择支付方式";
       } else if (type == 2) {
         titleNames = "选择配送方式";
+      } else if (type == 3) {
+        titleNames = "选择优惠券";
+        this.isUseMemberDiscount = isSelectDiscount;
+        console.log("isSelectDiscount",isSelectDiscount)
       }
       this.dialogName = titleNames;
       this.dialogArr = list;
@@ -350,11 +369,32 @@ export default {
         this.selectPayWay = data[1];
       } else if (data[0] == 2) {
         //选择配送方式
-        _this.orderList.forEach((item, index) => {
+        for (let i = 0; i < _this.orderList.length; i++) {
+          let item = _this.orderList[i];
           if (item.busId == data[2]) {
             item.selectDelivery = data[1];
+            break;
           }
-        });
+        }
+        // _this.orderList.forEach((item, index) => {
+        //   if (item.busId == data[2]) {
+        //     item.selectDelivery = data[1];
+        //   }
+        // });
+      } else if (data[0] == 3) {
+        let obj = data[1];
+        //选择优惠券
+        for (let i = 0; i < _this.orderList.length; i++) {
+          let bus = _this.orderList[i];
+          for (let j = 0; j < bus.shopResultList.length; j++) {
+            let shop = bus.shopResultList[j];
+            if (shop.shopId == data[2]) {
+              shop.selectCoupon = obj;
+              break;
+            }
+          }
+        }
+        this.caculationOrder(5);
       }
     }
   }
