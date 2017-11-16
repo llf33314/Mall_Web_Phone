@@ -177,17 +177,10 @@ export default {
         url: location.href, //当前页面的地址
         browerType: _this.$store.state.browerType //浏览器类型
       };
-      _this.commonFn.ajax({
+      _this.ajaxRequest({
         url: h5App.activeAPI.return_logistics_post,
         data: _data,
         success: function(data) {
-          if (data.code == 1001) {
-            location.href = data.url;
-          }
-          if (data.code != 0) {
-            _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
-            return;
-          }
           _this.selectDialogList = data.data;
           _this.selectDialogList.forEach((item, index) => {
             item.id = item.item_key;
@@ -206,17 +199,10 @@ export default {
         orderDetailId: _this.orderDetailId, //订单详情
         returnId: _this.returnId //退款id
       };
-      _this.commonFn.ajax({
+      _this.ajaxRequest({
         url: h5App.activeAPI.return_logistics_detail_post,
         data: _data,
         success: function(data) {
-          if (data.code == 1001) {
-            location.href = data.url;
-          }
-          if (data.code != 0) {
-            _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
-            return;
-          }
           _this.imgUrl = data.imgUrl; //图片域名
           let returnData = data.data; //返回数据
           _this.wuliuNo = returnData.wlNo; //物流单号
@@ -269,17 +255,10 @@ export default {
         //退款图片
         _data.wlImagesUrl = _this.imageArr.toString();
       }
-      _this.commonFn.ajax({
+      _this.ajaxRequest({
         url: h5App.activeAPI.return_logistics_save_post,
         data: _data,
         success: function(data) {
-          if (data.code == 1001) {
-            location.href = data.url;
-          }
-          if (data.code != 0) {
-            _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
-            return;
-          }
           if (_this.submitReturnUrl == null || _this.submitReturnUrl == "") {
             _this.submitReturnUrl = "/order/list/" + this.busId + "/0";
           }

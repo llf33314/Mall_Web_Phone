@@ -80,7 +80,7 @@ export default {
 
         if(count===0) return;
         
-        _this.commonFn.ajax({
+        _this.ajaxRequest({
         'url': h5App.activeAPI.phoneProduct_getProductComment_post,
         'data':{
             busId:_this.$route.params.busId,
@@ -89,7 +89,7 @@ export default {
         },
         'success':function(data){
             
-            if(data.code == -1 || !data.data.commentList){
+            if(!data.data.commentList){
                 _this.isShow = 0;
                 return
             }

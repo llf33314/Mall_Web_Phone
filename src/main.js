@@ -21,13 +21,15 @@ import jq from './lib/jquery-2.2.2.min';
 import FastClick from 'fastclick'
 FastClick.attach(document.body);
 
-new Vue({
+var vm = new Vue({
   el: '#app',
   router,
   store: storeConfig,
   template: '<App/>',
-  components: { App }
+  components: { App },
 })
+
+require('@/lib/ajax.js');
 /**
  * 弹出框调用
  * 使用方法

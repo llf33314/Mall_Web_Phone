@@ -22,7 +22,7 @@ Vue.mixin({
 		}, confirmReceipts(orderId) {
 			//确认收货请求接口
 			let _this = this;
-			_this.commonFn.ajax({
+			_this.ajaxRequest({
 				url: h5App.activeAPI.confirm_receipt_post,
 				data: {
 					busId: _this.busId, //商家id
@@ -31,13 +31,6 @@ Vue.mixin({
 					orderId: orderId
 				},
 				success: function (data) {
-					if (data.code == 1001) {
-						location.href = data.url;
-					}
-					if (data.code != 0) {
-						_this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
-						return;
-					}
 					//请求成功重新请求新数据
 					if (_this.orderList != null) {
 						//订单列表页面刷新数据
@@ -76,17 +69,10 @@ Vue.mixin({
 				url: location.href,
 				orderId: this.orderId
 			};
-			_this.commonFn.ajax({
+			_this.ajaxRequest({
 				url: h5App.activeAPI.delete_order_post,
 				data: _data,
 				success: function (data) {
-					if (data.code == 1001) {
-						location.href = data.url;
-					}
-					if (data.code != 0) {
-						_this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
-						return;
-					}
 					history.go(-1);
 				}
 			});
@@ -118,17 +104,10 @@ Vue.mixin({
 				url: location.href,
 				returnId: returnId
 			};
-			_this.commonFn.ajax({
+			_this.ajaxRequest({
 				url: h5App.activeAPI.close_return_post,
 				data: _data,
 				success: function (data) {
-					if (data.code == 1001) {
-						location.href = data.url;
-					}
-					if (data.code != 0) {
-						_this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
-						return;
-					}
 					//请求成功重新请求新数据
 					if (_this.orderList != null) {
 						//订单列表页面刷新数据

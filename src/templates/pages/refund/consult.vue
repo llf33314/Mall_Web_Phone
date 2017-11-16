@@ -97,17 +97,10 @@ export default {
         browerType: _this.$store.state.browerType, //浏览器类型
         returnId: _this.returnId //退款id
       };
-      _this.commonFn.ajax({
+      _this.ajaxRequest({
         url: h5App.activeAPI.return_log_post,
         data: _data,
         success: function(data) {
-          if (data.code == 1001) {
-            location.href = data.url;
-          }
-          if (data.code != 0) {
-            _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
-            return;
-          }
           if (data.data == null || data.data.length == 0) {
             _this.status = 1;
             return;

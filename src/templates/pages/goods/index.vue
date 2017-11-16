@@ -639,7 +639,8 @@ export default {
             let _this = this ;
             let activityId = _this.$route.params.activityId
             activityId == 'undefined' ? activityId=0 : activityId;
-            this.commonFn.ajax({
+            this.ajaxRequest({
+                'status': 1,
                 'url': h5App.activeAPI.phoneProduct_getProduct_post,
                 'data':{
                     url: _this.$store.state.loginDTO_URL,
@@ -652,10 +653,6 @@ export default {
                 },
                 'success':function(data){
                     console.log(data);
-                    if(data.code == 1){
-                        _this.$parent.$refs.bubble.show_tips(data.msg);//bubble_hint*/
-                        return
-                    }
                     
                     if(data.code == 1006 || data.code == 1007 || data.code == 1011){
                         _this.isSoldOut = true;
@@ -752,14 +749,11 @@ export default {
         wholesaleAjax(data){
             let _this = this;
             let _data = data
-            _this.commonFn.ajax({
+            _this.ajaxRequest({
                 'url': h5App.activeAPI.phoneProduct_getSpecifica_post,
                 'data':data,
                 'success':function(data){
                     //console.log(data,'批发数据');
-                    if(data.code == 1){
-                        _this.$parent.$refs.bubble.show_tips(data.msg);
-                    }
                     _this.w_specificaList = data.data.specificaList;
                     _this.w_guigePrice = data.data.guigePrice;
 
@@ -794,7 +788,7 @@ export default {
             let _this = this;
             let _data = data;
             let activityId = _this.$route.params.activityId;
-            this.commonFn.ajax({
+            this.ajaxRequest({
                 'url': h5App.activeAPI.phoneProduct_getSpecifica_post,
                 'data':_data,
                 'success':function(data){
@@ -1166,14 +1160,16 @@ export default {
                 ajaxdata.price = _this.goodsData.pfPrice;
             } 
 
-            _this.commonFn.ajax({
+            _this.ajaxRequest({
                 'url': h5App.activeAPI.phoneShopCart_addShopCart_post,
                 'data':ajaxdata,
                 'success':function(data){
-                    console.log(data)
-                    if(data.code == 1){
-                         _this.$parent.$refs.bubble.show_tips('加入成功');
+                    let msg={
+                        type :'success',
+                        msg :  res.data.msg
                     }
+                    _this.$parent.$refs.bubble.show_tips(msg);
+                    
                 } 
             })
         },
@@ -1182,7 +1178,7 @@ export default {
          */
         collectProductAjax(){
             let _this = this;
-            _this.commonFn.ajax({
+            _this.ajaxRequest({
                 'url': h5App.activeAPI.phoneProduct_collectProduct_post,
                 'data':{
                     busId: _this.$store.state.busId,
@@ -1191,7 +1187,7 @@ export default {
                     productId :  _this.$route.params.goodsId,
                 },
                 'success':function(data){
-                    if(data.code==1){
+                    if(data.code == 0){
                         _this.goodsData.isCollect = !_this.goodsData.isCollect;
                         if(_this.goodsData.isCollect){
                             _this.$parent.$refs.bubble.show_tips('收藏成功');
@@ -1215,7 +1211,7 @@ export default {
          */
         detailsAjax(){
         let _this = this;
-        _this.commonFn.ajax({
+        _this.ajaxRequest({
             'url': h5App.activeAPI.phoneProduct_getProductDetail_post,
             'data':{
                 productId :  _this.$route.params.goodsId,
@@ -1259,17 +1255,10 @@ export default {
                 _data.joinActivityId = _this.$route.params.joinActivityId;
             }
             console.log(_data)
-              _this.commonFn.ajax({
+              _this.ajaxRequest({
                 url: h5App.activeAPI.liji_buy_post,
                 data: _data,
                 success: function(data) {
-                    if (data.code == 1001) {
-                        location.href = data.url;
-                    }
-                    if (data.code != 0) {
-                        _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
-                        return;
-                    }
                     _this.commonFn.allowScroll();
                     //跳转到提交订单的页面
                     _this.$router.push("/order/settlement/"+_this.$route.params.busId+"/0");

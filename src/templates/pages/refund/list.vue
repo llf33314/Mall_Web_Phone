@@ -180,16 +180,11 @@ export default {
         type: data.type >= 0 ? data.type : _this.type,
         curPage: data.curPage > 0 ? data.curPage : 1
       };
-      _this.commonFn.ajax({
+      _this.ajaxRequest({
+        status: 1,
         url: h5App.activeAPI.order_list_post,
         data: _data,
         success: function(data) {
-          if (data.code == 1001) {
-            location.href = data.url;
-          }
-          if (data.code == 0) {
-            _this.orderList = null; //无数据清空
-          }
           if (data.code != 0) {
             _this.errorMsg = data.msg;
             _this.isShowNullContent = true; //有数据关闭

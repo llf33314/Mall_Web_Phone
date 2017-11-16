@@ -78,17 +78,10 @@ export default {
         orderDetailId: _this.orderDetailId, //订单详情
         returnId: _this.returnId //退款id
       };
-      _this.commonFn.ajax({
+      _this.ajaxRequest({
         url: h5App.activeAPI.return_finish_detail_post,
         data: _data,
         success: function(data) {
-          if (data.code == 1001) {
-            location.href = data.url;
-          }
-          if (data.code != 0) {
-            _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
-            return;
-          }
           _this.imgUrl = data.imgUrl; //图片域名
           _this.returnData = data.data; //返回数据
           if (_this.returnData.retHandlingWay == 1) {

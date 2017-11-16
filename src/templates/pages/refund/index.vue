@@ -85,17 +85,10 @@ export default {
         browerType: _this.$store.state.browerType, //浏览器类型
         orderDetailId: _this.orderDetailId //订单详情
       };
-      _this.commonFn.ajax({
+      _this.ajaxRequest({
         url: h5App.activeAPI.return_style_post,
         data: _data,
         success: function(data) {
-          if (data.code == 1001) {
-            location.href = data.url;
-          }
-          if (data.code != 0) {
-            _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
-            return;
-          }
           _this.imgUrl = data.imgUrl; //图片域名
           _this.myData = data.data; //返回数据
           _this.shopId = _this.myData.shopId; //店铺id

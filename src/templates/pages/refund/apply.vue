@@ -167,17 +167,10 @@ export default {
         orderDetailId: _this.orderDetailId, //订单详情
         returnId: _this.returnId //退款id
       };
-      _this.commonFn.ajax({
+      _this.ajaxRequest({
         url: h5App.activeAPI.return_post,
         data: _data,
         success: function(data) {
-          if (data.code == 1001) {
-            location.href = data.url;
-          }
-          if (data.code != 0) {
-            _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
-            return;
-          }
           _this.imgUrl = data.imgUrl; //图片域名
           _this.returnData = data.data; //返回数据
           let myData = _this.returnData;
@@ -339,17 +332,10 @@ export default {
         _data.imagesUrl = _this.imageArr.toString();
       }
       console.log(_data);
-      _this.commonFn.ajax({
+      _this.ajaxRequest({
         url: h5App.activeAPI.return_save_post,
         data: _data,
         success: function(data) {
-          if (data.code == 1001) {
-            location.href = data.url;
-          }
-          if (data.code != 0) {
-            _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
-            return;
-          }
           if (_this.submitReturnUrl == null || _this.submitReturnUrl == "") {
             _this.submitReturnUrl = "/order/list/" + this.busId + "/0";
           }

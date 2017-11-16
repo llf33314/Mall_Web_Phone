@@ -2,8 +2,6 @@
 import axios from 'axios';
 import Vue from 'vue'
 
-var oproto = Object.prototype;
-var serialize = oproto.toString;
 var Rxports = {
 	/**
 	  * @param {String} type			请求的类型，默认post
@@ -16,7 +14,8 @@ var Rxports = {
 	  * @param {Function} error		发送请求前
 	  * @param return 
 	*/
-	ajax(opt) {
+
+	/*ajax(opt) {
 
 		var opts = opt || {};
 
@@ -65,7 +64,8 @@ var Rxports = {
 			}
 		});
 
-	},
+	},*/
+	
 	/**
      * 设置根字体
      * 750设计稿  设计稿尺寸 / 100
