@@ -21,6 +21,7 @@ const state = {
     showTop:1,//置顶按钮显示
     showfooter:1,//底部导航显示隐藏
     isAdvert:'',//是否显示技术支持
+    pageId:''//首页id
 }
 
 const actions ={
@@ -40,6 +41,7 @@ const mutations = {
         state.browerType =  data.browerType ||state.browerType;
         state.keywords =  data.keywords || state.keywords;
         state.loginDTO_URL =  data.loginDTO_URL || state.loginDTO_URL;
+        state.pageId = data.pageId || state.pageId;
     },
     show_top:(state,Booleans)=>state.showTop =  Booleans,
     show_footer:(state,Booleans)=>state.showfooter =  Booleans,

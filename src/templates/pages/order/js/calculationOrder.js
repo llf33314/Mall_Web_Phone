@@ -31,7 +31,10 @@ Vue.mixin({
 					totalYouHuiMoneys = _commonFm.floatAdd(totalYouHuiMoneys, bus.memberYouhuiMoney);
 				}
 				//优惠券计算
-				
+				bus = _this.caculationYhqDiscount(bus);
+				if (_commonFm.validateDouble(bus.couponYouhuiMoney)) {
+					totalYouHuiMoneys = _commonFm.floatAdd(totalYouHuiMoneys, bus.couponYouhuiMoney);
+				}
 				//粉币计算
 				bus = _this.caculationFenbiDiscount(bus);
 				if (_commonFm.validateDouble(bus.fenbiYouhuiMoney)) {

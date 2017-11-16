@@ -29,6 +29,7 @@ export default {
   watch: {
     '$route'(){
       this.$store.commit('mutationData',{loginDTO_URL:window.location.href});
+      this.loadData();
     }
   },
   data () {
@@ -59,7 +60,68 @@ export default {
     browser_type(){
       let browser = this.commonFn.checkPlatform();
       browser === 'Messenger' ? this.Messenger = 1: this.Messenger = 99;
+    },
+    //获取店铺id
+    getShopId(busId){
+      let _this = this;
+      _this.commonFn.ajax({
+          'url': h5App.activeAPI.get_shop_id_post,
+          'data':{
+              busId : busId
+          },
+          'success':function(data){
+            let shopId = data.data;
+             if(shopId != null && shopId != "" && typeof(shopId) != "undefined"){
+              sessionStorage.setItem("shopId",shopId);
+              _this.$store.commit('mutationData' , {shopId:shopId});
+
+              _this.getPageId(busId,shopId);
+            }
+            return shopId;
+          }
+      });
+     // return shopId;
+    },
+    //获取首页id
+    getPageId(busId,shopId){
+      let _this = this;
+      _this.commonFn.ajax({
+          'url': h5App.activeAPI.get_home_page_id_post,
+          'data':{
+              busId : busId,
+              shopId : shopId
+          },
+          'success':function(data){
+              let pageId = data.data.pageId;
+              if(pageId != null && pageId != "" && typeof(pageId) != "undefined"){
+                sessionStorage.setItem("pageId",pageId);
+                _this.$store.commit('mutationData' , {pageId:pageId});
+              }
+          }
+      });
+      //return pageId;
+    },loadData(){
+      let busId = this.$route.params.busId || sessionStorage.getItem("busId");
+      let shopId = this.$route.params.shopId || sessionStorage.getItem("shopId");
+      let pageId = this.$route.params.pageId || sessionStorage.getItem("pageId");
+      if(busId != null && busId != "" && typeof(busId) != "undefined"){
+        sessionStorage.setItem("busId",busId);
+        this.$store.commit('mutationData' , {busId:busId});
+      }
+      if(shopId != null && shopId != "" && typeof(shopId) != "undefined"){
+        sessionStorage.setItem("shopId",shopId);
+        this.$store.commit('mutationData' , {shopId:shopId});
+      }else if(busId > 0){
+        this.getShopId(busId);
+      }
+      if(pageId != null && pageId != "" && typeof(pageId) != "undefined"){
+        sessionStorage.setItem("pageId",pageId);
+        this.$store.commit('mutationData' , {pageId:pageId});
+      }else if(shopId > 0 && busId > 0){
+        this.getPageId(busId,shopId);
+      }
     }
+  
   }
 }
 

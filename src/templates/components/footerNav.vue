@@ -91,8 +91,8 @@ export default {
          */
         jump(name){
             this.isShow = name;
-            let busId = this.$route.params.busId;
-            let shopId = this.$route.params.shopId;
+            let busId =  this.$route.params.busId || this.$store.state.busId;
+            let shopId = this.$route.params.shopId || this.$store.state.shopId;
             console.log(name,shopId,busId);
             if( name == 'home'){
                 //this.$router.push('/home/'+shopId+'/'+busId);
@@ -103,7 +103,7 @@ export default {
             }else if( name=='my'){
                 this.$router.push('/my/center/'+busId);
             }
-        }
+        },
     }
 }
 </script>

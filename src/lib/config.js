@@ -61,6 +61,12 @@
   // h5App.env = env.develop;
   h5App.activeAPI = {
     // phoneProduct_post: h5App.env.activeAPI + '/phoneProduct/L6tgXlBFeK/productAll',
+     /***********************   以下接口都是 公用接口 ***********************/
+    /*获取首页id*/
+    get_home_page_id_post: 'phonePage/L6tgXlBFeK/getHomePageId',
+    /*获取店铺id*/
+    get_shop_id_post: 'phonePage/L6tgXlBFeK/getShopId',
+    /***********************   以下接口都是 商品分类页面相关接口 ***********************/
     //商品详情
     /*商品搜索接口*/
     phoneProduct_productAll_post: '/phoneProduct/L6tgXlBFeK/productAll',
