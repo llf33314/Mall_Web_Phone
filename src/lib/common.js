@@ -363,7 +363,8 @@ var Rxports = {
 		m = Math.pow(10, Math.max(r1, r2));
 		//动态控制精度长度    
 		n = (r1 >= r2) ? r1 : r2;
-		return ((arg1 * m - arg2 * m) / m).toFixed(n);
+		let num = ((arg1 * m - arg2 * m) / m).toFixed(n);
+		return parseFloat(num);
 	},
 	//乘    
 	floatMul(arg1, arg2) {

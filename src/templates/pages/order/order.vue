@@ -221,7 +221,7 @@ export default {
           if (data.code == 1001) {
             location.href = data.url;
           }
-          if (data.code != 1) {
+          if (data.code != 0) {
             _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
             return;
           }

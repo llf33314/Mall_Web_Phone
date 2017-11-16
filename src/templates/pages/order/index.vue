@@ -221,7 +221,7 @@ export default {
           if (data.code == 0) {
             _this.orderList = null; //无数据清空
           }
-          if (data.code != 1) {
+          if (data.code != 0) {
             _this.errorMsg = data.msg;
             _this.isShowNullContent = true; //有数据关闭
             return;

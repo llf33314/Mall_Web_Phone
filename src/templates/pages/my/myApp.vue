@@ -200,7 +200,7 @@ export default {
           if (data.code == 1001) {
             location.href = data.url;
           }
-          if (data.code != 1) {
+          if (data.code != 0) {
             return;
           }
           let _returnData = data.data;

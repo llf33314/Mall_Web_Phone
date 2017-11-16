@@ -264,7 +264,7 @@ export default {
             'url': h5App.activeAPI.phoneShopCart_getShopCartx_post,
             'data':_data,
             'success':(data)=>{
-                if(data.code == -1){
+                if(data.code == 1){
                     let msg ={
                         type:'error',
                         msg:data.msg
@@ -363,7 +363,7 @@ export default {
             'url': h5App.activeAPI.phoneShopCart_removeShopCart_post,
             'data':_data,
             'success':(data)=>{
-                if(data.code == -1){
+                if(data.code == 1){
                      let msg={
                         type :'error',
                         msg :  data.msg
