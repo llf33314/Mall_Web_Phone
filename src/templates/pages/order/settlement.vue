@@ -305,13 +305,11 @@ export default {
         url: location.href,
         browerType: _this.$store.state.browerType
       };
-      _this.commonFn.ajax({
+      _this.ajaxRequest({
+        status: 1,
         url: h5App.activeAPI.to_order_post,
         data: _data,
         success: function(data) {
-          if (data.code == 1001) {
-            location.href = data.url;
-          }
           if (data.code != 0) {
             _this.bondStatu = 1;
             _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示

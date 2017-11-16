@@ -204,12 +204,12 @@ export default {
                 'type':    data.type|| 0,  //	类型，1.团购 3.秒杀 4.拍卖 5 粉币 6预售 7批发	可不传
                 'curPage': data.curPage||''//	当前页	可不传
             }
-            this.commonFn.ajax({
+            this.ajaxRequest({
+                'status':1,
                 'url': h5App.activeAPI.phoneProduct_productAll_post,
                 'data':_data,
                 'success':function(data){
-                    console.log(data,'aa-----------aa')
-                    if(data.code == '-1'){//接口失败显示
+                    if(data.code == 1){//接口失败显示
                         _this.subList = [];
                         return
                     }
@@ -286,7 +286,7 @@ export default {
          */
         classAllAjax(groupId){
             let _this = this ;
-            this.commonFn.ajax({
+            this.ajaxRequest({
                 'url': h5App.activeAPI.phoneProduct_classAll_post,
                 'data':{
                     shopId : _this.$store.state.shopId,

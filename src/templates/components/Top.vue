@@ -1,5 +1,5 @@
 <template>
-   <section class="top-box">
+   <section class="top-box" v-show="isShow">
         <i class="iconfont icon-zhiding" v-if=" scroll >= 300"
             @click="top()"></i>
         <em class="icon-kefu"
@@ -12,7 +12,8 @@ export default {
     data: function () {
         return {
             scroll:'',
-            QQ:''
+            QQ:'',
+            isShow: true,
         }
     },
     mounted() {
@@ -42,12 +43,16 @@ export default {
         qqAjax(){
             let _this = this ;
             let _shopId = _this.$store.state.shopId;
-            _this.commonFn.ajax({
+            _this.ajaxRequest({
+                'status': 1,
                 'url': h5App.activeAPI.phonePage_getCustomer_post,
                 'data':{
                     shopId : _shopId //todo 参数没有
                 },
                 'success':function(data){
+                    if(data.code != 0 ){
+                        _this.isShow = false;
+                    }
                     _this.QQ = data.data.qq;
                     _this.$store.commit('is_Advert',data.data.isAdvert);
                 }

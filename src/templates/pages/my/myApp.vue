@@ -193,16 +193,10 @@ export default {
         url: location.href, //当前页面地址
         browerType: _this.$store.state.browerType //浏览器类型 1微信 99 其他浏览器
       };
-      _this.commonFn.ajax({
+      _this.ajaxRequest({
         url: h5App.activeAPI.my_center_post,
         data: _data,
         success: function(data) {
-          if (data.code == 1001) {
-            location.href = data.url;
-          }
-          if (data.code != 0) {
-            return;
-          }
           let _returnData = data.data;
           _this.myData = _returnData;
           _this.memberName = _returnData.memberName; //用户名称

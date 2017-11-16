@@ -260,18 +260,11 @@ export default {
             _data.type = type;
         }
 
-        _this.commonFn.ajax({
+        _this.ajaxRequest({
             'url': h5App.activeAPI.phoneShopCart_getShopCartx_post,
             'data':_data,
             'success':(data)=>{
-                if(data.code == 1){
-                    let msg ={
-                        type:'error',
-                        msg:data.msg
-                    }
-                    _this.$parent.$refs.bubble.show_tips(msg);
-                    return
-                }
+
                 _this.imgUrl = data.imgUrl;
                 _this.path = data.path;
                 _this.webPath = data.webPath;
@@ -359,19 +352,10 @@ export default {
 
         }
         console.log(_data,'_data删除数据');
-        _this.commonFn.ajax({
+        _this.ajaxRequest({
             'url': h5App.activeAPI.phoneShopCart_removeShopCart_post,
             'data':_data,
             'success':(data)=>{
-                if(data.code == 1){
-                     let msg={
-                        type :'error',
-                        msg :  data.msg
-                    }
-                    _this.$parent.$refs.bubble.show_tips(msg);
-                    return
-                }
-
                 let msg={
                     type :'success',
                     msg :  '删除成功'

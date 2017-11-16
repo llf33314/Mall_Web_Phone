@@ -214,17 +214,10 @@ export default {
         url: location.href,
         orderId: this.orderId
       };
-      _this.commonFn.ajax({
+      _this.ajaxRequest({
         url: h5App.activeAPI.order_detail_post,
         data: _data,
         success: function(data) {
-          if (data.code == 1001) {
-            location.href = data.url;
-          }
-          if (data.code != 0) {
-            _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
-            return;
-          }
           let order = data.data;
           _this.order = order; //订单数据
           _this.orderDetailList = order.detailResultList; //订单详情数据

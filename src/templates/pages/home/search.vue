@@ -74,7 +74,7 @@ export default {
      */
     searchAjax(){
         let _this = this;
-        this.commonFn.ajax({
+        this.ajaxRequest({
             'url': h5App.activeAPI.phonePage_searchLabel_post,
             'data':{
                 shopId : this.$store.state.shopId
@@ -124,13 +124,14 @@ export default {
             'btnTow': '否',
             'callback': {
                 'btnOne': function () {
-                    _this.commonFn.ajax({
+                    _this.ajaxRequest({
+                        'status':1,
                         'url': h5App.activeAPI.phonePage_clearSearchGroup_post,
                         'data':{
                             shopId : _this.$store.state.shopId
                         },
                         'success':function(data){
-                            if(data.code == 1){ //code 1  清空成功
+                            if(data.code == 0){ //code 1  清空成功
                                 _this.keywordList = null
                             }else{
                                 _this.$parent.$refs.bubble.show_tips('清空失败');//bubble_hint*/

@@ -64,7 +64,7 @@ export default {
     //获取店铺id
     getShopId(busId){
       let _this = this;
-      _this.commonFn.ajax({
+      _this.ajaxRequest({
           'url': h5App.activeAPI.get_shop_id_post,
           'data':{
               busId : busId
@@ -85,7 +85,7 @@ export default {
     //获取首页id
     getPageId(busId,shopId){
       let _this = this;
-      _this.commonFn.ajax({
+      _this.ajaxRequest({
           'url': h5App.activeAPI.get_home_page_id_post,
           'data':{
               busId : busId,

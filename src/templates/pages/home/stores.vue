@@ -39,13 +39,12 @@ export default {
       */
       shopListAjax(){
         let _this = this;
-        _this.commonFn.ajax({
+        _this.ajaxRequest({
             'url': h5App.activeAPI.phonePage_shopList_post,
             'data':{
                 busId : _this.$store.state.busId
             },
             'success':function(data){
-                console.log(data);
                 //_this.imgUrl = data.imgUrl ;
                 _this.shopData = data.data;
             }

@@ -1,5 +1,5 @@
 <template>
-    <div class="bubble" v-show="show">
+    <div class="bubble" v-show="show" >
       <p>
         <i class="iconfont icon-dui1" v-if=" msg.type == 'success'"></i>
         <i class="iconfont icon-guanbi" v-if=" msg.type == 'error'"></i>

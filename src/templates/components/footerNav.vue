@@ -68,12 +68,16 @@ export default {
          */
         footerMenuAjax(){
             let _this = this;
-            _this.commonFn.ajax({
+            _this.ajaxRequest({
+                'status': 1,
                 'url': h5App.activeAPI.phonePage_footerMenu_post,
                 'data':{
                     busId : _this.$store.state.busId
                 },
                 'success':function(data){
+                    if(data.code != 0){
+                        _this.isFooter = false;
+                    }
                     let footerMenu = data.data;
                     for(var menu in footerMenu){
                         _this.footerData.forEach((itme,index)=>{

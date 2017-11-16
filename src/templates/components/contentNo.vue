@@ -39,17 +39,10 @@ export default {
     //逛商城
     lockMall() {
       let _this = this;
-      _this.commonFn.ajax({
+      _this.ajaxRequest({
         url: h5App.activeAPI.mall_index_post,
         data: { busId: _this.$route.params.busId, shopId: 0 },
         success: function(data) {
-          if (data.code == 1001) {
-            location.href = data.url;
-          }
-          if (data.code != 0) {
-            _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
-            return;
-          }
           if (data.pageId > 0) {
             //跳转至首页
           }

@@ -34,14 +34,15 @@ export default {
   specAjax(){
     let _this = this;
     _this.textNo = name;
-    _this.commonFn.ajax({
+    _this.ajaxRequest({
+      'status':1,
       'url': h5App.activeAPI.phoneProduct_getProductParams_post,
       'data':{
           productId :  _this.$route.params.goodsId,
       },
       'success':function(data){
         console.log(data,'specData');
-        if(data.code == -1 || !data.data.length>0){
+        if(data.code == 1 || !data.data.length>0){
           _this.isShow = 0;
           return
         }
