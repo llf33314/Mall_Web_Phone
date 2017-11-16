@@ -5,13 +5,13 @@
         <content-no :statu='bondStatu'></content-no>
     </section>
     <section class="shop-main order-main shoopCart-main" v-else>
-        <div class="order-box">
+        <div class="order-box" v-if="shopCartList != '' ">
             <div class="order-item" v-for=" (cart,i) in shopCartList"
                 :key = "i">
                 <div class="order-item-title fs40">
                     <i  class="iconfont icon-dui"
                         :class="{'js-font': cart.show}"
-                        @click="select_Cart(i)"></i>
+                        @click="select_Goods(cart)"></i>
                     <div class="order-title-img">
                       <default-img :background="cart.userImageUrl"
                                   :isHeadPortrait="1">
@@ -25,7 +25,7 @@
                     <div class="order-shop border">
                         <p class="order-shop-name">
                             <i class="iconfont icon-dui" :class="{'js-font':shop.show}"
-                            @click="select_Shop(j,i)"></i>
+                            @click="select_Goods(shop)"></i>
                             <i class="iconfont icon-dianpu"></i>
                             <span class="fs36">{{shop.shopName}}</span>
                             <i class="iconfont icon-you" ></i>
@@ -39,7 +39,7 @@
                         <delete-slide class="order-item-content"
                             v-for="(goods,index) in shop.productResultList"
                             :key="index"
-                            @delete="delete_dialog(index,goods)"
+                            @delete="delete_dialog(1,index,goods)"
                             :scope="index">
                             <div class="shoopCart-content">
                                 <div class="order-item-img">
@@ -47,7 +47,7 @@
                                                 :isHeadPortrait="0">
                                   </default-img>
                                    <i class="iconfont icon-dui" :class="{'js-font':goods.show}"
-                                    @click="select_Goods(index,j,i)"></i>
+                                    @click="select_Goods(goods)"></i>
                                 </div>
                                 <div class="order-item-txt">
                                     <p class="fs42">{{goods.productName}}</p>
@@ -72,6 +72,60 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="sxorder-box" v-if="sxShopCartList !='' ">
+            <p class="sxorder-box-title fs42">
+                以下商品无法购买
+            </p>
+            <div class="order-item" 
+                v-for=" (cart,i) in sxShopCartList" 
+                :key="i">
+                <div class="order-item-title fs40">
+                    <div class="order-title-img">
+                      <default-img :background="cart.userImageUrl"
+                                  :isHeadPortrait="1">
+                      </default-img>
+                    </div>
+                    <span>{{cart.userName}}</span>
+                </div>
+                <div class="shopping-box"
+                    v-for="(shop,j) in cart.shopResultList"
+                    :key="j">
+                    <div class="order-shop border">
+                        <p class="order-shop-name">
+                            <i class="iconfont icon-dianpu"></i>
+                            <span class="fs36">{{shop.shopName}}</span>
+                            <i class="iconfont icon-you" ></i>
+                        </p>
+                    </div>
+                    <div class="order-item-box">
+                        <div class="order-item-content"
+                            v-for="(goods,index) in shop.productResultList"
+                            :key="index">
+                            <div class="shoopCart-content">
+                                <div class="order-item-img">
+                                  <default-img :background="imgUrl+goods.productImageUrl"
+                                                :isHeadPortrait="0">
+                                  </default-img>
+                                </div>
+                                <div class="order-item-txt">
+                                    <p class="fs42">{{goods.productName}}</p>
+                                    <div v-if="!goods.edit">
+                                        <p class="fs36 shopGray">
+                                            <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
+                                            <span>{{goods.productNum}}份</span>
+                                        </p>
+                                        <p class="fs42 shop-font" v-if="goods.productHyPrice>0">¥{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
+                                        <p class="fs42 shop-font" v-else>¥{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="fs42 sxorder-button" 
+            @click="delete_dialog(2)">清空失效商品</div>
         </div>
         <div class="shopping-footer clearfix" style="z-index:2">
             <div class="shopping-footer-l fs40">
@@ -117,6 +171,7 @@ export default {
         hpNum:'',//混批最低数量
         spHand:'',//手批最低数量
         shopCartList:'',//购物车集合
+        sxShopCartList:'',//失败购物车集合
         imgUrl: '',
         path: '',
         webPath: '',
@@ -143,28 +198,48 @@ export default {
         let pifaTotal = 0;
         _this.pifaAmount = 0;
         _this.shopCartList.forEach((item,i)=>{
-            debugger
-            if(item.show){
-                _this.isPifaAmount = true;
-            }else{
-                _this.isPifaAmount = false;
-            }
+            //总价计算
             item.shopResultList.forEach((test,j)=>{
-                if(test.show){
-                    item.show = true;
-                }else{
-                    item.show = false;
-                }
                 test.productResultList.forEach((e,n)=>{
                     if(e.show){
                         pifaTotal += e.productNum * e.productHyPrice
                         _this.productNum += e.productNum;
-                    }else{
-                        test.show = false;
                     }
                 })
             })
-        });
+            
+            if(item.show){//选中商家时发生
+                //合计点亮
+                _this.isPifaAmount = true;
+                //商家下店铺全选
+                item.shopResultList.forEach((test,j)=>{
+                    test.show = true;
+                    //商家下店铺全选
+                    test.productResultList.forEach((e,n)=>{
+                        e.show = true
+                    })
+                })
+              return
+            }
+            //取消商家关闭
+            //合计关闭
+            _this.isPifaAmount = false;
+                //取消商家关闭时，店铺状态
+                item.shopResultList.forEach((test,j)=>{
+                    if(test.show){//店铺状态选中时
+                        //店铺下的商品全选
+                        test.productResultList.forEach((e,n)=>{
+                            e.show = true;
+                        })
+                    }else{//取消店铺状态
+                        //店铺下的商品全取消
+                        test.productResultList.forEach((e,n)=>{
+                            e.show = false
+                        })
+                    }
+                })
+
+        })
          _this.pifaTotal = pifaTotal;
     }
   },
@@ -206,6 +281,7 @@ export default {
                 _this.hpNum=data.data.hpNum;
                 _this.spHand=data.data.spHand;
                 _this.shopCartList=data.data.shopCartList;//购物车集合
+                _this.sxShopCartList = data.data.sxShopCartList //失败购物车集合
 
                 let pifaTotal = 0;
                 //全选后的总价
@@ -230,9 +306,40 @@ export default {
      * 删除弹出窗
      * @param index  当前要删除的对象
      */
-    delete_dialog(index,goods){
-        let _id = goods.id;
-        this.deleteAjax(_id);
+    delete_dialog(c,index,goods){
+        if(c===1){
+            let _id = goods.id;
+            this.deleteAjax(_id);
+        }else if(c===2){
+            let _this = this;
+            let  msg = {//弹出框组件调用
+                'btnNum': '2',
+                'dialogMsg': '确定清空失效商品？',
+                'btnOne': '确定',
+                'btnTow': '取消',
+                'dialogTitle':'提示',
+                'callback': {
+                    'btnOne': function () {
+                        //关闭
+                        let ids =[] 
+                        _this.sxShopCartList.forEach((item,i)=>{
+                            item.shopResultList.forEach((test,j) => {
+                                test.productResultList.forEach((e,n)=>{
+                                    ids.push(e.id)
+                                })
+                            });
+                        })
+                        _this.deleteAjax(ids);
+                    },
+                    'btnTow': function () {
+
+                    }
+                }
+            }
+          
+            _this.$parent.$refs.dialog.showDialog(msg);//弹出框
+        }
+        //this.deleteAjax(_id);
     },
     /**
      * 删除购物车请求
@@ -241,7 +348,7 @@ export default {
     deleteAjax(id){
         let _this = this;
         let _data = {};
-        _data.ids = id;
+        _data.ids = id.toString();
         if(_this.type == 1){
             _data.pifaSpecificaList = {
                 id:'', //批发购物车id integer
@@ -279,62 +386,72 @@ export default {
      * @param index Goods索引
      * @param j Shop索引
      */
-    select_Cart(i){
-      let _this = this;
-      _this.shopCartList.push([]);
-      _this.shopCartList.pop();
-      let obj = this.shopCartList[i]
-      if(obj.show){
-        this.isPifaAmount = false;
-        obj.show = false;
-        obj.shopResultList.forEach((test,j)=>{
-            test.show = false;
-            test.productResultList.forEach((e,n)=>{
-              e.show = false;
-            })
-          })
-      }else {
-        obj.show = true;
-        obj.shopResultList.forEach((test,j)=>{
-            test.show = true;
-            test.productResultList.forEach((e,n)=>{
-              e.show = true;
-            })
-        })
-      }
-    },
-    select_Shop(j,i){
+    // select_Cart(i){
+    //   let _this = this;
+    //   _this.shopCartList.push([]);
+    //   _this.shopCartList.pop();
+    //   let obj = this.shopCartList[i]
+    //   if(obj.show){
+    //     this.isPifaAmount = false;
+    //     obj.show = false;
+    //     obj.shopResultList.forEach((test,j)=>{
+    //         test.show = false;
+    //         test.productResultList.forEach((e,n)=>{
+    //           e.show = false;
+    //         })
+    //       })
+    //   }else {
+    //     obj.show = true;
+    //     obj.shopResultList.forEach((test,j)=>{
+    //         test.show = true;
+    //         test.productResultList.forEach((e,n)=>{
+    //           e.show = true;
+    //         })
+    //     })
+    //   }
+    // },
+    // select_Shop(j,i){
+    //     let _this = this;
+    //     this.shopCartList.push([]);
+    //     this.shopCartList.pop();
+    //     let obj = this.shopCartList[i].shopResultList[j];
+    //     if(obj.show){
+    //         this.isPifaAmount = false;
+    //         this.shopCartList[i].show = false;
+    //         obj.show = false;
+    //         obj.productResultList.forEach((e,n)=>{
+    //             e.show = false;
+    //         })
+    //     }else {
+    //       obj.show = true;
+    //       obj.productResultList.forEach((e,n)=>{
+    //         e.show = true;
+    //       })
+    //     }
+    // },
+    // select_Goods(index,j,i){
+    //     let _this = this;
+    //     this.shopCartList.push([]);
+    //     this.shopCartList.pop();
+    //     let obj = this.shopCartList[i].shopResultList[j].productResultList[index];
+    //     if(obj.show){
+    //         this.isPifaAmount = false;
+    //         this.shopCartList[i].show = false;
+    //         this.shopCartList[i].shopResultList[j].show = false;
+    //         obj.show = false;
+    //     }else {
+    //         obj.show = true;
+    //     }
+    // },
+    /** 
+     * 选中效果
+    */
+    select_Goods(e){
         let _this = this;
+        e.show = !e.show;
         this.shopCartList.push([]);
         this.shopCartList.pop();
-        let obj = this.shopCartList[i].shopResultList[j];
-        if(obj.show){
-            this.isPifaAmount = false;
-            this.shopCartList[i].show = false;
-            obj.show = false;
-            obj.productResultList.forEach((e,n)=>{
-                e.show = false;
-            })
-        }else {
-          obj.show = true;
-          obj.productResultList.forEach((e,n)=>{
-            e.show = true;
-          })
-        }
-    },
-    select_Goods(index,j,i){
-        let _this = this;
-        this.shopCartList.push([]);
-        this.shopCartList.pop();
-        let obj = this.shopCartList[i].shopResultList[j].productResultList[index];
-        if(obj.show){
-            this.isPifaAmount = false;
-            this.shopCartList[i].show = false;
-            this.shopCartList[i].shopResultList[j].show = false;
-            obj.show = false;
-        }else {
-            obj.show = true;
-        }
+        console.log(e);
     },
     select_PifaAmount(){
         console.log(111);
@@ -481,7 +598,26 @@ export default {
     }
     .order-box{
         width: 100%;
-        overflow: hidden;
+        //overflow: hidden;
+    }
+    .sxorder-box{
+        width: 100%;
+        .sxorder-box-title{
+            background: #fff;
+            margin-bottom: 45/@dev-Width *1rem;
+            padding: 38/@dev-Width *1rem;
+            line-height: 1;
+            text-align: center;
+        }
+        .sxorder-button{
+            border:1px solid #e4393c;
+            color: #e4393c;
+            margin: 75/@dev-Width *1rem  auto;
+            width: 30%;
+            text-align: center;
+            padding:  25/@dev-Width *1rem  35/@dev-Width *1rem;
+            .border-radius(3px); 
+        }
     }
     .order-item-img{
         position: relative;
