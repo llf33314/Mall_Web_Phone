@@ -261,6 +261,7 @@ export default {
         }
 
         _this.ajaxRequest({
+            'status': 1,
             'url': h5App.activeAPI.phoneShopCart_getShopCartx_post,
             'data':_data,
             'success':(data)=>{
