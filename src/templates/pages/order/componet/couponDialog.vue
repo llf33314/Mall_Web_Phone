@@ -21,6 +21,28 @@
                 </div>
                 <i class="iconfont icon-jiantou-copy fs40"></i>
             </div>
+            <div class="coupon-box">
+                <div class="coupon-item clearfix">
+                    <div class="coupon-item-letf">
+                        <!--span里面是大字体-->
+                        <p>￥<span>80</span></p>
+                        <!-- <p><span>9</span>.5折</p> -->
+                    </div>
+                    <div class="coupon-item-center">
+                        <div>
+                            <div class="coupon-item-title fs50">满100减80
+                            </div>
+                            <div class="coupon-item-text">
+                                <p class="fs36">消费满100元可用</p>
+                                <p class="fs36">有效期：2017/10/1~2017/11/1</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="coupon-item-rigth">
+                        <span class="fs60">使用</span>
+                    </div>
+                </div>
+            </div>
         </div>
      </sp-dialog>
 </template>
@@ -100,6 +122,53 @@ export default {
       color: #f7ba2a;
     }
   }
+}
+.coupon-box{
+    width: 100%;
+    padding: 0 38/@dev-Width *1rem;
+    .coupon-item{
+        width: 100%;
+        height: 339/@dev-Width *1rem;
+        background:url('../../../../assets/img/coupon_bg.png') no-repeat;
+        background-size: 100% 100%;
+        margin-bottom:  36/@dev-Width *1rem;
+        &>div{
+            height: 100%;
+            float: left;
+            .ik-box;
+            .ik-box-align(center);
+        }
+        .coupon-item-letf{
+            width: 28%;
+            font-size: 80/@dev-Width *1rem;
+            color: #fff;
+            .ik-box-pack(center);
+            span{
+                font-size: 120/@dev-Width *1rem;
+            }
+        }
+        .coupon-item-center{
+            width: 53%;
+            padding: 0 40/@dev-Width *1rem;
+            .coupon-item-title{
+                width: 100%;
+                margin-bottom: 52/@dev-Width *1rem;
+            }
+            .coupon-item-text{
+                width: 100%;
+                color: #999;
+            }
+        }
+        .coupon-item-rigth{
+            width: 19%;
+            span{
+                display: block;
+                margin: 0 auto;
+                width: 60/@dev-Width *1rem;
+                color: #ff4949
+            }
+        }
+    }
 }
 </style>
 
