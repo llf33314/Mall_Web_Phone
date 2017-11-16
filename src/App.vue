@@ -17,6 +17,7 @@ import loading from 'components/loading.vue';//loading
 import shopDialog from 'components/shopDialog.vue';//弹窗
 import Top from 'components/Top';//置顶
 import footerNav from 'components/footerNav';//置顶
+import ajax from '@/lib/ajax.js'
 
 export default {
   components: {

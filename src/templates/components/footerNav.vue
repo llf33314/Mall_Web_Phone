@@ -75,9 +75,9 @@ export default {
                     busId : _this.$store.state.busId
                 },
                 'success':function(data){
-                    if(data.code != 0){
-                        _this.isFooter = false;
-                    }
+                    // if(data.code != 0){
+                    //     _this.isFooter = false;
+                    // }
                     let footerMenu = data.data;
                     for(var menu in footerMenu){
                         _this.footerData.forEach((itme,index)=>{

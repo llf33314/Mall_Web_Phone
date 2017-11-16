@@ -18,7 +18,7 @@ Vue.mixin({
 	ajaxRequest(opt) {
             let vm = this;
             let opts = opt || {};
-            let status = opts.status || 2;
+            let status = opt.status || 2;
             if (!opts.url) {
                 alert('请填写接口地址');
                 return false;
@@ -61,7 +61,7 @@ Vue.mixin({
                         //请求失败 1 请求数据为空1000  参数传值不完整1003
                         //商品已被删除或未上架1006  店铺已被删除1007 活动被删除1011
                         if(status == 2){
-                            if(res.data.code != 0 || res.data.code != 1006 || res.data.code != 1007 || res.data.code != 1011){
+                            if(res.data.code != 0 ){
                                 let msg={
                                     type :'error',
                                     msg :  res.data.msg
