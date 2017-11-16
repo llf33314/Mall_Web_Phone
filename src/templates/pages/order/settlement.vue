@@ -81,11 +81,31 @@
                             <i class="iconfont icon-jiantou-copy shopGray"></i>
                         </p>
                     </div>
+                    <!-- 到店自提区域 -->
+                    <div class="clearfix " v-if="bus.selectDelivery != null && bus.selectDelivery.id == 1">
+                      <div class="border clearfix orderTotal-table">
+                         <p class="fs40 shop-fl">提货人：</p>
+                         <input  class="fs40 shop-fr my-table" placeholder="请填写提货人姓名（必填）" v-model="bus.appointmentUserName"/>
+                      </div>
+                      <div class="border clearfix orderTotal-table">
+                         <p class="fs40 shop-fl">手机号码：</p>
+                         <input  class="fs40 shop-fr my-table" placeholder="请填写提货人手机号码（必填）" v-model="bus.appointmentUserPhone"/>
+                      </div>
+                      <div class="border clearfix orderTotal-table">
+                         <p class="fs40 shop-fl">提货地址：</p>
+                         <div  class="fs40 shop-fr my-table text-overflow" placeholder="请填选择提货地址（必选）" v-text="bus.takeAddress"
+                          @click="changeTakeAddress"></div>
+                      </div>
+                      <div class="border clearfix orderTotal-table">
+                         <p class="fs40 shop-fl">提货时间：</p>
+                         <div  class="fs40 shop-fr my-table" placeholder="请填选择提货时间（必选）" v-text="bus.appointmenTimes"
+                          @click="changeTakeTime"></div>
+                      </div>
+                    </div>
+                    <!-- 会员折扣，联盟折扣，积分抵扣 和 粉币抵扣区域 -->
                     <div class="orderTotal-list border"
                         @click="order_ulShow">
-                        <p class="fs40">
-                            折扣信息<span class="shopGray">(可点击展开编辑)</span>
-                        </p>
+                        <p class="fs40">折扣信息<span class="shopGray">(可点击展开编辑)</span></p>
                         <p class="fs40">
                             <i class="iconfont icon-jiantou shopGray"></i>
                             <i class="iconfont icon-up shopGray shop-hide"></i>
@@ -138,6 +158,7 @@
                             </p>
                         </div>
                     </div>
+                    <!-- 买家留言区域 -->
                     <div class="orderTotal-table border shopGray clearfix">
                         <p class="fs40 shop-fl">
                                 买家留言：
@@ -145,7 +166,7 @@
                         <input class="fs40 shop-fr my-table" placeholder=" 请填写备注信息" v-model="bus.buyerMessage" />
                     </div>
                 </div>
-                    <div class="deltails-del border" style="padding-top: 0.2rem;">
+                <div class="deltails-del border" style="padding-top: 0.2rem;">
                     <p class="fs40">
                         <span>商品金额</span>
                         <span class="shop-font">￥{{bus.productTotalMoney}}</span>
@@ -197,11 +218,13 @@
     </section>
     <section class="orderTotal-footer clearfix" v-if="orderList != null && orderList.length > 0">
         <div class="orderTotal-fr fs40 ">
+            <!-- 实际支付的价格 -->
             <p>合计：<span class="shop-font">￥{{orderData.totalPayMoney | moneySplit1}}</i>.{{orderData.totalPayMoney | moneySplit2}}</span></p>
+            <!-- 优惠前的价格 -->
             <span>总额:￥{{orderData.totalMoney | moneySplit1}}</i>.{{orderData.totalMoney | moneySplit2}}</span>
             <span>总优惠:￥{{orderData.totalYouHuiMoney | moneySplit1}}</i>.{{orderData.totalYouHuiMoney | moneySplit2}}</span>
         </div>
-        <div class="orderTotal-button fs40 shop-bg">
+        <div class="orderTotal-button fs40 shop-bg" @click="submitOrder">
             提交订单
         </div>
     </section>
@@ -231,17 +254,21 @@
 </template>
 
 <script>
+//组件
 import footerNav from "components/footerNav";
 import defaultImg from "components/defaultImg";
 import shopDialog from "components/shopDialog";
 import payWayDialog from "components/payWayDialog";
-import filte from "../../../lib/filters";
 import technicalSupport from "components/technicalSupport"; //技术支持
-import calculation from "./js/calculationOrder"; //技术支持
 import couponDialog from "./componet/couponDialog"; //优惠券弹出框
+//过滤器
+import filte from "@/lib/filters"; //过滤器
+//js
+import calculation from "./js/calculationOrder"; //订单计算js
+import submitOrder from "./js/submitOrder"; //提交订单js
 
 export default {
-  name: "my",
+  name: "submitOrder",
 
   data() {
     return {
@@ -257,7 +284,7 @@ export default {
       orderList: [], //订单集合
       orderData: {}, //订单对象
       imgUrl: "", //图片域名
-      selectPayWay: 0, //选中的支付方式
+      selectPayWay: {}, //选中的支付方式
       dialogName: "选择支付方式", //标题
       dialogArr: [], //弹出框集合
       dialogType: 1,
@@ -354,7 +381,7 @@ export default {
       } else if (type == 3) {
         titleNames = "选择优惠券";
         this.isUseMemberDiscount = isSelectDiscount;
-        console.log("isSelectDiscount",isSelectDiscount)
+        console.log("isSelectDiscount", isSelectDiscount);
       }
       this.dialogName = titleNames;
       this.dialogArr = list;
@@ -400,459 +427,18 @@ export default {
         }
         this.caculationOrder(5);
       }
-    }
+    },
+    /**
+     * 改变到店自提地址
+     */
+    changeTakeAddress() {},
+    /**
+     * 改变到店自提时间
+     */
+    changeTakeTime() {}
   }
 };
 </script>
-
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
-//我的订单
-.order-content {
-  width: 100%;
-  background: #fff;
-  .logistics-title {
-    padding: 50/ @dev-Width *1rem 35/ @dev-Width *1rem;
-    line-height: 1;
-    .logistics-img {
-      width: 60/ @dev-Width *1rem;
-      height: 60/ @dev-Width *1rem;
-      .border-radius(100%);
-      margin-right: 20/ @dev-Width *1rem;
-      border: 1px solid #ededed;
-    }
-  }
-  .logistics-list {
-    width: 100%;
-    padding-left: 82/ @dev-Width *1rem;
-    padding-right: 30/ @dev-Width *1rem;
-    line-height: 1;
-    overflow: hidden;
-    .logistics-item {
-      padding: 40/@dev-Width *1rem 0 40/@dev-Width *1rem 82/ @dev-Width *1rem;
-      position: relative;
-      height: 235/@dev-Width *1rem;
-      .logistics-txt {
-        line-height: 0.35rem;
-        margin-bottom: 15/@dev-Width *1rem;
-      }
-      em {
-        position: absolute;
-        width: 25/@dev-Width *1rem;
-        height: 25/@dev-Width *1rem;
-        background: #dddddd;
-        top: 50/@dev-Width *1rem;
-        left: -((25+3)/2)/@dev-Width *1rem;
-        .border-radius(100%);
-      }
-      &::after {
-        content: "";
-        position: relative;
-        display: inline-block;
-        width: 3/@dev-Width *1rem;
-        height: 200%;
-        background: #dddddd;
-        left: -(86)/@dev-Width *1rem;
-        top: -(120)/@dev-Width *1rem;
-      }
-    }
-    & > div:first-child {
-      color: #0bb453;
-      em {
-        background: #0bb453;
-        box-shadow: 0px 0px 0px 2px rgba(11, 180, 83, 0.3);
-      }
-    }
-  }
-}
-.order-main {
-  padding-top: 148/@dev-Width *1rem;
-}
-.order-main,
-.deltails-main {
-  position: relative;
-  .order-box {
-    width: 100%;
-  }
-  .order-item {
-    width: 100%;
-    margin-bottom: 20/@dev-Width *1rem;
-    background: #fff;
-  }
-  .order-item-title {
-    padding: 0 40/@dev-Width *1rem;
-    background: #fafafa;
-    height: 135 /@dev-Width *1rem;
-    .ik-box;
-    .ik-box-align(center);
-    .order-title-img {
-      width: 80 /@dev-Width *1rem;
-      height: 80 /@dev-Width *1rem;
-      .border-radius(100%);
-      border: 1px solid #efefef;
-      background-size: cover;
-      overflow: hidden;
-    }
-    span {
-      margin-left: 20 /@dev-Width *1rem;
-      font-weight: bold;
-    }
-  }
-  .order-shop {
-    width: 100%;
-    height: 116 /@dev-Width *1rem;
-    padding-left: 40 /@dev-Width *1rem;
-    padding-right: 30/@dev-Width *1rem;
-    .ik-box;
-    .ik-box-align(center);
-    .ik-box-pack(justify);
-    font-size: 0;
-  }
-  .order-shop-name {
-    span {
-      margin: 30/@dev-Width *1rem;
-    }
-  }
-  .order-item-content,
-  .order-number-time {
-    .ik-box;
-    .ik-box-pack(justify);
-    width: 100%;
-    padding: 24/@dev-Width *1rem 30/@dev-Width *1rem 24/@dev-Width *1rem 40/@dev-Width *1rem;
-    .order-item-img {
-      width: 265 /@dev-Width *1rem;
-      height: 265 /@dev-Width *1rem;
-      background-size: cover;
-    }
-    .order-item-txt {
-      width: 73%;
-      p {
-        margin-bottom: 20 /@dev-Width *1rem;
-      }
-    }
-  }
-  .order-item-total,
-  .order-item-button,
-  .order-number-time {
-    width: 100%;
-    padding: 38/@dev-Width *1rem 30/@dev-Width *1rem 38/@dev-Width *1rem 40/@dev-Width *1rem;
-    text-align: right;
-    .order-button {
-      color: #fff;
-      width: 254/@dev-Width *1rem;
-      height: 88 /@dev-Width *1rem;
-      line-height: 88/@dev-Width *1rem;
-      display: inline-block;
-      .border-radius(5px);
-      text-align: center;
-      margin-left: 20/@dev-Width *1rem;
-    }
-  }
-}
-//订单详情
-.deltails-header {
-  color: #fff;
-  .ik-box;
-  .ik-box-pack(center);
-  .ik-box-orient(vertical);
-  padding-left: 115/@dev-Width *1rem;
-  width: 100%;
-  background-size: 100%;
-  height: 316/@dev-Width *1rem;
-  background-position: center;
-  margin-bottom: 30/@dev-Width *1rem;
-  & > p:first-child {
-    margin-bottom: 30/@dev-Width *1rem;
-  }
-}
-.deltails-padding0 {
-  padding-left: 0;
-  i {
-    font-size: 148/@dev-Width *1rem;
-  }
-}
-.deltails-express {
-  width: 100%;
-  padding: 0 42/@dev-Width *1rem;
-  background: #fff;
-  font-size: 0;
-  margin-bottom: 30/@dev-Width *1rem;
-  .deltails-express-top {
-    padding: 35/@dev-Width *1rem 0;
-    .ik-box;
-    width: 100%;
-    p {
-      line-height: 1.5em;
-      margin-bottom: 20/@dev-Width *1rem;
-    }
-    .col-1 {
-      width: 8%;
-      line-height: 1rem;
-    }
-    .col-2 {
-      width: 85%;
-    }
-  }
-  .deltails-express-bottom {
-    .ik-box;
-    padding: 30/@dev-Width *1rem 0;
-    .col-1 {
-      line-height: 0.6rem;
-      width: 8%;
-    }
-    .col-2 {
-      width: 92%;
-    }
-    .deltails-name {
-      .ik-box;
-      .ik-box-pack(justify);
-      span {
-        display: block;
-      }
-    }
-  }
-}
-.deltails-item-button {
-  text-align: right;
-  font-size: 0;
-  margin-bottom: 60/@dev-Width *1rem;
-}
-.deltails-button {
-  display: inline-block;
-  padding: 20/@dev-Width *1rem 15/@dev-Width *1rem;
-  .border-radius(5px);
-  margin-right: 30/@dev-Width *1rem;
-}
-.deltails-del {
-  padding-left: 30 /@dev-Width *1rem;
-  padding-bottom: 35 /@dev-Width *1rem;
-  line-height: 1;
-  p {
-    margin-bottom: 30 /@dev-Width *1rem;
-    .ik-box;
-    .ik-box-pack(justify);
-    padding-right: 25 /@dev-Width *1rem;
-    span {
-      display: block;
-    }
-  }
-  & > p:last-child {
-    margin-bottom: 0;
-  }
-}
-.deltails-money {
-  text-align: right;
-  padding: 40 /@dev-Width *1rem;
-}
-.deltails-footer {
-  padding: 35 /@dev-Width *1rem 0;
-  font-size: 0;
-  text-align: right;
-  border-top: 1px solid #ddd;
-  .deltails-button {
-    color: #fff;
-    display: inline-block;
-    .border-radius(5px);
-    text-align: center;
-    margin-left: 20/@dev-Width *1rem;
-  }
-}
-.deltails-main {
-  padding-bottom: 180 /@dev-Width *1rem;
-}
-.orderTotal-header {
-  width: 100%;
-  font-size: 0;
-  margin-bottom: 30 /@dev-Width *1rem;
-  .header-top {
-    width: 100%;
-    background: #f0f2f5;
-    padding: 0 48 /@dev-Width *1rem;
-    height: 138/@dev-Width *1rem;
-    .ik-box;
-    .ik-box-pack(justify);
-    .ik-box-align(center);
-    & > div {
-      width: 20%;
-      height: 100%;
-      padding: 37 /@dev-Width *1rem 0;
-      i {
-        color: #b2b2b2;
-      }
-    }
-  }
-  .header-bottom,
-  .header-bottom-no {
-    width: 100%;
-    background: #fff;
-    padding: 40 /@dev-Width *1rem 48 /@dev-Width *1rem;
-    border-top: 0;
-    border-bottom: 16 /@dev-Width *1rem solid transparent;
-    -webkit-border-image: url("../../../assets/img/order_border.png") repeat; /* Safari 5 */
-    -o-border-image: url("../../../assets/img/order_border.png") repeat; /* Opera */
-    border-image: url("../../../assets/img/order_border.png") repeat;
-    -webkit-border-image-slice: 12 0;
-    -o-border-border-image-slice: 12 0;
-    border-image-slice: 12 0;
-    .header-bottom-left {
-      width: 95%;
-      float: left;
-    }
-    .header-bottom-right {
-      float: left;
-      width: 5%;
-      color: #c7c7cc;
-    }
-    & > p {
-      margin-bottom: 20/@dev-Width *1rem;
-    }
-  }
-  .header-bottom-no {
-    width: 100%;
-    text-align: center;
-    height: 268/@dev-Width *1rem;
-    background: #fff;
-    .ik-box;
-    .ik-box-align(center);
-    .ik-box-pack(center);
-    p {
-      width: 80%;
-      padding: 30/@dev-Width *1rem 0;
-    }
-    .iconfont {
-      color: #c7c7cc;
-      font-size: 68/@dev-Width *1rem;
-      vertical-align: -0.08rem;
-      margin-right: 10/@dev-Width *1rem;
-    }
-  }
-}
-.orderTotal-money {
-  .ik-box;
-  .ik-box-pack(justify);
-  margin-top: 50/@dev-Width *1rem;
-}
-.orderTotal-list-box {
-  width: 100%;
-  padding-left: 30/@dev-Width *1rem;
-  .iconfont {
-    color: #c7c7cc;
-    font-size: 40/@dev-Width *1rem;
-    margin-right: 10/@dev-Width *1rem;
-  }
-}
-.orderTotal-list {
-  width: 100%;
-  .ik-box;
-  .ik-box-pack(justify);
-  .ik-box-align(center);
-  height: 122/@dev-Width *1rem;
-  padding-right: 20/@dev-Width *1rem;
-}
-.orderTotal-table {
-  width: 100%;
-  padding: 40/@dev-Width *1rem 0;
-  padding-right: 20/@dev-Width *1rem;
-  .my-table {
-    width: 80%;
-  }
-  input {
-    border: 0px;
-  }
-}
-.orderTotal-footer {
-  width: 100%;
-  background: #fff;
-  position: fixed;
-  bottom: 0;
-  .orderTotal-fr {
-    width: 75%;
-    float: left;
-    padding: 20/@dev-Width *1rem 0;
-    padding-left: 45/@dev-Width *1rem;
-  }
-  .orderTotal-button {
-    width: 25%;
-    float: left;
-    color: #fff;
-    height: 164/@dev-Width *1rem;
-    line-height: 164/@dev-Width *1rem;
-    text-align: center;
-  }
-}
-
-.switch {
-  display: inline-block;
-  text-align: start;
-  text-indent: 0;
-  text-transform: none;
-  text-shadow: none;
-  word-spacing: normal;
-  letter-spacing: normal;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-rtl-ordering: logical;
-  -webkit-user-select: text;
-  text-rendering: auto;
-  -webkit-writing-mode: horizontal-tb;
-  position: relative;
-  box-sizing: border-box;
-  outline: 0;
-  border: 1px solid #d2d2d2;
-  background-color: #d2d2d2;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  vertical-align: middle;
-}
-.small-switch {
-  width: 45px;
-  height: 24px;
-  border-radius: 14px;
-}
-.switch:before {
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: #d2d2d2;
-  text-align: right;
-  -webkit-transition: -webkit-transform 0.3s;
-  transition: -webkit-transform 0.3s;
-  transition: transform 0.3s;
-  transition: transform 0.3s, -webkit-transform 0.3s;
-}
-.small-switch:before {
-  width: 21px;
-  height: 21px;
-  border-radius: 15px;
-  line-height: 27px;
-  padding-right: 10px;
-}
-.switch:after {
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-  content: "";
-  -webkit-transition: -webkit-transform 0.3s;
-  transition: -webkit-transform 0.3s;
-  transition: transform 0.3s;
-  transition: transform 0.3s, -webkit-transform 0.3s;
-}
-.small-switch:after {
-  width: 21px;
-  height: 21px;
-  border-radius: 15px;
-  line-height: 22px;
-  padding-right: 10px;
-}
-.small-switch:checked:after {
-  width: 21px;
-  height: 21px;
-  border-radius: 20px;
-  -webkit-transform: translateX(21px);
-  transform: translateX(21px);
-}
+@import "./css/settlement"; //样式
 </style>

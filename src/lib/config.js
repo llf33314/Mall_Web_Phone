@@ -61,7 +61,7 @@
   // h5App.env = env.develop;
   h5App.activeAPI = {
     // phoneProduct_post: h5App.env.activeAPI + '/phoneProduct/L6tgXlBFeK/productAll',
-     /***********************   以下接口都是 公用接口 ***********************/
+    /***********************   以下接口都是 公用接口 ***********************/
     /*获取首页id*/
     get_home_page_id_post: 'phonePage/L6tgXlBFeK/getHomePageId',
     /*获取店铺id*/
@@ -99,8 +99,8 @@
     phoneProduct_getProductParams_post: '/phoneProduct/L6tgXlBFeK/getProductParams',
     /*加入购物车接口*/
     phoneShopCart_addShopCart_post: '/phoneShopCart/L6tgXlBFeK/addShopCart',
-     /*加入购物车接口*/
-     liji_buy_post: '/phoneOrder/L6tgXlBFeK/buyNow',
+    /*加入购物车接口*/
+    liji_buy_post: '/phoneOrder/L6tgXlBFeK/buyNow',
     /***********************   以下接口都是 购物车页面相关接口 ***********************/
     /*查询购物车接口 */
     phoneShopCart_getShopCartx_post: '/phoneShopCart/L6tgXlBFeK/getShopCart',
@@ -112,8 +112,6 @@
     /*获取商城首页数据 */
     mall_index_post: '/phonePage/L6tgXlBFeK/getHomePageId',
     /***********************   以下接口都是 订单相关的接口 ***********************/
-    /*获取提交订单的数据 */
-    to_order_post: '/phoneOrder/L6tgXlBFeK/toOrder',
     /*获取我的订单数据 */
     order_list_post: '/phoneOrder/L6tgXlBFeK/orderList',
     /*确认收货接口 */
@@ -123,6 +121,7 @@
     /*获取订单详情数据 */
     order_detail_post: '/phoneOrder/L6tgXlBFeK/orderDetail',
     /*删除订单的接口 */
+    /********************** 以下接口是退款相关的接口 */
     delete_order_post: '/phoneOrder/L6tgXlBFeK/deleteOrder',
     /*获取退款类型的接口 */
     return_style_post: '/phoneOrder/L6tgXlBFeK/getReturnStyle',
@@ -139,7 +138,16 @@
     /*查看退款详情的接口 */
     return_finish_detail_post: '/phoneOrder/L6tgXlBFeK/returnDetail',
     /*查看协商详情的接口 */
-    return_log_post: '/phoneOrder/L6tgXlBFeK/returnLogList'
+    return_log_post: '/phoneOrder/L6tgXlBFeK/returnLogList',
+    /*提交订单的接口 */
+    submit_order_post: '/phoneOrder/L6tgXlBFeK/submitOrder',
+    /**********************以下接口是提交订单页面相关接口 */
+    /*获取提交订单的数据 */
+    to_order_post: '/phoneOrder/L6tgXlBFeK/toOrder',
+    /*查询上门自提地址的接口 */
+    get_take_their_post: '/phoneOrder/L6tgXlBFeK/getTakeTheir',
+    /*查询上门自提时间的接口 */
+    get_take_their_time_post: '/phoneOrder/L6tgXlBFeK/getTakeTheirTime'
 
   };
 

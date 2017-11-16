@@ -1,10 +1,13 @@
 
 import Vue from 'vue'
+/**
+ * 订单计算
+ */
 Vue.mixin({
 	methods: {
 		/**
 		 * 计算订单
-		 * type 1 联盟折扣 2 会员折扣 3 粉币抵扣 4 积分抵扣  5 优惠券优惠
+		 * type 1 联盟折扣 2 会员折扣 3 粉币抵扣 4 积分抵扣  5 优惠券优惠  
 		 */
 		caculationOrder(type) {
 			let _this = this;
