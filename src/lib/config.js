@@ -106,7 +106,8 @@
     phoneShopCart_getShopCartx_post: '/phoneShopCart/L6tgXlBFeK/getShopCart',
     /*删除购物车接口 */
     phoneShopCart_removeShopCart_post: '/phoneShopCart/L6tgXlBFeK/removeShopCart',
-
+    /*去结算接口 */
+    phoneShopCart_shopCartOrder_post: '/phoneShopCart/L6tgXlBFeK/shopCartOrder',
     /*获取我的页面数据*/
     my_center_post: '/phoneMember/L6tgXlBFeK/toUser',
     /*获取商城首页数据 */
