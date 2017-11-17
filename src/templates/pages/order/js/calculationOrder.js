@@ -15,7 +15,7 @@ Vue.mixin({
 			let data = _this.orderData;
 			let totalYouHuiMoneys = 0;//保存优惠的金额
 			//循环商家
-			_this.orderList.forEach((bus, item) => {
+			_this.orderList.forEach((bus, i) => {
 				bus.shopResultList.forEach((shop, index) => {
 					//循环商品
 					shop.productResultList.forEach((product, index) => {
@@ -52,6 +52,7 @@ Vue.mixin({
 					// totalYouHuiMoneys += bus.jifenYouhuiMoney;
 					totalYouHuiMoneys = _commonFm.floatAdd(totalYouHuiMoneys, bus.jifenYouhuiMoney);
 				}
+				_this.$set(_this.orderList, i, bus);
 			});
 			//计算订单支付的金额 订单优惠券的价格 - 订单优惠后的价格   data.totalMoney - totalYouHuiMoneys）
 			data.totalPayMoney = _commonFm.floatSub(data.totalMoney, totalYouHuiMoneys);

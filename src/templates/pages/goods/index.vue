@@ -19,7 +19,7 @@
                             {{goodsData.productPrice | moneySplit1}}.{{goodsData.productPrice | moneySplit2}}积分
                         </span>
                         <span v-else >价格:</span>
-                        ￥<span class="fs50">{{goodsData.productPrice | moneySplit1}}</span>.{{goodsData.productPrice | moneySplit2}}
+                        ￥<span class="fs50" v-if="goodsData.productPrice > 0">{{goodsData.productPrice | moneySplit1}}</span>.{{goodsData.productPrice | moneySplit2}}
                         <span v-if="type== 7">批发价：￥{{goodsData.pfPrice}}</span>
                         <span class="shopGray" v-if="goodsData.auctionResult >= 0 ">抢拍{{goodsData.auctionResult.auctionNumber}}次</span>
                     </div>

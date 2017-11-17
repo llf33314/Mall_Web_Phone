@@ -383,6 +383,15 @@ var Rxports = {
 
 		r2 = Number(arg2.toString().replace(".", ""));
 		return (r1 / r2) * Math.pow(10, t2 - t1);
+	},
+	/**
+	 * 判断对象是否为空
+	 */
+	isNull(data){
+		if(data == null || data == "" || typeof(data) == "undefined"){
+			return true;
+		}
+		return false;
 	}
 };
 

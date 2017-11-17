@@ -82,7 +82,7 @@
                         </p>
                     </div>
                     <!-- 到店自提区域 -->
-                    <div class="clearfix " v-if="bus.selectDelivery != null && bus.selectDelivery.id == 1">
+                    <div class="clearfix " v-if="bus.selectDelivery != null && bus.selectDelivery.id == 2">
                       <div class="border clearfix orderTotal-table">
                          <p class="fs40 shop-fl">提货人：</p>
                          <input  class="fs40 shop-fr my-table" placeholder="请填写提货人姓名（必填）" v-model="bus.appointmentUserName"/>
@@ -98,8 +98,12 @@
                       </div>
                       <div class="border clearfix orderTotal-table">
                          <p class="fs40 shop-fl">提货时间：</p>
-                         <div  class="fs40 shop-fr my-table" placeholder="请填选择提货时间（必选）" v-text="bus.appointmenTimes"
-                          @click="changeTakeTime"></div>
+                         <div  class="fs40 shop-fr my-table"   @click="changeTakeTime(bus.takeTimeList)" 
+                            v-if="bus.takeTimeList != null && bus.takeTimeList.length > 0 && bus.selectTakeTime != null"
+                            v-text="bus.selectTakeTime.times +' '+ bus.selectTakeTime.startTime +'-'+ bus.selectTakeTime.endTime"></div>
+                          <div  class="fs40 shop-fr my-table"
+                            v-else   
+                            ></div>
                       </div>
                     </div>
                     <!-- 会员折扣，联盟折扣，积分抵扣 和 粉币抵扣区域 -->
@@ -289,7 +293,8 @@ export default {
       dialogArr: [], //弹出框集合
       dialogType: 1,
       dialogBusId: 0, //弹出框需要的商家id
-      isUseMemberDiscount: 0 //是否选择了会员折扣
+      isUseMemberDiscount: 0, //是否选择了会员折扣
+      pickerValue: ""
     };
   },
   components: {
@@ -392,6 +397,7 @@ export default {
     //选中弹出框内容
     selectDialogChange(data) {
       let _this = this;
+      let obj = data[1];
       //改变选中对象
       if (data[0] == 1) {
         //选择支付方式
@@ -402,6 +408,10 @@ export default {
           let item = _this.orderList[i];
           if (item.busId == data[2]) {
             item.selectDelivery = data[1];
+            if (obj.id == 2) {
+              //到店自提
+              _this.showTakeTime(item.takeId, item.busId);
+            }
             break;
           }
         }
@@ -411,7 +421,6 @@ export default {
         //   }
         // });
       } else if (data[0] == 3) {
-        let obj = data[1];
         //选择优惠券
         for (let i = 0; i < _this.orderList.length; i++) {
           let bus = _this.orderList[i];
@@ -429,14 +438,92 @@ export default {
     /**
      * 改变到店自提地址
      */
-    changeTakeAddress() {},
+    changeTakeAddress() {
+      let _this = this;
+      let _data = {};
+      _this.ajaxRequest({
+        url: h5App.activeAPI.get_take_their_post,
+        data: _data,
+        success: function(data) {
+          if (data.code != 0) {
+            _this.bondStatu = 1;
+            _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
+            return;
+          }
+          let myData = data.data;
+          console.log("myData", myData);
+          _this.orderData = myData;
+          _this.memberAddresss = myData.memberAddressDTO; //选中的收货地址
+          if (_this.memberAddresss != null) {
+            _this.hasAddress = true;
+          }
+          _this.payWayList = myData.payWayList; //支付方式
+          _this.orderList = myData.busResultList; //订单集合
+          _this.imgUrl = data.imgUrl; //图片域名
+          _this.orderList.forEach((item, index) => {
+            item.isSelectDiscount = true;
+            if (item.deliveryWayList != null) {
+              let selectDelivery = item.deliveryWayList[0]; //默认选中第一个配送方式
+              item.selectDelivery = selectDelivery; //选中的配送方式
+            }
+          });
+          //支付方式集合
+          if (_this.payWayList != null && _this.payWayList.length > 0) {
+            //赋值默认的支付方式
+            _this.selectPayWay = _this.payWayList[0];
+          }
+          _this.caculationOrder(0); //初始化计算订单
+        }
+      });
+    },
     /**
-     * 改变到店自提时间
+     * 获取到店自提时间
      */
-    changeTakeTime() {}
+    showTakeTime(id, busId) {
+      let _this = this;
+      let _data = {
+        takeId: id
+      };
+      console.log("---", busId);
+      _this.ajaxRequest({
+        url: h5App.activeAPI.get_take_their_time_post,
+        data: _data,
+        success: function(data) {
+          let myData = data.data;
+          if (myData == null && myData == "") {
+            return;
+          }
+          for (let i = 0; i < _this.orderList.length; i++) {
+            let bus = _this.orderList[i];
+            if (bus.busId == busId) {
+              bus.takeTimeList = myData;
+              bus.selectTakeTime = myData[0];
+              bus.text = "aaa";
+              _this.$set(_this.orderList, i, bus);
+              break;
+            }
+          }
+          console.log("到店自提时间：", _this.orderList);
+        }
+      });
+    },
+    /**
+     * 改变时间
+     */
+    changeTakeTime(takeTimeList) {
+      this.pickerValue = takeTimeList;
+      openPicker();
+      console.log(takeTimeList, "-------------");
+    },
+    /**
+     * 打开时间弹出框
+     */
+    openPicker() {
+    //   this.$refs.picker.open();
+    }
   }
 };
 </script>
 <style lang="less" scoped>
-@import "./css/settlement"; //样式
+@import "./css/settlement.less"; //样式
 </style>
