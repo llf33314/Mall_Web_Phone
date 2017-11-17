@@ -392,7 +392,16 @@ var Rxports = {
 			return true;
 		}
 		return false;
-	}
+	},
+	/**
+	* 判断对象是否不为空
+	*/
+   isNotNull(data){
+	   if(data == null || data == "" || typeof(data) == "undefined"){
+		   return false;
+	   }
+	   return true;
+   }
 };
 
 Vue.prototype.commonFn = Rxports;

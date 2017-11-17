@@ -8,11 +8,12 @@
             <div class="payment-dialog-list shop-box-center border"
                 v-for="obj in dialogList"
                 @click="selectDialog(obj)" >
+                 <i class="  fs40 shop-font" :class="[selectData == obj.id ? 'icon-yigouxuan iconfont' : 'icon-yuangy']"></i>
                 <div class="payment-dialog-title shop-box-center">
-                    <i class="iconfont " :class="'icon-'+obj.claName"></i>
-                    <span class="fs42">{{obj.wayName}}</span>
+                    <span class="fs42">{{obj.visitAddressDetail}}</span>
                 </div>
-                <i class="iconfont icon-jiantou-copy fs40"></i>
+                <!-- <i class="iconfont icon-dui1 fs40 shop-font" v-if="selectData == obj.id"></i>
+                 <i class="iconfont  fs40 shop-font" v-else></i> -->
             </div>
         </div>
      </sp-dialog>
@@ -21,7 +22,7 @@
 import spDialog from "components/spDialog";
 export default {
   name: "payWayDialog",
-  props: ["name", "dialogList", "type", "busId"],
+  props: ["name", "dialogList", "type", "busId", "selectData"],
   data: function() {
     return {
       list: [],
@@ -51,8 +52,8 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import "../../assets/css/mixins.less";
-@import "../../assets/css/base.less";
+@import "../../../../assets/css/mixins.less";
+@import "../../../../assets/css/base.less";
 .payment-dialog-main {
   width: 100%;
   .payment-dialog-list {
@@ -63,6 +64,8 @@ export default {
       color: #c7c7cc;
     }
     .payment-dialog-title {
+      width: 92%;
+      text-align: justify;
       i {
         display: block;
         font-size: 95/@dev-Width *1rem;
@@ -86,6 +89,16 @@ export default {
     .icon-chuzhika,
     .icon-daodianziti {
       color: #f7ba2a;
+    }
+    .icon-yuangy {
+      display: block;
+      width: 70/@dev-Width *1rem;
+      height: 70/@dev-Width *1rem;
+      border: 1px solid #c9c9c9;
+      .border-radius(100%);
+    }
+    .icon-yigouxuan {
+      font-size: 76/@dev-Width *1rem;
     }
   }
 }

@@ -63,7 +63,7 @@
                         </div>
                     </div>
                     <div class="border orderTotal-list-box" v-if="shop.isCanUseYhqDiscount == 1 && shop.couponList != null">
-                      <div class="orderTotal-list border" @click="showDialogs(shop.couponList,3,shop.shopId,bus.isSelectDiscount)">
+                      <div class="orderTotal-list border" @click="showDialogs(shop.couponList,3,shop.shopId,bus.isSelectDiscount,shop.selectCoupon)">
                           <p class="fs40"> 优惠券</p>
                           <p class="fs40">
                               <span v-if="shop.selectCoupon != null">{{shop.selectCoupon.couponsName || ""}}</span>
@@ -74,7 +74,7 @@
                 </div>
                 <div class="border orderTotal-list-box">
                     <div class="orderTotal-list border" v-if="bus.deliveryWayList != null && bus.deliveryWayList.length > 0"
-                      @click="showDialogs(bus.deliveryWayList,2,bus.busId)">
+                      @click="showDialogs(bus.deliveryWayList,2,bus.busId,bus.isSelectDiscount,bus.selectDelivery)">
                         <p class="fs40">配送方式</p>
                         <p class="fs40">
                             {{bus.selectDelivery.wayName}}
@@ -85,25 +85,25 @@
                     <div class="clearfix " v-if="bus.selectDelivery != null && bus.selectDelivery.id == 2">
                       <div class="border clearfix orderTotal-table">
                          <p class="fs40 shop-fl">提货人：</p>
-                         <input  class="fs40 shop-fr my-table" placeholder="请填写提货人姓名（必填）" v-model="bus.appointmentUserName"/>
+                         <input  class="fs40 shop-fr my-table" placeholder="请填写提货人姓名（必填）" v-model="bus.appointmentUserName"
+                         @blur="blurName(bus.appointmentUserName)"/>
                       </div>
                       <div class="border clearfix orderTotal-table">
                          <p class="fs40 shop-fl">手机号码：</p>
-                         <input  class="fs40 shop-fr my-table" placeholder="请填写提货人手机号码（必填）" v-model="bus.appointmentUserPhone"/>
+                         <input  class="fs40 shop-fr my-table" placeholder="请填写提货人手机号码（必填）" v-model="bus.appointmentUserPhone"
+                            @blur="blurPhone(bus.appointmentUserPhone,'提货人手机号')" />
                       </div>
                       <div class="border clearfix orderTotal-table">
                          <p class="fs40 shop-fl">提货地址：</p>
                          <div  class="fs40 shop-fr my-table text-overflow" placeholder="请填选择提货地址（必选）" v-text="bus.takeAddress"
-                          @click="changeTakeAddress"></div>
+                          @click="changeTakeAddress(bus.busId,bus.takeDataArr,bus.takeId)"></div>
                       </div>
                       <div class="border clearfix orderTotal-table">
                          <p class="fs40 shop-fl">提货时间：</p>
-                         <div  class="fs40 shop-fr my-table"   @click="changeTakeTime(bus.takeTimeList)" 
+                         <div  class="fs40 shop-fr my-table"   @click="showDialogs(bus.takeTimeList,4,bus.busId,0,bus.selectTakeTime)" 
                             v-if="bus.takeTimeList != null && bus.takeTimeList.length > 0 && bus.selectTakeTime != null"
                             v-text="bus.selectTakeTime.times +' '+ bus.selectTakeTime.startTime +'-'+ bus.selectTakeTime.endTime"></div>
-                          <div  class="fs40 shop-fr my-table"
-                            v-else   
-                            ></div>
+                          <div  class="fs40 shop-fr my-table" v-else ></div>
                       </div>
                     </div>
                     <!-- 会员折扣，联盟折扣，积分抵扣 和 粉币抵扣区域 -->
@@ -167,7 +167,8 @@
                         <p class="fs40 shop-fl">
                                 买家留言：
                         </p>
-                        <input class="fs40 shop-fr my-table" placeholder=" 请填写备注信息" v-model="bus.buyerMessage" />
+                        <input class="fs40 shop-fr my-table" placeholder=" 请填写备注信息" v-model="bus.buyerMessage" 
+                            @blur="blurBuyerMessage(bus.buyerMessage)"/>
                     </div>
                 </div>
                 <div class="deltails-del border" style="padding-top: 0.2rem;">
@@ -202,14 +203,14 @@
                 </div>
                 <div class="deltails-money fs40">
                     共计{{bus.totalNum}}件商品 小计：
-                    <span class="shop-font">￥<i class="fs52">{{bus.totalMoney | moneySplit1}}</i>.{{orderData.totalMoney | moneySplit2}}</span>
+                    <span class="shop-font">￥<i class="fs52">{{bus.totalMoney | moneySplit1}}</i>.{{bus.totalMoney | moneySplit2}}</span>
                 </div>
             </div>
 
         </div>
         <div class="border orderTotal-list-box" style="background-color:#fff;" 
           v-if="orderData.payWayList != null && orderData.payWayList.length > 0">
-          <div class="orderTotal-list border" @click="showDialogs(orderData.payWayList,1,-1)">
+          <div class="orderTotal-list border" @click="showDialogs(orderData.payWayList,1,-1,0,selectPayWay)">
               <p class="fs40">支付方式</p>
               <p class="fs40">
                   {{selectPayWay.wayName}}
@@ -247,10 +248,25 @@
     <section class="shop-main-no fs40 my-bond" 
       v-if="isShow && dialogArr != null && dialogArr.length > 0 && dialogType == 3">
         <coupon-dialog :name="dialogName" :dialogList="dialogArr" :type="dialogType"  :busId="dialogBusId"
-          :isSelectDiscount = "isUseMemberDiscount"
           :closeDialog.sync="isShow"
           @selectDialog="selectDialogChange"
         ></coupon-dialog>
+    </section>
+    <!-- 选择时间 -->
+    <section class="shop-main-no2 fs40 my-bond" 
+      v-if="isShow && dialogArr != null && dialogArr.length > 0 && dialogType == 4">
+      <times-dialog :name="dialogName" :dialogList="dialogArr" :type="dialogType"  :busId="dialogBusId" :selectData="selectObj"
+          :closeDialog.sync="isShow"
+          @selectDialog="selectDialogChange"
+        ></times-dialog>
+    </section>
+    <!-- 选择地址 -->
+    <section class="shop-main-no fs40 my-bond" 
+      v-if="isShow && dialogArr != null && dialogArr.length > 0 && dialogType == 5">
+      <take-address-dialog :name="dialogName" :dialogList="dialogArr" :type="dialogType"  :busId="dialogBusId" :selectData="selectObj"
+          :closeDialog.sync="isShow"
+          @selectDialog="selectDialogChange"
+        ></take-address-dialog>
     </section>
     <shop-dialog ref="dialog"></shop-dialog>
 </div>
@@ -265,6 +281,8 @@ import shopDialog from "components/shopDialog";
 import payWayDialog from "components/payWayDialog";
 import technicalSupport from "components/technicalSupport"; //技术支持
 import couponDialog from "./componet/couponDialog"; //优惠券弹出框
+import timesDialog from "./componet/timeDialog"; //时间弹出框
+import takeAddressDialog from "./componet/takeAddressDialog"; //提货地址弹出框
 //过滤器
 import filte from "@/lib/filters"; //过滤器
 //js
@@ -294,7 +312,7 @@ export default {
       dialogType: 1,
       dialogBusId: 0, //弹出框需要的商家id
       isUseMemberDiscount: 0, //是否选择了会员折扣
-      pickerValue: ""
+      selectObj: {} //记录选中的对象
     };
   },
   components: {
@@ -303,7 +321,9 @@ export default {
     shopDialog,
     technicalSupport,
     payWayDialog,
-    couponDialog
+    couponDialog,
+    timesDialog,
+    takeAddressDialog
   },
   mounted() {
     this.loadDatas(); //初始化协商详情数据
@@ -348,7 +368,6 @@ export default {
             return;
           }
           let myData = data.data;
-          console.log("myData", myData);
           _this.orderData = myData;
           _this.memberAddresss = myData.memberAddressDTO; //选中的收货地址
           if (_this.memberAddresss != null) {
@@ -373,8 +392,15 @@ export default {
         }
       });
     },
-    //显示弹出框
-    showDialogs(list, type, busId, isSelectDiscount) {
+    /**
+     * 显示弹出框
+     * list 弹出框显示的集合
+     * type 弹出框类型 1 支付方式  2配送方式 3 优惠券 4提货时间 5 提货地址
+     * busId 商家id
+     * isSelectDiscount 是否选中优惠券 
+     * defaultObj 选中数据
+     */
+    showDialogs(list, type, busId, isSelectDiscount, defaultObj) {
       let titleNames = "";
       if (type == 1) {
         //选择支付方式
@@ -384,8 +410,12 @@ export default {
       } else if (type == 3) {
         titleNames = "选择优惠券";
         this.isUseMemberDiscount = isSelectDiscount;
-        console.log("isSelectDiscount", isSelectDiscount);
+      } else if (type == 4) {
+        titleNames = "选择提货时间";
+      } else if (type == 5) {
+        titleNames = "选择提货地址";
       }
+      this.selectObj = defaultObj;
       this.dialogName = titleNames;
       this.dialogArr = list;
       this.isShow = true;
@@ -396,6 +426,7 @@ export default {
     },
     //选中弹出框内容
     selectDialogChange(data) {
+      console.log("data", data);
       let _this = this;
       let obj = data[1];
       //改变选中对象
@@ -415,11 +446,6 @@ export default {
             break;
           }
         }
-        // _this.orderList.forEach((item, index) => {
-        //   if (item.busId == data[2]) {
-        //     item.selectDelivery = data[1];
-        //   }
-        // });
       } else if (data[0] == 3) {
         //选择优惠券
         for (let i = 0; i < _this.orderList.length; i++) {
@@ -432,47 +458,64 @@ export default {
             }
           }
         }
-        this.caculationOrder(5);
+        this.caculationOrder(5); //计算优惠券优惠的
+      } else if (data[0] == 4) {
+        //选中时间
+        for (let i = 0; i < _this.orderList.length; i++) {
+          let bus = _this.orderList[i];
+          if (bus.busId == data[2]) {
+            bus.selectTakeTime = obj;
+            _this.$set(_this.orderList, i, bus);
+            break;
+          }
+        }
+      } else if (data[0] == 5) {
+        console.log(obj);
+        //选中提货地址
+        for (let i = 0; i < _this.orderList.length; i++) {
+          let bus = _this.orderList[i];
+          if (bus.busId == data[2]) {
+            bus.takeId = obj.id;
+            bus.takeAddress = obj.visitAddressDetail;
+            _this.$set(_this.orderList, i, bus);
+            //重新获得自提点时间
+            _this.showTakeTime(obj.id, bus.busId);
+            break;
+          }
+        }
       }
     },
     /**
      * 改变到店自提地址
      */
-    changeTakeAddress() {
+    changeTakeAddress(busId, takeArr, takeId) {
       let _this = this;
-      let _data = {};
+      let _commonFn = _this.commonFn;
+      let address = _this.memberAddresss;
+      if (_commonFn.isNotNull(takeArr) && takeArr.length > 0) {
+        _this.showDialogs(takeArr, 5, busId, 0, takeId);
+        return;
+      }
+      let _data = {
+        busId: busId
+      };
+      if (address != null && _commonFn.isNotNull(address.addressProvince)) {
+        _data.province = address.addressProvince;
+      }
       _this.ajaxRequest({
         url: h5App.activeAPI.get_take_their_post,
         data: _data,
         success: function(data) {
-          if (data.code != 0) {
-            _this.bondStatu = 1;
-            _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
-            return;
-          }
           let myData = data.data;
-          console.log("myData", myData);
-          _this.orderData = myData;
-          _this.memberAddresss = myData.memberAddressDTO; //选中的收货地址
-          if (_this.memberAddresss != null) {
-            _this.hasAddress = true;
-          }
-          _this.payWayList = myData.payWayList; //支付方式
-          _this.orderList = myData.busResultList; //订单集合
-          _this.imgUrl = data.imgUrl; //图片域名
-          _this.orderList.forEach((item, index) => {
-            item.isSelectDiscount = true;
-            if (item.deliveryWayList != null) {
-              let selectDelivery = item.deliveryWayList[0]; //默认选中第一个配送方式
-              item.selectDelivery = selectDelivery; //选中的配送方式
+          for (let i = 0; i < _this.orderList.length; i++) {
+            let bus = _this.orderList[i];
+            if (bus.busId == busId) {
+              bus.takeDataArr = myData;
+              _this.$set(_this.orderList, i, bus);
+              _this.showDialogs(bus.takeDataArr, 5, bus.busId, 0, bus.takeId);
+              break;
             }
-          });
-          //支付方式集合
-          if (_this.payWayList != null && _this.payWayList.length > 0) {
-            //赋值默认的支付方式
-            _this.selectPayWay = _this.payWayList[0];
           }
-          _this.caculationOrder(0); //初始化计算订单
         }
       });
     },
@@ -484,7 +527,6 @@ export default {
       let _data = {
         takeId: id
       };
-      console.log("---", busId);
       _this.ajaxRequest({
         url: h5App.activeAPI.get_take_their_time_post,
         data: _data,
@@ -498,28 +540,51 @@ export default {
             if (bus.busId == busId) {
               bus.takeTimeList = myData;
               bus.selectTakeTime = myData[0];
-              bus.text = "aaa";
               _this.$set(_this.orderList, i, bus);
               break;
             }
           }
-          console.log("到店自提时间：", _this.orderList);
         }
       });
     },
     /**
-     * 改变时间
+     * 验证提货人姓名
      */
-    changeTakeTime(takeTimeList) {
-      this.pickerValue = takeTimeList;
-      openPicker();
-      console.log(takeTimeList, "-------------");
+    blurName(obj) {
+      let _this = this;
+      let _commonFm = this.commonFn;
+      if (_commonFm.isNull(obj) || !_commonFm.validPhone(obj)) {
+        _this.$parent.$refs.bubble.show_tips("请填写提货人姓名");
+        return false;
+      } else if (obj.length > 15) {
+        _this.$parent.$refs.bubble.show_tips("提货人姓名长度不能超过15个字");
+        return false;
+      }
+      return true;
     },
     /**
-     * 打开时间弹出框
+     * 验证提货人手机号码
      */
-    openPicker() {
-    //   this.$refs.picker.open();
+    blurPhone(obj, tipMsg) {
+      let _this = this;
+      let _commonFm = this.commonFn;
+      if (_commonFm.isNull(obj) || !_commonFm.validPhone(obj)) {
+        _this.$parent.$refs.bubble.show_tips("请填写正确的" + tipMsg);
+        return false;
+      }
+      return true;
+    },
+    /**
+     * 验证买家留言
+     */
+    blurBuyerMessage(obj) {
+      let _this = this;
+      let _commonFm = this.commonFn;
+      if (_commonFm.isNotNull(obj) && obj.length >= 100) {
+        _this.$parent.$refs.bubble.show_tips("买家留言长度不能超过100个字");
+        return false;
+      }
+      return true;
     }
   }
 };

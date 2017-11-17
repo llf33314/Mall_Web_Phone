@@ -9,10 +9,59 @@ Vue.mixin({
 		 * 提交订单
 		 */
 		submitOrder() {
+			if (!this.validateSubmitOrderParams()) {
+				return;
+			}
 			let _data = this.getSubmitOrderParams();
 			if (_data == null || _data.length == 0) {
 				return;
 			}
+		},
+		/**
+		 * 验证提交订单的参数
+		 */
+		validateSubmitOrderParams() {
+			let _this = this;
+			let _commonFn = _this.commonFn;//公共js调用
+			let orderData = _this.orderData;//初始化数据
+			let orderList = _this.orderList;//商家集合
+			let flag = true;
+
+
+			for (let i = 0; i < orderList.length; i++) {
+				let bus = orderList[i];
+				let selectDelivery = bus.selectDelivery;
+				if (_commonFn.isNull(selectDelivery)) {
+					_this.$parent.$refs.bubble.show_tips("请选择配送方式");
+					flag = false;
+					break;
+				}
+				//选中配送方式的id  1, 快递配送  2,上门自提  3到店购买
+				if (selectDelivery.id == 1) {
+					if (_commonFn.isNull(memberAddresss) || memberAddresss.id == 0) {
+						_this.$parent.$refs.bubble.show_tips("请选择收货地址");
+						flag = false;
+					}
+				} else if (selectDelivery.id == 2) {
+					if (_commonFn.isNull(bus.appointmentUserName)) {
+						_this.$parent.$refs.bubble.show_tips("请填写提货人姓名");
+						flag = false;
+					}
+					if (_commonFn.isNull(bus.appointmentUserPhone)) {
+						_this.$parent.$refs.bubble.show_tips("请填写正确的提货人手机号码");
+						flag = false;
+					}
+					if (_commonFn.isNull(bus.selectTakeTime)) {
+						_this.$parent.$refs.bubble.show_tips("请填写正确的提货人手机号码");
+						flag = false;
+					}
+
+				}
+				if (!flag) {
+					break;
+				}
+			}
+			return flag;
 		},
 		/**
 		 * 拼提交订单参数
@@ -35,7 +84,6 @@ Vue.mixin({
 			let busResultList = [];
 
 			orderList.forEach((bus, index) => {
-				console.log(bus, "bus")
 				let orderObj = {
 					productTotalMoney: bus.productTotalMoney || 0,//商品总价
 					productFreightMoney: bus.productFreightMoney || 0,//商品运费
@@ -55,18 +103,13 @@ Vue.mixin({
 				};
 				if (orderObj.selectDeliveryWayId == 2) {//上门自提
 					let takeTime = bus.selectTakeTime;
-					// if(_commonFn.isNull(takeTime)){
-
-					// }
-
-					orderObj.takeId = bus.takeId;
 					orderObj.takeAddress = bus.takeAddress;
 					orderObj.appointmentUserName = bus.appointmentUserName;
 					orderObj.appointmentUserPhone = bus.appointmentUserPhone;
-					orderObj.appointmentId = bus.appointmentId;
-					orderObj.appointmentDate = bus.appointmentDate || "";
-					orderObj.appointmentStartTime = bus.appointmentStartTime || "";
-					orderObj.appointmentEndTime = bus.appointmentEndTime || "";
+					orderObj.appointmentId = bus.takeId;
+					orderObj.appointmentDate = takeTime.times || "";
+					orderObj.appointmentStartTime = takeTime.startTime || "";
+					orderObj.appointmentEndTime = takeTime.endTime || "";
 
 				}
 				_this.$set(busResultList, index, orderObj);

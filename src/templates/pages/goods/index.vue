@@ -1267,15 +1267,12 @@ export default {
             
         }
     },
-    beforeCreate() {
-        this.$store.commit('show_footer',false);
-        
-    },
     beforeDestroy() {
         this.$store.commit('show_footer',true);
-
     },  
     mounted () {
+        this.$store.commit('show_footer',false);
+        
         this.commonFn.setTitle( '商品详情');
         this.goodsId = this.$route.params.goodsId;
 
