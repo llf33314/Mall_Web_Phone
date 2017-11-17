@@ -29,7 +29,6 @@ var vm = new Vue({
   components: { App },
 })
 
-
 // require('@/lib/ajax.js');
 /**
  * 弹出框调用
