@@ -30,7 +30,7 @@
                             <span class="fs36">{{shop.shopName}}</span>
                             <i class="iconfont icon-you" ></i>
                         </p>
-                        <p class="fs42 shopGray" @click="edit(i,j)">
+                        <p class="fs42 shopGray" @click="edit(i,j,shop)">
                             <span v-if="!shop.edit">编辑</span>
                             <span v-else>完成</span>
                         </p>
@@ -51,20 +51,23 @@
                                 </div>
                                 <div class="order-item-txt">
                                     <p class="fs42">{{goods.productName}}</p>
-                                    <div v-if="!goods.edit">
+                                    <div v-if="!shop.edit">
                                         <p class="fs36 shopGray">
                                             <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
                                             <span>{{goods.productNum}}份</span>
                                         </p>
-                                        <p class="fs42 shop-font" v-if="goods.productHyPrice>0">¥{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
-                                        <p class="fs42 shop-font" v-else>¥{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
+                                        <p class="fs42 " :class="[ goods.productHyPrice >0 ?'shopGray':'shop-font']"><span class="fs32">¥</span>{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
+                                        <p class="fs42 shop-font" v-if="goods.productHyPrice>0"><span class="fs32">会员价:¥</span>{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
                                     </div>
                                     <div class="goods-choice-box2" v-else>
-                                        <em class="em-choice">-</em>
+                                        <em class="em-choice" 
+                                            @click="addNumber('-',goods)">-</em>
                                         <input class="em-choice"
-                                         v-model="goods.productNum">
+                                            v-model="goods.productNum" 
+                                            @blur="addNumber('',goods)">
                                         </input>
-                                        <em class="em-choice">+</em>
+                                        <em class="em-choice" 
+                                            @click="addNumber('+',goods)">+</em>
                                     </div>
                                 </div>
                             </div>
@@ -110,13 +113,13 @@
                                 </div>
                                 <div class="order-item-txt">
                                     <p class="fs42">{{goods.productName}}</p>
-                                    <div v-if="!goods.edit">
+                                    <div v-if="!shop.edit">
                                         <p class="fs36 shopGray">
                                             <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
                                             <span>{{goods.productNum}}份</span>
                                         </p>
-                                        <p class="fs42 shop-font" v-if="goods.productHyPrice>0">¥{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
-                                        <p class="fs42 shop-font" v-else>¥{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
+                                        <p class="fs42 " :class="[ goods.productHyPrice >0 ?'shopGray':'shop-font']"><span class="fs32">¥</span>{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
+                                        <p class="fs42 shop-font" v-if="goods.productHyPrice>0"><span class="fs32">会员价:¥</span>{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
                                     </div>
                                 </div>
                             </div>
@@ -136,7 +139,7 @@
                 合计：<span class="shop-font">￥{{pifaTotal | currency}}</span>
             </div>
             <div class="shopping-footer-r">
-                <div class="shopping-buttom fs50 shop-yellow">
+                <div class="shopping-buttom fs50 shop-yellow" @click="choose()">
                     继续选购
                 </div>
                 <div class="shopping-buttom fs50 shop-bg">
@@ -155,6 +158,7 @@ import headerNav from 'components/headerNav'
 import contentNo from 'components/contentNo'
 import deleteSlide from './component/deleteSlide'
 import filter from '../../../lib/filters'// 过滤器
+
 export default {
   name: 'shippingCart',
   data(){
@@ -183,6 +187,7 @@ export default {
         selectShop:'',//选中的店铺
         selectGoods:[],//选中的商品
         selectClass:[],//选中的商品
+        settlement:[],//结算数据
     }
   },
   components:{
@@ -197,48 +202,53 @@ export default {
         let _this = this;
         let pifaTotal = 0;
         _this.pifaAmount = 0;
+        let ispifaAmount = true;//判断合计点亮
+        //监听选中购物车数据
         _this.shopCartList.forEach((item,i)=>{
+            let isBusSelect = true;//判断商家点亮
+
+            item.shopResultList.forEach((test,j)=> {
+                let isShopSelect = true;//判断商家店铺点亮
+
+              test.productResultList.forEach((m, n) => {
+                  if(m.show){//商品点亮
+                      if(ispifaAmount){
+                        _this.isPifaAmount = true;
+                      }
+                    if( isBusSelect){
+                        item.show = true;
+                    }
+                    if (isShopSelect) {
+                        //店铺下的商品全部选择时，店铺都选择;
+                        test.show = true;
+                     }
+                  }else{//商品不亮
+                    isBusSelect = false;
+                    isShopSelect = false;
+                    ispifaAmount = false
+                    item.show = false;
+                    test.show = false;
+                    _this.isPifaAmount = false;
+                }
+        
+              })
+            })
+          
+
             //总价计算
             item.shopResultList.forEach((test,j)=>{
                 test.productResultList.forEach((e,n)=>{
                     if(e.show){
-                        pifaTotal += e.productNum * e.productHyPrice
-                        _this.productNum += e.productNum;
+                        if(e.productHyPrice>0){ //会员价
+                            pifaTotal += e.productNum * e.productHyPrice
+                        }else{ //商品价
+                            pifaTotal += e.productNum * e.productPrice
+                        }
+                        _this.pifaAmount += e.productNum;
                     }
                 })
             })
             
-            if(item.show){//选中商家时发生
-                //合计点亮
-                _this.isPifaAmount = true;
-                //商家下店铺全选
-                item.shopResultList.forEach((test,j)=>{
-                    test.show = true;
-                    //商家下店铺全选
-                    test.productResultList.forEach((e,n)=>{
-                        e.show = true
-                    })
-                })
-              return
-            }
-            //取消商家关闭
-            //合计关闭
-            _this.isPifaAmount = false;
-                //取消商家关闭时，店铺状态
-                item.shopResultList.forEach((test,j)=>{
-                    if(test.show){//店铺状态选中时
-                        //店铺下的商品全选
-                        test.productResultList.forEach((e,n)=>{
-                            e.show = true;
-                        })
-                    }else{//取消店铺状态
-                        //店铺下的商品全取消
-                        test.productResultList.forEach((e,n)=>{
-                            e.show = false
-                        })
-                    }
-                })
-
         })
          _this.pifaTotal = pifaTotal;
     }
@@ -265,7 +275,13 @@ export default {
             'url': h5App.activeAPI.phoneShopCart_getShopCartx_post,
             'data':_data,
             'success':(data)=>{
-
+                if(data.code == 1){
+                    let msg={
+                        type :'error',
+                        msg :  data.msg +'------差无数据显示'
+                    }
+                    _this.$parent.$refs.bubble.show_tips(msg);
+                }
                 _this.imgUrl = data.imgUrl;
                 _this.path = data.path;
                 _this.webPath = data.webPath;
@@ -366,101 +382,159 @@ export default {
         })
     },
     /**
-     * 选择商店
-     * @param i  Cart选中的索引
-     * @param index Goods索引
-     * @param j Shop索引
-     */
-    // select_Cart(i){
-    //   let _this = this;
-    //   _this.shopCartList.push([]);
-    //   _this.shopCartList.pop();
-    //   let obj = this.shopCartList[i]
-    //   if(obj.show){
-    //     this.isPifaAmount = false;
-    //     obj.show = false;
-    //     obj.shopResultList.forEach((test,j)=>{
-    //         test.show = false;
-    //         test.productResultList.forEach((e,n)=>{
-    //           e.show = false;
-    //         })
-    //       })
-    //   }else {
-    //     obj.show = true;
-    //     obj.shopResultList.forEach((test,j)=>{
-    //         test.show = true;
-    //         test.productResultList.forEach((e,n)=>{
-    //           e.show = true;
-    //         })
-    //     })
-    //   }
-    // },
-    // select_Shop(j,i){
-    //     let _this = this;
-    //     this.shopCartList.push([]);
-    //     this.shopCartList.pop();
-    //     let obj = this.shopCartList[i].shopResultList[j];
-    //     if(obj.show){
-    //         this.isPifaAmount = false;
-    //         this.shopCartList[i].show = false;
-    //         obj.show = false;
-    //         obj.productResultList.forEach((e,n)=>{
-    //             e.show = false;
-    //         })
-    //     }else {
-    //       obj.show = true;
-    //       obj.productResultList.forEach((e,n)=>{
-    //         e.show = true;
-    //       })
-    //     }
-    // },
-    // select_Goods(index,j,i){
-    //     let _this = this;
-    //     this.shopCartList.push([]);
-    //     this.shopCartList.pop();
-    //     let obj = this.shopCartList[i].shopResultList[j].productResultList[index];
-    //     if(obj.show){
-    //         this.isPifaAmount = false;
-    //         this.shopCartList[i].show = false;
-    //         this.shopCartList[i].shopResultList[j].show = false;
-    //         obj.show = false;
-    //     }else {
-    //         obj.show = true;
-    //     }
-    // },
-    /** 
      * 选中效果
     */
     select_Goods(e){
         let _this = this;
-        e.show = !e.show;
-        this.shopCartList.push([]);
-        this.shopCartList.pop();
-        console.log(e);
+        let _show = !e.show;
+
+        if(typeof e.shopResultList !== 'undefined'){
+          //当前点击是在 商家 第一层数据
+            e.show = _show;
+            e.shopResultList.forEach((item,i)=>{
+              item.show = _show;
+              item.productResultList.forEach((test,j)=>{
+                test.show = _show;
+              })
+            })
+        }else if(typeof e.productResultList !== 'undefined'){
+          //当前点击是在 店铺 第二层数据
+            e.show = _show;
+            e.productResultList.forEach((test,j)=>{
+              test.show = _show;
+            })
+        }else {
+          //当前点击是在 商品 第三层数据
+          e.show = _show;
+        }
+      this.shopCartList.push([]);
+      this.shopCartList.pop();
     },
     select_PifaAmount(){
         console.log(111);
         this.shopCartList.push([]);
         this.shopCartList.pop();
-        this.isPifaAmount = true;
+        let _show =  !this.isPifaAmount
+        this.isPifaAmount = _show;
         this.shopCartList.forEach((item,i)=>{
-            item.show = true;
+            item.show = _show;
             item.shopResultList.forEach((test,j)=>{
-                test.show = true;
+                test.show = _show;
                 test.productResultList.forEach((e,n)=>{
-                    e.show = true;
+                    e.show = _show;
                 })
             })
         });
     },
     /** 
      * 编辑按钮
-     * @param j 当前索引
+     * @param i 商家 索引
+     * @param j 店铺 索引
+     * @param e 当前 商家
      */
-    edit(i,j){
-        console.log(i,j)
-        let obj = this.shopCartList[i].shopResultList[j];
-        this.$set(obj,'edit',!obj);
+    edit(i,j,e){
+        e.edit = !e.edit;
+        let obj = this.shopCartList[i].shopResultList;
+        this.$set(obj,j,e);
+    },
+    /** 
+     * 继续选购--跳转分类页
+    */
+    choose(){
+        let busId =  this.$route.params.busId || this.$store.state.busId;
+        let shopId = this.$route.params.shopId || this.$store.state.shopId;
+        this.$router.push('/classify/'+shopId+'/'+busId+'/'+'0/k=k');
+    },
+    /** 
+     * 添加数量
+     * @param c 加减判断
+     * @param e 当前数据
+    */
+    addNumber(c,e){
+        let _this = this;
+        console.log(e,'e修改数据')
+        let re = /^[0-9]+$/ ;
+            
+        if(!re.test( e.productNum)){
+            _this.$parent.$refs.bubble.show_tips('请输入大于0的整数');
+            e.productNum = 1 ;
+        
+        }else if( e.stockNum == 0){
+            //库存为0 
+            e.productNum = 0 ;
+            _this.$parent.$refs.bubble.show_tips('商品已售罄');
+        }else if( c === '-' || c === ''){
+            //减小时 或者 手动输入
+            e.productNum--;
+
+            if(e.productNum <= 0){
+                _this.$parent.$refs.bubble.show_tips('数量不能小于1');
+                e.productNum = 1 ;
+            }
+        }else{//增减时
+
+            //限购数量不为零时，购买数量不能超出限购数量
+            if(e.maxBuyNum && ( e.productNum >= e.maxBuyNum)){
+                _this.$parent.$refs.bubble.show_tips('超出限购数量');
+                
+            }else  if(e.productNum >= e.stockNum){
+                //库存不为0，超出规格库存
+                _this.$parent.$refs.bubble.show_tips('超出现有库存量');
+                e.productNum = e.stockNum;
+            }else if(c === '+'){
+                e.productNum ++;
+            }
+        }
+        _this.shopCartList.push([]);
+        _this.shopCartList.pop();
+
+        let obj= {
+            id:  e.id,
+            productNum: e.productNum
+        };
+        if( _this.type == 1 ){//批发结算和修改
+            let arr=[];
+            e.pifaSpecificaList.forEach((item,i)=>{
+                let  _data= {
+                    productId: item.productId,
+                    productNum: item.productNum,
+                    specificaValueIds: item.specificaValueIds
+                }
+                arr.push(_data);
+            })
+            obj.pifatSpecificaDTOList =  arr//批发规格集合
+        }
+        
+        if(_this.settlement.length > 0){
+            
+            this.settlement.forEach((item,i)=>{
+                if(item.id == e.id && isId){
+                    item = e;
+                }else{
+                    _this.settlement.push(e);
+                }
+            })
+        }else{
+            
+            _this.settlement.push(e);
+        }
+        console.log(_this.settlement,'_this.settlement');
+    },
+    /**
+     * 结算请求
+     * @param data 请求数据
+     */
+    settlementAjax(data){
+        let _this = this;
+        console.log(_data,'结算和改变数量');
+        _this.ajaxRequest({
+            'url': h5App.activeAPI.phoneShopCart_shopCartOrder_post,
+            'data':_data,
+            'success':(data)=>{
+                //结算跳转
+                //修改编辑
+        }
+    })
     }
   },
   mounted () {
@@ -475,7 +549,6 @@ export default {
 <style lang="less" scoped>
 @import '../../../assets/css/mixins.less';
 @import '../../../assets/css/base.less';
-
 .order-main{
     padding-top: 148/@dev-Width *1rem;
     padding-bottom: 360/@dev-Width *1rem;;
@@ -537,8 +610,14 @@ export default {
           }
           .order-item-txt{
               width: 73%;
-              p{
+              &>p{
                   margin-bottom: 20 /@dev-Width *1rem
+              }
+              &>div{
+                  line-height: 1;
+                  p{
+                      padding-bottom:2px;
+                  }
               }
           }
       }
