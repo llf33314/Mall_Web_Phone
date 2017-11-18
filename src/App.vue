@@ -5,7 +5,7 @@
     <bubble-hint ref="bubble"></bubble-hint>
     <shop-dialog ref="dialog"></shop-dialog>
     <top ref="top" v-if="$store.state.showTop"></top>
-    <!-- <loading :is-loading-show="isLoadingShow"></loading> -->
+    <loading ref="loading"></loading>
     <footer-nav ref="footer_nav" v-if="$store.state.showfooter"></footer-nav>
     <!-- <iframe ref="footer_nav" src="https://deeptel.com.cn/mallPage/82/79B4DE7C/pageIndex.do" class="material"></iframe> -->
   </div>
@@ -18,6 +18,8 @@ import shopDialog from 'components/shopDialog.vue';//弹窗
 import Top from 'components/Top';//置顶
 import footerNav from 'components/footerNav';//置顶
 import ajax from '@/lib/ajax.js'
+
+
 
 export default {
   components: {

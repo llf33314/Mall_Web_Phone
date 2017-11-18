@@ -9,9 +9,18 @@
 </template>
 <script>
 	export default {
-		props: ['isLoadingShow'],
+		data () {
+			return {
+				isLoadingShow:false
+			}
+		},
 		mounted() {
 			//console.log(this.isshow);
+		},
+		methods: {
+			show(show){
+				this.isLoadingShow = show;
+			}
 		}
 	}
 /*调用
@@ -33,14 +42,14 @@ this.$root.$emit('complete',true);//loading*/
 	}
 	
 	.ball-clip-rotate > div {
-		background-color: rgb(76,165,254);
+		background-color: #e4393c;
 		width: 15px;
 		height: 15px;
 		border-radius: 100%;
 		margin: 2px;
 		-webkit-animation-fill-mode: both;
 		animation-fill-mode: both;
-		border: 2px solid rgb(76,165,254);
+		border: 2px solid #e4393c;
 		border-bottom-color: transparent;
 		height: 25px;
 		width: 25px;

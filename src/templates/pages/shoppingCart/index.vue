@@ -19,7 +19,7 @@
                     </div>
                     <span>{{cart.userName}}</span>
                 </div>
-                <div class="shopping-box"
+                <div class="shopping-box" :class="{'pf-box':type == 1}"
                     v-for="(shop,j) in cart.shopResultList"
                     :key="j">
                     <div class="order-shop border">
@@ -30,49 +30,79 @@
                             <span class="fs36">{{shop.shopName}}</span>
                             <i class="iconfont icon-you" ></i>
                         </p>
-                        <p class="fs42 shopGray" @click="edit(i,j,shop)">
-                            <span v-if="!shop.edit">编辑</span>
-                            <span v-else>完成</span>
+                        <p class="fs42 shopGray" @click="edit(i,j,shop)" v-if=" type != 1">
+                            <span class="buttom" v-if="!shop.edit">编辑</span>
+                            <span class="buttom" v-else >完成</span>
                         </p>
                     </div>
                     <div class="order-item-box">
-                        <delete-slide class="order-item-content"
+                        <div class="order-item" :class="{'border': type == 1}"
                             v-for="(goods,index) in shop.productResultList"
-                            :key="index"
-                            @delete="delete_dialog(1,index,goods)"
-                            :scope="index">
-                            <div class="shoopCart-content">
-                                <div class="order-item-img">
-                                  <default-img :background="imgUrl+goods.productImageUrl"
-                                                :isHeadPortrait="0">
-                                  </default-img>
-                                   <i class="iconfont icon-dui" :class="{'js-font':goods.show}"
-                                    @click="select_Goods(goods)"></i>
-                                </div>
-                                <div class="order-item-txt">
-                                    <p class="fs42">{{goods.productName}}</p>
-                                    <div v-if="!shop.edit">
-                                        <p class="fs36 shopGray">
-                                            <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
-                                            <span>{{goods.productNum}}份</span>
+                            :key="index">
+                            <delete-slide class="order-item-content" 
+                                @delete="delete_dialog(1,index,goods)"
+                                :scope="index">
+                                <div class="shoopCart-content" :class="{'border': type == 1}">
+                                    <div class="order-item-img">
+                                    <default-img :background="imgUrl+goods.productImageUrl"
+                                                    :isHeadPortrait="0">
+                                    </default-img>
+                                    <i class="iconfont icon-dui" :class="{'js-font':goods.show}"
+                                        @click="select_Goods(goods)"></i>
+                                    </div>
+                                    <div class="order-item-txt">
+                                        <p class="fs42" :class="{'text-overflow': type == 1}">{{goods.productName}}</p>
+                                        <!----------------购物车 未编辑时↓------------------>
+                                        <div v-if="!shop.edit && goods.pfType == 0">
+                                            <p class="fs36 shopGray">
+                                                <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
+                                                <span>{{goods.productNum}}份</span>
+                                            </p>
+                                            <p class="fs42 " :class="[ goods.productHyPrice >0 ?'shopGray':'shop-font']"><span class="fs32">¥</span>{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
+                                            <p class="fs42 shop-font" v-if="goods.productHyPrice>0"><span class="fs32">会员价:¥</span>{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
+                                        </div>
+                                        <!----------------购物车 编辑时↓------------------>
+                                        <div class="goods-choice-box2" v-else-if="shop.edit && goods.pfType == 0">
+                                            <em class="em-choice" 
+                                                @click="addNumber('-',goods)">-</em>
+                                            <input class="em-choice"
+                                                v-model="goods.productNum" 
+                                                @blur="addNumber('',goods)">
+                                            </input>
+                                            <em class="em-choice" 
+                                                @click="addNumber('+',goods)">+</em>
+                                        </div>
+                                        <!----------------批发购物车 手批↓------------------>
+                                        <div v-if=" goods.pfType == 1">
+                                        <p class="fs42 pf1-buttom-box">
+                                            <span  class="shop-font pf1-buttom pf1-buttom-b"  >减一手</span>
+                                            <span class="shop-bg pf1-buttom">加一手</span>
                                         </p>
-                                        <p class="fs42 " :class="[ goods.productHyPrice >0 ?'shopGray':'shop-font']"><span class="fs32">¥</span>{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
-                                        <p class="fs42 shop-font" v-if="goods.productHyPrice>0"><span class="fs32">会员价:¥</span>{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
+                                        </div>
+                                        <!----------------批发购物车 混批↓------------------>
+                                        <div v-if="goods.pfType == 2">
+                                            <p class="fs36 shopGray">
+                                                <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
+                                                <span>{{goods.productNum}}份</span>
+                                            </p>
+                                            <p class="fs42 " :class="[ goods.productHyPrice >0 ?'shopGray':'shop-font']"><span class="fs32">¥</span>{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
+                                            <p class="fs42 shop-font" v-if="goods.productHyPrice>0"><span class="fs32">会员价:¥</span>{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
+                                        </div>
                                     </div>
-                                    <div class="goods-choice-box2" v-else>
-                                        <em class="em-choice" 
-                                            @click="addNumber('-',goods)">-</em>
-                                        <input class="em-choice"
-                                            v-model="goods.productNum" 
-                                            @blur="addNumber('',goods)">
-                                        </input>
-                                        <em class="em-choice" 
-                                            @click="addNumber('+',goods)">+</em>
-                                    </div>
+                                    
                                 </div>
-                            </div>
-                        </delete-slide>
+                            </delete-slide>
+                        <p class="shopGray fs40 border pf1-spec" v-if=" goods.pfType == 1">
+                                规格：深空灰X1 、玫瑰金X2 
+                        </p>
+                        <p class="shopGray fs40 pf2-spec"v-if=" goods.pfType == 2">
+                                规格：深空灰X1 、玫瑰金X2 
+                        </p>
+                        </div>
                     </div>
+                    <p class="fs36 pf-min-pifaTotal" v-if="type == 1">
+                        3件，小计:<span class="shop-font">￥<span class="fs42">6,666</span>.00</span>
+                    </p>
                 </div>
             </div>
         </div>
@@ -112,7 +142,7 @@
                                   </default-img>
                                 </div>
                                 <div class="order-item-txt">
-                                    <p class="fs42">{{goods.productName}}</p>
+                                    <p class="fs42" :class="{'text-overflow': type == 1}">{{goods.productName}}{{}}</p>
                                     <div v-if="!shop.edit">
                                         <p class="fs36 shopGray">
                                             <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
@@ -142,7 +172,7 @@
                 <div class="shopping-buttom fs50 shop-yellow" @click="choose()">
                     继续选购
                 </div>
-                <div class="shopping-buttom fs50 shop-bg">
+                <div class="shopping-buttom fs50 shop-bg" @click="settlementAjax(1)">
                     去结算({{pifaAmount}})
                 </div>
             </div>
@@ -188,6 +218,7 @@ export default {
         selectGoods:[],//选中的商品
         selectClass:[],//选中的商品
         settlement:[],//结算数据
+        settlementarr:[],
     }
   },
   components:{
@@ -195,8 +226,10 @@ export default {
   },
   watch: {
     '$route'(){
-        this.shopCartList = {};
-        this.cartAjax(this.$route.params.type);
+        let type = this.$route.params.type;
+        type==0?this.commonFn.setTitle( '购物车'):this.commonFn.setTitle( '批发商购物车');
+        this.type = type;
+        this.cartAjax();
     },
     'shopCartList'(a,b){
         let _this = this;
@@ -256,9 +289,8 @@ export default {
   methods:{
     /**
      * 购物车请求
-     * @param type 批发购买条件
      */
-    cartAjax(type){
+    cartAjax(){
         let _this = this;
         let _data = {
             url: _this.$store.state.loginDTO_URL,
@@ -266,8 +298,9 @@ export default {
             busId:_this.$route.params.busId,
             shopId: _this.$route.params.shopId
         }
-        if(type == 1){
-            _data.type = type;
+        if(_this.$route.params.type == 1){
+            //批发购买条件 1
+            _data.type = 1;
         }
 
         _this.ajaxRequest({
@@ -378,6 +411,7 @@ export default {
                     msg :  '删除成功'
                 };
                 _this.$parent.$refs.bubble.show_tips(msg);
+                _this.cartAjax()
             }
         })
     },
@@ -410,6 +444,9 @@ export default {
       this.shopCartList.push([]);
       this.shopCartList.pop();
     },
+    /** 
+     * 合计选择
+     */
     select_PifaAmount(){
         console.log(111);
         this.shopCartList.push([]);
@@ -436,6 +473,10 @@ export default {
         e.edit = !e.edit;
         let obj = this.shopCartList[i].shopResultList;
         this.$set(obj,j,e);
+        if(!e.edit){
+            this.settlementAjax(2);
+        }
+        
     },
     /** 
      * 继续选购--跳转分类页
@@ -488,60 +529,108 @@ export default {
         _this.shopCartList.push([]);
         _this.shopCartList.pop();
 
+        //编辑数据处理  -- 集合 settlement settlementarr
+        let obj = _this.settlementData(e);
+
+        if($.inArray(e.id, _this.settlementarr) == -1){
+            //新增当前修改
+            _this.settlementarr.push(e.id);
+            _this.settlement.push(obj)
+        }else{
+            //替换已有修改
+            _this.settlement.forEach((item,i)=>{
+                if(item.id == e.id){
+                    this.$set(_this.settlement,i,obj)
+                }
+            })
+        }
+    },
+    /**
+     * 结算请求
+     * @param c    判断去结算1 还是 编辑商品数量提交2
+     */
+    settlementAjax(c){
+        let _this = this;
+        let _data ={
+            str:[]
+        }; 
+        let shopCartIds=[]; 
+        if(c === 1){
+            //去结算1
+            _this.shopCartList.forEach((item,i)=>{
+                item.shopResultList.forEach((test,j)=>{
+                    test.productResultList.forEach((e,n)=>{
+                        if(e.show){
+                            let obj = this.settlementData(e);
+                            _data.str.push(obj);
+                            shopCartIds.push(obj.id);
+                        }
+                    })
+                })
+            })
+        }else{
+            _data.str = _this.settlement
+        }
+        
+        //无数据修改 不发送请求
+        if(_data.str.length <=0) return; 
+
+        //有数据修改，str换json，shopCartIds转字符串；
+        _data.str = JSON.stringify(_data.str);
+        
+        _this.ajaxRequest({
+            'url': h5App.activeAPI.phoneShopCart_shopCartOrder_post,
+            'data': _data,
+            'success':(data)=>{
+                if(c === 1){
+                    //结算 成功跳转 订单页面 /order/settlement/:busId/1/:shopCartIds（购物车id）
+                    shopCartIds = shopCartIds.toString();
+                    let busId = this.$route.params.busId || this.$store.state.busId;
+                    console.log('/order/settlement/'+busId+'/1/'+shopCartIds)
+                    _this.$router.push('/order/settlement/'+busId+'/1/'+shopCartIds);
+                }else{
+                     //编辑 请求成功后 清空之前编辑商品集合
+                    _this.settlement = [];
+                    _this.cartAjax();
+                }
+            }
+        })
+    
+    },
+    /** 
+     * 结算请求--数据处理
+     * @param e 当前修改商品 返回 传参需要格式
+     */
+    settlementData(e){
+        let _this = this;
+        //正常
         let obj= {
             id:  e.id,
             productNum: e.productNum
         };
-        if( _this.type == 1 ){//批发结算和修改
+        //批发
+
+        if( _this.type == 1 ){
             let arr=[];
             e.pifaSpecificaList.forEach((item,i)=>{
                 let  _data= {
-                    productId: item.productId,
+                    productId: item.id,
                     productNum: item.productNum,
                     specificaValueIds: item.specificaValueIds
                 }
                 arr.push(_data);
             })
-            obj.pifatSpecificaDTOList =  arr//批发规格集合
+            //批发规格集合
+            obj.pifatSpecificaDTOList =  arr
         }
-        
-        if(_this.settlement.length > 0){
-            
-            this.settlement.forEach((item,i)=>{
-                if(item.id == e.id && isId){
-                    item = e;
-                }else{
-                    _this.settlement.push(e);
-                }
-            })
-        }else{
-            
-            _this.settlement.push(e);
-        }
-        console.log(_this.settlement,'_this.settlement');
-    },
-    /**
-     * 结算请求
-     * @param data 请求数据
-     */
-    settlementAjax(data){
-        let _this = this;
-        console.log(_data,'结算和改变数量');
-        _this.ajaxRequest({
-            'url': h5App.activeAPI.phoneShopCart_shopCartOrder_post,
-            'data':_data,
-            'success':(data)=>{
-                //结算跳转
-                //修改编辑
-        }
-    })
+        return obj
     }
   },
   mounted () {
     let type = this.$route.params.type;
     type==0?this.commonFn.setTitle( '购物车'):this.commonFn.setTitle( '批发商购物车');
-
-    this.cartAjax(type);
+    this.type = type;
+    this.cartAjax();
   }
 }
 </script>
@@ -561,7 +650,6 @@ export default {
       }
       .order-item{
           width: 100%;
-          margin-bottom: 20/@dev-Width *1rem;
           background: #fff;
       }
       .order-item-title{
@@ -599,10 +687,11 @@ export default {
           }
       }
       .order-item-content,.order-number-time{
-          .ik-box;
-          .ik-box-pack(justify);
-          width: 100%;
-          padding: 24/@dev-Width *1rem 30/@dev-Width *1rem  24/@dev-Width *1rem 40/@dev-Width *1rem;
+            .ik-box;
+            .ik-box-pack(justify);
+            width: 100%;
+            padding: 0 *1rem 30/@dev-Width *1rem  0 40/@dev-Width *1rem;
+            line-height: 1;
           .order-item-img{
               width: 265  /@dev-Width *1rem;
               height: 265 /@dev-Width *1rem;
@@ -649,6 +738,7 @@ export default {
         width: 100%;
         .ik-box;
         .ik-box-pack(justify);
+        padding: 48/@dev-Width *1rem 0;
     }
     .icon-dui{
         background:#bfbfbf;
@@ -753,6 +843,36 @@ export default {
     &>em:last-of-type{
         border-top-right-radius: 3px;
         border-bottom-right-radius: 3px;
+    }
+}
+.buttom{
+    border: 25/ @dev-Width *1rem solid #fff;
+    border-right: 0;
+}
+.pf-box{
+    .pf1-spec{
+        padding: 25/ @dev-Width *1rem;
+    }
+    .pf2-spec{
+        padding: 25/ @dev-Width *1rem;
+    }
+    .pf1-buttom-box{
+        border:1px solid blue;
+        .pf1-buttom{
+            width: 185/ @dev-Width *1rem;
+            height: 90/ @dev-Width *1rem;
+            display: inline-block;
+            text-align: center;
+            line-height: 90/ @dev-Width *1rem;
+            .border-radius(3px)
+        }
+        .pf1-buttom-b{
+            border:1px solid #e4393c;
+        }
+    }
+    .pf-min-pifaTotal{
+        text-align: right;
+        padding: 25/ @dev-Width *1rem 38/ @dev-Width *1rem;; 
     }
 }
 </style>

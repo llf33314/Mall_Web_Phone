@@ -12,17 +12,21 @@ Vue.mixin({
 	  * @param {Object} headers			自定义请求headers
 	  * @param {Function} success		请求成功后，这里会有两个参数,服务器返回数据，返回状态，[data, res]
       * @param {Function} error		    发送请求前
-      * @param {Number} status		    判断是否执行公用错误请求提示 1不使用 2使用  默认使用2
+      * @param {Booleans} status		判断是否执行公用错误请求提示 false不使用 true使用  默认true使用
+        @param {Booleans} loading		判断是否执行公用错误请求提示 false不使用 true使用  默认false不使用
 	  * @param return 
 	*/
 	ajaxRequest(opt) {
+        
             let vm = this;
             let opts = opt || {};
-            let status = opt.status || 2;
+            let status = opt.status || false;
+            let loading = opt.loading || false;
             if (!opts.url) {
                 alert('请填写接口地址');
                 return false;
             }
+            vm.$parent.$refs.loading.show(loading);//开启loading*/
             //配置请求头
             axios({
                 "method": opts.type || 'post',
@@ -41,10 +45,9 @@ Vue.mixin({
                 if (res.status == 200) {
     
                     if (opts.success) {
-    
-                        opts.success(res.data, res);
-                        //需要登陆（需要跳转）
+                        vm.$parent.$refs.loading.show(false);//关闭loading*/
                         
+                        //需要登陆（需要跳转）
                         if(res.data.code == 1001){
                             return
                         }
@@ -70,10 +73,11 @@ Vue.mixin({
                                 return
                             }
                         }
+                        opts.success(res.data, res);
                     }
     
                 } else {
-    
+                    vm.$parent.$refs.loading.show(false);//关闭loading*/
                     if (data.error) {
                         opts.error(error);
                     } else {
@@ -89,6 +93,7 @@ Vue.mixin({
                 } else {
                     console.log('catch');
                 }
+                vm.$parent.$refs.loading.show(false);//关闭loading*/
             });
     
         },
