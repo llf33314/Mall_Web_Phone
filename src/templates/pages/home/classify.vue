@@ -202,7 +202,7 @@ export default {
                 'isDesc':	data.isDesc || '',//排序 1、升序 -1 降序	可不传
                 'searchContent':	data.searchContent||'',//搜索内容	可不传
                 'type':    data.type|| 0,  //	类型，1.团购 3.秒杀 4.拍卖 5 粉币 6预售 7批发	可不传
-                'curPage': data.curPage||''//	当前页	可不传
+                'curPage': data.curPage ||''//	当前页	可不传
             }
             this.ajaxRequest({
                 'status':1,
@@ -274,9 +274,11 @@ export default {
             let _keyword = this.$route.params.keywords || this.$store.state.keywords ;
             _keyword === 'k=k'?_this.keyWord = '':_this.keyWord = _keyword || '';
 
+            _this.curPage = 1;
+
             this.productAjax({
                 sort: 'new',
-                curPage: 1,
+                curPage: _this.curPage,
                 type : _this.$route.params.type,
                 searchContent: _this.keyWord
             });
@@ -366,6 +368,8 @@ export default {
         _this.$store.commit('mutationData',{type:_this.type});
         let _keyword = this.$store.state.keywords || this.$route.params.keywords;
         _keyword === 'k=k'?_this.keyWord = '':_this.keyWord = _keyword || '';
+        _this.curPage = 1;
+        
         _this.setTitle();
 
         _this.classAllAjax();

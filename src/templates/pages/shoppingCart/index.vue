@@ -92,12 +92,36 @@
                                     
                                 </div>
                             </delete-slide>
-                        <p class="shopGray fs40 border pf1-spec" v-if=" goods.pfType == 1">
-                                规格：深空灰X1 、玫瑰金X2 
-                        </p>
-                        <p class="shopGray fs40 pf2-spec"v-if=" goods.pfType == 2">
-                                规格：深空灰X1 、玫瑰金X2 
-                        </p>
+                            <!----------------批发购物车 手批↓-规格------------------>
+                            <p class="shopGray fs40 border pf1-spec" v-if=" goods.pfType == 1">
+                                规格 : <span v-for=" (pifa,index) in goods.pifaSpecificaList":key="index">
+                                    {{pifa.specificaValues+' X'+pifa.productNum}}
+                                    <i v-if=" index <  goods.pifaSpecificaList.length-1">、</i>
+                                </span> 
+                            </p>
+                            <!----------------批发购物车 混批↓-规格------------------>
+                            <div class="shopGray fs40 pf2-spec "v-if=" goods.pfType == 2">
+                                <div class="pf2-list clearfix" 
+                                    v-for=" (pifa,index) in goods.pifaSpecificaList"
+                                    :key="index">
+                                    <i class="iconfont icon-dui" :class="{'js-font':goods.show}"
+                                    @click="select_Goods(goods)"></i>
+                                    <p class="pf2-list-spec fs42">
+                                        <span style="color:#000">规格 : {{goods.productName}} {{pifa.specificaValues+' X'+pifa.productNum}} </span>
+                                        <span class="shop-font">{{goods.productPrice}}</span>
+                                    </p>
+                                    <div class="goods-choice-box2">
+                                        <em class="em-choice" 
+                                            @click="addNumber('-',pifa)">-</em>
+                                        <input class="em-choice"
+                                            v-model="pifa.productNum" 
+                                            @blur="addNumber('',pifa)">
+                                        </input>
+                                        <em class="em-choice" 
+                                            @click="addNumber('+',pifa)">+</em>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <p class="fs36 pf-min-pifaTotal" v-if="type == 1">
@@ -142,7 +166,7 @@
                                   </default-img>
                                 </div>
                                 <div class="order-item-txt">
-                                    <p class="fs42" :class="{'text-overflow': type == 1}">{{goods.productName}}{{}}</p>
+                                    <p class="fs42" :class="{'text-overflow': type == 1}">{{goods.productName}}</p>
                                     <div v-if="!shop.edit">
                                         <p class="fs36 shopGray">
                                             <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
@@ -699,6 +723,7 @@ export default {
           }
           .order-item-txt{
               width: 73%;
+              position: relative;
               &>p{
                   margin-bottom: 20 /@dev-Width *1rem
               }
@@ -855,9 +880,22 @@ export default {
     }
     .pf2-spec{
         padding: 25/ @dev-Width *1rem;
+        .pf2-list {
+            font-size: 0;
+            line-height: 1;
+            &>i,&>div,&>p{
+                float: left;
+                border: 1px solid;
+            }
+        }
+        .pf2-list-spec{
+            width:55%
+        }
     }
     .pf1-buttom-box{
-        border:1px solid blue;
+        position: absolute;
+        bottom: 0;
+        right: 0;
         .pf1-buttom{
             width: 185/ @dev-Width *1rem;
             height: 90/ @dev-Width *1rem;
@@ -868,6 +906,7 @@ export default {
         }
         .pf1-buttom-b{
             border:1px solid #e4393c;
+            margin-right: 25/ @dev-Width *1rem;
         }
     }
     .pf-min-pifaTotal{
