@@ -1,6 +1,8 @@
 <template>
 <div class="order-wrapper">
+    <!-- 头部导航 + 收货地址区域 + 新增收货地址区域 -->
     <header class="orderTotal-header">
+        <!-- 导航 -->
         <div class="header-top">
             <div class="fs46">
                 <i class="iconfont icon-jiantou-copy1"></i>
@@ -10,6 +12,7 @@
                 首页
             </div>
         </div>
+        <!-- 收货地址区域 -->
         <div class="header-bottom clearfix" v-if="hasAddress && memberAddresss != null">
             <p class="fs46">{{memberAddresss.memberName}}  {{memberAddresss.memberPhone}}</p>
             <div class="header-bottom-left">
@@ -19,7 +22,9 @@
                 <i class="iconfont icon-jiantou-copy "></i>
             </div>
         </div>
-        <div class="header-bottom-no clearfix" v-else>
+        <!-- 新增收货地址区域 -->
+        <div class="header-bottom-no clearfix" v-else
+          @click="toAddress">
             <p class="fs42">
                 <i class="iconfont icon-jia"></i>
                 新增收货地址
@@ -29,6 +34,7 @@
     <section class="shop-main deltails-main" v-if="orderList != null && orderList.length > 0">
         <div class="order-box">
             <div class="order-item" v-for="bus in orderList">
+                <!-- 商家头像和名称区域 -->
                 <div class="order-item-title fs40">
                     <div class="order-title-img">
                         <default-img :background="bus.busImageUrl"
@@ -38,6 +44,7 @@
                     <span>{{bus.busName}}</span>
                 </div>
                 <div v-for="shop in bus.shopResultList">
+                    <!-- 店铺名称区域 -->
                     <div class="order-shop border">
                         <p class="order-shop-name">
                             <i class="iconfont icon-dianpu"></i>
@@ -45,6 +52,7 @@
                             <i class="iconfont icon-you"></i>
                         </p>
                     </div>
+                    <!-- 商品循环 -->
                     <div class="order-item-box border" v-for="product in shop.productResultList">
                         <div class="order-item-content">
                             <div class="order-item-img">
@@ -56,12 +64,30 @@
                                 <p class="fs42 text-overflow">{{product.productName}}</p>
                                 <p class="fs36 shopGray" v-if="product.productSpecificaValue != null">{{product.productSpecificaValue}}</p>
                                 <div class="fs42 shop-font orderTotal-money">
-                                    <p>¥{{product.productPrice | moneySplit1}}.<span class="fs32">{{product.productPrice | moneySplit2}}</span></p>
+                                    <div> 
+                                      <p  v-if="product.productOldPrice > product.productPrice && orderData.type > 0" style="margin-bottom:0" >
+                                        <span class="span-block">原价：</span>
+                                        <del>¥{{product.productOldPrice | moneySplit1}}.{{product.productOldPrice | moneySplit2}}</del>
+                                        
+                                        </p>
+                                      <p>
+                                        <span class="span-block" 
+                                        v-if="orderData.type == 1 && orderData.typePriceName != null">{{orderData.typePriceName}}：</span>
+                                        ¥{{product.productPrice | moneySplit1}}.{{product.productPrice | moneySplit2}}
+                                      </p>
+                                    </div>
                                     <p class="shopGray">X{{product.productNum}}</p>
                                 </div>
                             </div>
                         </div>
+                        <div class="border orderTotal-list-box" v-if="product.pfSpecResultList != null && product.pfSpecResultList.length > 0">
+                          <div class=" clearfix pf-div" v-for="pfSpec in product.pfSpecResultList">
+                            <p class="fs40 shop-fl pf-spec-left">规格：{{pfSpec.specificaValues}} X {{pfSpec.totalNum}}</p>
+                            <div class="fs40 shop-fr text-overflow pf-spec-right shop-font" >批发价：{{pfSpec.pfPrice}}元</div>
+                          </div>
+                        </div>
                     </div>
+                    <!-- 优惠券 -->
                     <div class="border orderTotal-list-box" v-if="shop.isCanUseYhqDiscount == 1 && shop.couponList != null">
                       <div class="orderTotal-list border" @click="showDialogs(shop.couponList,3,shop.shopId,bus.isSelectDiscount,shop.selectCoupon)">
                           <p class="fs40"> 优惠券</p>
@@ -91,12 +117,12 @@
                       <div class="border clearfix orderTotal-table">
                          <p class="fs40 shop-fl">手机号码：</p>
                          <input  class="fs40 shop-fr my-table" placeholder="请填写提货人手机号码（必填）" v-model="bus.appointmentUserPhone"
-                            @blur="blurPhone(bus.appointmentUserPhone,'提货人手机号')" />
+                            @blur="blurPhone(bus.appointmentUserPhone)" />
                       </div>
                       <div class="border clearfix orderTotal-table">
                          <p class="fs40 shop-fl">提货地址：</p>
                          <div  class="fs40 shop-fr my-table text-overflow" placeholder="请填选择提货地址（必选）" v-text="bus.takeAddress"
-                          @click="changeTakeAddress(bus.busId,bus.takeDataArr,bus.takeId)"></div>
+                          @click="showTakeAddress(bus.busId,bus.takeDataArr,bus.takeId)"></div>
                       </div>
                       <div class="border clearfix orderTotal-table">
                          <p class="fs40 shop-fl">提货时间：</p>
@@ -107,60 +133,62 @@
                       </div>
                     </div>
                     <!-- 会员折扣，联盟折扣，积分抵扣 和 粉币抵扣区域 -->
-                    <div class="orderTotal-list border"
-                        @click="order_ulShow">
-                        <p class="fs40">折扣信息<span class="shopGray">(可点击展开编辑)</span></p>
-                        <p class="fs40">
-                            <i class="iconfont icon-jiantou shopGray"></i>
-                            <i class="iconfont icon-up shopGray shop-hide"></i>
-                        </p>
-                    </div>
-                    <div class="orderTotal-ul"
-                    v-if="(bus.isCanUseUnionDiscount == 1 && bus.unionStatus == 1) || bus.isCanUseMemberDiscount == 1 || bus.isCanUseFenbiDiscount == 1 || bus.isCanUseJifenDiscount == 1">
-                       <div class="orderTotal-list border" v-if="bus.isCanUseUnionDiscount == 1 && bus.unionStatus == 1"  >
-                            <p class="fs40">联盟折扣</p>
-                            <p class="fs40">
-                                <input class="switch small-switch shop-switch" type="checkbox" value="1"
-                                  v-model="bus.isSelectUnion" 
-                                  @change="caculationOrder(1)"/>
-                            </p>
-                        </div>
-                        <div class="orderTotal-list border" v-if="bus.isCanUseMemberDiscount == 1">
-                            <p class="fs40">会员折扣</p>
-                            <p class="fs40">
-                                <input class="switch small-switch shop-switch" type="checkbox" value="1"
-                                  v-model="bus.isSelectDiscount" 
-                                  @change="caculationOrder(2)"/>
-                            </p>
-                        </div>
-                        <div class="orderTotal-list border" v-if="bus.isCanUseFenbiDiscount == 1">
-                            <p class="fs40"> 粉币抵扣
-                              <em class="shop-font" v-if="bus.fenbiMoney > 0 && bus.fenbiNum > 0 && bus.fenbiDisabled == 0">
-                                有{{bus.fenbiNum}}粉币，可抵扣¥{{bus.fenbiMoney}}
-                              </em>
-                              <em class="shop-font" v-else>不可用</em>
-                            </p>
-                            <p class="fs40">
-                                <input class="switch small-switch shop-switch" type="checkbox" value="1"
-                                  :disabled = "bus.fenbiDisabled == 1 ? true : false"
-                                  v-model="bus.isSelectFenbi"
-                                  @change="caculationOrder(3)"/>
-                            </p>
-                        </div>
-                        <div class="orderTotal-list border" v-if="bus.isCanUseJifenDiscount == 1">
-                            <p class="fs40">积分抵扣
-                              <em class="shop-font" v-if="bus.jifenMoney > 0 && bus.jifenNum > 0 && bus.jifenDisabled == 0">
-                                有{{bus.jifenNum}}积分，可抵扣¥{{bus.jifenMoney}}
-                              </em>
-                              <em class="shop-font" v-else>不可用</em>
-                            </p>
-                            <p class="fs40">
-                                <input class="switch small-switch shop-switch" type="checkbox" value="1"
-                                 :disabled = "bus.jifenDisabled == 1 ? true : false"
-                                  v-model="bus.isSelectJifen" 
-                                  @change="caculationOrder(4)"/>
-                            </p>
-                        </div>
+                    <div v-if="(bus.isCanUseUnionDiscount == 1 && bus.unionStatus == 1) || bus.isCanUseMemberDiscount == 1 || bus.isCanUseFenbiDiscount == 1 || bus.isCanUseJifenDiscount == 1">
+                      <div class="orderTotal-list border"
+                          @click="order_ulShow">
+                          <p class="fs40">折扣信息<span class="shopGray">(可点击展开编辑)</span></p>
+                          <p class="fs40">
+                              <i class="iconfont icon-jiantou shopGray"></i>
+                              <i class="iconfont icon-up shopGray shop-hide"></i>
+                          </p>
+                      </div>
+                      <!-- 各种抵扣 -->
+                      <div class="orderTotal-ul shop-hide">
+                        <div class="orderTotal-list border" v-if="bus.isCanUseUnionDiscount == 1 && bus.unionStatus == 1"  >
+                              <p class="fs40">联盟折扣</p>
+                              <p class="fs40">
+                                  <input class="switch small-switch shop-switch" type="checkbox" value="1"
+                                    v-model="bus.isSelectUnion" 
+                                    @change="caculationOrder(1)"/>
+                              </p>
+                          </div>
+                          <div class="orderTotal-list border" v-if="bus.isCanUseMemberDiscount == 1">
+                              <p class="fs40">会员折扣</p>
+                              <p class="fs40">
+                                  <input class="switch small-switch shop-switch" type="checkbox" value="1"
+                                    v-model="bus.isSelectDiscount" 
+                                    @change="caculationOrder(2)"/>
+                              </p>
+                          </div>
+                          <div class="orderTotal-list border" v-if="bus.isCanUseFenbiDiscount == 1">
+                              <p class="fs40"> 粉币抵扣
+                                <em class="shop-font" v-if="bus.fenbiMoney > 0 && bus.fenbiNum > 0 && bus.fenbiDisabled == 0">
+                                  有{{bus.fenbiNum}}粉币，可抵扣¥{{bus.fenbiMoney}}
+                                </em>
+                                <em class="shop-font" v-else>不可用</em>
+                              </p>
+                              <p class="fs40">
+                                  <input class="switch small-switch shop-switch" type="checkbox" value="1"
+                                    :disabled = "bus.fenbiDisabled == 1 ? true : false"
+                                    v-model="bus.isSelectFenbi"
+                                    @change="caculationOrder(3)"/>
+                              </p>
+                          </div>
+                          <div class="orderTotal-list border" v-if="bus.isCanUseJifenDiscount == 1">
+                              <p class="fs40">积分抵扣
+                                <em class="shop-font" v-if="bus.jifenMoney > 0 && bus.jifenNum > 0 && bus.jifenDisabled == 0">
+                                  有{{bus.jifenNum}}积分，可抵扣¥{{bus.jifenMoney}}
+                                </em>
+                                <em class="shop-font" v-else>不可用</em>
+                              </p>
+                              <p class="fs40">
+                                  <input class="switch small-switch shop-switch" type="checkbox" value="1"
+                                  :disabled = "bus.jifenDisabled == 1 ? true : false"
+                                    v-model="bus.isSelectJifen" 
+                                    @change="caculationOrder(4)"/>
+                              </p>
+                          </div>
+                      </div>
                     </div>
                     <!-- 买家留言区域 -->
                     <div class="orderTotal-table border shopGray clearfix">
@@ -171,6 +199,7 @@
                             @blur="blurBuyerMessage(bus.buyerMessage)"/>
                     </div>
                 </div>
+                <!-- 显示优惠价格 -->
                 <div class="deltails-del border" style="padding-top: 0.2rem;">
                     <p class="fs40">
                         <span>商品金额</span>
@@ -178,25 +207,25 @@
                     </p>
                     <p class="fs40" v-if="bus.productFreightMoney != null && bus.productFreightMoney > 0">
                         <span>运费</span>
-                        <span class="shop-font">+￥{{bus.productFreightMoney }}</span>
+                        <span class="shop-font">+￥{{bus.productFreightMoneyOld }}</span>
                     </p>
-                    <p class="fs40" v-if="bus.isCanUseUnionDiscount == 1 ">
+                    <p class="fs40" v-if="bus.isCanUseUnionDiscount == 1 && bus.unionYouhuiMoney > 0">
                         <span>联盟折扣</span>
                         <span class="shop-font">-￥{{bus.unionYouhuiMoney > 0 ? bus.unionYouhuiMoney : 0}}</span>
                     </p>
-                    <p class="fs40" v-if="bus.isCanUseMemberDiscount == 1 ">
+                    <p class="fs40" v-if="bus.isCanUseMemberDiscount == 1 && bus.memberYouhuiMoney  > 0">
                         <span>会员折扣</span>
                         <span class="shop-font">-￥{{bus.memberYouhuiMoney  > 0 ? bus.memberYouhuiMoney : 0 }}</span>
                     </p>
-                    <p class="fs40" v-if="bus.isCanUseYhqDiscount == 1 ">
+                    <p class="fs40" v-if="bus.isCanUseYhqDiscount == 1 && bus.couponYouhuiMoney > 0">
                         <span>优惠券抵扣</span>
                         <span class="shop-font">-￥{{bus.couponYouhuiMoney > 0 ? bus.couponYouhuiMoney : 0}}</span>
                     </p>
-                    <p class="fs40" v-if="bus.isCanUseFenbiDiscount == 1 ">
+                    <p class="fs40" v-if="bus.isCanUseFenbiDiscount == 1 && bus.fenbiYouhuiMoney && bus.fenbiDisabled == 0">
                         <span>粉币抵扣</span>
                         <span class="shop-font">-￥{{bus.fenbiYouhuiMoney > 0 ? bus.fenbiYouhuiMoney : 0}}</span>
                     </p>
-                    <p class="fs40" v-if="bus.isCanUseJifenDiscount == 1 ">
+                    <p class="fs40" v-if="bus.isCanUseJifenDiscount == 1 && bus.jifenYouhuiMoney > 0 && bus.jifenDisabled == 0">
                         <span>积分抵扣</span>
                         <span class="shop-font">-￥{{bus.jifenYouhuiMoney > 0 ? bus.jifenYouhuiMoney : 0}}</span>
                     </p>
@@ -208,6 +237,7 @@
             </div>
 
         </div>
+        <!-- 选择支付方式区域 -->
         <div class="border orderTotal-list-box" style="background-color:#fff;" 
           v-if="orderData.payWayList != null && orderData.payWayList.length > 0">
           <div class="orderTotal-list border" @click="showDialogs(orderData.payWayList,1,-1,0,selectPayWay)">
@@ -312,7 +342,8 @@ export default {
       dialogType: 1,
       dialogBusId: 0, //弹出框需要的商家id
       isUseMemberDiscount: 0, //是否选择了会员折扣
-      selectObj: {} //记录选中的对象
+      selectObj: {}, //记录选中的对象
+      isSelectDaodianPay: false //是否选择了到店支付
     };
   },
   components: {
@@ -327,7 +358,7 @@ export default {
   },
   mounted() {
     this.loadDatas(); //初始化协商详情数据
-    this.commonFn.setTitle("提交订单");
+    this.commonFn.setTitle(Language.submit_order_title);
     this.$store.commit("show_footer", false); //隐藏底部导航栏
     if (this.$route.params.from != null) {
       this.from = this.$route.params.from;
@@ -339,10 +370,83 @@ export default {
   },
   watch: {
     orderList() {
-      console.log(this.orderList, "_this.orderList---------");
+      console.log(this.orderList, "this.orderList---------");
+    },
+    /**
+     * 监听支付方式集合
+     */
+    payWayList() {
+      this.changePayWay();
+    },
+    /**
+     * 监控选中的支付，  当选择到店支付 不用计算运费
+     */
+    selectPayWay() {
+      let _this = this;
+      let _commonFn = this.commonFn;
+      let _floatSub = _commonFn.floatSub; //减法
+      let _floatAdd = _commonFn.floatAdd; //加法
+      if (_commonFn.isNull(this.selectPayWay)) {
+        return;
+      }
+      let payWayId = this.selectPayWay.id;
+      if (payWayId == 6) {
+        _this.isSelectDaodianPay = true;
+      }
+      if (!_this.isSelectDaodianPay) {
+        return;
+      }
+      let _orderData = _this.orderData;
+      //定义运费差价
+      let chaFreightMoney = 0;
+      _this.orderList.forEach((bus, index) => {
+        let freightMoney = bus.productFreightMoney;
+        let oldFreightMoney = bus.productFreightMoneyOld;
+        let busFreight = 0;
+        if (payWayId == 6) {
+          busFreight = freightMoney;
+        } else {
+          busFreight = -freightMoney;
+        }
+        bus.shopResultList.forEach((shop, index) => {
+          shop.totalFreightMoney = _floatSub(
+            shop.totalFreightMoney,
+            busFreight
+          );
+        });
+        bus.productFreightMoneyOld = _floatSub(oldFreightMoney, busFreight);
+        console.log(bus.totalMoney, "----", busFreight);
+        bus.totalMoney = _floatSub(bus.totalMoney, busFreight);
+        bus.totalNewPrice = _floatSub(bus.totalNewPrice, busFreight);
+
+        chaFreightMoney = _floatAdd(chaFreightMoney, busFreight);
+
+        _this.$set(_this.orderList, index, bus);
+      });
+      let totalPayMoney = _orderData.totalPayMoney;
+      _orderData.totalPayMoney = _floatSub(totalPayMoney, chaFreightMoney);
+      _orderData.totalMoney = _floatSub(_orderData.totalMoney, chaFreightMoney);
+      console.log(totalPayMoney, "---", "totalPayMoney", chaFreightMoney);
     }
   },
   methods: {
+    /**
+     * 支付方式（只有当配送方式选择 到店自提  才能选择到店支付）
+     */
+    changePayWay() {
+      let _this = this;
+      let list = this.orderList;
+      let payWayLists = _this.payWayList;
+      list.forEach((bus, index) => {
+        payWayLists.forEach((way, index) => {
+          if (bus.selectDelivery.id != 2 && way.id == 6) {
+            way.isHide = true;
+          } else {
+            way.isHide = false;
+          }
+        });
+      });
+    },
     order_ulShow() {
       $(".orderTotal-ul").toggleClass("shop-hide");
       $(".icon-up").toggleClass("shop-hide");
@@ -382,12 +486,14 @@ export default {
               let selectDelivery = item.deliveryWayList[0]; //默认选中第一个配送方式
               item.selectDelivery = selectDelivery; //选中的配送方式
             }
+            item.productFreightMoneyOld = item.productFreightMoney;
           });
           //支付方式集合
           if (_this.payWayList != null && _this.payWayList.length > 0) {
             //赋值默认的支付方式
             _this.selectPayWay = _this.payWayList[0];
           }
+          _this.orderData.typePriceName = Language.order_type_price_name[myData.type]
           _this.caculationOrder(0); //初始化计算订单
         }
       });
@@ -424,7 +530,7 @@ export default {
         this.dialogBusId = busId;
       }
     },
-    //选中弹出框内容
+    //选中弹出框事件
     selectDialogChange(data) {
       console.log("data", data);
       let _this = this;
@@ -434,7 +540,7 @@ export default {
         //选择支付方式
         this.selectPayWay = data[1];
       } else if (data[0] == 2) {
-        //选择配送方式
+        //选择配送方式  如果配送方式是到店自提，则查询到店自提时间，并改变支付方式
         for (let i = 0; i < _this.orderList.length; i++) {
           let item = _this.orderList[i];
           if (item.busId == data[2]) {
@@ -442,7 +548,20 @@ export default {
             if (obj.id == 2) {
               //到店自提
               _this.showTakeTime(item.takeId, item.busId);
+              
+            } else {
+              //没有选择到店自提，但选择了支付方式，则清空选择的支付方式
+              if (this.selectPayWay.id == 6) {
+                for (let i = 0; i < _this.payWayList.length; i++) {
+                  let payWay = _this.payWayList[i];
+                  if (payWay.id != 6) {
+                    _this.selectPayWay = payWay;
+                    break;
+                  }
+                }
+              }
             }
+              _this.changePayWay();
             break;
           }
         }
@@ -470,7 +589,6 @@ export default {
           }
         }
       } else if (data[0] == 5) {
-        console.log(obj);
         //选中提货地址
         for (let i = 0; i < _this.orderList.length; i++) {
           let bus = _this.orderList[i];
@@ -486,9 +604,9 @@ export default {
       }
     },
     /**
-     * 改变到店自提地址
+     * 获取到店自提地址 并显示  弹出框
      */
-    changeTakeAddress(busId, takeArr, takeId) {
+    showTakeAddress(busId, takeArr, takeId) {
       let _this = this;
       let _commonFn = _this.commonFn;
       let address = _this.memberAddresss;
@@ -553,11 +671,11 @@ export default {
     blurName(obj) {
       let _this = this;
       let _commonFm = this.commonFn;
-      if (_commonFm.isNull(obj) || !_commonFm.validPhone(obj)) {
-        _this.$parent.$refs.bubble.show_tips("请填写提货人姓名");
+      if (_commonFm.isNull(obj)) {
+        _this.$parent.$refs.bubble.show_tips(Language.tihuo_name_msg);
         return false;
       } else if (obj.length > 15) {
-        _this.$parent.$refs.bubble.show_tips("提货人姓名长度不能超过15个字");
+        _this.$parent.$refs.bubble.show_tips(Language.tihuo_name_length_msg);
         return false;
       }
       return true;
@@ -565,11 +683,11 @@ export default {
     /**
      * 验证提货人手机号码
      */
-    blurPhone(obj, tipMsg) {
+    blurPhone(obj) {
       let _this = this;
       let _commonFm = this.commonFn;
       if (_commonFm.isNull(obj) || !_commonFm.validPhone(obj)) {
-        _this.$parent.$refs.bubble.show_tips("请填写正确的" + tipMsg);
+        _this.$parent.$refs.bubble.show_tips(Language.tihuo_phone_msg);
         return false;
       }
       return true;
@@ -585,7 +703,11 @@ export default {
         return false;
       }
       return true;
-    }
+    },
+    /**
+     * 进入新增收货地址页面
+     */
+    toAddress() {}
   }
 };
 </script>

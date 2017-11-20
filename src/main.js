@@ -6,6 +6,8 @@ require('assets/font/iconfont.css');
 require('@/lib/common.js');
 //接口文件
 require('@/lib/config');
+//语言引用
+require('@/lib/gloabConstant');
 //vuex
 import Vue from 'vue'
 import App from './App'
@@ -17,17 +19,20 @@ import storeConfig from './vuex/store'
 
 import jq from './lib/jquery-2.2.2.min';
 
+
 //消除移动端300ms延迟
 import FastClick from 'fastclick'
 FastClick.attach(document.body);
+
 
 var vm = new Vue({
   el: '#app',
   router,
   store: storeConfig,
   template: '<App/>',
-  components: { App },
+  components: { App }
 })
+
 
 // require('@/lib/ajax.js');
 /**

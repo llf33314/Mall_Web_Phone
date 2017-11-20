@@ -49,10 +49,14 @@ const mutations = {
     goods_details:(state,data)=>state.goodsdetails = data,
 }
 
+const tipMsg = {
+    tihuo_name_msg:"请填写提货人姓名"
+}
 export default new Vuex.Store({
     state,
     actions,
     mutations,
+    tipMsg
   })
 
   

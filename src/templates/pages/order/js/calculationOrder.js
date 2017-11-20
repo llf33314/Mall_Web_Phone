@@ -58,6 +58,7 @@ Vue.mixin({
 				}
 				// bus.productTotalMoney + 
 				bus.totalMoney = _commonFm.floatSub(bus.totalNewPrice, busYouhuiMoneys);//商家小计（包含运费，优惠后的）
+				bus.totalYouhuiMoney = busYouhuiMoneys;
 				_this.$set(_this.orderList, i, bus);
 				totalYouHuiMoneys = _commonFm.floatAdd(totalYouHuiMoneys, busYouhuiMoneys);
 			});
@@ -79,12 +80,12 @@ Vue.mixin({
 				return bus;
 			}
 			let unionDiscount = bus.unionDiscount;//会员折扣
-			if (unionDiscount == null || unionDiscount == "" || unionDiscount < 0 || unionDiscount >= 1) {
+			if (unionDiscount == null || unionDiscount == "" || unionDiscount < 0  || unionDiscount >= 1) {
 				bus.unionYouhuiMoney = 0;//商家联盟优惠金额设为 0 
 				bus.isSelectUnion = false;//关闭联盟选择
 				return bus;
 			}
-			// console.log("bus.isSelectUnion", bus.isSelectUnion, unionDiscount)
+			console.log("bus.isSelectUnion", bus.isSelectUnion, unionDiscount)
 			let busCanUseUnionProductPrice = 0;//定义能使用会员折扣的商品总价
 			//循环店铺
 			bus.shopResultList.forEach((shop, index) => {
@@ -336,7 +337,7 @@ Vue.mixin({
 					}
 				});
 				if (canUseCouponProductPrice == 0 || canUseCouponProductNum == 0) {//能使用优惠券的商品总价和商品总数 = 0  则跳出当前循环
-					_this.$parent.$refs.bubble.show_tips("您不能使用优惠券的商品");
+					_this.$parent.$refs.bubble.show_tips(Language.select_coupon_msg);
 					shop.selectCoupon = null;
 					bus.couponYouhuiMoney = 0;
 					continue;
@@ -347,7 +348,7 @@ Vue.mixin({
 				let couponNum = coupons.couponNum//叠加的数量
 				let shopYouhuiHouTotalPrice = 0;//保存 店铺下 商品优惠后的总额
 				if (cardType == 0 && bus.isSelectDiscount == 1) {
-					_this.$parent.$refs.bubble.show_tips("会员折扣和折扣券不能同时使用");
+					_this.$parent.$refs.bubble.show_tips(Language.coupon_discount_msg);
 					shop.selectCoupon = null;
 					bus.couponYouhuiMoney = 0;
 					continue;
@@ -462,7 +463,9 @@ Vue.mixin({
 					// bus.jifenMoney = 0;
 					if (isSelect) {
 						//选中抵扣才能提醒
-						_this.$parent.$refs.bubble.show_tips("能使用积分抵扣的商品金额为" + canUseDiscountMoney + "，没达到起兑金额");
+						let msg = Language.jifen_start_money_msg;
+						msg = msg.replace("{0}", canUseDiscountMoney);
+						_this.$parent.$refs.bubble.show_tips(msg);
 					}
 				}
 
@@ -491,7 +494,9 @@ Vue.mixin({
 					// bus.fenbiMoney = 0;
 					if (isSelect) {
 						//选中抵扣才能提醒
-						_this.$parent.$refs.bubble.show_tips("能使用粉币抵扣的商品金额为" + canUseDiscountMoney + "，没达到起兑金额");
+						let msg = Language.fenbi_start_money_msg;
+						msg = msg.replace("{0}", canUseDiscountMoney);
+						_this.$parent.$refs.bubble.show_tips(msg);
 					}
 				}
 			}

@@ -298,7 +298,7 @@
                 <div class="goods-dialog-button fs52 shop-yellow" @click="addCard(1)">
                     加入购物车
                 </div>
-                <div class="goods-dialog-button fs52  shop-bg" @click="lijiBuy(1)">
+                <div class="goods-dialog-button fs52  shop-bg" @click="lijiBuy(0)">
                     立即购买
                 </div> 
             </div>
@@ -468,7 +468,8 @@
                     加入购物车 
                 </div>
                 <div class="goods-dialog-button fs52  shop-bg " 
-                   :class="[w_specNum-pifaResult.pfSetObj.spHand<0?'shopRgba':'']">
+                   :class="[w_specNum-pifaResult.pfSetObj.spHand<0?'shopRgba':'']"
+                   @click="lijiBuy(pifaResult.pfType)">
                     立刻批发 
                 </div> 
             </div>
@@ -479,7 +480,8 @@
                     加入购物车 
                 </div>
                 <div class="goods-dialog-button fs52  shop-bg "
-                    :class="[(pifaResult.pfSetObj.hpMoney-pifaTotal > 0 || pifaAmount - pifaResult.pfSetObj.hpNum < 0) ?'shopRgba':'']">
+                    :class="[(pifaResult.pfSetObj.hpMoney-pifaTotal > 0 || pifaAmount - pifaResult.pfSetObj.hpNum < 0) ?'shopRgba':'']"
+                    @click="lijiBuy(pifaResult.pfType)">
                     立刻批发
                 </div> 
             </div>
@@ -1149,7 +1151,7 @@ export default {
                 data = _this.newDialog;
                 let arr = {}
                 data.forEach((item,i)=>{
-                    arr[item.specifica_ids] = {
+                    arr[item.xsid] = {
                         num:item.productNum,
                         value:item.values.toString(),
                         price:item.inv_price
@@ -1230,7 +1232,7 @@ export default {
             this.$router.push('/cart/'+shopId+'/'+busId+'/0');
         },
         //立即购买
-        lijiBuy(){
+        lijiBuy(type){
             // let price = 
             let _this = this;
             console.log(_this.dialogData)
@@ -1254,8 +1256,24 @@ export default {
             if(_this.$route.params.joinActivityId != null){
                 _data.joinActivityId = _this.$route.params.joinActivityId;
             }
-            console.log(_data)
-              _this.ajaxRequest({
+            if(type > 0){
+                //获取批发规格
+                 //批发购买
+                let pfDatas = _this.newDialog;
+                let arr = []
+                pfDatas.forEach((item,i)=>{
+                    let pfObj= {
+                        productNum : item.productNum,
+                        specificaValueIds : item.xsid.toString()
+                    };
+                    arr.push(pfObj);
+                    // _this.$set(arr,arr.length,pfObj);
+                })
+                // arr = JSON.parse(arr);
+                _data.pifaSpecificaDTOList = JSON.stringify(arr);
+            }
+            console.log("_data",_data);
+            _this.ajaxRequest({
                 url: h5App.activeAPI.liji_buy_post,
                 data: _data,
                 success: function(data) {

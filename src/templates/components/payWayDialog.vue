@@ -7,7 +7,8 @@
             
             <div class="payment-dialog-list shop-box-center border"
                 v-for="obj in dialogList"
-                @click="selectDialog(obj)" >
+                @click="selectDialog(obj)" 
+                v-show="!obj.isHide">
                 <div class="payment-dialog-title shop-box-center">
                     <i class="iconfont " :class="'icon-'+obj.claName"></i>
                     <span class="fs42">{{obj.wayName}}</span>

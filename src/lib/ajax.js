@@ -42,7 +42,6 @@ Vue.mixin({
     
                     if (opts.success) {
     
-                        opts.success(res.data, res);
                         //需要登陆（需要跳转）
                         
                         if(res.data.code == 1001){
@@ -70,6 +69,7 @@ Vue.mixin({
                                 return
                             }
                         }
+                        opts.success(res.data, res);
                     }
     
                 } else {
