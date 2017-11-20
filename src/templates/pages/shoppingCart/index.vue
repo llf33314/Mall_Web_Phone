@@ -19,7 +19,7 @@
                     </div>
                     <span>{{cart.userName}}</span>
                 </div>
-                <div class="shopping-box"
+                <div class="shopping-box" :class="{'pf-box':type == 1}"
                     v-for="(shop,j) in cart.shopResultList"
                     :key="j">
                     <div class="order-shop border">
@@ -30,46 +30,79 @@
                             <span class="fs36">{{shop.shopName}}</span>
                             <i class="iconfont icon-you" ></i>
                         </p>
-                        <p class="fs42 shopGray" @click="edit(i,j)">
-                            <span v-if="!shop.edit">编辑</span>
-                            <span v-else>完成</span>
+                        <p class="fs42 shopGray" @click="edit(i,j,shop)" v-if=" type != 1">
+                            <span class="buttom" v-if="!shop.edit">编辑</span>
+                            <span class="buttom" v-else >完成</span>
                         </p>
                     </div>
                     <div class="order-item-box">
-                        <delete-slide class="order-item-content"
+                        <div class="order-item" :class="{'border': type == 1}"
                             v-for="(goods,index) in shop.productResultList"
-                            :key="index"
-                            @delete="delete_dialog(1,index,goods)"
-                            :scope="index">
-                            <div class="shoopCart-content">
-                                <div class="order-item-img">
-                                  <default-img :background="imgUrl+goods.productImageUrl"
-                                                :isHeadPortrait="0">
-                                  </default-img>
-                                   <i class="iconfont icon-dui" :class="{'js-font':goods.show}"
-                                    @click="select_Goods(goods)"></i>
-                                </div>
-                                <div class="order-item-txt">
-                                    <p class="fs42">{{goods.productName}}</p>
-                                    <div v-if="!goods.edit">
-                                        <p class="fs36 shopGray">
-                                            <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
-                                            <span>{{goods.productNum}}份</span>
+                            :key="index">
+                            <delete-slide class="order-item-content" 
+                                @delete="delete_dialog(1,index,goods)"
+                                :scope="index">
+                                <div class="shoopCart-content" :class="{'border': type == 1}">
+                                    <div class="order-item-img">
+                                    <default-img :background="imgUrl+goods.productImageUrl"
+                                                    :isHeadPortrait="0">
+                                    </default-img>
+                                    <i class="iconfont icon-dui" :class="{'js-font':goods.show}"
+                                        @click="select_Goods(goods)"></i>
+                                    </div>
+                                    <div class="order-item-txt">
+                                        <p class="fs42" :class="{'text-overflow': type == 1}">{{goods.productName}}</p>
+                                        <!----------------购物车 未编辑时↓------------------>
+                                        <div v-if="!shop.edit && goods.pfType == 0">
+                                            <p class="fs36 shopGray">
+                                                <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
+                                                <span>{{goods.productNum}}份</span>
+                                            </p>
+                                            <p class="fs42 " :class="[ goods.productHyPrice >0 ?'shopGray':'shop-font']"><span class="fs32">¥</span>{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
+                                            <p class="fs42 shop-font" v-if="goods.productHyPrice>0"><span class="fs32">会员价:¥</span>{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
+                                        </div>
+                                        <!----------------购物车 编辑时↓------------------>
+                                        <div class="goods-choice-box2" v-else-if="shop.edit && goods.pfType == 0">
+                                            <em class="em-choice" 
+                                                @click="addNumber('-',goods)">-</em>
+                                            <input class="em-choice"
+                                                v-model="goods.productNum" 
+                                                @blur="addNumber('',goods)">
+                                            </input>
+                                            <em class="em-choice" 
+                                                @click="addNumber('+',goods)">+</em>
+                                        </div>
+                                        <!----------------批发购物车 手批↓------------------>
+                                        <div v-if=" goods.pfType == 1">
+                                        <p class="fs42 pf1-buttom-box">
+                                            <span  class="shop-font pf1-buttom pf1-buttom-b"  >减一手</span>
+                                            <span class="shop-bg pf1-buttom">加一手</span>
                                         </p>
-                                        <p class="fs42 shop-font" v-if="goods.productHyPrice>0">¥{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
-                                        <p class="fs42 shop-font" v-else>¥{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
+                                        </div>
+                                        <!----------------批发购物车 混批↓------------------>
+                                        <div v-if="goods.pfType == 2">
+                                            <p class="fs36 shopGray">
+                                                <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
+                                                <span>{{goods.productNum}}份</span>
+                                            </p>
+                                            <p class="fs42 " :class="[ goods.productHyPrice >0 ?'shopGray':'shop-font']"><span class="fs32">¥</span>{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
+                                            <p class="fs42 shop-font" v-if="goods.productHyPrice>0"><span class="fs32">会员价:¥</span>{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
+                                        </div>
                                     </div>
-                                    <div class="goods-choice-box2" v-else>
-                                        <em class="em-choice">-</em>
-                                        <input class="em-choice"
-                                         v-model="goods.productNum">
-                                        </input>
-                                        <em class="em-choice">+</em>
-                                    </div>
+                                    
                                 </div>
-                            </div>
-                        </delete-slide>
+                            </delete-slide>
+                        <p class="shopGray fs40 border pf1-spec" v-if=" goods.pfType == 1">
+                                规格：深空灰X1 、玫瑰金X2 
+                        </p>
+                        <p class="shopGray fs40 pf2-spec"v-if=" goods.pfType == 2">
+                                规格：深空灰X1 、玫瑰金X2 
+                        </p>
+                        </div>
                     </div>
+                    <p class="fs36 pf-min-pifaTotal" v-if="type == 1">
+                        3件，小计:<span class="shop-font">￥<span class="fs42">6,666</span>.00</span>
+                    </p>
                 </div>
             </div>
         </div>
@@ -109,14 +142,14 @@
                                   </default-img>
                                 </div>
                                 <div class="order-item-txt">
-                                    <p class="fs42">{{goods.productName}}</p>
-                                    <div v-if="!goods.edit">
+                                    <p class="fs42" :class="{'text-overflow': type == 1}">{{goods.productName}}{{}}</p>
+                                    <div v-if="!shop.edit">
                                         <p class="fs36 shopGray">
                                             <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
                                             <span>{{goods.productNum}}份</span>
                                         </p>
-                                        <p class="fs42 shop-font" v-if="goods.productHyPrice>0">¥{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
-                                        <p class="fs42 shop-font" v-else>¥{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
+                                        <p class="fs42 " :class="[ goods.productHyPrice >0 ?'shopGray':'shop-font']"><span class="fs32">¥</span>{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
+                                        <p class="fs42 shop-font" v-if="goods.productHyPrice>0"><span class="fs32">会员价:¥</span>{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
                                     </div>
                                 </div>
                             </div>
@@ -136,10 +169,10 @@
                 合计：<span class="shop-font">￥{{pifaTotal | currency}}</span>
             </div>
             <div class="shopping-footer-r">
-                <div class="shopping-buttom fs50 shop-yellow">
+                <div class="shopping-buttom fs50 shop-yellow" @click="choose()">
                     继续选购
                 </div>
-                <div class="shopping-buttom fs50 shop-bg">
+                <div class="shopping-buttom fs50 shop-bg" @click="settlementAjax(1)">
                     去结算({{pifaAmount}})
                 </div>
             </div>
@@ -155,6 +188,7 @@ import headerNav from 'components/headerNav'
 import contentNo from 'components/contentNo'
 import deleteSlide from './component/deleteSlide'
 import filter from '../../../lib/filters'// 过滤器
+
 export default {
   name: 'shippingCart',
   data(){
@@ -183,6 +217,8 @@ export default {
         selectShop:'',//选中的店铺
         selectGoods:[],//选中的商品
         selectClass:[],//选中的商品
+        settlement:[],//结算数据
+        settlementarr:[],
     }
   },
   components:{
@@ -190,55 +226,62 @@ export default {
   },
   watch: {
     '$route'(){
-        this.shopCartList = {};
-        this.cartAjax(this.$route.params.type);
+        let type = this.$route.params.type;
+        type==0?this.commonFn.setTitle( '购物车'):this.commonFn.setTitle( '批发商购物车');
+        this.type = type;
+        this.cartAjax();
     },
     'shopCartList'(a,b){
         let _this = this;
         let pifaTotal = 0;
         _this.pifaAmount = 0;
+        let ispifaAmount = true;//判断合计点亮
+        //监听选中购物车数据
         _this.shopCartList.forEach((item,i)=>{
+            let isBusSelect = true;//判断商家点亮
+
+            item.shopResultList.forEach((test,j)=> {
+                let isShopSelect = true;//判断商家店铺点亮
+
+              test.productResultList.forEach((m, n) => {
+                  if(m.show){//商品点亮
+                      if(ispifaAmount){
+                        _this.isPifaAmount = true;
+                      }
+                    if( isBusSelect){
+                        item.show = true;
+                    }
+                    if (isShopSelect) {
+                        //店铺下的商品全部选择时，店铺都选择;
+                        test.show = true;
+                     }
+                  }else{//商品不亮
+                    isBusSelect = false;
+                    isShopSelect = false;
+                    ispifaAmount = false
+                    item.show = false;
+                    test.show = false;
+                    _this.isPifaAmount = false;
+                }
+        
+              })
+            })
+          
+
             //总价计算
             item.shopResultList.forEach((test,j)=>{
                 test.productResultList.forEach((e,n)=>{
                     if(e.show){
-                        pifaTotal += e.productNum * e.productHyPrice
-                        _this.productNum += e.productNum;
+                        if(e.productHyPrice>0){ //会员价
+                            pifaTotal += e.productNum * e.productHyPrice
+                        }else{ //商品价
+                            pifaTotal += e.productNum * e.productPrice
+                        }
+                        _this.pifaAmount += e.productNum;
                     }
                 })
             })
             
-            if(item.show){//选中商家时发生
-                //合计点亮
-                _this.isPifaAmount = true;
-                //商家下店铺全选
-                item.shopResultList.forEach((test,j)=>{
-                    test.show = true;
-                    //商家下店铺全选
-                    test.productResultList.forEach((e,n)=>{
-                        e.show = true
-                    })
-                })
-              return
-            }
-            //取消商家关闭
-            //合计关闭
-            _this.isPifaAmount = false;
-                //取消商家关闭时，店铺状态
-                item.shopResultList.forEach((test,j)=>{
-                    if(test.show){//店铺状态选中时
-                        //店铺下的商品全选
-                        test.productResultList.forEach((e,n)=>{
-                            e.show = true;
-                        })
-                    }else{//取消店铺状态
-                        //店铺下的商品全取消
-                        test.productResultList.forEach((e,n)=>{
-                            e.show = false
-                        })
-                    }
-                })
-
         })
          _this.pifaTotal = pifaTotal;
     }
@@ -246,9 +289,8 @@ export default {
   methods:{
     /**
      * 购物车请求
-     * @param type 批发购买条件
      */
-    cartAjax(type){
+    cartAjax(){
         let _this = this;
         let _data = {
             url: _this.$store.state.loginDTO_URL,
@@ -256,8 +298,9 @@ export default {
             busId:_this.$route.params.busId,
             shopId: _this.$route.params.shopId
         }
-        if(type == 1){
-            _data.type = type;
+        if(_this.$route.params.type == 1){
+            //批发购买条件 1
+            _data.type = 1;
         }
 
         _this.ajaxRequest({
@@ -265,7 +308,13 @@ export default {
             'url': h5App.activeAPI.phoneShopCart_getShopCartx_post,
             'data':_data,
             'success':(data)=>{
-
+                if(data.code == 1){
+                    let msg={
+                        type :'error',
+                        msg :  data.msg +'------差无数据显示'
+                    }
+                    _this.$parent.$refs.bubble.show_tips(msg);
+                }
                 _this.imgUrl = data.imgUrl;
                 _this.path = data.path;
                 _this.webPath = data.webPath;
@@ -362,112 +411,226 @@ export default {
                     msg :  '删除成功'
                 };
                 _this.$parent.$refs.bubble.show_tips(msg);
+                _this.cartAjax()
             }
         })
     },
     /**
-     * 选择商店
-     * @param i  Cart选中的索引
-     * @param index Goods索引
-     * @param j Shop索引
-     */
-    // select_Cart(i){
-    //   let _this = this;
-    //   _this.shopCartList.push([]);
-    //   _this.shopCartList.pop();
-    //   let obj = this.shopCartList[i]
-    //   if(obj.show){
-    //     this.isPifaAmount = false;
-    //     obj.show = false;
-    //     obj.shopResultList.forEach((test,j)=>{
-    //         test.show = false;
-    //         test.productResultList.forEach((e,n)=>{
-    //           e.show = false;
-    //         })
-    //       })
-    //   }else {
-    //     obj.show = true;
-    //     obj.shopResultList.forEach((test,j)=>{
-    //         test.show = true;
-    //         test.productResultList.forEach((e,n)=>{
-    //           e.show = true;
-    //         })
-    //     })
-    //   }
-    // },
-    // select_Shop(j,i){
-    //     let _this = this;
-    //     this.shopCartList.push([]);
-    //     this.shopCartList.pop();
-    //     let obj = this.shopCartList[i].shopResultList[j];
-    //     if(obj.show){
-    //         this.isPifaAmount = false;
-    //         this.shopCartList[i].show = false;
-    //         obj.show = false;
-    //         obj.productResultList.forEach((e,n)=>{
-    //             e.show = false;
-    //         })
-    //     }else {
-    //       obj.show = true;
-    //       obj.productResultList.forEach((e,n)=>{
-    //         e.show = true;
-    //       })
-    //     }
-    // },
-    // select_Goods(index,j,i){
-    //     let _this = this;
-    //     this.shopCartList.push([]);
-    //     this.shopCartList.pop();
-    //     let obj = this.shopCartList[i].shopResultList[j].productResultList[index];
-    //     if(obj.show){
-    //         this.isPifaAmount = false;
-    //         this.shopCartList[i].show = false;
-    //         this.shopCartList[i].shopResultList[j].show = false;
-    //         obj.show = false;
-    //     }else {
-    //         obj.show = true;
-    //     }
-    // },
-    /** 
      * 选中效果
     */
     select_Goods(e){
         let _this = this;
-        e.show = !e.show;
-        this.shopCartList.push([]);
-        this.shopCartList.pop();
-        console.log(e);
+        let _show = !e.show;
+
+        if(typeof e.shopResultList !== 'undefined'){
+          //当前点击是在 商家 第一层数据
+            e.show = _show;
+            e.shopResultList.forEach((item,i)=>{
+              item.show = _show;
+              item.productResultList.forEach((test,j)=>{
+                test.show = _show;
+              })
+            })
+        }else if(typeof e.productResultList !== 'undefined'){
+          //当前点击是在 店铺 第二层数据
+            e.show = _show;
+            e.productResultList.forEach((test,j)=>{
+              test.show = _show;
+            })
+        }else {
+          //当前点击是在 商品 第三层数据
+          e.show = _show;
+        }
+      this.shopCartList.push([]);
+      this.shopCartList.pop();
     },
+    /** 
+     * 合计选择
+     */
     select_PifaAmount(){
         console.log(111);
         this.shopCartList.push([]);
         this.shopCartList.pop();
-        this.isPifaAmount = true;
+        let _show =  !this.isPifaAmount
+        this.isPifaAmount = _show;
         this.shopCartList.forEach((item,i)=>{
-            item.show = true;
+            item.show = _show;
             item.shopResultList.forEach((test,j)=>{
-                test.show = true;
+                test.show = _show;
                 test.productResultList.forEach((e,n)=>{
-                    e.show = true;
+                    e.show = _show;
                 })
             })
         });
     },
     /** 
      * 编辑按钮
-     * @param j 当前索引
+     * @param i 商家 索引
+     * @param j 店铺 索引
+     * @param e 当前 商家
      */
-    edit(i,j){
-        console.log(i,j)
-        let obj = this.shopCartList[i].shopResultList[j];
-        this.$set(obj,'edit',!obj);
+    edit(i,j,e){
+        e.edit = !e.edit;
+        let obj = this.shopCartList[i].shopResultList;
+        this.$set(obj,j,e);
+        if(!e.edit){
+            this.settlementAjax(2);
+        }
+        
+    },
+    /** 
+     * 继续选购--跳转分类页
+    */
+    choose(){
+        let busId =  this.$route.params.busId || this.$store.state.busId;
+        let shopId = this.$route.params.shopId || this.$store.state.shopId;
+        this.$router.push('/classify/'+shopId+'/'+busId+'/'+'0/k=k');
+    },
+    /** 
+     * 添加数量
+     * @param c 加减判断
+     * @param e 当前数据
+    */
+    addNumber(c,e){
+        let _this = this;
+        console.log(e,'e修改数据')
+        let re = /^[0-9]+$/ ;
+            
+        if(!re.test( e.productNum)){
+            _this.$parent.$refs.bubble.show_tips('请输入大于0的整数');
+            e.productNum = 1 ;
+        
+        }else if( e.stockNum == 0){
+            //库存为0 
+            e.productNum = 0 ;
+            _this.$parent.$refs.bubble.show_tips('商品已售罄');
+        }else if( c === '-' || c === ''){
+            //减小时 或者 手动输入
+            e.productNum--;
+
+            if(e.productNum <= 0){
+                _this.$parent.$refs.bubble.show_tips('数量不能小于1');
+                e.productNum = 1 ;
+            }
+        }else{//增减时
+
+            //限购数量不为零时，购买数量不能超出限购数量
+            if(e.maxBuyNum && ( e.productNum >= e.maxBuyNum)){
+                _this.$parent.$refs.bubble.show_tips('超出限购数量');
+                
+            }else  if(e.productNum >= e.stockNum){
+                //库存不为0，超出规格库存
+                _this.$parent.$refs.bubble.show_tips('超出现有库存量');
+                e.productNum = e.stockNum;
+            }else if(c === '+'){
+                e.productNum ++;
+            }
+        }
+        _this.shopCartList.push([]);
+        _this.shopCartList.pop();
+
+        //编辑数据处理  -- 集合 settlement settlementarr
+        let obj = _this.settlementData(e);
+
+        if($.inArray(e.id, _this.settlementarr) == -1){
+            //新增当前修改
+            _this.settlementarr.push(e.id);
+            _this.settlement.push(obj)
+        }else{
+            //替换已有修改
+            _this.settlement.forEach((item,i)=>{
+                if(item.id == e.id){
+                    this.$set(_this.settlement,i,obj)
+                }
+            })
+        }
+    },
+    /**
+     * 结算请求
+     * @param c    判断去结算1 还是 编辑商品数量提交2
+     */
+    settlementAjax(c){
+        let _this = this;
+        let _data ={
+            str:[]
+        }; 
+        let shopCartIds=[]; 
+        if(c === 1){
+            //去结算1
+            _this.shopCartList.forEach((item,i)=>{
+                item.shopResultList.forEach((test,j)=>{
+                    test.productResultList.forEach((e,n)=>{
+                        if(e.show){
+                            let obj = this.settlementData(e);
+                            _data.str.push(obj);
+                            shopCartIds.push(obj.id);
+                        }
+                    })
+                })
+            })
+        }else{
+            _data.str = _this.settlement
+        }
+        
+        //无数据修改 不发送请求
+        if(_data.str.length <=0) return; 
+
+        //有数据修改，str换json，shopCartIds转字符串；
+        _data.str = JSON.stringify(_data.str);
+        
+        _this.ajaxRequest({
+            'url': h5App.activeAPI.phoneShopCart_shopCartOrder_post,
+            'data': _data,
+            'success':(data)=>{
+                if(c === 1){
+                    //结算 成功跳转 订单页面 /order/settlement/:busId/1/:shopCartIds（购物车id）
+                    shopCartIds = shopCartIds.toString();
+                    let busId = this.$route.params.busId || this.$store.state.busId;
+                    console.log('/order/settlement/'+busId+'/1/'+shopCartIds)
+                    _this.$router.push('/order/settlement/'+busId+'/1/'+shopCartIds);
+                }else{
+                     //编辑 请求成功后 清空之前编辑商品集合
+                    _this.settlement = [];
+                    _this.cartAjax();
+                }
+            }
+        })
+    
+    },
+    /** 
+     * 结算请求--数据处理
+     * @param e 当前修改商品 返回 传参需要格式
+     */
+    settlementData(e){
+        let _this = this;
+        //正常
+        let obj= {
+            id:  e.id,
+            productNum: e.productNum
+        };
+        //批发
+
+        if( _this.type == 1 ){
+            let arr=[];
+            e.pifaSpecificaList.forEach((item,i)=>{
+                let  _data= {
+                    productId: item.id,
+                    productNum: item.productNum,
+                    specificaValueIds: item.specificaValueIds
+                }
+                arr.push(_data);
+            })
+            //批发规格集合
+            obj.pifatSpecificaDTOList =  arr
+        }
+        return obj
     }
   },
   mounted () {
     let type = this.$route.params.type;
     type==0?this.commonFn.setTitle( '购物车'):this.commonFn.setTitle( '批发商购物车');
-
-    this.cartAjax(type);
+    this.type = type;
+    this.cartAjax();
   }
 }
 </script>
@@ -475,7 +638,6 @@ export default {
 <style lang="less" scoped>
 @import '../../../assets/css/mixins.less';
 @import '../../../assets/css/base.less';
-
 .order-main{
     padding-top: 148/@dev-Width *1rem;
     padding-bottom: 360/@dev-Width *1rem;;
@@ -488,7 +650,6 @@ export default {
       }
       .order-item{
           width: 100%;
-          margin-bottom: 20/@dev-Width *1rem;
           background: #fff;
       }
       .order-item-title{
@@ -526,10 +687,11 @@ export default {
           }
       }
       .order-item-content,.order-number-time{
-          .ik-box;
-          .ik-box-pack(justify);
-          width: 100%;
-          padding: 24/@dev-Width *1rem 30/@dev-Width *1rem  24/@dev-Width *1rem 40/@dev-Width *1rem;
+            .ik-box;
+            .ik-box-pack(justify);
+            width: 100%;
+            padding: 0 *1rem 30/@dev-Width *1rem  0 40/@dev-Width *1rem;
+            line-height: 1;
           .order-item-img{
               width: 265  /@dev-Width *1rem;
               height: 265 /@dev-Width *1rem;
@@ -537,8 +699,14 @@ export default {
           }
           .order-item-txt{
               width: 73%;
-              p{
+              &>p{
                   margin-bottom: 20 /@dev-Width *1rem
+              }
+              &>div{
+                  line-height: 1;
+                  p{
+                      padding-bottom:2px;
+                  }
               }
           }
       }
@@ -570,6 +738,7 @@ export default {
         width: 100%;
         .ik-box;
         .ik-box-pack(justify);
+        padding: 48/@dev-Width *1rem 0;
     }
     .icon-dui{
         background:#bfbfbf;
@@ -674,6 +843,36 @@ export default {
     &>em:last-of-type{
         border-top-right-radius: 3px;
         border-bottom-right-radius: 3px;
+    }
+}
+.buttom{
+    border: 25/ @dev-Width *1rem solid #fff;
+    border-right: 0;
+}
+.pf-box{
+    .pf1-spec{
+        padding: 25/ @dev-Width *1rem;
+    }
+    .pf2-spec{
+        padding: 25/ @dev-Width *1rem;
+    }
+    .pf1-buttom-box{
+        border:1px solid blue;
+        .pf1-buttom{
+            width: 185/ @dev-Width *1rem;
+            height: 90/ @dev-Width *1rem;
+            display: inline-block;
+            text-align: center;
+            line-height: 90/ @dev-Width *1rem;
+            .border-radius(3px)
+        }
+        .pf1-buttom-b{
+            border:1px solid #e4393c;
+        }
+    }
+    .pf-min-pifaTotal{
+        text-align: right;
+        padding: 25/ @dev-Width *1rem 38/ @dev-Width *1rem;; 
     }
 }
 </style>

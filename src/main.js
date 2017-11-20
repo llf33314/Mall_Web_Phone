@@ -34,7 +34,6 @@ var vm = new Vue({
 })
 
 
-// require('@/lib/ajax.js');
 /**
  * 弹出框调用
  * 使用方法

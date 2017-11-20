@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-
 Vue.use(Vuex);
 
 /** 获取使用方法 
@@ -21,9 +20,8 @@ const state = {
     showTop:1,//置顶按钮显示
     showfooter:1,//底部导航显示隐藏
     isAdvert:'',//是否显示技术支持
-    pageId:''//首页id
+    pageId:'',//首页id
 }
-
 const actions ={
     
 }
