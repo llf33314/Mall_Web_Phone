@@ -10,6 +10,8 @@ Vue.mixin({
 		 */
 		submitOrder() {
 			let _this = this;
+			let busId = _this.$route.params.busId;
+			let _commonFn = _this.commonFn;//公共js调用
 			if (!_this.validateSubmitOrderParams()) {
 				return;
 			}
@@ -21,9 +23,30 @@ Vue.mixin({
 				params: _order,
 				busId: _this.$route.params.busId,
 				url: window.location.href,
-				browerType:_this.$store.state.browerType
+				browerType: _this.$store.state.browerType
 			}
-			console.log(_data,"_data")
+			console.log(_data, "_data")
+
+			_this.ajaxRequest({
+				url: h5App.activeAPI.submit_order_post,
+				data: _data,
+				loading: true,//开启loading
+				success: function (data) {
+					//各种跳转
+					let url = data.url;
+					if (_commonFn.isNotNull(url)) {
+						location.href = url;
+					}
+					url = "/order/list/" + busId + "/0";
+					if (data.orderPayWay == 7) {
+						//跳转到找人代付页面
+					} else if (data.orderPayWay == 4) {
+						//跳转到积分商城的页面
+					}
+					_this.$router.push(url);
+
+				}
+			});
 		},
 		/**
 		 * 验证提交订单的参数
@@ -43,35 +66,37 @@ Vue.mixin({
 				let _showTip = _this.$parent.$refs.bubble.show_tips;//冒泡提醒
 				let _isNull = _commonFn.isNull;//不为空定义
 
-				if (_isNull(_this.selectPayWay) || _isNull(_this.selectPayWay.id)) {
-					_showTip(Language.select_pay_way_msg);//收货地址提醒
-					flag = false;
-					break;
-				}
-
-				if (_isNull(selectDelivery)) {
-					_showTip(Language.select_delivery_msg);//配送方式提醒
-					flag = false;
-					break;
-				}
-				//选中配送方式的id  1, 快递配送  2,上门自提  3到店购买
-				if (selectDelivery.id == 1) {
-					if (_isNull(_this.memberAddresss) || _this.memberAddresss.id == 0) {
-						_showTip(Language.select_receipt_msg);//收货地址提醒
-						flag = false;
-					}
-				} else if (selectDelivery.id == 2) {
-					if (!_this.blurName(bus.appointmentUserName) || !_this.blurPhone(bus.appointmentUserPhone)) {
+				if (orderData.proTypeId == 0) {
+					if (_isNull(_this.selectPayWay) || _isNull(_this.selectPayWay.id)) {
+						_showTip(Language.select_pay_way_msg);//收货地址提醒
 						flag = false;
 						break;
 					}
-					if (_isNull(bus.selectTakeTime)) {
-						_showTip(Language.tihuo_time_msg);//提货时间提醒
+					if (_isNull(selectDelivery)) {
+						_showTip(Language.select_delivery_msg);//配送方式提醒
 						flag = false;
 						break;
 					}
+					//选中配送方式的id  1, 快递配送  2,上门自提  3到店购买
+					if (selectDelivery.id == 1) {
+						if (_isNull(_this.memberAddresss) || _this.memberAddresss.id == 0) {
+							_showTip(Language.select_receipt_msg);//收货地址提醒
+							flag = false;
+						}
+					} else if (selectDelivery.id == 2) {
+						if (!_this.blurName(bus.appointmentUserName) || !_this.blurPhone(bus.appointmentUserPhone)) {
+							flag = false;
+							break;
+						}
+						if (_isNull(bus.selectTakeTime)) {
+							_showTip(Language.tihuo_time_msg);//提货时间提醒
+							flag = false;
+							break;
+						}
 
+					}
 				}
+
 			}
 			return flag;
 		},

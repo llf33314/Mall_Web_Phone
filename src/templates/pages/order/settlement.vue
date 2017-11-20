@@ -1,7 +1,7 @@
 <template>
 <div class="order-wrapper">
     <!-- 头部导航 + 收货地址区域 + 新增收货地址区域 -->
-    <header class="orderTotal-header">
+    <header class="orderTotal-header" :class="[orderData.proType == 0,'order-header']">
         <!-- 导航 -->
         <div class="header-top">
             <div class="fs46">
@@ -12,23 +12,25 @@
                 首页
             </div>
         </div>
+        <div v-if="orderData.proTypeId == 0">
         <!-- 收货地址区域 -->
-        <div class="header-bottom clearfix" v-if="hasAddress && memberAddresss != null">
-            <p class="fs46">{{memberAddresss.memberName}}  {{memberAddresss.memberPhone}}</p>
-            <div class="header-bottom-left">
-                <p class="fs36 shopGray">{{memberAddresss.memberAddress}}</p>
-            </div>
-            <div class="header-bottom-right">
-                <i class="iconfont icon-jiantou-copy "></i>
-            </div>
-        </div>
-        <!-- 新增收货地址区域 -->
-        <div class="header-bottom-no clearfix" v-else
-          @click="toAddress">
-            <p class="fs42">
-                <i class="iconfont icon-jia"></i>
-                新增收货地址
-            </p>
+          <div class="header-bottom clearfix" v-if="hasAddress && memberAddresss != null">
+              <p class="fs46">{{memberAddresss.memberName}}  {{memberAddresss.memberPhone}}</p>
+              <div class="header-bottom-left">
+                  <p class="fs36 shopGray">{{memberAddresss.memberAddress}}</p>
+              </div>
+              <div class="header-bottom-right">
+                  <i class="iconfont icon-jiantou-copy "></i>
+              </div>
+          </div>
+          <!-- 新增收货地址区域 -->
+          <div class="header-bottom-no clearfix" v-else
+            @click="toAddress">
+              <p class="fs42">
+                  <i class="iconfont icon-jia"></i>
+                  新增收货地址
+              </p>
+          </div>
         </div>
     </header> 
     <section class="shop-main deltails-main" v-if="orderList != null && orderList.length > 0">
@@ -99,7 +101,7 @@
                     </div>
                 </div>
                 <div class="border orderTotal-list-box">
-                    <div class="orderTotal-list border" v-if="bus.deliveryWayList != null && bus.deliveryWayList.length > 0"
+                    <div class="orderTotal-list border" v-if="bus.deliveryWayList != null && bus.deliveryWayList.length > 0 && orderData.proTypeId == 0"
                       @click="showDialogs(bus.deliveryWayList,2,bus.busId,bus.isSelectDiscount,bus.selectDelivery)">
                         <p class="fs40">配送方式</p>
                         <p class="fs40">
@@ -481,7 +483,9 @@ export default {
           _this.orderList = myData.busResultList; //订单集合
           _this.imgUrl = data.imgUrl; //图片域名
           _this.orderList.forEach((item, index) => {
-            item.isSelectDiscount = true;
+            if(myData.proTypeId == 0){
+              item.isSelectDiscount = true;
+            }
             if (item.deliveryWayList != null) {
               let selectDelivery = item.deliveryWayList[0]; //默认选中第一个配送方式
               item.selectDelivery = selectDelivery; //选中的配送方式
