@@ -316,7 +316,7 @@
                 </div> -->
             </div>
            <div class="dialog-bottom">
-                <span class="fs50 dialog-button" 
+                <span class="fs50 dialog-button2" 
                     @click="confirmPhone()"
                     >提交订单
                 </span>
