@@ -1,8 +1,10 @@
 <template>
-	<div class="loading" v-show="isLoadingShow">
-		<div class="loader">
-			<div class="loader-inner ball-clip-rotate">
-				<div></div>
+	<div class="loading-box" v-show="isLoadingShow">
+		<div class="loading" >
+			<div class="loader">
+				<div class="loader-inner ball-clip-rotate">
+					<div></div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -27,10 +29,18 @@
 this.$root.$emit('complete',true);//loading*/
 </script>
 <style scoped>
+	.loading-box{
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		top:0;
+		left: 0;
+		z-index: 9999;
+	}
 	.loading {
-		width: 0.8rem;
+		width: 1.2rem;
 		/*loading 总大小*/
-		height: 0.8rem;
+		height: 1.2rem;
 		/*loading 总大小*/
 		position: absolute;
 		top: 5rem;
@@ -39,17 +49,19 @@ this.$root.$emit('complete',true);//loading*/
 		left: 50%;
 		margin-left: -0.4rem;
 		text-align: center;
+		background: rgba(0, 0, 0, 0.25);
+		border-radius:5px;
 	}
 	
 	.ball-clip-rotate > div {
-		background-color: #e4393c;
+		background-color: #fff;
 		width: 15px;
 		height: 15px;
 		border-radius: 100%;
-		margin: 2px;
+		margin: 10px;
 		-webkit-animation-fill-mode: both;
 		animation-fill-mode: both;
-		border: 2px solid #e4393c;
+		border: 2px solid #fff;
 		border-bottom-color: transparent;
 		height: 25px;
 		width: 25px;
