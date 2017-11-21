@@ -126,14 +126,14 @@ export default new Router({
         title: '报名成功'
       }
     }, {
-      path: '/comment',
+      path: '/comment/:busId/:orderDetailId',
       name: 'comment',
       component: Comment,
       meta: {
         title: '评论'
       }
     }, {
-      path: '/comment/share',
+      path: '/comment/share/:busId/:id',
       name: 'share',
       component: Comment_Share,
       meta: {

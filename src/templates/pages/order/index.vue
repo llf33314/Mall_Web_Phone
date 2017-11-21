@@ -47,7 +47,7 @@
                         </div>
                         <div class="order-button shop-bg"
                             v-if="detail.isShowCommentButton == 1"
-                            @click="returnToComment(detail.orderDetailId)">
+                            @click="returnToComment(detail.orderDetailId,busItem.busId)">
                             去评论
                         </div>
                     </div>
@@ -183,6 +183,10 @@ export default {
     defaultImg,
     more
   },
+  beforeDestroy() {
+    //离开后的操作
+    this.isMore = -1;
+  },
   methods: {
     loadMore() {
       this.curPage++; //请求页数
@@ -216,7 +220,6 @@ export default {
         url: h5App.activeAPI.order_list_post,
         data: _data,
         success: function(data) {
-
           if (data.code != 0) {
             _this.errorMsg = data.msg;
             _this.isShowNullContent = true; //有数据关闭
@@ -262,16 +265,16 @@ export default {
     revoke_dialog() {},
     returnApplyReturn(orderDetailId) {
       //跳转申请退款页面
-       sessionStorage.setItem('refundReturnUrl', location.href);
-      this.isMore = -1;
+      sessionStorage.setItem("refundReturnUrl", location.href);
       this.$router.push("/return/classify/" + this.busId + "/" + orderDetailId);
     },
-    returnToComment(orderDetailId) {
+    returnToComment(orderDetailId,busId) {
       //跳转至去评价页面
+      this.$router.push("/comment/"+busId+"/"+orderDetailId);
     },
-    returnToPay(orderId,busId) {
-      //跳转至提交订单页面
-      this.$router.push("/order/settlement/"+busId+"/2/"+orderId);
+    returnToPay(orderId, busId) {
+      // 去支付 跳转至提交订单页面
+      this.$router.push("/order/settlement/" + busId + "/2/" + orderId);
     },
     returnDaifu(orderId) {
       //跳转至代付详情页面

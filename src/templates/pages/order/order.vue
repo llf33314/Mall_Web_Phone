@@ -105,7 +105,7 @@
                             撤销退款
                         </div>
                         <div class="deltails-button shop-bg fs36" v-if="detail.isShowCommentButton == 1"
-                         @click="goComment(detail.orderDetailId)">
+                         @click="goComment(detail.orderDetailId,order.busId)">
                             去评价
                         </div>
                     </div>
@@ -150,7 +150,7 @@
             确认收货
         </div>
         <div class="deltails-button fs40 shop-bg" v-if="order.isShowGoPayButton == 1" 
-          @click="returnGoPay(order.orderId)">
+          @click="returnGoPay(order.orderId,order.busId)">
             去支付
         </div>
         <div class="deltails-button fs40 shop-bg" v-if="order.isShowDeleteButton == 1" 
@@ -236,8 +236,9 @@ export default {
       //弹出删除订单的弹出框
       this.showDeleteOrderDialog(orderId);
     },
-    returnGoPay() {
-      //去支付跳转
+    returnGoPay(orderId,busId) {
+      // 去支付 跳转至提交订单页面
+      this.$router.push("/order/settlement/" + busId + "/2/" + orderId);
     },
     confirmReceipt(orderId) {
       //确认收货
@@ -272,8 +273,9 @@ export default {
       //调用关闭退款的接口
       this.showCloseReturnDialog(returnId);
     },
-    goComment(orderDetailId) {
+    goComment(orderDetailId,busId) {
       //跳入去评价的页面
+      this.$router.push("/comment/"+busId+"/"+orderDetailId);
     },
     toProductDetail(productId, shopId, busId) {
       //跳转至商品详情页面
