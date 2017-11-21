@@ -25,7 +25,8 @@ Vue.mixin({
 				url: window.location.href,
 				browerType: _this.$store.state.browerType
 			}
-			console.log("提交订单参数：", _data)
+			console.log("提交订单参数：", _data);
+			// return;
 
 			_this.ajaxRequest({
 				url: h5App.activeAPI.submit_order_post,
@@ -58,12 +59,16 @@ Vue.mixin({
 			let _commonFn = _this.commonFn;//公共js调用
 			let orderData = _this.orderData;//初始化数据
 			let orderList = _this.orderList;//商家集合
+			let _showTip = _this.$parent.$refs.bubble.show_tips;//冒泡提醒
+			let _isNull = _commonFn.isNull;//不为空定义
+			if (orderData.proTypeId == 4 && _isNull(orderData.flowPhone)) {
+				_showTip("请填写需要充值的手机号码");//请填写需要充值的手机号码
+				return;
+			}
 			let flag = true;
 			for (let i = 0; i < orderList.length; i++) {
 				let bus = orderList[i];
 				let selectDelivery = bus.selectDelivery;
-				let _showTip = _this.$parent.$refs.bubble.show_tips;//冒泡提醒
-				let _isNull = _commonFn.isNull;//不为空定义
 
 				if (orderData.proTypeId == 0) {
 					if (_isNull(_this.selectPayWay) || _isNull(_this.selectPayWay.id)) {
@@ -155,10 +160,10 @@ Vue.mixin({
 					orderObj.jifenMoney = 0;
 				}
 				let isSelectCoupons = 0; //是否选中了优惠券  1选中
-				
-				if( bus.isSelectUnion){
-					orderObj.unionCardId =  bus.unionCardId || 0;//联盟卡id
-					orderObj.unionDiscount =  bus.unionDiscount || 0;//联盟卡折扣
+
+				if (bus.isSelectUnion) {
+					orderObj.unionCardId = bus.unionCardId || 0;//联盟卡id
+					orderObj.unionDiscount = bus.unionDiscount || 0;//联盟卡折扣
 				}
 				if (orderData.proTypeId == 0) {
 					if (orderObj.selectDeliveryWayId == 2) {//上门自提
@@ -176,7 +181,7 @@ Vue.mixin({
 				let shopResultList = [];
 				//循环店铺
 				bus.shopResultList.forEach((shop, index2) => {
-					if(_commonFn.isNotNull(shop.selectCoupon)){
+					if (_commonFn.isNotNull(shop.selectCoupon)) {
 						isSelectCoupons = 1;//是否选中了优惠券  1选中
 					}
 					let shopObj = {
@@ -216,6 +221,9 @@ Vue.mixin({
 						if (product.pfSpecResultList != null) {
 							productObj.pfSpecResultList = product.pfSpecResultList;
 						}
+						if (product.orderDetailId != null && product.orderDetailId > 0) {
+							productObj.orderDetailId = product.orderDetailId;
+						}
 						_this.$set(productResultList, productResultList.length, productObj);
 					});
 
@@ -231,7 +239,7 @@ Vue.mixin({
 			_data.busResultList = busResultList;//商家集合
 			_data.wxShopIds = wxShopIds.toString();
 			_data.busIds = busIds.toString();
-			if(_this.from == 2){
+			if (_this.from == 2) {
 				_data.orderId = _this.$route.params.ids;
 			}
 			return _data;

@@ -131,7 +131,7 @@
                       <div class="border clearfix orderTotal-table">
                          <p class="fs40 shop-fl">提货时间：</p>
                          <div  class="fs40 shop-fr my-table"   @click="showDialogs(bus.takeTimeList,4,bus.busId,0,bus.selectTakeTime)" 
-                            v-if="bus.takeTimeList != null && bus.takeTimeList.length > 0 && bus.selectTakeTime != null"
+                            v-if="(bus.takeTimeList != null && bus.takeTimeList.length > 0) || bus.selectTakeTime != null"
                             v-text="bus.selectTakeTime.times +' '+ bus.selectTakeTime.startTime +'-'+ bus.selectTakeTime.endTime"></div>
                           <div  class="fs40 shop-fr my-table" v-else ></div>
                       </div>
@@ -347,8 +347,8 @@ export default {
       dialogBusId: 0, //弹出框需要的商家id
       isUseMemberDiscount: 0, //是否选择了会员折扣
       selectObj: {}, //记录选中的对象
-      isSelectDaodianPay: false ,//是否选择了到店支付
-      ids:"",//当 from = 0 时 此值为购物车id;  如 from = 2 时 此值为订单id
+      isSelectDaodianPay: false, //是否选择了到店支付
+      ids: "" //当 from = 0 时 此值为购物车id;  如 from = 2 时 此值为订单id
     };
   },
   components: {
@@ -420,7 +420,7 @@ export default {
           );
         });
         bus.productFreightMoneyOld = _floatSub(oldFreightMoney, busFreight);
-        console.log(bus.totalMoney, "----", busFreight);
+        // console.log(bus.totalMoney, "----", busFreight);
         bus.totalMoney = _floatSub(bus.totalMoney, busFreight);
         bus.totalNewPrice = _floatSub(bus.totalNewPrice, busFreight);
 
@@ -431,7 +431,7 @@ export default {
       let totalPayMoney = _orderData.totalPayMoney;
       _orderData.totalPayMoney = _floatSub(totalPayMoney, chaFreightMoney);
       _orderData.totalMoney = _floatSub(_orderData.totalMoney, chaFreightMoney);
-      console.log(totalPayMoney, "---", "totalPayMoney", chaFreightMoney);
+      // console.log(totalPayMoney, "---", "totalPayMoney", chaFreightMoney);
     }
   },
   methods: {
@@ -443,13 +443,23 @@ export default {
       let list = this.orderList;
       let payWayLists = _this.payWayList;
       list.forEach((bus, index) => {
-        payWayLists.forEach((way, index) => {
-          if (bus.selectDelivery.id != 2 && way.id == 6) {
-            way.isHide = true;
+        for (let i = 0; i < payWayLists.length; i++) {
+          let way = payWayLists[i];
+          if (bus.selectDelivery.id == 1 && way.id == 6) {
+            way.isHide = true; //快递配送 且 到店支付，隐藏起来
+            continue;
           } else {
             way.isHide = false;
           }
-        });
+          if (bus.selectDelivery.id == 2 && way.id == 2) {
+            way.isHide = true; //到店自提  且 货到付款， 隐藏起来
+            continue;
+          } else {
+            way.isHide = false;
+          }
+        }
+        // payWayLists.forEach((way, index) => {
+        // });
       });
     },
     order_ulShow() {
@@ -466,8 +476,8 @@ export default {
         url: location.href,
         browerType: _this.$store.state.browerType
       };
-      if(_this.from == 2){
-        _data.orderId = _this.$route.params.ids
+      if (_this.from == 2) {
+        _data.orderId = _this.$route.params.ids;
       }
       _this.ajaxRequest({
         status: false,
@@ -492,14 +502,23 @@ export default {
             if (myData.proTypeId == 0) {
               item.isSelectDiscount = true;
             }
-            if (item.deliveryWayList != null) {
-              let selectDelivery = item.deliveryWayList[0]; //默认选中第一个配送方式
-              item.selectDelivery = selectDelivery; //选中的配送方式
+            if (
+              item.deliveryWayList != null &&
+              item.deliveryWayList.length > 0 &&
+              item.selectDelivery == null
+            ) {
+              //默认选中第一个配送方式
+              item.selectDelivery = item.deliveryWayList[0]; //选中的配送方式
             }
             item.productFreightMoneyOld = item.productFreightMoney;
+            if (item.selectTakeTime != null) {
+              _this.showTakeTime(item.takeId, item.busId);
+            }
           });
           //支付方式集合
-          if (_this.payWayList != null && _this.payWayList.length > 0) {
+          if (myData.selectPayWay != null) {
+            _this.selectPayWay = myData.selectPayWay;
+          } else if (_this.payWayList != null && _this.payWayList.length > 0) {
             //赋值默认的支付方式
             _this.selectPayWay = _this.payWayList[0];
           }
@@ -556,19 +575,19 @@ export default {
           let item = _this.orderList[i];
           if (item.busId == data[2]) {
             item.selectDelivery = data[1];
+
             if (obj.id == 2) {
               //到店自提
               _this.showTakeTime(item.takeId, item.busId);
+              //选择了货到付款
+              //选择到店自提，也选择了货到付款，则清空选择的支付方式
+              if (this.selectPayWay.id == 2) {
+                _this.clearPayWay(2);
+              }
             } else {
               //没有选择到店自提，但选择了支付方式，则清空选择的支付方式
               if (this.selectPayWay.id == 6) {
-                for (let i = 0; i < _this.payWayList.length; i++) {
-                  let payWay = _this.payWayList[i];
-                  if (payWay.id != 6) {
-                    _this.selectPayWay = payWay;
-                    break;
-                  }
-                }
+                _this.clearPayWay(6);
               }
             }
             _this.changePayWay();
@@ -614,6 +633,22 @@ export default {
       }
     },
     /**
+     * 清空支付方式
+     */
+    clearPayWay(wayId) {
+      let _this = this;
+      //没有选择到店自提，但选择了支付方式，则清空选择的支付方式
+      if (this.selectPayWay.id == wayId) {
+        for (let i = 0; i < _this.payWayList.length; i++) {
+          let payWay = _this.payWayList[i];
+          if (payWay.id != wayId) {
+            _this.selectPayWay = payWay;
+            break;
+          }
+        }
+      }
+    },
+    /**
      * 获取到店自提地址 并显示  弹出框
      */
     showTakeAddress(busId, takeArr, takeId) {
@@ -628,7 +663,7 @@ export default {
         busId: busId
       };
       if (address != null && _commonFn.isNotNull(address.addressProvince)) {
-        _data.province = address.addressProvince;
+        _data.provinceIds = address.addressProvince;
       }
       _this.ajaxRequest({
         url: h5App.activeAPI.get_take_their_post,
@@ -667,7 +702,9 @@ export default {
             let bus = _this.orderList[i];
             if (bus.busId == busId) {
               bus.takeTimeList = myData;
-              bus.selectTakeTime = myData[0];
+              if (_this.commonFn.isNull(bus.selectTakeTime)) {
+                bus.selectTakeTime = myData[0];
+              }
               _this.$set(_this.orderList, i, bus);
               break;
             }
