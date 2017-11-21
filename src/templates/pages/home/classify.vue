@@ -60,7 +60,7 @@
             :class="[isList?'classify-content1':'classify-content2']" 
             v-if="subList !=='' ">
         <div class="classify-item" v-for="goods in subList"
-            @click="goods_jump(goods.id,goods.activityId)">
+            @click="goods_jump(goods)">
             <div class="classify-img" >
                 <default-img :background="goods.image_url"
                             :isHeadPortrait="0">
@@ -341,11 +341,13 @@ export default {
                 });
             }
         },
-        goods_jump(id,activity){
-            if(activity == null || activity == '' || typeof(activity) == "undefined"){
-                activity = 0;
+        goods_jump(e){
+
+            if(e.activity == null || e.activity == '' || typeof(e.activity) == "undefined"){
+                e.activity = 0;
             }
-            let shopId =  this.$store.state.shopId || this.$route.params.shopId;
+
+            let shopId =  e.shop_id ||this.$store.state.shopId ||this.$store.state.shopId || this.$route.params.shopId;
             let busId =  this.$store.state.busId || this.$route.params.busId;
             let type = this.$store.state.type || this.$route.params.type;
             this.$store.commit('mutationData',{
@@ -353,7 +355,7 @@ export default {
                 busId: busId,
                 type : type,
             });
-            this.$router.push('/goods/details/'+shopId+'/'+busId+'/'+type+'/'+id+'/'+activity);
+            this.$router.push('/goods/details/'+shopId+'/'+busId+'/'+type+'/'+e.id+'/'+e.activity);
         },
         /** 
          *关闭分类

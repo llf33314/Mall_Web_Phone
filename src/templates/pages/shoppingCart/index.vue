@@ -1,33 +1,33 @@
 <template>
 <div id='app' class="shop-wrapper order-wrapper">
     <header-nav :headers= "homeNav" :status="'cart'" style="z-index:3"></header-nav>
-    <section class="shop-main-no fs40 my-bond" v-if="isShow">
+    <section class="shop-main-no fs40 my-bond" v-if="shopCartList == 1">
         <content-no :statu='bondStatu'></content-no>
     </section>
     <section class="shop-main order-main shoopCart-main" v-else>
         <div class="order-box" v-if="shopCartList != '' ">
             <div class="order-item" v-for=" (cart,i) in shopCartList"
                 :key = "i">
-                <div class="order-item-title fs40">
+                <div class="order-item-title fs40" @click.self="jupm_cart(cart)">
                     <i  class="iconfont icon-dui"
                         :class="{'js-font': cart.show}"
                         @click="select_Goods(cart)"></i>
-                    <div class="order-title-img">
+                    <div class="order-title-img" @click="jupm_cart(cart)">
                       <default-img :background="cart.userImageUrl"
                                   :isHeadPortrait="1">
                       </default-img>
                     </div>
-                    <span>{{cart.userName}}</span>
+                    <span @click.self="jupm_cart(cart)">{{cart.userName}}</span>
                 </div>
                 <div class="shopping-box" :class="{'pf-box':type == 1}"
                     v-for="(shop,j) in cart.shopResultList"
                     :key="j">
                     <div class="order-shop border">
-                        <p class="order-shop-name">
+                        <p class="order-shop-name"  @click.self="jupm_shop(shop)"> 
                             <i class="iconfont icon-dui" :class="{'js-font':shop.show}"
                             @click="select_Goods(shop)"></i>
-                            <i class="iconfont icon-dianpu"></i>
-                            <span class="fs36">{{shop.shopName}}</span>
+                            <i class="iconfont icon-dianpu" @click.self="jupm_shop(shop)"></i>
+                            <span class="fs36"  @click.self="jupm_shop(shop)">{{shop.shopName}}</span>
                             <i class="iconfont icon-you" ></i>
                         </p>
                         <p class="fs42 shopGray" @click="edit(i,j,shop)">
@@ -43,15 +43,18 @@
                                 @delete="delete_dialog(1,goods)"
                                 :scope="index">
                                 <div class="shoopCart-content" :class="{'border': type == 1}">
-                                    <div class="order-item-img">
-                                    <default-img :background="imgUrl+goods.productImageUrl"
+                                    <div class="order-item-img" >
+                                        <a @click="jupm_goods(goods)">
+                                        <default-img :background="imgUrl+goods.productImageUrl"
                                                     :isHeadPortrait="0">
-                                    </default-img>
-                                    <i class="iconfont icon-dui" :class="{'js-font':goods.show}"
-                                        @click="select_Goods(goods)"></i>
+                                        </default-img>
+                                        </a>
+                                        <i class="iconfont icon-dui" :class="{'js-font':goods.show}"
+                                            @click="select_Goods(goods)"></i>
                                     </div>
                                     <div class="order-item-txt">
-                                        <p class="fs42" :class="{'text-overflow': type == 1}">{{goods.productName}}</p>
+                                        <p class="fs42" :class="{'text-overflow': type == 1}"
+                                            @click="jupm_goods(goods)">{{goods.productName}}</p>
                                         <!----------------购物车 未编辑时↓------------------>
                                         <p v-if="!shop.edit && goods.pfType == 1" 
                                         class="fs42 " :class="[ goods.productHyPrice >0 ?'shopGray':'shop-font']"><span class="fs32">¥</span>{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
@@ -132,7 +135,7 @@
             </div>
         </div>
         <div class="sxorder-box" v-if=" sxShopCartList != 1 ">
-            <p class="sxorder-box-title fs42">
+            <p class="sxorder-box-title fs42" >
                 以下商品无法购买
             </p>
             <div class="order-item" 
@@ -195,9 +198,16 @@
                 </div>
             </div>
             <div class="fs42 sxorder-button" 
-            @click="delete_dialog(2)">清空失效商品</div>
+                @click="delete_dialog(2)">清空失效商品
+            </div>
         </div>
         <div class="shopping-footer clearfix" style="z-index:2">
+            <div class="pifa-warning-box" v-if="pifawarning">
+                <div class="pifa-warning">
+                    <span class="fs40">手批条件</span>
+                    <span class="fs40">混批条件</span>
+                </div>
+            </div>
             <div class="shopping-footer-l fs40">
                 <i class="iconfont icon-dui"
                 :class="{'js-font':isPifaAmount}"
@@ -225,18 +235,18 @@ import headerNav from 'components/headerNav'
 import contentNo from 'components/contentNo'
 import deleteSlide from './component/deleteSlide'
 import filter from '../../../lib/filters'// 过滤器
+import dialogModular from 'components/dialogModular'// 过滤器
 
 export default {
   name: 'shippingCart',
   data(){
     return{
-        isPhoto: false,
+        isShow: true,
         homeNav:[
             { id: 0, name: "购物车" },
             { id: 1, name: "批发商购物车" }
         ],
         isNavshow: 'cart',
-        isShow: false,
         bondStatu: 3,
         hpMoney:'', //混批最低金额
         hpNum:'',//混批最低数量
@@ -256,10 +266,11 @@ export default {
         selectClass:[],//选中的商品
         settlement:[],//结算数据
         settlementarr:[],
+        pifawarning:false,//批发条件判断
     }
   },
   components:{
-	  defaultImg,headerNav,contentNo,deleteSlide
+	  defaultImg,headerNav,contentNo,deleteSlide,dialogModular
   },
   watch: {
     '$route'(){
@@ -408,9 +419,11 @@ export default {
                 if(data.code == 1){
                     let msg={
                         type :'error',
-                        msg :  data.msg +'------差无数据显示'
+                        msg :  data.msg
                     }
                     _this.$parent.$refs.bubble.show_tips(msg);
+                    _this.shopCartList =  1;//购物车集合
+                    return
                 }
                 _this.imgUrl = data.imgUrl;
                 _this.path = data.path;
@@ -420,7 +433,7 @@ export default {
                 _this.hpMoney=data.data.hpMoney;
                 _this.hpNum=data.data.hpNum;
                 _this.spHand=data.data.spHand;
-                _this.shopCartList=data.data.shopCartList;//购物车集合
+                _this.shopCartList=data.data.shopCartList || 1;//购物车集合
                 _this.sxShopCartList = data.data.sxShopCartList || 1//失败购物车集合
 
                 let pifaTotal = 0;
@@ -830,6 +843,7 @@ export default {
                             let obj = this.settlementData(e,1);
                             _data.str.push(obj);
                             shopCartIds.push(obj.id);
+                            _this.pifawarning = true;
                         }
                     })
                 })
@@ -844,22 +858,23 @@ export default {
         //有数据修改，str换json，shopCartIds转字符串；
         _data.str = JSON.stringify(_data.str);
         //console.log(_data,'请求数据')
-        _this.ajaxRequest({
-            'url': h5App.activeAPI.phoneShopCart_shopCartOrder_post,
-            'data': _data,
-            'success':(data)=>{
-                if(c === 1){
-                    //结算 成功跳转 订单页面 /order/settlement/:busId/1/:shopCartIds（购物车id）
-                    shopCartIds = shopCartIds.toString();
-                    let busId = this.$route.params.busId || this.$store.state.busId;
-                    _this.$router.push('/order/settlement/'+busId+'/1/'+shopCartIds);
-                }else{
-                     //编辑 请求成功后 清空之前编辑商品集合
-                    _this.settlement = [];
-                    _this.cartAjax();
-                }
-            }
-        })
+
+        // _this.ajaxRequest({
+        //     'url': h5App.activeAPI.phoneShopCart_shopCartOrder_post,
+        //     'data': _data,
+        //     'success':(data)=>{
+        //         if(c === 1){
+        //             //结算 成功跳转 订单页面 /order/settlement/:busId/1/:shopCartIds（购物车id）
+        //             shopCartIds = shopCartIds.toString();
+        //             let busId = this.$route.params.busId || this.$store.state.busId;
+        //             _this.$router.push('/order/settlement/'+busId+'/1/'+shopCartIds);
+        //         }else{
+        //              //编辑 请求成功后 清空之前编辑商品集合
+        //             _this.settlement = [];
+        //             _this.cartAjax();
+        //         }
+        //     }
+        // })
     
     },
     /** 
@@ -897,6 +912,31 @@ export default {
         }
         return obj
     },
+    /** 
+     * 商品跳转
+    */
+    jupm_goods(e){
+        let shopId = e.shopId ||this.$route.params.shopId || sessionStorage.getItem("shopId");
+        let busId = e.busId ||this.$route.params.busId || sessionStorage.getItem("busId");
+        let type = 0;
+        let goodsId = e.productId;
+        if(this.type == 1 ){
+            type = 7;
+        }
+        this.$router.push('/goods/details/'+shopId+'/'+busId+'/'+type+'/'+goodsId+'/'+'0');
+    },
+    /** 
+     * 商家跳转
+    */
+    jupm_cart(e){
+        console.log(e,'商家跳转')
+    },
+    /** 
+     * 店铺跳转
+    */
+    jupm_shop(e){
+        console.log(e,'店铺跳转')
+    }
   },
   mounted () {
     let type = this.$route.params.type;
@@ -1179,7 +1219,22 @@ export default {
     }
 }
 .cart-min-pifaTotal{
-        text-align: right;
-        padding: 25/ @dev-Width *1rem 38/ @dev-Width *1rem;; 
+    text-align: right;
+    padding: 25/ @dev-Width *1rem 38/ @dev-Width *1rem;
+}
+.pifa-warning-box{
+    width: 100%;
+    height:0;
+    position: relative;
+    .pifa-warning{
+        width: 100%;
+        padding: 30/ @dev-Width *1rem;
+        font-size: 0;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        background: #fdded2;
     }
+}
+
 </style>
