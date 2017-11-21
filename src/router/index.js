@@ -31,8 +31,12 @@ const Goods_Details = resolve => require(['pages/goods/index'], resolve);
 //Goods_details => 商品详情-评论
 const Goods_Spec = resolve => require(['pages/goods/child/spec'], resolve);
 //Goods_details => 商品详情-评论
+/***************      超级销售员相关页面     ******************/
 const Sale_index = resolve => require(['pages/sale/index.vue'], resolve);
 //Sale_index =>超级营销员
+const Sale_apply = resolve => require(['pages/sale/apply.vue'], resolve);
+//Sale_index =>超级营销员
+/***************      批发相关页面     ******************/
 const Wholesale_Apply = resolve => require(['pages/wholesale/apply'], resolve);
 //Wholesale_Apply =>批发申请页
 
@@ -166,11 +170,18 @@ export default new Router({
         title: '我的'
       }
     }, {
-      path: '/sale/:busId',
+      path: '/seller/:busId',
       name: 'Sale_index',
       component: Sale_index,
       meta: {
         title: '超级营销员首页'
+      }
+    }, {
+      path: '/seller/apply/:busId',
+      name: 'Sale_apply',
+      component: Sale_apply,
+      meta: {
+        title: '超级营销员申请'
       }
     }, {
       path: '/order/settlement/:busId/:from',

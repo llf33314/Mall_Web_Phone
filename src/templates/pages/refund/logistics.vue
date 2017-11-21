@@ -77,7 +77,7 @@ export default {
   data() {
     return {
       imgURL: "sss",
-      busId: this.$route.params.busId,
+      busId: this.$route.params.busId || sessionStorage.getItem("busId"),
       returnId: this.$route.params.returnId,
       isShowDialog: false, //是否显示弹出框
       selectDialogData: {}, //选中弹出框对象

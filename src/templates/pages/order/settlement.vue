@@ -303,6 +303,27 @@
         ></take-address-dialog>
     </section>
     <shop-dialog ref="dialog"></shop-dialog>
+    <section v-show="isShowFlowPhone">
+       <dialog-modular :dialogTitle = "'流量充值'">
+        <div class="dialog-input-main">
+            <div class="dialog-input-box">
+                <div class="dialog-input">
+                    <input class="fs50" placeholder="请输入手机号码" v-model="orderData.flowPhone"/>
+                </div>
+                <!-- <div class="dialog-input dialog-code">
+                    <input class=" fs50" placeholder="请输入验证码"/>
+                    <span class="fs50 shopGreen">获取验证码</span>
+                </div> -->
+            </div>
+           <div class="dialog-bottom">
+                <span class="fs50 dialog-button" 
+                    @click="confirmPhone()"
+                    >提交订单
+                </span>
+            </div>
+        </div>
+    </dialog-modular>
+    </section>
 </div>
 
 </template>
@@ -314,6 +335,7 @@ import defaultImg from "components/defaultImg";
 import shopDialog from "components/shopDialog";
 import payWayDialog from "components/payWayDialog";
 import technicalSupport from "components/technicalSupport"; //技术支持
+import dialogModular from "components/dialogModular"; //技术支持
 import couponDialog from "./componet/couponDialog"; //优惠券弹出框
 import timesDialog from "./componet/timeDialog"; //时间弹出框
 import takeAddressDialog from "./componet/takeAddressDialog"; //提货地址弹出框
@@ -348,7 +370,8 @@ export default {
       isUseMemberDiscount: 0, //是否选择了会员折扣
       selectObj: {}, //记录选中的对象
       isSelectDaodianPay: false, //是否选择了到店支付
-      ids: "" //当 from = 0 时 此值为购物车id;  如 from = 2 时 此值为订单id
+      ids: "", //当 from = 0 时 此值为购物车id;  如 from = 2 时 此值为订单id
+      isShowFlowPhone: false //是否显示流量充值
     };
   },
   components: {
@@ -359,7 +382,8 @@ export default {
     payWayDialog,
     couponDialog,
     timesDialog,
-    takeAddressDialog
+    takeAddressDialog,
+    dialogModular
   },
   mounted() {
     this.commonFn.setTitle(Language.submit_order_title);
@@ -472,7 +496,7 @@ export default {
       let _this = this;
       let _data = {
         from: _this.from,
-        busId: _this.$route.params.busId,
+        busId: this.$route.params.busId || sessionStorage.getItem("busId"),
         url: location.href,
         browerType: _this.$store.state.browerType
       };
@@ -771,6 +795,26 @@ export default {
           "/" +
           activityId
       );
+    },
+    /**
+     * 显示流量充值弹出框
+     */
+    showFlowPhone() {
+      let _this = this;
+      this.isShowFlowPhone = true;
+      // console.log("_this.$refs.dialogModular", _this.$refs.dialogModular);
+      // _this.$refs.dialogModular.showDialog();
+    },
+    /** */
+    confirmPhone() {
+      let flowPhone = this.orderData.flowPhone;
+      let _commonfn = this.commonFn;
+      let _isNull = _commonfn.isNull;
+      if (_isNull(flowPhone) || !_commonfn.validPhone(flowPhone)) {
+        this.$parent.$refs.bubble.show_tips(Language.flow_phone_msg);
+        return;
+      }
+      this.submitOrder();
     }
   }
 };

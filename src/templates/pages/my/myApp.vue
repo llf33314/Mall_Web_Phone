@@ -165,7 +165,7 @@ export default {
 
   data() {
     return {
-      busId: this.$route.params.busId,
+      busId: this.$route.params.busId || sessionStorage.getItem("busId"),
       isNavshow: "my",
       myData: null,
       memberName: "未知用户", //用户名
@@ -293,12 +293,12 @@ export default {
     },
     returnApplySeller() {
       //跳转至超级销售员申请页面
+      this.$router.push("/seller/apply/" + this.busId);
     },
     returnSellerIndex() {
       //跳转至超级销售员首页
     },
     returnApplyPifa() {
-      this.$store.commit("mutationData", { busId: this.busId });
       //跳转至批发商申请页面
       this.$router.push("/wholesale/apply/" + this.busId);
     },
@@ -306,11 +306,9 @@ export default {
       //跳转至批发商品页面
     },
     returnMyOrder(type) {
-      this.$store.commit("mutationData", { busId: this.busId });
       this.$router.push("/order/list/" + this.busId + "/" + type);
     },
     returnRefundOrder() {
-      this.$store.commit("mutationData", { busId: this.busId });
       this.$router.push("/return/list/" + this.busId);
     }
   }

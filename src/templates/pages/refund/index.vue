@@ -54,7 +54,7 @@ export default {
   data() {
     return {
       background: "",
-      busId: this.$route.params.busId, //商家id
+      busId: this.$route.params.busId || sessionStorage.getItem("busId"), //商家id
       orderDetailId: this.$route.params.orderDetailId, //订单详情id
       shopId: 0, //店铺id
       productId: 0, //商品id
