@@ -26,7 +26,7 @@ Vue.mixin({
                 alert('请填写接口地址');
                 return false;
             }
-            vm.$parent.$refs.loading.show(loading);//开启loading*/
+            //vm.$parent.$refs.loading.show(loading);//开启loading*/
             //配置请求头
             axios({
                 "method": opts.type || 'post',

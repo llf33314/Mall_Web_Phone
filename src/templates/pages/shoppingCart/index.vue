@@ -30,7 +30,7 @@
                             <span class="fs36">{{shop.shopName}}</span>
                             <i class="iconfont icon-you" ></i>
                         </p>
-                        <p class="fs42 shopGray" @click="edit(i,j,shop)" v-if=" type != 1">
+                        <p class="fs42 shopGray" @click="edit(i,j,shop)">
                             <span class="buttom" v-if="!shop.edit">编辑</span>
                             <span class="buttom" v-else >完成</span>
                         </p>
@@ -40,7 +40,7 @@
                             v-for="(goods,index) in shop.productResultList"
                             :key="index">
                             <delete-slide class="order-item-content" 
-                                @delete="delete_dialog(1,index,goods)"
+                                @delete="delete_dialog(1,goods)"
                                 :scope="index">
                                 <div class="shoopCart-content" :class="{'border': type == 1}">
                                     <div class="order-item-img">
@@ -53,6 +53,8 @@
                                     <div class="order-item-txt">
                                         <p class="fs42" :class="{'text-overflow': type == 1}">{{goods.productName}}</p>
                                         <!----------------购物车 未编辑时↓------------------>
+                                        <p v-if="!shop.edit && goods.pfType == 1" 
+                                        class="fs42 " :class="[ goods.productHyPrice >0 ?'shopGray':'shop-font']"><span class="fs32">¥</span>{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
                                         <div v-if="!shop.edit && goods.pfType == 0">
                                             <p class="fs36 shopGray">
                                                 <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
@@ -73,20 +75,13 @@
                                                 @click="addNumber('+',goods)">+</em>
                                         </div>
                                         <!----------------批发购物车 手批↓------------------>
-                                        <div v-if=" goods.pfType == 1">
+                                        <div v-if=" goods.pfType == 1 && shop.edit">
                                         <p class="fs42 pf1-buttom-box">
-                                            <span  class="shop-font pf1-buttom pf1-buttom-b"  >减一手</span>
-                                            <span class="shop-bg pf1-buttom">加一手</span>
+                                            <span  class="shop-font pf1-buttom pf1-buttom-b"
+                                            @click="addpf1('-',goods)">减一手</span>
+                                            <span class="shop-bg pf1-buttom"
+                                            @click="addpf1('+',goods)">加一手</span>
                                         </p>
-                                        </div>
-                                        <!----------------批发购物车 混批↓------------------>
-                                        <div v-if="goods.pfType == 2">
-                                            <p class="fs36 shopGray">
-                                                <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
-                                                <span>{{goods.productNum}}份</span>
-                                            </p>
-                                            <p class="fs42 " :class="[ goods.productHyPrice >0 ?'shopGray':'shop-font']"><span class="fs32">¥</span>{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
-                                            <p class="fs42 shop-font" v-if="goods.productHyPrice>0"><span class="fs32">会员价:¥</span>{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
                                         </div>
                                     </div>
                                     
@@ -95,42 +90,48 @@
                             <!----------------批发购物车 手批↓-规格------------------>
                             <p class="shopGray fs40 border pf1-spec" v-if=" goods.pfType == 1">
                                 规格 : <span v-for=" (pifa,index) in goods.pifaSpecificaList":key="index">
-                                    {{pifa.specificaValues+' X'+pifa.productNum}}
+                                    {{pifa.specificaValues+' X'+pifa.productNum}} ¥{{pifa.specificaPrice | currency}}
                                     <i v-if=" index <  goods.pifaSpecificaList.length-1">、</i>
                                 </span> 
                             </p>
                             <!----------------批发购物车 混批↓-规格------------------>
                             <div class="shopGray fs40 pf2-spec "v-if=" goods.pfType == 2">
-                                <div class="pf2-list clearfix" 
+                                <div class="pf2-list border" 
                                     v-for=" (pifa,index) in goods.pifaSpecificaList"
                                     :key="index">
-                                    <i class="iconfont icon-dui" :class="{'js-font':goods.show}"
-                                    @click="select_Goods(goods)"></i>
-                                    <p class="pf2-list-spec fs42">
-                                        <span style="color:#000">规格 : {{goods.productName}} {{pifa.specificaValues+' X'+pifa.productNum}} </span>
-                                        <span class="shop-font">{{goods.productPrice}}</span>
+                                    <i class="iconfont icon-dui" :class="{'js-font':pifa.show}"
+                                    @click="select_Goods(pifa)"></i>
+                                    <p class="pf2-list-spec">
+                                        <span class="fs42" style="color:#000">规格 :{{pifa.specificaValues+' X'+pifa.productNum}} </span>
+                                        <span class="shop-font fs36" >¥<i class="fs50">{{pifa.specificaPrice | moneySplit1}}</i>.{{pifa.specificaPrice | moneySplit2}}</span>
                                     </p>
-                                    <div class="goods-choice-box2">
+                                    <div class="goods-choice-box2" v-if=" goods.pfType == 2 && shop.edit">
                                         <em class="em-choice" 
-                                            @click="addNumber('-',pifa)">-</em>
+                                            @click="addpf2('-',pifa,goods)">-</em>
                                         <input class="em-choice"
                                             v-model="pifa.productNum" 
-                                            @blur="addNumber('',pifa)">
+                                            @blur="addpf2('',pifa,goods)">
                                         </input>
                                         <em class="em-choice" 
-                                            @click="addNumber('+',pifa)">+</em>
+                                            @click="addpf2('+',pifa,goods)">+</em>
                                     </div>
+                                    <div style="width: 2.28rem;" v-else></div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <!----店铺小计---->
                     <p class="fs36 pf-min-pifaTotal" v-if="type == 1">
-                        3件，小计:<span class="shop-font">￥<span class="fs42">6,666</span>.00</span>
+                        {{shop.num}}件，小计:<span class="shop-font">￥<span class="fs42">{{shop.money | moneySplit1 }}</span>.{{shop.money | moneySplit2 }}</span>
                     </p>
                 </div>
+                <!----商家小计---->
+                <p class="fs36 cart-min-pifaTotal" v-if="type == 1">
+                       {{cart.num}}件，小计:<span class="shop-font">￥<span class="fs42">{{cart.money | moneySplit1 }}</span>.{{cart.money | moneySplit2 }}</span>
+                </p>
             </div>
         </div>
-        <div class="sxorder-box" v-if="sxShopCartList !='' ">
+        <div class="sxorder-box" v-if=" sxShopCartList != 1 ">
             <p class="sxorder-box-title fs42">
                 以下商品无法购买
             </p>
@@ -156,7 +157,7 @@
                         </p>
                     </div>
                     <div class="order-item-box">
-                        <div class="order-item-content"
+                        <div class="order-item-content" :class="{'sx-content':type == 1}"
                             v-for="(goods,index) in shop.productResultList"
                             :key="index">
                             <div class="shoopCart-content">
@@ -165,9 +166,9 @@
                                                 :isHeadPortrait="0">
                                   </default-img>
                                 </div>
-                                <div class="order-item-txt">
+                                <div class="order-item-txt" >
                                     <p class="fs42" :class="{'text-overflow': type == 1}">{{goods.productName}}</p>
-                                    <div v-if="!shop.edit">
+                                    <div v-if="!shop.edit && type != 1">
                                         <p class="fs36 shopGray">
                                             <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
                                             <span>{{goods.productNum}}份</span>
@@ -175,8 +176,20 @@
                                         <p class="fs42 " :class="[ goods.productHyPrice >0 ?'shopGray':'shop-font']"><span class="fs32">¥</span>{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
                                         <p class="fs42 shop-font" v-if="goods.productHyPrice>0"><span class="fs32">会员价:¥</span>{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
                                     </div>
+                                    <div v-if="type == 1" class="pf-box">
+                                        <p class="fs40 shop-font">{{goods.errorMsg}}</p>
+                                        <p class="fs36 shop-font shop-textr pf1-buttom-box">￥<span class="fs50">{{goods.productPrice|moneySplit1}}</span>.{{goods.productPrice|moneySplit2}}
+                                            <span class="fs50">X{{goods.productNum}}</span>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
+                            <p class="shopGray fs40 border sxpf1-spec" v-if="type == 1"> 规格 :
+                                <span v-for=" (pifa,index) in goods.pifaSpecificaList":key="index">
+                                    {{pifa.specificaValues+' X'+pifa.productNum}}
+                                    <i v-if=" index <  goods.pifaSpecificaList.length-1">、</i>
+                                </span>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -229,7 +242,7 @@ export default {
         hpNum:'',//混批最低数量
         spHand:'',//手批最低数量
         shopCartList:'',//购物车集合
-        sxShopCartList:'',//失败购物车集合
+        sxShopCartList: '',//失败购物车集合
         imgUrl: '',
         path: '',
         webPath: '',
@@ -257,9 +270,10 @@ export default {
     },
     'shopCartList'(a,b){
         let _this = this;
+        let ispifaAmount = true;//判断合计点亮
+
         let pifaTotal = 0;
         _this.pifaAmount = 0;
-        let ispifaAmount = true;//判断合计点亮
         //监听选中购物车数据
         _this.shopCartList.forEach((item,i)=>{
             let isBusSelect = true;//判断商家点亮
@@ -267,47 +281,106 @@ export default {
             item.shopResultList.forEach((test,j)=> {
                 let isShopSelect = true;//判断商家店铺点亮
 
-              test.productResultList.forEach((m, n) => {
-                  if(m.show){//商品点亮
-                      if(ispifaAmount){
-                        _this.isPifaAmount = true;
-                      }
-                    if( isBusSelect){
-                        item.show = true;
+                test.productResultList.forEach((m, n) => {
+                    //批发
+                    if(_this.$route.params.type == 1){
+                        let isGoodsSelect = true;//批发--商品点亮
+                        m.pifaSpecificaList.forEach((a,b)=>{
+                            if(a.show){//商品点亮
+                                if(ispifaAmount){
+                                    _this.isPifaAmount = true;
+                                }
+                                if( isBusSelect){
+                                    item.show = true;
+                                }
+                                if (isShopSelect) {
+                                    //店铺下的商品全部选择时，店铺都选择;
+                                    test.show = true;
+                                }
+                                if (isGoodsSelect) {
+                                    //店铺下的商品全部选择时，店铺都选择;
+                                    m.show = true;
+                                }
+                            }else{//商品不亮
+                                isBusSelect = false;
+                                isShopSelect = false;
+                                ispifaAmount = false;
+                                isGoodsSelect = false;
+                                item.show = false;
+                                test.show = false;
+                                m.show = false;
+                                a.show=false;
+                                _this.isPifaAmount = false;
+                            }
+                        })
                     }
-                    if (isShopSelect) {
-                        //店铺下的商品全部选择时，店铺都选择;
-                        test.show = true;
-                     }
-                  }else{//商品不亮
-                    isBusSelect = false;
-                    isShopSelect = false;
-                    ispifaAmount = false
-                    item.show = false;
-                    test.show = false;
-                    _this.isPifaAmount = false;
-                }
+                    //正常购物
+                    if(_this.$route.params.type != 1){
+                        if(m.show){//商品点亮
+                            if(ispifaAmount){
+                                _this.isPifaAmount = true;
+                            }
+                            if( isBusSelect){
+                                item.show = true;
+                            }
+                            if (isShopSelect) {
+                                //店铺下的商品全部选择时，店铺都选择;
+                                test.show = true;
+                            }
+                        }else{//商品不亮
+                            isBusSelect = false;
+                            isShopSelect = false;
+                            ispifaAmount = false
+                            item.show = false;
+                            test.show = false;
+                            m.show = false;
+                            _this.isPifaAmount = false;
+                        }
+                    }
         
-              })
+                })
             })
-          
 
             //总价计算
+            //批发商家小计--清空
+            item.num = 0;
+            item.money = 0; 
             item.shopResultList.forEach((test,j)=>{
+                //批发店铺小计--清空
+                test.num = 0;
+                test.money = 0;
                 test.productResultList.forEach((e,n)=>{
                     if(e.show){
-                        if(e.productHyPrice>0){ //会员价
-                            pifaTotal += e.productNum * e.productHyPrice
-                        }else{ //商品价
-                            pifaTotal += e.productNum * e.productPrice
+                        //批发
+                        if(_this.$route.params.type == 1){
+                            e.pifaSpecificaList.forEach((a,b)=>{
+                                if(a.show){
+                                    //商家小计 数量 金额
+                                    item.num += a.productNum;
+                                    item.money += a.productNum * a.specificaPrice;
+                                    //店铺小计 数量 金额
+                                    test.num += a.productNum;
+                                    test.money += a.productNum * a.specificaPrice;
+                                    pifaTotal += a.productNum * a.specificaPrice
+                                }
+                                _this.pifaAmount += a.productNum;
+                            })
+                            
+                        }else{
+                        //正常购买
+                            if(e.productHyPrice>0){ //会员价
+                                pifaTotal += e.productNum * e.productHyPrice
+                            }else{ //商品价
+                                pifaTotal += e.productNum * e.productPrice
+                            }
+                            _this.pifaAmount += e.productNum;
                         }
-                        _this.pifaAmount += e.productNum;
                     }
                 })
             })
             
         })
-         _this.pifaTotal = pifaTotal;
+        _this.pifaTotal = pifaTotal;
     }
   },
   methods:{
@@ -328,7 +401,7 @@ export default {
         }
 
         _this.ajaxRequest({
-            'status': 1,
+            'status': false,
             'url': h5App.activeAPI.phoneShopCart_getShopCartx_post,
             'data':_data,
             'success':(data)=>{
@@ -348,17 +421,31 @@ export default {
                 _this.hpNum=data.data.hpNum;
                 _this.spHand=data.data.spHand;
                 _this.shopCartList=data.data.shopCartList;//购物车集合
-                _this.sxShopCartList = data.data.sxShopCartList //失败购物车集合
+                _this.sxShopCartList = data.data.sxShopCartList || 1//失败购物车集合
 
                 let pifaTotal = 0;
                 //全选后的总价
                 _this.shopCartList.forEach((item,i)=>{
                     item.show = true;
+                    //批发时 添加 小计 数量和金额
+                    if(_this.$route.params.type == 1){
+                        item.num = 0;
+                        item.money = 0;
+                    }
                     item.shopResultList.forEach((test,j)=>{
                         test.show = true;
                         test.edit = false;
+                        if(_this.$route.params.type == 1){
+                            test.num = 0;
+                            test.money = 0;
+                        }
                         test.productResultList.forEach((e,n)=>{
                             e.show = true;
+                            if(_this.$route.params.type == 1){
+                                e.pifaSpecificaList.forEach((a,b)=>{
+                                    a.show = true;
+                                })
+                            }
                             pifaTotal += e.productNum*e.productHyPrice;
                             _this.pifaAmount += e.productNum;
                         })
@@ -372,11 +459,16 @@ export default {
     /**
      * 删除弹出窗
      * @param index  当前要删除的对象
+     * @param c  1删除 2清空
      */
-    delete_dialog(c,index,goods){
+    delete_dialog(c,goods){
         if(c===1){
-            let _id = goods.id;
-            this.deleteAjax(_id);
+            let data = this.settlementData(goods,2);
+            if(this.$route.params.type == 1 ){
+                this.deleteAjax(data.pifatSpecificaDTOList,goods.id);
+            }else{
+                this.deleteAjax(data);
+            }
         }else if(c===2){
             let _this = this;
             let  msg = {//弹出框组件调用
@@ -388,15 +480,40 @@ export default {
                 'callback': {
                     'btnOne': function () {
                         //关闭
-                        let ids =[] 
+                        let pifaSpecificaList = [];
+                        let ids = [];
                         _this.sxShopCartList.forEach((item,i)=>{
                             item.shopResultList.forEach((test,j) => {
                                 test.productResultList.forEach((e,n)=>{
-                                    ids.push(e.id)
+                                    if(_this.type ==1 ){
+                                        //批发
+                                        e.pifaSpecificaList.forEach((a,b)=>{
+                                            console.log(a,e);
+                                            if($.inArray(a.id, ids) == -1){
+                                                //新增当前修改
+                                                ids.push(a.id);
+                                            }
+                                            let data = {
+                                                id: a.id, // 购物车id
+                                                productId: e.productId, //商品id
+                                                productNum: a.productNum, //商品数量
+                                                specificaValueIds: a.specificaValueIds, //规格值id
+                                            }
+                                            pifaSpecificaList.push(data);
+                                        })
+                                    }else{
+                                        //正常清空
+                                        ids.push(e.id)
+                                    }
                                 })
                             });
                         })
-                        _this.deleteAjax(ids);
+
+                        if(_this.type == 1 ){
+                            _this.deleteAjax(pifaSpecificaList,ids);
+                        }else{
+                            _this.deleteAjax('',ids);
+                        }
                     },
                     'btnTow': function () {
 
@@ -410,20 +527,26 @@ export default {
     },
     /**
      * 删除购物车请求
-     * @param id 删除购物车id
+     * @param data 删除购物车id
      */
-    deleteAjax(id){
+    deleteAjax(data,ids){
         let _this = this;
-        let _data = {};
-        _data.ids = id.toString();
-        if(_this.type == 1){
-            _data.pifaSpecificaList = {
-                id:'', //批发购物车id integer
-                productId:'', //商品id integer
-                productNum:'', //商品数量 integer
-                specificaValueIds:'' //规格值id Array[string]
-            }
 
+        let _data={}
+         //批发删除 需要ids，pifaSpecificaList
+        if(_this.type == 1 ){
+            _data.ids = ids.toString();
+            _data.pifaSpecificaList = JSON.stringify(data);
+           
+        }else{
+            //正常删除 只需要ids
+            if(data == ''){
+                //清空
+                _data.ids = ids.toString()
+            }else{
+                //删除
+                _data.ids = data.id.toString()
+            }
         }
         console.log(_data,'_data删除数据');
         _this.ajaxRequest({
@@ -435,6 +558,8 @@ export default {
                     msg :  '删除成功'
                 };
                 _this.$parent.$refs.bubble.show_tips(msg);
+                _this.settlement = [];
+                _this.settlementarr = [];
                 _this.cartAjax()
             }
         })
@@ -445,25 +570,42 @@ export default {
     select_Goods(e){
         let _this = this;
         let _show = !e.show;
-
+        console.log(e,'选中效果')
         if(typeof e.shopResultList !== 'undefined'){
-          //当前点击是在 商家 第一层数据
+        //当前点击是在 商家 第一层数据
             e.show = _show;
             e.shopResultList.forEach((item,i)=>{
               item.show = _show;
               item.productResultList.forEach((test,j)=>{
                 test.show = _show;
+                if(_this.type == 1 ){
+                    test.pifaSpecificaList.forEach((a,b)=>{
+                        a.show = _show
+                    })
+                }
               })
             })
         }else if(typeof e.productResultList !== 'undefined'){
-          //当前点击是在 店铺 第二层数据
+        //当前点击是在 店铺 第二层数据
             e.show = _show;
             e.productResultList.forEach((test,j)=>{
-              test.show = _show;
+                test.show = _show;
+                if(_this.type == 1 ){
+                    test.pifaSpecificaList.forEach((a,b)=>{
+                        a.show = _show
+                    })
+                }
             })
-        }else {
-          //当前点击是在 商品 第三层数据
-          e.show = _show;
+        }else if(typeof e.pifaSpecificaList !== 'undefined'){
+        //当前点击是在 商品 第三层数据
+            e.show = _show;
+            e.pifaSpecificaList.forEach((m,n)=>{
+                m.show = _show;
+            })
+        }else{
+        //当前点击是在 规格 第四层数据
+            e.show = _show;
+            console.log('规格',e)
         }
       this.shopCartList.push([]);
       this.shopCartList.pop();
@@ -472,7 +614,6 @@ export default {
      * 合计选择
      */
     select_PifaAmount(){
-        console.log(111);
         this.shopCartList.push([]);
         this.shopCartList.pop();
         let _show =  !this.isPifaAmount
@@ -494,6 +635,7 @@ export default {
      * @param e 当前 商家
      */
     edit(i,j,e){
+
         e.edit = !e.edit;
         let obj = this.shopCartList[i].shopResultList;
         this.$set(obj,j,e);
@@ -511,7 +653,32 @@ export default {
         this.$router.push('/classify/'+shopId+'/'+busId+'/'+'0/k=k');
     },
     /** 
-     * 添加数量
+     *编辑数据处理  -- 集合 settlement settlementarr
+    */
+    settlementHandle(e){
+        let _this = this;
+
+        _this.shopCartList.push([]);
+        _this.shopCartList.pop();
+
+        let obj = _this.settlementData(e,1);
+
+        if($.inArray(e.id, _this.settlementarr) == -1){
+            //新增当前修改
+            _this.settlementarr.push(e.id);
+            _this.settlement.push(obj)
+        }else{
+            //替换已有修改
+            _this.settlement.forEach((item,i)=>{
+                if(item.id == e.id){
+                    this.$set(_this.settlement,i,obj)
+                }
+            })
+        }
+        //console.log(_this.settlement,'_this.settlement集合数据');
+    },
+    /** 
+     * 正常结算----添加数量
      * @param c 加减判断
      * @param e 当前数据
     */
@@ -550,24 +717,99 @@ export default {
                 e.productNum ++;
             }
         }
-        _this.shopCartList.push([]);
-        _this.shopCartList.pop();
 
         //编辑数据处理  -- 集合 settlement settlementarr
-        let obj = _this.settlementData(e);
-
-        if($.inArray(e.id, _this.settlementarr) == -1){
-            //新增当前修改
-            _this.settlementarr.push(e.id);
-            _this.settlement.push(obj)
-        }else{
-            //替换已有修改
-            _this.settlement.forEach((item,i)=>{
-                if(item.id == e.id){
-                    this.$set(_this.settlement,i,obj)
-                }
+        this.settlementHandle(e);
+    },
+    /** 
+     * 手批----添加数量
+     * @param c 加减判断
+     * @param e 当前数据
+    */
+    addpf1(c,e){
+        let _this = this;
+        let num = 0;//一手商品的数量；
+        num = e.pifaSpecificaList.length;
+        console.log(c,e,'手批e修改数据',num,'一手商品的数量')
+        if( e.stockNum == 0){
+            //库存为0 
+            e.productNum = 0 ;
+            _this.$parent.$refs.bubble.show_tips('商品已售罄');
+        }else if( c === '-' ){
+            //减小时 或者 手动输入
+            e.productNum -= num;
+            e.pifaSpecificaList.forEach((item,i)=>{
+                item.productNum --;
             })
+            if(e.productNum <= 0){
+                _this.$parent.$refs.bubble.show_tips('数量不能小于1');
+                e.productNum = num ;
+                 e.pifaSpecificaList.forEach((item,i)=>{
+                    item.productNum = 1;
+                })
+            }
+        }else{//增减时
+
+            //限购数量不为零时，购买数量不能超出限购数量
+            if(e.maxBuyNum && ( e.productNum >= e.maxBuyNum)){
+                _this.$parent.$refs.bubble.show_tips('超出限购数量');
+                
+            }else  if(e.productNum >= e.stockNum){
+                //库存不为0，超出规格库存
+                _this.$parent.$refs.bubble.show_tips('超出现有库存量');
+                e.productNum = e.stockNum;
+            }else if(c === '+'){
+                e.productNum += num;
+                e.pifaSpecificaList.forEach((item,i)=>{
+                    item.productNum ++;
+                })
+            }
         }
+       //编辑数据处理  -- 集合 settlement settlementarr
+        this.settlementHandle(e);
+    },
+    /** 
+     * 混批 ---- 添加数量
+     * @param c 加减判断
+     * @param e 当前数据
+     * @param goods 店铺信息
+    */
+    addpf2(c,e,goods){
+        let _this = this;
+        //console.log(e,'混批修改数据');
+        if( e.stockNum == 0){
+            //库存为0 
+            e.productNum = 0 ;
+            _this.$parent.$refs.bubble.show_tips('商品已售罄');
+        }else if( c === '-' ){
+            //减小时 或者 手动输入
+            e.productNum --;
+            if(e.productNum <= 0){
+                _this.$parent.$refs.bubble.show_tips('数量不能小于1');
+                e.productNum = num ;    
+            }
+        }else{//增减时
+
+            //限购数量不为零时，购买数量不能超出限购数量
+            if(goods.maxBuyNum && ( e.productNum >= goods.maxBuyNum)){
+                _this.$parent.$refs.bubble.show_tips('超出限购数量');
+                
+            }else  if(e.productNum >= e.stockNum){
+                //库存不为0，超出规格库存
+                _this.$parent.$refs.bubble.show_tips('超出现有库存量');
+                e.productNum = e.stockNum;
+            }else if(c === '+'){
+                e.productNum ++;
+            }
+        }
+        //goods.productNum
+        let Num = 0;
+        goods.pifaSpecificaList.forEach((item,i)=>{
+            Num += item.productNum;
+        })
+        goods.productNum = Num;
+       //编辑数据处理  -- 集合 settlement settlementarr
+        this.settlementHandle(goods);
     },
     /**
      * 结算请求
@@ -585,7 +827,7 @@ export default {
                 item.shopResultList.forEach((test,j)=>{
                     test.productResultList.forEach((e,n)=>{
                         if(e.show){
-                            let obj = this.settlementData(e);
+                            let obj = this.settlementData(e,1);
                             _data.str.push(obj);
                             shopCartIds.push(obj.id);
                         }
@@ -601,7 +843,7 @@ export default {
 
         //有数据修改，str换json，shopCartIds转字符串；
         _data.str = JSON.stringify(_data.str);
-        
+        //console.log(_data,'请求数据')
         _this.ajaxRequest({
             'url': h5App.activeAPI.phoneShopCart_shopCartOrder_post,
             'data': _data,
@@ -610,7 +852,6 @@ export default {
                     //结算 成功跳转 订单页面 /order/settlement/:busId/1/:shopCartIds（购物车id）
                     shopCartIds = shopCartIds.toString();
                     let busId = this.$route.params.busId || this.$store.state.busId;
-                    console.log('/order/settlement/'+busId+'/1/'+shopCartIds)
                     _this.$router.push('/order/settlement/'+busId+'/1/'+shopCartIds);
                 }else{
                      //编辑 请求成功后 清空之前编辑商品集合
@@ -622,18 +863,21 @@ export default {
     
     },
     /** 
-     * 结算请求--数据处理
+     * 结算删除请求--数据处理
      * @param e 当前修改商品 返回 传参需要格式
+     * @param c 结算 1 删除2
      */
-    settlementData(e){
+    settlementData(e,c){
         let _this = this;
-        //正常
-        let obj= {
+        let obj = {
             id:  e.id,
-            productNum: e.productNum
         };
-        //批发
-
+        //正常 
+        if(c == 1){
+            //-- 结算
+            obj.productNum = e.productNum
+        }
+        //批发 -- 结算
         if( _this.type == 1 ){
             let arr=[];
             e.pifaSpecificaList.forEach((item,i)=>{
@@ -642,13 +886,17 @@ export default {
                     productNum: item.productNum,
                     specificaValueIds: item.specificaValueIds
                 }
+                if(c == 2){
+                    //-- 删除 
+                    _data.id = e.id;
+                }
                 arr.push(_data);
             })
             //批发规格集合
             obj.pifatSpecificaDTOList =  arr
         }
         return obj
-    }
+    },
   },
   mounted () {
     let type = this.$route.params.type;
@@ -755,6 +1003,7 @@ export default {
     width: 100%;
     .order-box{
         background: #fff;
+        margin-bottom: 30/@dev-Width *1rem;
     }
     .order-item-content{
         width: 100%;
@@ -783,7 +1032,7 @@ export default {
         width: 100%;
         .sxorder-box-title{
             background: #fff;
-            margin-bottom: 45/@dev-Width *1rem;
+            margin-bottom: 30/@dev-Width *1rem;
             padding: 38/@dev-Width *1rem;
             line-height: 1;
             text-align: center;
@@ -879,17 +1128,24 @@ export default {
         padding: 25/ @dev-Width *1rem;
     }
     .pf2-spec{
-        padding: 25/ @dev-Width *1rem;
+        padding: 0 25/ @dev-Width *1rem;
         .pf2-list {
             font-size: 0;
             line-height: 1;
-            &>i,&>div,&>p{
-                float: left;
-                border: 1px solid;
-            }
+            .ik-box;
+            .ik-box-align(center);
+            .ik-box-pack(justify);
+            padding: 40/ @dev-Width *1rem 0;
         }
         .pf2-list-spec{
-            width:55%
+            width:58%;
+            margin-right: 10/ @dev-Width *1rem;
+            span{
+                display: block;
+            }
+            span:first-child{
+                margin-bottom: 20/ @dev-Width *1rem;
+            }
         }
     }
     .pf1-buttom-box{
@@ -914,4 +1170,16 @@ export default {
         padding: 25/ @dev-Width *1rem 38/ @dev-Width *1rem;; 
     }
 }
+.sx-content{
+    position: relative;
+    display: block !important;
+    .sxpf1-spec{
+        padding: 25/ @dev-Width *1rem;
+       text-align: justify;
+    }
+}
+.cart-min-pifaTotal{
+        text-align: right;
+        padding: 25/ @dev-Width *1rem 38/ @dev-Width *1rem;; 
+    }
 </style>
