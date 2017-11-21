@@ -57,13 +57,13 @@
                     <!-- 商品循环 -->
                     <div class="order-item-box border" v-for="product in shop.productResultList">
                         <div class="order-item-content">
-                            <div class="order-item-img">
+                            <div class="order-item-img" @click="toProductDetail(product.productId,product.shopId,bus.busId)">
                                 <default-img :background="imgUrl+product.productImageUrl"
                                             :isHeadPortrait="0">
                                 </default-img>
                             </div>
                             <div class="order-item-txt">
-                                <p class="fs42 text-overflow">{{product.productName}}</p>
+                                <p class="fs42 text-overflow"  @click="toProductDetail(product.productId,product.shopId,bus.busId)">{{product.productName}}</p>
                                 <p class="fs36 shopGray" v-if="product.productSpecificaValue != null">{{product.productSpecificaValue}}</p>
                                 <div class="fs42 shop-font orderTotal-money">
                                     <div> 
@@ -90,11 +90,13 @@
                         </div>
                     </div>
                     <!-- 优惠券 -->
-                    <div class="border orderTotal-list-box" v-if="shop.isCanUseYhqDiscount == 1 && shop.couponList != null">
+                    <div class="border orderTotal-list-box" v-if="shop.isCanUseYhqDiscount == 1 && shop.couponList != null && shop.couponList.length > 0">
                       <div class="orderTotal-list border" @click="showDialogs(shop.couponList,3,shop.shopId,bus.isSelectDiscount,shop.selectCoupon)">
                           <p class="fs40"> 优惠券</p>
                           <p class="fs40">
-                              <span v-if="shop.selectCoupon != null">{{shop.selectCoupon.couponsName || ""}}</span>
+                              <span v-if="shop.selectCoupon != null">{{shop.selectCoupon.couponsName || ""}}
+                                <em v-if="shop.selectCoupon.couponsFrom == 2 && shop.selectCoupon.addUser == 1 && shop.selectCoupon.useCouponNum > 1"> X{{shop.selectCoupon.useCouponNum}}</em>
+                              </span>
                               <i class="iconfont icon-jiantou-copy shopGray"></i>
                           </p>
                       </div>
@@ -129,7 +131,7 @@
                       <div class="border clearfix orderTotal-table">
                          <p class="fs40 shop-fl">提货时间：</p>
                          <div  class="fs40 shop-fr my-table"   @click="showDialogs(bus.takeTimeList,4,bus.busId,0,bus.selectTakeTime)" 
-                            v-if="bus.takeTimeList != null && bus.takeTimeList.length > 0 && bus.selectTakeTime != null"
+                            v-if="(bus.takeTimeList != null && bus.takeTimeList.length > 0) || bus.selectTakeTime != null"
                             v-text="bus.selectTakeTime.times +' '+ bus.selectTakeTime.startTime +'-'+ bus.selectTakeTime.endTime"></div>
                           <div  class="fs40 shop-fr my-table" v-else ></div>
                       </div>
@@ -331,7 +333,7 @@ export default {
       bondStatu: -1,
       background:
         "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1501765343077&di=5d3652848769c1abd7eb25dea007bb1d&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D450%252C600%2Fsign%3Dcf8442791bd8bc3ec65d0eceb7bb8a28%2Fb3119313b07eca80c63dcea4932397dda14483bd.jpg",
-      from: 0, //来源 1 购物车结算进入 0 立即购买进入，必传
+      from: 0, //来源 1 购物车结算进入 0 立即购买进入 2 去支付，必传
       cartIds: "", //购物车id
       memberAddresss: {}, //粉丝收货地址
       payWayList: [], //支付集合
@@ -345,7 +347,8 @@ export default {
       dialogBusId: 0, //弹出框需要的商家id
       isUseMemberDiscount: 0, //是否选择了会员折扣
       selectObj: {}, //记录选中的对象
-      isSelectDaodianPay: false //是否选择了到店支付
+      isSelectDaodianPay: false, //是否选择了到店支付
+      ids: "" //当 from = 0 时 此值为购物车id;  如 from = 2 时 此值为订单id
     };
   },
   components: {
@@ -359,12 +362,12 @@ export default {
     takeAddressDialog
   },
   mounted() {
-    this.loadDatas(); //初始化协商详情数据
     this.commonFn.setTitle(Language.submit_order_title);
     this.$store.commit("show_footer", false); //隐藏底部导航栏
     if (this.$route.params.from != null) {
       this.from = this.$route.params.from;
     }
+    this.loadDatas(); //初始化协商详情数据
   },
   beforeDestroy() {
     //离开后的操作
@@ -417,7 +420,7 @@ export default {
           );
         });
         bus.productFreightMoneyOld = _floatSub(oldFreightMoney, busFreight);
-        console.log(bus.totalMoney, "----", busFreight);
+        // console.log(bus.totalMoney, "----", busFreight);
         bus.totalMoney = _floatSub(bus.totalMoney, busFreight);
         bus.totalNewPrice = _floatSub(bus.totalNewPrice, busFreight);
 
@@ -428,7 +431,7 @@ export default {
       let totalPayMoney = _orderData.totalPayMoney;
       _orderData.totalPayMoney = _floatSub(totalPayMoney, chaFreightMoney);
       _orderData.totalMoney = _floatSub(_orderData.totalMoney, chaFreightMoney);
-      console.log(totalPayMoney, "---", "totalPayMoney", chaFreightMoney);
+      // console.log(totalPayMoney, "---", "totalPayMoney", chaFreightMoney);
     }
   },
   methods: {
@@ -440,13 +443,23 @@ export default {
       let list = this.orderList;
       let payWayLists = _this.payWayList;
       list.forEach((bus, index) => {
-        payWayLists.forEach((way, index) => {
-          if (bus.selectDelivery.id != 2 && way.id == 6) {
-            way.isHide = true;
+        for (let i = 0; i < payWayLists.length; i++) {
+          let way = payWayLists[i];
+          if (bus.selectDelivery.id == 1 && way.id == 6) {
+            way.isHide = true; //快递配送 且 到店支付，隐藏起来
+            continue;
           } else {
             way.isHide = false;
           }
-        });
+          if (bus.selectDelivery.id == 2 && way.id == 2) {
+            way.isHide = true; //到店自提  且 货到付款， 隐藏起来
+            continue;
+          } else {
+            way.isHide = false;
+          }
+        }
+        // payWayLists.forEach((way, index) => {
+        // });
       });
     },
     order_ulShow() {
@@ -463,8 +476,11 @@ export default {
         url: location.href,
         browerType: _this.$store.state.browerType
       };
+      if (_this.from == 2) {
+        _data.orderId = _this.$route.params.ids;
+      }
       _this.ajaxRequest({
-        status: 1,
+        status: false,
         url: h5App.activeAPI.to_order_post,
         data: _data,
         success: function(data) {
@@ -483,21 +499,31 @@ export default {
           _this.orderList = myData.busResultList; //订单集合
           _this.imgUrl = data.imgUrl; //图片域名
           _this.orderList.forEach((item, index) => {
-            if(myData.proTypeId == 0){
+            if (myData.proTypeId == 0) {
               item.isSelectDiscount = true;
             }
-            if (item.deliveryWayList != null) {
-              let selectDelivery = item.deliveryWayList[0]; //默认选中第一个配送方式
-              item.selectDelivery = selectDelivery; //选中的配送方式
+            if (
+              item.deliveryWayList != null &&
+              item.deliveryWayList.length > 0 &&
+              item.selectDelivery == null
+            ) {
+              //默认选中第一个配送方式
+              item.selectDelivery = item.deliveryWayList[0]; //选中的配送方式
             }
             item.productFreightMoneyOld = item.productFreightMoney;
+            if (item.selectTakeTime != null) {
+              _this.showTakeTime(item.takeId, item.busId);
+            }
           });
           //支付方式集合
-          if (_this.payWayList != null && _this.payWayList.length > 0) {
+          if (myData.selectPayWay != null) {
+            _this.selectPayWay = myData.selectPayWay;
+          } else if (_this.payWayList != null && _this.payWayList.length > 0) {
             //赋值默认的支付方式
             _this.selectPayWay = _this.payWayList[0];
           }
-          _this.orderData.typePriceName = Language.order_type_price_name[myData.type]
+          _this.orderData.typePriceName =
+            Language.order_type_price_name[myData.type];
           _this.caculationOrder(0); //初始化计算订单
         }
       });
@@ -549,23 +575,22 @@ export default {
           let item = _this.orderList[i];
           if (item.busId == data[2]) {
             item.selectDelivery = data[1];
+
             if (obj.id == 2) {
               //到店自提
               _this.showTakeTime(item.takeId, item.busId);
-              
+              //选择了货到付款
+              //选择到店自提，也选择了货到付款，则清空选择的支付方式
+              if (this.selectPayWay.id == 2) {
+                _this.clearPayWay(2);
+              }
             } else {
               //没有选择到店自提，但选择了支付方式，则清空选择的支付方式
               if (this.selectPayWay.id == 6) {
-                for (let i = 0; i < _this.payWayList.length; i++) {
-                  let payWay = _this.payWayList[i];
-                  if (payWay.id != 6) {
-                    _this.selectPayWay = payWay;
-                    break;
-                  }
-                }
+                _this.clearPayWay(6);
               }
             }
-              _this.changePayWay();
+            _this.changePayWay();
             break;
           }
         }
@@ -608,6 +633,22 @@ export default {
       }
     },
     /**
+     * 清空支付方式
+     */
+    clearPayWay(wayId) {
+      let _this = this;
+      //没有选择到店自提，但选择了支付方式，则清空选择的支付方式
+      if (this.selectPayWay.id == wayId) {
+        for (let i = 0; i < _this.payWayList.length; i++) {
+          let payWay = _this.payWayList[i];
+          if (payWay.id != wayId) {
+            _this.selectPayWay = payWay;
+            break;
+          }
+        }
+      }
+    },
+    /**
      * 获取到店自提地址 并显示  弹出框
      */
     showTakeAddress(busId, takeArr, takeId) {
@@ -622,7 +663,7 @@ export default {
         busId: busId
       };
       if (address != null && _commonFn.isNotNull(address.addressProvince)) {
-        _data.province = address.addressProvince;
+        _data.provinceIds = address.addressProvince;
       }
       _this.ajaxRequest({
         url: h5App.activeAPI.get_take_their_post,
@@ -661,7 +702,9 @@ export default {
             let bus = _this.orderList[i];
             if (bus.busId == busId) {
               bus.takeTimeList = myData;
-              bus.selectTakeTime = myData[0];
+              if (_this.commonFn.isNull(bus.selectTakeTime)) {
+                bus.selectTakeTime = myData[0];
+              }
               _this.$set(_this.orderList, i, bus);
               break;
             }
@@ -711,7 +754,24 @@ export default {
     /**
      * 进入新增收货地址页面
      */
-    toAddress() {}
+    toAddress() {},
+    toProductDetail(productId, shopId, busId) {
+      let type = this.orderData.type || 0;
+      let activityId = this.orderData.activityId;
+      //进入商品详情页面
+      this.$router.push(
+        "/goods/details/" +
+          shopId +
+          "/" +
+          busId +
+          "/" +
+          type +
+          "/" +
+          productId +
+          "/" +
+          activityId
+      );
+    }
   }
 };
 </script>

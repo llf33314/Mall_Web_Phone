@@ -26,7 +26,9 @@ Vue.mixin({
                 alert('请填写接口地址');
                 return false;
             }
-            //vm.$parent.$refs.loading.show(loading);//开启loading*/
+            if(typeof(vm.$parent.$refs.loading) != "undefined"){
+                vm.$parent.$refs.loading.show(loading);//开启loading*/
+            }
             //配置请求头
             axios({
                 "method": opts.type || 'post',
@@ -45,7 +47,9 @@ Vue.mixin({
                 if (res.status == 200) {
     
                     if (opts.success) {
-                        vm.$parent.$refs.loading.show(false);//关闭loading*/
+                        if(typeof(vm.$parent.$refs.loading) != "undefined"){
+                            vm.$parent.$refs.loading.show(false);//关闭loading*/
+                        }
                         
                         //需要登陆（需要跳转）
                         if(res.data.code == 1001){
@@ -77,7 +81,9 @@ Vue.mixin({
                     }
     
                 } else {
-                    vm.$parent.$refs.loading.show(false);//关闭loading*/
+                    if(typeof(vm.$parent.$refs.loading) != "undefined"){
+                        vm.$parent.$refs.loading.show(false);//关闭loading*/
+                    }
                     if (data.error) {
                         opts.error(error);
                     } else {

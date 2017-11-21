@@ -35,7 +35,7 @@ export default {
     let _this = this;
     _this.textNo = name;
     _this.ajaxRequest({
-      'status':1,
+      'status':false,
       'url': h5App.activeAPI.phoneProduct_getProductParams_post,
       'data':{
           productId :  _this.$route.params.goodsId,

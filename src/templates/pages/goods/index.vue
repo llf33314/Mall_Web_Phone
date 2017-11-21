@@ -219,7 +219,7 @@
             <div class="goods-footer-botton ui-col-2 fs50 shop-bg" v-if="type == 4 || type == 6 ">
                 交保证金报名
             </div>
-            <div class="goods-footer-content" v-if=" goodsData.isShowAddShopButton == 1">
+            <div class="goods-footer-content">
                 <div class="goods-footer-botton ui-col-1 fs32">
                     <i class="iconfont icon-xiaoxi shop-font"></i>
                     客服
@@ -232,11 +232,13 @@
                 </div>
                 <div class="goods-footer-botton ui-col-2 fs50 shop-yellow"
                     :class="{'shopFff':isSoldOut}"
+                    v-if=" goodsData.isShowAddShopButton == 1"
                     @click="dialogShow">
                     加入购物车
                 </div>
                 <div class="goods-footer-botton ui-col-2 fs50 shop-bg"
                     :class="{'shopFff':isSoldOut}"
+                    v-if=" goodsData.isShowLiJiBuyButton == 1"
                     @click="dialogShow">
                     立即购买
                 </div>
@@ -295,10 +297,12 @@
                 </div>
             </div>
             <div class="goods-dialog-footer">
-                <div class="goods-dialog-button fs52 shop-yellow" @click="addCard(1)">
+                <div class="goods-dialog-button fs52 shop-yellow" @click="addCard(1)"
+                    v-if=" goodsData.isShowAddShopButton == 1">
                     加入购物车
                 </div>
-                <div class="goods-dialog-button fs52  shop-bg" @click="lijiBuy(0)">
+                <div class="goods-dialog-button fs52  shop-bg" @click="lijiBuy(0)"
+                   v-if=" goodsData.isShowLiJiBuyButton == 1">
                     立即购买
                 </div> 
             </div>
@@ -464,11 +468,13 @@
             <div class="goods-dialog-footer" v-if="pifaResult.pfType == 1" >
                 <div class="goods-dialog-button fs52 shop-yellow" 
                     :class="[w_specNum-pifaResult.pfSetObj.spHand<0?'shopRgba':'']"
+                    v-if=" goodsData.isShowAddShopButton == 1"
                     @click="addCard(2,$event)">
                     加入购物车 
                 </div>
                 <div class="goods-dialog-button fs52  shop-bg " 
                    :class="[w_specNum-pifaResult.pfSetObj.spHand<0?'shopRgba':'']"
+                   v-if=" goodsData.isShowLiJiBuyButton == 1"
                    @click="lijiBuy(pifaResult.pfType)">
                     立刻批发 
                 </div> 
@@ -476,11 +482,13 @@
             <div class="goods-dialog-footer" v-if="pifaResult.pfType == 2" >
                 <div class="goods-dialog-button fs52 shop-yellow " 
                     :class="[(pifaResult.pfSetObj.hpMoney-pifaTotal > 0 || pifaAmount - pifaResult.pfSetObj.hpNum < 0) ?'shopRgba':'']"
+                    v-if=" goodsData.isShowAddShopButton == 1"
                     @click="addCard(2,$event)">
                     加入购物车 
                 </div>
                 <div class="goods-dialog-button fs52  shop-bg "
                     :class="[(pifaResult.pfSetObj.hpMoney-pifaTotal > 0 || pifaAmount - pifaResult.pfSetObj.hpNum < 0) ?'shopRgba':'']"
+                    v-if=" goodsData.isShowLiJiBuyButton == 1"
                     @click="lijiBuy(pifaResult.pfType)">
                     立刻批发
                 </div> 
@@ -642,7 +650,7 @@ export default {
             let activityId = _this.$route.params.activityId
             activityId == 'undefined' ? activityId=0 : activityId;
             this.ajaxRequest({
-                'status': 1,
+                'status': false,
                 'url': h5App.activeAPI.phoneProduct_getProduct_post,
                 'data':{
                     url: _this.$store.state.loginDTO_URL,

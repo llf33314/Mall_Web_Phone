@@ -18,7 +18,9 @@
                         <div>
                             <div class="coupon-item-title fs50">{{obj.couponsName}}</div>
                             <div class="coupon-item-text">
-                                <p class="fs36" v-if="obj.cardType == 1">消费满{{obj.cashLeastCost}}元可用</p>
+                                <p class="fs36" v-if="obj.cardType == 1">消费满{{obj.cashLeastCost}}元可用
+                                   <em v-if="obj.couponsFrom == 2 && obj.addUser == 1">,且可使用{{obj.couponNum}}张</em>
+                                </p>
                                 <p class="fs36">有效期：2017/10/1~2017/11/1</p>
                             </div>
                         </div>

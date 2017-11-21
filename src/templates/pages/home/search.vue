@@ -125,7 +125,7 @@ export default {
             'callback': {
                 'btnOne': function () {
                     _this.ajaxRequest({
-                        'status':1,
+                        'status':false,
                         'url': h5App.activeAPI.phonePage_clearSearchGroup_post,
                         'data':{
                             shopId : _this.$store.state.shopId

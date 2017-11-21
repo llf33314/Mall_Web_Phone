@@ -64,7 +64,7 @@ Vue.mixin({
 			});
 			//计算订单支付的金额 订单优惠券的价格 - 订单优惠后的价格   data.totalMoney - totalYouHuiMoneys）
 			data.totalPayMoney = _commonFm.floatSub(data.totalMoney, totalYouHuiMoneys);
-			data.totalYouHuiMoney = totalYouHuiMoneys;
+			data.totalYouHuiMoney = totalYouHuiMoneys.toFixed(2)*1;
 		},
 		/**
 		 * 计算联盟折扣
@@ -114,16 +114,17 @@ Vue.mixin({
 				//循环商品
 				shop.productResultList.forEach((product, index) => {
 					if (product.isCanUseDiscount == 1) {
-						let productNewTotal = product.totalPrice;//商品优惠前的价格
+						let productNewTotal = product.totalNewPrice;//商品优惠前的价格
 						let discountHouPrice = _commonFm.floatMul(productNewTotal, unionDiscount);//计算商品联盟折扣后的金额
 						let productYouhuiPrice = _commonFm.floatSub(productNewTotal, discountHouPrice);//计算联盟折扣 优惠的金额  （商品优惠前的总价 -  优惠后的金额）
 						product.totalNewPrice = discountHouPrice;
 						totalYouhuiMoney = _commonFm.floatAdd(totalYouhuiMoney, productYouhuiPrice);
+						console.log("联盟卡优惠后的价格：",product.totalNewPrice)
 					}
 
 				});
 			});
-			bus.unionYouhuiMoney = busDiscountYouhui;
+			bus.unionYouhuiMoney = busDiscountYouhui.toFixed(2)*1;
 			// console.log(busDiscountYouhui, "联盟卡优惠的金额")
 			return bus;
 		},
@@ -168,16 +169,17 @@ Vue.mixin({
 				//循环商品
 				shop.productResultList.forEach((product, index) => {
 					if (product.isCanUseDiscount == 1) {
-						let productNewTotal = product.totalPrice;//商品优惠前的价格
+						let productNewTotal = product.totalNewPrice;//商品优惠前的价格
 						let discountHouPrice = _commonFm.floatMul(productNewTotal, memberDiscount);//计算商品会员折扣后的金额
 						let productYouhuiPrice = _commonFm.floatSub(productNewTotal, discountHouPrice);//计算会员折扣 优惠的金额  （商品优惠前的总价 -  优惠后的金额）
 						product.totalNewPrice = discountHouPrice;
 						totalYouhuiMoney = _commonFm.floatAdd(totalYouhuiMoney, productYouhuiPrice);
+						console.log("会员折扣优惠后的价格：",product.totalNewPrice)
 					}
 
 				});
 			});
-			bus.memberYouhuiMoney = totalYouhuiMoney;
+			bus.memberYouhuiMoney = totalYouhuiMoney.toFixed(2)*1;
 			// console.log("折扣卡优惠的金额", totalYouhuiMoney);
 			return bus;
 		},
@@ -239,12 +241,13 @@ Vue.mixin({
 
 						useFenbiTotalPrice = _commonFm.floatAdd(useFenbiTotalPrice, fenbiYouhuiPrice);
 						useFenbiTotalNum++;
+						console.log("粉币抵扣优惠后的价格：",product.totalNewPrice)
 
 					}
 				});
 			});
 			// console.log("粉币优惠的金额", useFenbiTotalPrice);
-			bus.fenbiYouhuiMoney = useFenbiTotalPrice;
+			bus.fenbiYouhuiMoney = useFenbiTotalPrice.toFixed(2)*1;
 
 			return bus;
 		},
@@ -309,10 +312,11 @@ Vue.mixin({
 
 						useJifenTotalPrice = _commonFm.floatAdd(useJifenTotalPrice, jifenYouhuiPrice);//累积积分优惠的价格
 						useJifenTotalNum++;
+						console.log("积分抵扣优惠后的价格：",product.totalNewPrice)
 					}
 				});
 			});
-			bus.jifenYouhuiMoney = useJifenTotalPrice;
+			bus.jifenYouhuiMoney = useJifenTotalPrice.toFixed(2)*1;
 			return bus;
 		},
 		//计算优惠券抵扣
@@ -374,6 +378,7 @@ Vue.mixin({
 								couponNum = parseInt(couponNum);
 							}
 						}
+						shop.useCouponNum = couponNum;
 						shopYouhuiHouTotalPrice = _commonFm.floatMul(coupons.reduceCost, couponNum);
 					}
 					if (coupons.cashLeastCost > canUseCouponProductPrice) {//满减条件  大于能 使用优惠券的商品金额
@@ -431,7 +436,7 @@ Vue.mixin({
 					}
 				}
 				// console.log("优惠券总共能优惠", totalYouhuiMoney, "优惠后价格：", shopProductNewTotal);
-				bus.couponYouhuiMoney = totalYouhuiMoney;
+				bus.couponYouhuiMoney = totalYouhuiMoney.toFixed(2)*1;
 			}
 			return bus;
 		},
@@ -448,6 +453,9 @@ Vue.mixin({
 				return bus;
 			}
 			let jifenFenbiRule = bus.jifenFenbiRule;
+			if(canUseDiscountMoney > 0){
+				canUseDiscountMoney = canUseDiscountMoney.toFixed(2)*1;
+			}
 			if (type == 1) {
 				if (jifenFenbiRule.jifenStartMoney > 0 && jifenFenbiRule.jifenStartMoney < canUseDiscountMoney && canUseDiscountMoney > 0) {
 					//积分

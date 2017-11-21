@@ -25,7 +25,8 @@ Vue.mixin({
 				url: window.location.href,
 				browerType: _this.$store.state.browerType
 			}
-			console.log(_data, "_data")
+			console.log("提交订单参数：", _data);
+			// return;
 
 			_this.ajaxRequest({
 				url: h5App.activeAPI.submit_order_post,
@@ -33,9 +34,11 @@ Vue.mixin({
 				loading: true,//开启loading
 				success: function (data) {
 					//各种跳转
-					let url = data.url;
+					let reData = data.data;
+					let url = reData.url;
 					if (_commonFn.isNotNull(url)) {
 						location.href = url;
+						return;
 					}
 					url = "/order/list/" + busId + "/0";
 					if (data.orderPayWay == 7) {
@@ -56,15 +59,16 @@ Vue.mixin({
 			let _commonFn = _this.commonFn;//公共js调用
 			let orderData = _this.orderData;//初始化数据
 			let orderList = _this.orderList;//商家集合
+			let _showTip = _this.$parent.$refs.bubble.show_tips;//冒泡提醒
+			let _isNull = _commonFn.isNull;//不为空定义
+			if (orderData.proTypeId == 4 && _isNull(orderData.flowPhone)) {
+				_showTip("请填写需要充值的手机号码");//请填写需要充值的手机号码
+				return;
+			}
 			let flag = true;
-
-
-
 			for (let i = 0; i < orderList.length; i++) {
 				let bus = orderList[i];
 				let selectDelivery = bus.selectDelivery;
-				let _showTip = _this.$parent.$refs.bubble.show_tips;//冒泡提醒
-				let _isNull = _commonFn.isNull;//不为空定义
 
 				if (orderData.proTypeId == 0) {
 					if (_isNull(_this.selectPayWay) || _isNull(_this.selectPayWay.id)) {
@@ -118,6 +122,9 @@ Vue.mixin({
 				flowPhone: orderData.flowPhone || "", //流量充值需要传的手机号码
 				shopCartIds: _this.$route.params.shopCartIds || "",//购物车id，多个用逗号隔开
 			};
+			if (orderData.proTypeId > 0) {//虚拟物品不用选择收货地址
+				_data.selectMemberAddressId = 0;
+			}
 
 			let wxShopIds = [];
 			let busIds = [];
@@ -138,12 +145,10 @@ Vue.mixin({
 					jifenMoney: bus.jifenMoney || 0,//积分数量抵扣的积分金额
 					fenbiNum: bus.fenbiNum || 0,//能抵扣的粉币数量
 					fenbiMoney: bus.fenbiMoney || 0,//粉币数量抵扣的粉币金额
-					unionCardId: bus.unionCardId || 0,//联盟卡id
 					selectDeliveryWayId: bus.selectDelivery.id || 0,//选中配送方式的id  1, 快递配送  2,上门自提  3到店购买
 					isSelectJifen: bus.isSelectJifen ? 1 : 0,//是否选中积分  1选中
 					isSelectFenbi: bus.isSelectFenbi ? 1 : 0,//是否选中粉币  1选中
 					isSelectDiscount: bus.isSelectDiscount ? 1 : 0,//是否选中会员卡折扣 1选中
-					isSelectCoupons: bus.isSelectCoupons ? 1 : 0,//是否选中了优惠券  1选中
 					isSelectUnion: bus.isSelectUnion ? 1 : 0//是否选中联盟 1选中
 				};
 				if (bus.fenbiDisabled == 1) {
@@ -154,19 +159,31 @@ Vue.mixin({
 					orderObj.jifenNum = 0;
 					orderObj.jifenMoney = 0;
 				}
-				if (orderObj.selectDeliveryWayId == 2) {//上门自提
-					let takeTime = bus.selectTakeTime;
-					orderObj.takeAddress = bus.takeAddress;//上门自提地址
-					orderObj.appointmentUserName = bus.appointmentUserName;//提货人姓名
-					orderObj.appointmentUserPhone = bus.appointmentUserPhone;//提货人手机号码
-					orderObj.appointmentId = bus.takeId;//提货id
-					orderObj.appointmentDate = takeTime.times || "";//提货日期
-					orderObj.appointmentStartTime = takeTime.startTime || "";//提货开始时间
-					orderObj.appointmentEndTime = takeTime.endTime || "";//提货结束时间
+				let isSelectCoupons = 0; //是否选中了优惠券  1选中
+
+				if (bus.isSelectUnion) {
+					orderObj.unionCardId = bus.unionCardId || 0;//联盟卡id
+					orderObj.unionDiscount = bus.unionDiscount || 0;//联盟卡折扣
 				}
+				if (orderData.proTypeId == 0) {
+					if (orderObj.selectDeliveryWayId == 2) {//上门自提
+						let takeTime = bus.selectTakeTime;
+						orderObj.takeAddress = bus.takeAddress;//上门自提地址
+						orderObj.appointmentUserName = bus.appointmentUserName;//提货人姓名
+						orderObj.appointmentUserPhone = bus.appointmentUserPhone;//提货人手机号码
+						orderObj.appointmentId = bus.takeId;//提货id
+						orderObj.appointmentDate = takeTime.times || "";//提货日期
+						orderObj.appointmentStartTime = takeTime.startTime || "";//提货开始时间
+						orderObj.appointmentEndTime = takeTime.endTime || "";//提货结束时间
+					}
+				}
+
 				let shopResultList = [];
 				//循环店铺
 				bus.shopResultList.forEach((shop, index2) => {
+					if (_commonFn.isNotNull(shop.selectCoupon)) {
+						isSelectCoupons = 1;//是否选中了优惠券  1选中
+					}
 					let shopObj = {
 						shopId: shop.shopId || 0,//店铺id
 						wxShopId: shop.wxShopId || 0,//门店id
@@ -199,9 +216,13 @@ Vue.mixin({
 							commission: product.commission || 0,//销售佣金
 							activityType: orderData.type || 0,//活动类型，1.团购商品 3.秒杀商品 4.拍卖商品 5 粉币商品 6预售商品 7批发商品
 							activityId: orderData.activityId || 0,//活动id(如果是活动商品，必传)
+							proTypeId: orderData.proTypeId || 0
 						};
 						if (product.pfSpecResultList != null) {
 							productObj.pfSpecResultList = product.pfSpecResultList;
+						}
+						if (product.orderDetailId != null && product.orderDetailId > 0) {
+							productObj.orderDetailId = product.orderDetailId;
 						}
 						_this.$set(productResultList, productResultList.length, productObj);
 					});
@@ -210,6 +231,7 @@ Vue.mixin({
 					_this.$set(shopResultList, shopResultList.length, shopObj);
 
 				});
+				orderObj.isSelectCoupons = isSelectCoupons;
 
 				orderObj.shopResultList = shopResultList;
 				_this.$set(busResultList, busResultList.length, orderObj);
@@ -217,8 +239,9 @@ Vue.mixin({
 			_data.busResultList = busResultList;//商家集合
 			_data.wxShopIds = wxShopIds.toString();
 			_data.busIds = busIds.toString();
-
-			console.log("提交订单参数：", _data)
+			if (_this.from == 2) {
+				_data.orderId = _this.$route.params.ids;
+			}
 			return _data;
 		}
 	}
