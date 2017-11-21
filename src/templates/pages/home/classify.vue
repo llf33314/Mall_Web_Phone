@@ -205,7 +205,7 @@ export default {
                 'curPage': data.curPage||''//	当前页	可不传
             }
             this.ajaxRequest({
-                'status':1,
+                'status':false,
                 'url': h5App.activeAPI.phoneProduct_productAll_post,
                 'data':_data,
                 'success':function(data){

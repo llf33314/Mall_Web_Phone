@@ -57,13 +57,13 @@
                     <!-- 商品循环 -->
                     <div class="order-item-box border" v-for="product in shop.productResultList">
                         <div class="order-item-content">
-                            <div class="order-item-img">
+                            <div class="order-item-img" @click="toProductDetail(product.productId,product.shopId,bus.busId)">
                                 <default-img :background="imgUrl+product.productImageUrl"
                                             :isHeadPortrait="0">
                                 </default-img>
                             </div>
                             <div class="order-item-txt">
-                                <p class="fs42 text-overflow">{{product.productName}}</p>
+                                <p class="fs42 text-overflow"  @click="toProductDetail(product.productId,product.shopId,bus.busId)">{{product.productName}}</p>
                                 <p class="fs36 shopGray" v-if="product.productSpecificaValue != null">{{product.productSpecificaValue}}</p>
                                 <div class="fs42 shop-font orderTotal-money">
                                     <div> 
@@ -90,11 +90,13 @@
                         </div>
                     </div>
                     <!-- 优惠券 -->
-                    <div class="border orderTotal-list-box" v-if="shop.isCanUseYhqDiscount == 1 && shop.couponList != null">
+                    <div class="border orderTotal-list-box" v-if="shop.isCanUseYhqDiscount == 1 && shop.couponList != null && shop.couponList.length > 0">
                       <div class="orderTotal-list border" @click="showDialogs(shop.couponList,3,shop.shopId,bus.isSelectDiscount,shop.selectCoupon)">
                           <p class="fs40"> 优惠券</p>
                           <p class="fs40">
-                              <span v-if="shop.selectCoupon != null">{{shop.selectCoupon.couponsName || ""}}</span>
+                              <span v-if="shop.selectCoupon != null">{{shop.selectCoupon.couponsName || ""}}
+                                <em v-if="shop.selectCoupon.couponsFrom == 2 && shop.selectCoupon.addUser == 1 && shop.selectCoupon.useCouponNum > 1"> X{{shop.selectCoupon.useCouponNum}}</em>
+                              </span>
                               <i class="iconfont icon-jiantou-copy shopGray"></i>
                           </p>
                       </div>
@@ -331,7 +333,7 @@ export default {
       bondStatu: -1,
       background:
         "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1501765343077&di=5d3652848769c1abd7eb25dea007bb1d&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D450%252C600%2Fsign%3Dcf8442791bd8bc3ec65d0eceb7bb8a28%2Fb3119313b07eca80c63dcea4932397dda14483bd.jpg",
-      from: 0, //来源 1 购物车结算进入 0 立即购买进入，必传
+      from: 0, //来源 1 购物车结算进入 0 立即购买进入 2 去支付，必传
       cartIds: "", //购物车id
       memberAddresss: {}, //粉丝收货地址
       payWayList: [], //支付集合
@@ -345,7 +347,8 @@ export default {
       dialogBusId: 0, //弹出框需要的商家id
       isUseMemberDiscount: 0, //是否选择了会员折扣
       selectObj: {}, //记录选中的对象
-      isSelectDaodianPay: false //是否选择了到店支付
+      isSelectDaodianPay: false ,//是否选择了到店支付
+      ids:"",//当 from = 0 时 此值为购物车id;  如 from = 2 时 此值为订单id
     };
   },
   components: {
@@ -359,12 +362,12 @@ export default {
     takeAddressDialog
   },
   mounted() {
-    this.loadDatas(); //初始化协商详情数据
     this.commonFn.setTitle(Language.submit_order_title);
     this.$store.commit("show_footer", false); //隐藏底部导航栏
     if (this.$route.params.from != null) {
       this.from = this.$route.params.from;
     }
+    this.loadDatas(); //初始化协商详情数据
   },
   beforeDestroy() {
     //离开后的操作
@@ -463,8 +466,11 @@ export default {
         url: location.href,
         browerType: _this.$store.state.browerType
       };
+      if(_this.from == 2){
+        _data.orderId = _this.$route.params.ids
+      }
       _this.ajaxRequest({
-        status: 1,
+        status: false,
         url: h5App.activeAPI.to_order_post,
         data: _data,
         success: function(data) {
@@ -483,7 +489,7 @@ export default {
           _this.orderList = myData.busResultList; //订单集合
           _this.imgUrl = data.imgUrl; //图片域名
           _this.orderList.forEach((item, index) => {
-            if(myData.proTypeId == 0){
+            if (myData.proTypeId == 0) {
               item.isSelectDiscount = true;
             }
             if (item.deliveryWayList != null) {
@@ -497,7 +503,8 @@ export default {
             //赋值默认的支付方式
             _this.selectPayWay = _this.payWayList[0];
           }
-          _this.orderData.typePriceName = Language.order_type_price_name[myData.type]
+          _this.orderData.typePriceName =
+            Language.order_type_price_name[myData.type];
           _this.caculationOrder(0); //初始化计算订单
         }
       });
@@ -552,7 +559,6 @@ export default {
             if (obj.id == 2) {
               //到店自提
               _this.showTakeTime(item.takeId, item.busId);
-              
             } else {
               //没有选择到店自提，但选择了支付方式，则清空选择的支付方式
               if (this.selectPayWay.id == 6) {
@@ -565,7 +571,7 @@ export default {
                 }
               }
             }
-              _this.changePayWay();
+            _this.changePayWay();
             break;
           }
         }
@@ -711,7 +717,24 @@ export default {
     /**
      * 进入新增收货地址页面
      */
-    toAddress() {}
+    toAddress() {},
+    toProductDetail(productId, shopId, busId) {
+      let type = this.orderData.type || 0;
+      let activityId = this.orderData.activityId;
+      //进入商品详情页面
+      this.$router.push(
+        "/goods/details/" +
+          shopId +
+          "/" +
+          busId +
+          "/" +
+          type +
+          "/" +
+          productId +
+          "/" +
+          activityId
+      );
+    }
   }
 };
 </script>

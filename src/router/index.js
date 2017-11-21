@@ -180,7 +180,7 @@ export default new Router({
         title: '提交订单'
       }
     },  {
-      path: '/order/settlement/:busId/:from/:shopCartIds',
+      path: '/order/settlement/:busId/:from/:ids',
       name: 'subtmit_order_list',
       component: subtmit_order_list,
       meta: {

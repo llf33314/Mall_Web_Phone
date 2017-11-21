@@ -69,7 +69,7 @@ export default {
         footerMenuAjax(){
             let _this = this;
             _this.ajaxRequest({
-                'status': 1,
+                'status': false,
                 'url': h5App.activeAPI.phonePage_footerMenu_post,
                 'data':{
                     busId : _this.$store.state.busId

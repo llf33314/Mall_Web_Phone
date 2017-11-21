@@ -181,7 +181,7 @@ export default {
         curPage: data.curPage > 0 ? data.curPage : 1
       };
       _this.ajaxRequest({
-        status: 1,
+        status: false,
         url: h5App.activeAPI.order_list_post,
         data: _data,
         success: function(data) {

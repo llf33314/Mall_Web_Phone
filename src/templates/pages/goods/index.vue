@@ -642,7 +642,7 @@ export default {
             let activityId = _this.$route.params.activityId
             activityId == 'undefined' ? activityId=0 : activityId;
             this.ajaxRequest({
-                'status': 1,
+                'status': false,
                 'url': h5App.activeAPI.phoneProduct_getProduct_post,
                 'data':{
                     url: _this.$store.state.loginDTO_URL,

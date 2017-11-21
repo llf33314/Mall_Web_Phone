@@ -114,11 +114,12 @@ Vue.mixin({
 				//循环商品
 				shop.productResultList.forEach((product, index) => {
 					if (product.isCanUseDiscount == 1) {
-						let productNewTotal = product.totalPrice;//商品优惠前的价格
+						let productNewTotal = product.totalNewPrice;//商品优惠前的价格
 						let discountHouPrice = _commonFm.floatMul(productNewTotal, unionDiscount);//计算商品联盟折扣后的金额
 						let productYouhuiPrice = _commonFm.floatSub(productNewTotal, discountHouPrice);//计算联盟折扣 优惠的金额  （商品优惠前的总价 -  优惠后的金额）
 						product.totalNewPrice = discountHouPrice;
 						totalYouhuiMoney = _commonFm.floatAdd(totalYouhuiMoney, productYouhuiPrice);
+						console.log("联盟卡优惠后的价格：",product.totalNewPrice)
 					}
 
 				});
@@ -168,11 +169,12 @@ Vue.mixin({
 				//循环商品
 				shop.productResultList.forEach((product, index) => {
 					if (product.isCanUseDiscount == 1) {
-						let productNewTotal = product.totalPrice;//商品优惠前的价格
+						let productNewTotal = product.totalNewPrice;//商品优惠前的价格
 						let discountHouPrice = _commonFm.floatMul(productNewTotal, memberDiscount);//计算商品会员折扣后的金额
 						let productYouhuiPrice = _commonFm.floatSub(productNewTotal, discountHouPrice);//计算会员折扣 优惠的金额  （商品优惠前的总价 -  优惠后的金额）
 						product.totalNewPrice = discountHouPrice;
 						totalYouhuiMoney = _commonFm.floatAdd(totalYouhuiMoney, productYouhuiPrice);
+						console.log("会员折扣优惠后的价格：",product.totalNewPrice)
 					}
 
 				});
@@ -239,6 +241,7 @@ Vue.mixin({
 
 						useFenbiTotalPrice = _commonFm.floatAdd(useFenbiTotalPrice, fenbiYouhuiPrice);
 						useFenbiTotalNum++;
+						console.log("粉币抵扣优惠后的价格：",product.totalNewPrice)
 
 					}
 				});
@@ -309,6 +312,7 @@ Vue.mixin({
 
 						useJifenTotalPrice = _commonFm.floatAdd(useJifenTotalPrice, jifenYouhuiPrice);//累积积分优惠的价格
 						useJifenTotalNum++;
+						console.log("积分抵扣优惠后的价格：",product.totalNewPrice)
 					}
 				});
 			});
@@ -374,6 +378,7 @@ Vue.mixin({
 								couponNum = parseInt(couponNum);
 							}
 						}
+						shop.useCouponNum = couponNum;
 						shopYouhuiHouTotalPrice = _commonFm.floatMul(coupons.reduceCost, couponNum);
 					}
 					if (coupons.cashLeastCost > canUseCouponProductPrice) {//满减条件  大于能 使用优惠券的商品金额

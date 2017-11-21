@@ -67,7 +67,7 @@
                 <div class="order-item-button fs42"  v-if="busItem.isShowGoPayButton == 1 || busItem.isShowReceiveGoodButton == 1 || busItem.isShowDaifuButton == 1">
                     <div class="order-button shop-bg" 
                         v-if="busItem.isShowGoPayButton == 1"
-                        @click="returnToPay(busItem.orderId)">
+                        @click="returnToPay(busItem.orderId,busItem.busId)">
                         去支付
                     </div>
                     <div class="order-button shop-bg"
@@ -212,7 +212,7 @@ export default {
         curPage: data.curPage > 0 ? data.curPage : 1
       };
       _this.ajaxRequest({
-        status: 1,
+        status: false,
         url: h5App.activeAPI.order_list_post,
         data: _data,
         success: function(data) {
@@ -269,8 +269,9 @@ export default {
     returnToComment(orderDetailId) {
       //跳转至去评价页面
     },
-    returnToPay(orderId) {
+    returnToPay(orderId,busId) {
       //跳转至提交订单页面
+      this.$router.push("/order/settlement/"+busId+"/2/"+orderId);
     },
     returnDaifu(orderId) {
       //跳转至代付详情页面

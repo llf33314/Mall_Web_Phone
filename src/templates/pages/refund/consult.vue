@@ -100,6 +100,7 @@ export default {
       _this.ajaxRequest({
         url: h5App.activeAPI.return_log_post,
         data: _data,
+        status:false,
         success: function(data) {
           if (data.data == null || data.data.length == 0) {
             _this.status = 1;
