@@ -156,7 +156,14 @@
     //获取短信验证码
     pifa_send_msg_post: '/phoneWholesaler/L6tgXlBFeK/sendMsg',
     //添加批发商接口
-    add_pifa_post: '/phoneWholesaler/L6tgXlBFeK/addWholesaler'
+    add_pifa_post: '/phoneWholesaler/L6tgXlBFeK/addWholesaler',
+
+    /**********************以下接口是超级销售员相关接口*****************************/
+    is_apply_seller_post : '/phoneSellers/L6tgXlBFeK/isApplySeller',
+    //获取销售员获取短信验证码
+    seller_send_msg_post:'/phoneSellers/L6tgXlBFeK/getValCode',
+    //获取销售员获取短信验证码
+    add_seller_post:'/phoneSellers/L6tgXlBFeK/addSellers'
 
   };
 

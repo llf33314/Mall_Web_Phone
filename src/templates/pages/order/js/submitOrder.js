@@ -10,7 +10,7 @@ Vue.mixin({
 		 */
 		submitOrder() {
 			let _this = this;
-			let busId = _this.$route.params.busId;
+			let busId = this.$route.params.busId || sessionStorage.getItem("busId");
 			let _commonFn = _this.commonFn;//公共js调用
 			if (!_this.validateSubmitOrderParams()) {
 				return;
@@ -21,7 +21,7 @@ Vue.mixin({
 			}
 			let _data = {
 				params: _order,
-				busId: _this.$route.params.busId,
+				busId:busId,
 				url: window.location.href,
 				browerType: _this.$store.state.browerType
 			}
@@ -63,6 +63,7 @@ Vue.mixin({
 			let _isNull = _commonFn.isNull;//不为空定义
 			if (orderData.proTypeId == 4 && _isNull(orderData.flowPhone)) {
 				_showTip("请填写需要充值的手机号码");//请填写需要充值的手机号码
+				_this.showFlowPhone();
 				return;
 			}
 			let flag = true;

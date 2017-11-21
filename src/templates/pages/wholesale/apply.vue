@@ -77,7 +77,7 @@ export default {
   name: "apply",
   data() {
     return {
-      busId: this.$route.params.busId,
+      busId: this.$route.params.busId || sessionStorage.getItem("busId"),
       pfApplayRemark: "",
       name: "", //姓名
       companyName: "", //公司名称

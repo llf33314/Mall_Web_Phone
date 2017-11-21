@@ -13,6 +13,7 @@
 		coupon_discount_msg: '会员折扣和折扣券不能同时使用',
 		jifen_start_money_msg: '能使用积分抵扣的商品金额为{0}，没达到起兑金额',
 		fenbi_start_money_msg: '能使用粉币抵扣的商品金额为{0}，没达到起兑金额',
+		flow_phone_msg : '请填写正确的充值手机号码',
 
 		order_type_price_name: {
 			1: "团购价",

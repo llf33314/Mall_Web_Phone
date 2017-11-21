@@ -54,7 +54,7 @@ export default {
   name: "successd",
   data() {
     return {
-      busId: this.$route.params.busId, //商家di
+      busId: this.$route.params.busId || sessionStorage.getItem("busId"), //商家di
       returnId: this.$route.params.returnId, //退款id
       returnData: {} //初始化数据
     };

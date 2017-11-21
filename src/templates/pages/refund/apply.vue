@@ -109,7 +109,7 @@ export default {
     return {
       isShow: false,
       background: "",
-      busId: this.$route.params.busId, //商家id
+      busId:this.$route.params.busId || sessionStorage.getItem("busId"), //商家id
       orderDetailId: this.$route.params.orderDetailId, //订单详情id
       returnType: this.$route.params.returnType, //退款方式
       returnId: this.$route.params.returnId, //退款id
