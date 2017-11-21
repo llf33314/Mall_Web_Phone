@@ -21,7 +21,14 @@
 			5: "粉币",
 			6: "预售价",
 			7: "批发价"
-		}
+		},
+		pifa_name_msg: "请输入您本人真实姓名",
+		pifa_name_length_msg: "姓名长度不能超过25个字",
+		pifa_company_name_msg: "请输入公司名称",
+		pifa_company_name_length_msg: "公司名称不能超过50个字",
+		pifa_telePhone_msg: "请输入正确的手机号",
+		pifa_validate_code_msg : "请输入验证码",
+		pifa_remark_length_msg : "备注的长度不能超过100个字"
 	};
 
 
