@@ -148,7 +148,15 @@
     /*查询上门自提地址的接口 */
     get_take_their_post: '/phoneOrder/L6tgXlBFeK/getTakeTheir',
     /*查询上门自提时间的接口 */
-    get_take_their_time_post: '/phoneOrder/L6tgXlBFeK/getTakeTheirTime'
+    get_take_their_time_post: '/phoneOrder/L6tgXlBFeK/getTakeTheirTime',
+
+    /**********************以下接口是批发商相关接口*****************************/
+    //获取批发商信息
+    get_pf_apply_remark_post: '/phoneWholesaler/L6tgXlBFeK/getPfApplyRemark',
+    //获取短信验证码
+    pifa_send_msg_post: '/phoneWholesaler/L6tgXlBFeK/sendMsg',
+    //添加批发商接口
+    add_pifa_post: '/phoneWholesaler/L6tgXlBFeK/addWholesaler'
 
   };
 
