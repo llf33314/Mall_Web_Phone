@@ -21,6 +21,8 @@ const Auction_Succeed = resolve => require(['pages/auction/succeed'], resolve);
 //Auction_succeed => 用户竞拍服务协议
 const Comment = resolve => require(['pages/comment/comment'], resolve);
 //Comment => 评论
+const my_comment = resolve => require(['pages/comment/myComment'], resolve);
+//my_comment => 我的评论
 const Comment_Share = resolve => require(['pages/comment/share'], resolve);
 //Comment_share => 评论分享
 const Goods = resolve => require(['pages/goods/index'], resolve);
@@ -62,6 +64,7 @@ const consult_return = resolve => require(['pages/refund/consult'], resolve);
 //my_order_detail => 协商(完成)
 const logistics_return = resolve => require(['pages/refund/logistics'], resolve);
 //my_order_detail => 物流信息（上传未完成）
+
 
 const shoppingCart = resolve => require(['pages/shoppingCart/index'], resolve);
 //my_order_detail => 物流信息（上传未完成）
@@ -259,6 +262,13 @@ export default new Router({
       component: shoppingCart,
       meta: {
         title: '购物车'
+      }
+    },{
+      path: '/mycomment',
+      name: 'my_comment',
+      component: my_comment,
+      meta: {
+        title: '我的评论'
       }
     }
 
