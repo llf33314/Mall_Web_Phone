@@ -8,20 +8,6 @@
           </p>
         </div>
         <slot></slot>
-        <div class="dialog-bottom">
-          <span class="fs50 dialog-button" 
-                @click.shop="dialogClose(1)"
-                v-text="btnTow" v-if="btnNum == 2">
-          </span>
-          <span class="fs50 dialog-button" 
-                @click.shop="dialogConfirm"
-                v-text="btnOne" v-if="btnNum == 2">
-          </span>
-          <span class="fs50 dialog-button" 
-                @click.shop="dialogConfirm"
-                v-text="btnOne" v-else-if=" btnNum == 1">
-          </span>
-        </div>
       </div>
     </section>
   </transition>
@@ -29,65 +15,13 @@
 <script>
 
 export default {
-    props:['navshow'],
+    props:['dialogTitle'],
     data: function () {
         return {
-            isShow: false,
-            btnNum : 2,
-            btnOne: '',
-            btnTow: '',
-            dialogTitle:'提示',
-            dialogMsg: '我是消息内容？',
-            callback: {
-                btnOne: '',
-                btnTow: ''
-            }
+            isShow: true,
         }
     }, 
     methods: {
-        //关闭弹窗
-        dialogClose: function (num) {
-            this.allowScroll();
-            this.isShow = false;
-            if(num === 1 && Number(this.btnNum) === 2){
-                return this.callback.btnTow && !this.callback.btnTow();
-            }
-        },
-        //确定
-        dialogConfirm: function () {
-            this.isShow = false;
-            this.allowScroll();
-            if(this.callback !== undefined &&　this.callback　!== ''){
-                return this.callback.btnOne && !this.callback.btnOne();
-            }
-        },
-
-        showDialog: function (msg) {
-            var vm = this;
-            vm.btnNum = msg.btnNum || 2;
-            vm.dialogTitle = msg.dialogTitle;
-            vm.dialogMsg = msg.dialogMsg;
-            vm.btnOne = msg.btnOne || '确定';
-            vm.btnTow = msg.btnTow || '取消';
-            vm.callback = msg.callback;
-            vm.isShow = true;
-            
-            vm.disableScroll();
-        },
-        /**
-         * 禁止页面滚动
-         */
-        disableScroll: function () {
-            $(window).bind("touchmove", function (e) {
-                e.preventDefault();
-            });
-        },
-        /**
-         * 允许页面滚动
-         */
-        allowScroll: function () {
-            $(window).unbind("touchmove");
-        }
     }    
 }
 </script>

@@ -19,7 +19,7 @@
           <i>！</i>
         </div>
         <p class="fs36 shopGray">您的购物车还没有任何商品</p>
-        <span class="no-button shopborder"  @click="lockMall">去逛逛</span>
+        <span class="no-button shopborder fs36"  @click="lockMall">去逛逛</span>
       </div>
     </div>
   </div>
@@ -44,7 +44,7 @@ export default {
         data: { busId: _this.$route.params.busId, shopId: 0 },
         success: function(data) {
           if (data.pageId > 0) {
-            //跳转至首页
+            //todo跳转至首页
           }
         }
       });
