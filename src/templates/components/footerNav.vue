@@ -103,7 +103,7 @@ export default {
             }else if( name == 'classify'){
                 this.$router.push('/classify/'+shopId+'/'+busId+'/'+'0/k=k');
             }else if( name == 'cart'){
-                this.$router.push('/cart/'+busId+'/0');
+                this.$router.push('/cart/'+shopId+'/'+busId+'/0');
             }else if( name=='my'){
                 this.$router.push('/my/center/'+busId);
             }
