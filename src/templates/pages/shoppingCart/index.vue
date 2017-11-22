@@ -130,7 +130,7 @@
                 </div>
                 <!----商家小计---->
                 <p class="fs36 cart-min-pifaTotal" v-if="type == 1">
-                       {{cart.num}}件，小计:<span class="shop-font">￥<span class="fs42">{{cart.money | moneySplit1 }}</span>.{{cart.money | moneySplit2 }}</span>
+                       {{cart.num}}件，小计:<span class="shop-font">￥<span class="fs42">{{cart.money|currency | moneySplit1 }}</span>.{{cart.money |currency| moneySplit2 }}</span>
                 </p>
             </div>
         </div>
@@ -202,10 +202,21 @@
             </div>
         </div>
         <div class="shopping-footer clearfix" style="z-index:2">
-            <div class="pifa-warning-box" v-if="pifawarning">
+            <div class="pifa-warning-box" v-if="pifawarning && type == 1">
                 <div class="pifa-warning">
-                    <span class="fs40">手批条件</span>
-                    <span class="fs40">混批条件</span>
+                    <p class="fs40" v-if="spHand-pifa1num > 0">
+                        手批商品还差 {{spHand-pifa1num}} 手
+                        <span v-if="spHand-pifa1num > 0 && (hpNum-pifa2num > 0 || hpMoney-pifa2money >0)">
+                            ; 
+                        </span>
+                    </p>
+                    <p class="fs40" v-if="hpNum-pifa2num > 0 || hpMoney-pifa2money >0">
+                        混批商品还差
+                        <span v-if="hpNum-pifa2num >0"> {{hpNum-pifa2num +'件'}} </span>
+                        <span v-if="hpNum-pifa2num >0 && hpMoney-pifa2money >0">,或</span> 
+                        <span v-if="hpMoney-pifa2money >0">{{(hpMoney-pifa2money | currency)+'元'}}</span>
+                    </p>
+                    <p class="fs40">,可混批</p>
                 </div>
             </div>
             <div class="shopping-footer-l fs40">
@@ -266,7 +277,11 @@ export default {
         selectClass:[],//选中的商品
         settlement:[],//结算数据
         settlementarr:[],
-        pifawarning:false,//批发条件判断
+        pifawarning:false,//批发条件判断  true 是为满足 显示批发提醒 false满足 不显示批发提醒
+        pifa1num : 0,//当前手批 手数
+        pifa2num : 0,//当前混批 个数
+        pifa2money: 0,//当前混批 金额
+        flag:false// 批发结算条件判断开启
     }
   },
   components:{
@@ -389,9 +404,14 @@ export default {
                     }
                 })
             })
-            
+            //批发条件审核
         })
         _this.pifaTotal = pifaTotal;
+
+        if(_this.flag){
+            _this.pifa_if();
+        }
+        
     }
   },
   methods:{
@@ -834,20 +854,24 @@ export default {
             str:[]
         }; 
         let shopCartIds=[]; 
+
         if(c === 1){
             //去结算1
+            _this.flag = true;
+            _this.pifa_if();
             _this.shopCartList.forEach((item,i)=>{
                 item.shopResultList.forEach((test,j)=>{
                     test.productResultList.forEach((e,n)=>{
                         if(e.show){
+                            if(_this.type == 1 && _this.pifawarning)return;
                             let obj = this.settlementData(e,1);
                             _data.str.push(obj);
                             shopCartIds.push(obj.id);
-                            _this.pifawarning = true;
                         }
                     })
                 })
             })
+
         }else{
             _data.str = _this.settlement
         }
@@ -857,24 +881,24 @@ export default {
 
         //有数据修改，str换json，shopCartIds转字符串；
         _data.str = JSON.stringify(_data.str);
-        //console.log(_data,'请求数据')
+        console.log(_data,'请求数据')
 
-        // _this.ajaxRequest({
-        //     'url': h5App.activeAPI.phoneShopCart_shopCartOrder_post,
-        //     'data': _data,
-        //     'success':(data)=>{
-        //         if(c === 1){
-        //             //结算 成功跳转 订单页面 /order/settlement/:busId/1/:shopCartIds（购物车id）
-        //             shopCartIds = shopCartIds.toString();
-        //             let busId = this.$route.params.busId || this.$store.state.busId;
-        //             _this.$router.push('/order/settlement/'+busId+'/1/'+shopCartIds);
-        //         }else{
-        //              //编辑 请求成功后 清空之前编辑商品集合
-        //             _this.settlement = [];
-        //             _this.cartAjax();
-        //         }
-        //     }
-        // })
+        _this.ajaxRequest({
+            'url': h5App.activeAPI.phoneShopCart_shopCartOrder_post,
+            'data': _data,
+            'success':(data)=>{
+                if(c === 1){
+                    //结算 成功跳转 订单页面 /order/settlement/:busId/1/:shopCartIds（购物车id）
+                    shopCartIds = shopCartIds.toString();
+                    let busId = this.$route.params.busId || this.$store.state.busId;
+                    _this.$router.push('/order/settlement/'+busId+'/1/'+shopCartIds);
+                }else{
+                     //编辑 请求成功后 清空之前编辑商品集合
+                    _this.settlement = [];
+                    _this.cartAjax();
+                }
+            }
+        })
     
     },
     /** 
@@ -936,6 +960,49 @@ export default {
     */
     jupm_shop(e){
         console.log(e,'店铺跳转')
+    },
+    /** 
+     * 结算条件判断
+     */
+    pifa_if(){
+        let _this = this;
+        _this.pifa2num = 0;
+        _this.pifa2money =0;
+        _this.pifa1num = 0;
+        if(_this.flag){
+            _this.shopCartList.forEach((item,i)=>{
+                item.shopResultList.forEach((test,j)=>{
+                    test.productResultList.forEach((e,n)=>{
+                        if(e.show){
+                            if(_this.type == 1 ){
+                                if(e.pfType == 1){
+                                    //手批
+                                    _this.pifa1num += (e.productNum /e.pifaSpecificaList.length);
+                                    //console.log(pifa1num,'手批个数')
+                                }
+                                if(e.pfType == 2){
+                                    //混批
+                                    e.pifaSpecificaList.forEach((a,b)=>{
+                                        _this.pifa2num += a.productNum ;
+                                        _this.pifa2money += (a.productNum * a.specificaPrice)
+                                    })
+                                    //console.log(pifa2num,'混批个数',pifa2money,'混批金额')
+                                }
+                                //没有满足 批发条件 提示 不发送请求  spHand / hpNum / hpMoney  为0时无条件 
+                                let _if = (_this.pifa1num < this.spHand && this.spHand)||(_this.pifa2num < this.hpNum && this.hpNum) || (_this.pifa2money < this.hpMoney && this.hpMoney);
+                                
+                                if(_if){
+                                    _this.pifawarning = true;
+                                }else{
+                                    _this.pifawarning = false;
+                                    _this.flag = false;
+                                }
+                            }
+                        }
+                    })
+                })
+            })
+        }
     }
   },
   mounted () {
@@ -1234,6 +1301,9 @@ export default {
         bottom: 0;
         left: 0;
         background: #fdded2;
+        p{
+            display: inline-block;
+        }
     }
 }
 
