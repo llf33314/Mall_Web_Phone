@@ -63,7 +63,7 @@
                         <i class="iconfont icon-jiantou-copy"></i>
                     </div>
                 </div>
-                <div class="my-list border">
+                <div class="my-list border" @click="toReturnMyComment">
                     <div>
                         <i class="iconfont icon-daipingjia"></i>
                         我的评价
@@ -310,6 +310,9 @@ export default {
     },
     returnRefundOrder() {
       this.$router.push("/return/list/" + this.busId);
+    },toReturnMyComment(){
+      //跳转到我的评论
+       this.$router.push("/my/comment/" + this.busId);
     }
   }
 };

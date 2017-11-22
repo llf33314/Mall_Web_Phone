@@ -76,7 +76,8 @@
                         确定收货
                     </div>
                     <div class="order-button shop-bg" 
-                        v-if="busItem.isShowDaifuButton == 1">
+                        v-if="busItem.isShowDaifuButton == 1"
+                        @click="returnDaifu(busItem.orderId,busItem.busId)">
                         代付详情
                     </div>
                 </div>
@@ -189,18 +190,18 @@ export default {
   },
   methods: {
     loadMore() {
-      this.curPage++; //请求页数
       let pageCount = this.pageCount; //总页数
       if (this.curPage >= pageCount) {
         this.isMore = 3; //没有更多
         return;
       }
-      if (this.isMore != 1) {
+      if (this.isMore != 2) {
         this.isMore = -1;
         return;
       }
+      this.curPage++; //请求页数
       this.isMore = 2;
-      console.log("加载更多");
+      // console.log("加载更多");
       this.getOrderList({
         curPage: this.curPage
       });
@@ -276,8 +277,9 @@ export default {
       // 去支付 跳转至提交订单页面
       this.$router.push("/order/settlement/" + busId + "/2/" + orderId);
     },
-    returnDaifu(orderId) {
+    returnDaifu(orderId,busId) {
       //跳转至代付详情页面
+      this.$router.push( "/daifu/" + busId + "/" + orderId);
     },
     returnOrderDetail(orderId) {
       //跳转至订单详情页面

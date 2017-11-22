@@ -14,7 +14,8 @@
         </div>
         <div v-if="orderData.proTypeId == 0">
         <!-- 收货地址区域 -->
-          <div class="header-bottom clearfix" v-if="hasAddress && memberAddresss != null">
+          <div class="header-bottom clearfix" v-if="hasAddress && memberAddresss != null"
+           @click="toAddress">
               <p class="fs46">{{memberAddresss.memberName}}  {{memberAddresss.memberPhone}}</p>
               <div class="header-bottom-left">
                   <p class="fs36 shopGray">{{memberAddresss.memberAddress}}</p>
@@ -95,7 +96,7 @@
                           <p class="fs40"> 优惠券</p>
                           <p class="fs40">
                               <span v-if="shop.selectCoupon != null">{{shop.selectCoupon.couponsName || ""}}
-                                <em v-if="shop.selectCoupon.couponsFrom == 2 && shop.selectCoupon.addUser == 1 && shop.selectCoupon.useCouponNum > 1"> X{{shop.selectCoupon.useCouponNum}}</em>
+                                <em v-if="shop.selectCoupon.couponsFrom == 2 && shop.selectCoupon.addUser == 1 && shop.useCouponNum > 0"> X{{shop.useCouponNum}}</em>
                               </span>
                               <i class="iconfont icon-jiantou-copy shopGray"></i>
                           </p>
@@ -355,6 +356,7 @@ export default {
       bondStatu: -1,
       background:
         "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1501765343077&di=5d3652848769c1abd7eb25dea007bb1d&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D450%252C600%2Fsign%3Dcf8442791bd8bc3ec65d0eceb7bb8a28%2Fb3119313b07eca80c63dcea4932397dda14483bd.jpg",
+      busId: this.$route.params.busId || sessionStorage.getItem("busId"),
       from: 0, //来源 1 购物车结算进入 0 立即购买进入 2 去支付，必传
       cartIds: "", //购物车id
       memberAddresss: {}, //粉丝收货地址
@@ -778,7 +780,10 @@ export default {
     /**
      * 进入新增收货地址页面
      */
-    toAddress() {},
+    toAddress() {
+      sessionStorage.setItem("addressBeforeUrl", location.href);
+      this.$router.push("/address/" + this.busId);
+    },
     toProductDetail(productId, shopId, busId) {
       let type = this.orderData.type || 0;
       let activityId = this.orderData.activityId;

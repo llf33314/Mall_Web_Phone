@@ -84,14 +84,6 @@ export default {
           _this.imageList = myData.imageList;
           _this.product = myData.productResult;
           console.log(myData, "myData");
-          let feel = _this.comment.feel;
-          if (feel == 1) {
-            _this.comment.feel = "好评";
-          } else if (feel == 0) {
-            _this.comment.feel = "中评";
-          } else if (feel == -1) {
-            _this.comment.feel = "差评";
-          }
         }
       });
     },

@@ -155,18 +155,18 @@ export default {
   },
   methods: {
     loadMore() {
-      this.curPage++; //请求页数
       let pageCount = this.pageCount; //总页数
       if (this.curPage >= pageCount) {
         this.isMore = 3; //没有更多
         return;
       }
-      if (this.isMore != 1) {
+      if (this.isMore != 2) {
         this.isMore = -1;
         return;
       }
       console.log("加载更多", this.isMore);
       this.isMore = 2;
+      this.curPage++; //请求页数
       this.getOrderList({
         curPage: this.curPage
       });

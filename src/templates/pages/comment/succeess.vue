@@ -18,7 +18,7 @@
                         <em v-if="product.productSpecifica != null">{{product.productSpecifica}}/</em>{{product.productNum}}件
                     </p>
                     <p class="fs36 shopGray"
-                    style="color:#e4393c;">{{comment.feel}}</p>
+                    style="color:#e4393c;">{{comment.feel == 1 ? "好评" : comment.feel == 0 ? "中评" : comment.feel == -1 ? "差评" : ""}}</p>
                 </div>
             </div>
             <p class="comment-txt fs46" v-if="comment != null">{{comment.content}}</p>
@@ -87,14 +87,6 @@ export default {
           _this.imageList = myData.imageList;
           _this.product = myData.productResult;
           console.log(myData, "myData");
-          let feel = _this.comment.feel;
-          if (feel == 1) {
-            _this.comment.feel = "好评";
-          } else if (feel == 0) {
-            _this.comment.feel = "中评";
-          } else if (feel == -1) {
-            _this.comment.feel = "差评";
-          }
         }
       });
     },

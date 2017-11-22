@@ -68,7 +68,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@import url("//unpkg.com/mint-ui/lib/style.css");
 @import '../../../../assets/css/mixins.less';
 @import '../../../../assets/css/base.less';
 .goods-img-display{

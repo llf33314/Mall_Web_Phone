@@ -21,7 +21,7 @@ Vue.mixin({
 			}
 			let _data = {
 				params: _order,
-				busId:busId,
+				busId: busId,
 				url: window.location.href,
 				browerType: _this.$store.state.browerType
 			}
@@ -36,14 +36,16 @@ Vue.mixin({
 					//各种跳转
 					let reData = data.data;
 					let url = reData.url;
+					let orderId = reData.orderId;
 					if (_commonFn.isNotNull(url)) {
 						location.href = url;
 						return;
 					}
 					url = "/order/list/" + busId + "/0";
-					if (data.orderPayWay == 7) {
+					if (reData.orderPayWay == 7) {
 						//跳转到找人代付页面
-					} else if (data.orderPayWay == 4) {
+						url = "/daifu/" + busId + "/" + orderId;
+					} else if (reData.orderPayWay == 4) {
 						//跳转到积分商城的页面
 					}
 					_this.$router.push(url);
@@ -198,6 +200,7 @@ Vue.mixin({
 					}
 					if (shop.selectCoupon != null) {
 						shopObj.selectCouponsId = shop.selectCoupon.id || 0;//选中优惠券的id
+						shopObj.selectCouponsNum = shop.useCouponNum || 1;
 					}
 
 					let productResultList = [];

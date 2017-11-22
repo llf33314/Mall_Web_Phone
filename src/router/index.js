@@ -68,11 +68,17 @@ const detail_return = resolve => require(['pages/refund/succeed'], resolve);
 const consult_return = resolve => require(['pages/refund/consult'], resolve);
 //my_order_detail => 协商(完成)
 const logistics_return = resolve => require(['pages/refund/logistics'], resolve);
-//my_order_detail => 物流信息（上传未完成）
+//my_order_detail => 物流信息
 
 
 const shoppingCart = resolve => require(['pages/shoppingCart/index'], resolve);
-//my_order_detail => 物流信息（上传未完成）
+//my_order_detail => 物流信息
+
+
+const myAddress = resolve => require(['pages/my/myAddress'], resolve);
+//myAddress => 地址列表
+const address = resolve => require(['pages/my/address'], resolve);
+//address => 编辑地址
 
 Vue.use(Router)
 
@@ -283,14 +289,28 @@ export default new Router({
         title: '我的评论'
       }
     },{
-      path: '/helpPay',
+      path: '/daifu/:busId/:orderId',
       name: 'help_Pay',
       component: help_Pay,
       meta: {
         title: '找人代付'
       }
+    },{
+      path: '/address/:busId',
+      name: 'myAddress',
+      component: myAddress,
+      meta: {
+        title: '地址列表'
+      }
+    },{
+      path: '/address/edit/:busId/:id',
+      name: 'address',
+      component: address,
+      meta: {
+        title: '编辑地址页面'
+      }
     }
-
+    
 
   ]
 })

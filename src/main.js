@@ -8,6 +8,8 @@ require('@/lib/common.js');
 require('@/lib/config');
 //语言引用
 require('@/lib/gloabConstant');
+
+require("mint-ui/lib/style.css");
 //vuex
 import Vue from 'vue'
 import App from './App'

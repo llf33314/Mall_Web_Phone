@@ -142,7 +142,25 @@
     return_log_post: '/phoneOrder/L6tgXlBFeK/returnLogList',
     /*提交订单的接口 */
     submit_order_post: '/phoneOrder/L6tgXlBFeK/submitOrder',
+    /*查询找人代付页面的的接口 */
+    get_daifu_post: '/phoneOrder/L6tgXlBFeK/getDaiFu',
+    /*好友代付 */
+    freind_daifu_post: '/phoneOrder/L6tgXlBFeK/freindDaifu',
+    /*********************以下接口是地址页面的接口**********/
+    /* 查询地址列表的接口 */
+    address_list_post: '/phoneAddress/L6tgXlBFeK/addressList',
+    /*根据地址id查询地址信息 */
+    address_id_post: '/phoneAddress/L6tgXlBFeK/selectAddressById',
+    /*查询省市区的接口 */
+    address_city_post: '/phoneAddress/L6tgXlBFeK/getCityList',
+    /*保存地址的接口*/
+    save_address_post: '/phoneAddress/L6tgXlBFeK/saveAddress',
+    /*设置默认地址的接口 */
+    default_address_post: '/phoneAddress/L6tgXlBFeK/defaultAddress',
+
     /*********************以下接口是进入评论页面的接口**********/
+    /*查询评价列表的接口 */
+    comment_list_post: '/phoneComment/L6tgXlBFeK/commentList',
     /*进入评论页面的接口 */
     to_comment_product_post: '/phoneComment/L6tgXlBFeK/toCommentProduct',
     /*添加评论的接口 */
