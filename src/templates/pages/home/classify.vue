@@ -10,6 +10,7 @@
             <div  
                 @click="showNav()">
                 分类
+                <i class="iconfont icon-fenlei"></i>
                 <!-- sidebar_a, #sidebar_b -->
             </div>
             <div :class="[sort =='new'?'shop-font':'']" 
@@ -24,8 +25,7 @@
             :class="[sort =='price'?'shop-font':'']" 
                 @click="switchProduc('price')">
                 价格
-                <!--      -->
-                
+                <i class="iconfont icon-sort-small-b shop-font"></i>
             </div>
             <div>
                 <i class="icon-fenglei" 
@@ -398,33 +398,6 @@ export default {
         z-index: 3;
         .price{
             position: relative;
-            i{
-                right: 65/@dev-Width *1rem;
-                position: absolute;
-                width:0; 
-                height:0; 
-            }
-        }
-        /*箭头向上*/
-        .price-up {
-            top: 28/@dev-Width *1rem;
-            border-left:6px solid transparent;
-            border-right:6px solid transparent;
-            border-bottom:6px solid #ccc;
-        }
-            
-        /*箭头向下*/
-        .price-down {
-            bottom: 28/@dev-Width *1rem;
-            border-left:6px solid transparent;
-            border-right:6px solid transparent;
-            border-top: 6px solid #ccc;
-        }
-        .upborder{
-            border-bottom:6px solid #e4393c
-        }
-        .downborder{
-            border-top:6px solid #e4393c
         }
     }
     .header-search{
