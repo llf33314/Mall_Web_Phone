@@ -25,8 +25,11 @@
                         </div>
                     </div>
                     <!-- 显示按钮 -->
-                    <div class="consult-footer" v-if="refund.isShowReturnWuLiuButton == 1">
-                        <div class="consult-botton fs46">退款申请</div>
+                    <div class="consult-footer" v-if="refund.isShowApplyReturnButton == 1 || refund.isShowReturnWuLiuButton == 1">
+                        <div class="consult-botton fs46 m-right" v-if="refund.isShowApplyReturnButton == 1"
+                        @click="updateReturn(refund.orderDetailId,refund.returnId)">修改退款申请</div>
+                        <div class="consult-botton fs46 m-right" v-if="refund.isShowReturnWuLiuButton == 1"
+                        @click="goReturnWuliu(refund.returnId)">填写退款物流</div>
                     </div>
                 </div>
             </div>
@@ -93,6 +96,15 @@ export default {
           });
         }
       });
+    },
+    goReturnWuliu(returnId) {
+      //跳入填写物流的页面
+      this.$router.push("/return/logistics/" + this.busId + "/" + returnId);
+    },
+    updateReturn(detailId, returnId) {
+      this.$router.push(
+        "/return/apply/" + this.busId + "/" + detailId + "/-1/" + returnId
+      );
     }
   }
 };
@@ -259,5 +271,8 @@ export default {
 }
 .consult-wrapper .system::before {
   content: "系统消息";
+}
+.consult-wrapper .m-right {
+  margin-right: 10px;
 }
 </style>

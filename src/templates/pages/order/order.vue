@@ -263,7 +263,6 @@ export default {
     },
     goReturnWuliu(returnId, detailStatus) {
       //跳入填写物流的页面
-      this.isMore = -1;
       this.$router.push("/return/logistics/" + this.busId + "/" + returnId);
     },
     goUpdateReturn(orderDetailId) {

@@ -132,5 +132,7 @@ export default {
 <style lang="less">
 .wrapper{
   height: 100%;
+  max-width: 750px;
+  margin: 0 auto;
 }
 </style>
