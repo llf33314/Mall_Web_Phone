@@ -1,56 +1,49 @@
 <template>
 <div id='app' class="shop-wrapper ">
     <div class="comment-main">
-        <div class="comment-goods clearfix">
+        <div class="comment-goods clearfix" v-if="productObj != null"
+            @click="toReturnProductDetail(productObj.productId,productObj.shopId,productObj.busId)">
             <div class="goods-img">
-                <default-img :background="background"
+                <default-img :background="imgUrl+productObj.productImageUrl"
                             :isHeadPortrait="0">
                 </default-img>
             </div>
             <div class="goods-txt">
-                <p class="fs40">Apple iPhone 7 Plus (A1661) 128GB 玫瑰金 色 移动联通电信4G手机</p>
-                <p class="fs36 shopGray">玫瑰金/128GB/1件/包邮</p>
+                <p class="fs40">{{productObj.productName}}</p>
+                <p class="fs36 shopGray">
+                   <em v-if="productObj.productSpecifica != null">{{productObj.productSpecifica}}/</em>{{productObj.productNum}}件
+                </p>
             </div>
         </div>
         <div class="comment-content">
-            <textarea class="comment-textarea fs46"
+            <textarea class="comment-textarea fs46" v-model="content" @blur="blurValidate"
                 placeholder="请写下你的评价"></textarea>
             <div class="comment-photo border clearfix">
-                <div class="comment-img">
-                    <img src="../../../assets/img/test/test1.jpg">
-                    <i class="iconfont icon-guanbi"></i>
+                <div class="comment-img"  v-if="imageArr != null" v-for="(image , index) in imageArr">
+                    <default-img :background="imgUrl+image"
+                                 :isHeadPortrait="1">
+                    </default-img>
+                    <i class="iconfont icon-guanbi"  @click="removeImages(index)"></i>
                 </div>
-                <div class="comment-img">
-                    <img src="../../../assets/img/test/test2.jpg">
-                    <i class="iconfont icon-guanbi"></i>
-                </div>
-                <div class="comment-img">
-                    <img src="../../../assets/img/test/test1.jpg">
-                    <i class="iconfont icon-guanbi"></i>
-                </div>
-                <div class="comment-img">
-                    <img src="../../../assets/img/test/test2.jpg">
-                    <i class="iconfont icon-guanbi"></i>
-                </div>
-                 <div class="comment-upload">
-                    <imgUpload :imgURL="imgData"></imgUpload>
+                 <div class="comment-upload"  v-if="imageArr != null && imageArr.length < 3">
+                    <img-upload :imgURL="imageArr" @returnUrl="returnUrl"></img-upload>
                 </div>
             </div>
             <div class="comment-main-footer">
-                <div class="comment-button fs46"
-                @click="comment_selected($event)">
+                <div class="comment-button fs46 " :class="{'selected':feel==1}"
+                @click="comment_selected(1)">
                     <i class="iconfont icon-daipingjia"></i>
                     <i class="iconfont icon-haoping "></i>
                     好评
                 </div>
-                <div class="comment-button fs46"
-                @click="comment_selected($event)">
+                <div class="comment-button fs46"  :class="{'selected':feel==0}"
+                @click="comment_selected(0)">
                     <i class="iconfont icon-zhongping"></i>
                     <i class="iconfont icon-zhongping1 "></i>
                     中评
                 </div>
-                <div class="comment-button fs46  selected"
-                @click="comment_selected($event)">
+                <div class="comment-button fs46  "  :class="{'selected':feel==-1}"
+                @click="comment_selected(-1)">
                     <i class="iconfont icon-chaping"></i>
                     <i class="iconfont icon-chaping1"></i>
                     差评
@@ -59,7 +52,7 @@
         </div>
     </div>
     <section class="shop-footer-fixed comment-footer1">
-        <div class="shop-max-button fs52 shop-bg">
+        <div class="shop-max-button fs52 shop-bg" @click="submitComment">
             发表评价
         </div>
     </section>
@@ -74,11 +67,15 @@ export default {
 
   data() {
     return {
-      imgURL: [],
+      imageArr: [],
       background:
         "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1501765343077&di=5d3652848769c1abd7eb25dea007bb1d&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D450%252C600%2Fsign%3Dcf8442791bd8bc3ec65d0eceb7bb8a28%2Fb3119313b07eca80c63dcea4932397dda14483bd.jpg",
       busId: this.$route.params.busId || sessionStorage.getItem("busId"),
-      orderDetailId: this.$route.params.orderDetailId
+      orderDetailId: this.$route.params.orderDetailId,
+      imgUrl: "", //图片域名
+      productObj: {}, //商品对象
+      content: "", //评论内容
+      feel: 1
     };
   },
   components: {
@@ -86,7 +83,7 @@ export default {
     imgUpload
   },
   mounted() {
-    this.loadDatas(); //初始化协商详情数据
+    this.loadDatas(); //初始化数据
     this.commonFn.setTitle("评论");
     this.$store.commit("show_footer", false); //隐藏底部导航栏
   },
@@ -96,24 +93,24 @@ export default {
   },
   methods: {
     //切换评论
-    comment_selected(e) {
-      var _e = $(e.target);
-      $(".comment-button").removeClass("selected");
-      if (_e.is("i")) {
-        _e.parents(".comment-button").addClass("selected");
-        return;
-      }
-      _e.addClass("selected");
+    comment_selected(feel) {
+      this.feel = feel;
     },
-    //删除上传图片
-    dele_img(e) {
-      $(e.target)
-        .parents(".comment-img")
-        .remove();
+    removeImages(index) {
+      //删除图片
+      this.imageArr.splice(index, 1);
     },
     //组件图片接受
-    imgData(data) {
-      this.imgURL = data;
+    returnUrl(data) {
+      let _this = this;
+      if (_this.imageArr != null && data != null) {
+        data.forEach((item, index) => {
+          //重新给图片集合赋值
+          _this.$set(_this.imageArr, _this.imageArr.length, item);
+        });
+      } else if (data != null) {
+        _this.imageArr = data;
+      }
     },
     //初始化样式
     loadDatas() {
@@ -121,19 +118,83 @@ export default {
       let _data = {
         busId: _this.busId, //商家id
         url: location.href, //当前页面的地址
+        orderDetailId: this.orderDetailId, //订单详情id
         browerType: _this.$store.state.browerType //浏览器类型
       };
       _this.ajaxRequest({
-        url: h5App.activeAPI.is_apply_seller_post,
+        url: h5App.activeAPI.to_comment_product_post,
         data: _data,
         success: function(data) {
           let myData = data.data;
-          if (myData == null) {
-            return;
-          }
+          _this.imgUrl = data.imgUrl;
+          _this.productObj = myData;
           console.log(myData, "myData");
         }
       });
+    },
+    blurValidate() {
+      let _isNull = this.commonFn.isNull;
+      let content = this.content;
+      let _show_tip = this.$parent.$refs.bubble.show_tips;
+      if (_isNull(content)) {
+        _show_tip(Language.comment_content_null_msg);
+        return false;
+      } else if (content.length > 240) {
+        _show_tip(Language.comment_content_length_msg);
+        return false;
+      }
+      return true;
+    },
+    /**
+     * 提交评论
+     */
+    submitComment() {
+      let _this = this;
+      let comment = this.productObj;
+      if (!this.blurValidate()) {
+        return false;
+      }
+      let _data = {
+        busId: _this.busId, //商家id
+        url: location.href, //当前页面的地址
+        browerType: _this.$store.state.browerType, //浏览器类型
+        orderId: comment.orderId, //订单id
+        orderDetailId: this.orderDetailId, //订单详情id
+        productId: comment.productId, //商品id
+        content: this.content,
+        feel: this.feel
+      };
+      if (this.imageArr != null && this.imageArr.length > 0) {
+        _data.imageUrls = this.imageArr.toString();
+      }
+      _this.ajaxRequest({
+        url: h5App.activeAPI.save_comment_post,
+        data: _data,
+        loading: true,
+        success: function(data) {
+          let busId = _this.busId;
+          let id = data.data;
+          //跳入评论成功页面
+          _this.$router.push("/comment/success/" + busId + "/" + id);
+        }
+      });
+    },
+    //跳转商品详情页面
+    toReturnProductDetail(productId, shopId, busId) {
+      let orderType = productObj.orderType || 0;
+      let activityId = productObj.activityId || 0;
+      this.$router.push(
+        "/goods/details/" +
+          shopId +
+          "/" +
+          busId +
+          "/" +
+          orderType +
+          "/" +
+          productId +
+          "/" +
+          activityId
+      );
     }
   }
 };
@@ -272,5 +333,8 @@ export default {
     height: 134/@dev-Width *1rem;
     .border-radius(0);
   }
+}
+.icon-guanbi {
+  z-index: 2;
 }
 </style>

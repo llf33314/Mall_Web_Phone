@@ -13,47 +13,20 @@
                     <div class="consult-title fs56">
                         {{refund.statusContent }}
                     </div>
-                    <!-- getData 0不需要 1退货申请 2卖家退货地址 3买家回寄的物流信息 -->
-                    <!-- 系统消息 等待卖家处理 -->
                   <div v-if="refund.getData == 0 && refund.remark != null">
                         <div class="consult-txt">
                             <p class="fs46" v-html="refund.remark"></p>
                         </div>
                     </div>
-                    <!-- 退货申请，取退货数据  -->
-                    <div v-if="refund.getData == 1">
-                        <div class="consult-txt">
-                            <p class="fs46" v-if="refund.refundType != null">退款类型：{{refund.refundType}}</p>
-                            <p class="fs46">货物状态：请将配件全数寄回并保证</p>
-                            <p class="fs46" v-if="refund.retReason != null">退款原因：{{refund.retReason}}</p>
-                            <p class="fs46" v-if="refund.retMoney != null">退款金额：{{refund.retMoney|moneySplit1}}.{{refund.retMoney|moneySplit2}}元</p>
-                            <p class="fs46" v-if="refund.retRemark != null">退款说明：{{refund.retRemark}}</p>
+
+                    <div v-if="refund.getData > 0 && refund.remark != null">
+                        <div class="consult-txt">{{refund.remark}}
+                            <p class="fs46" v-for="(obj,index) in refund.remark">{{index}}：{{obj}}</p>
                         </div>
                     </div>
-                     <!-- 卖家已同意，取卖家退货地址  -->
-                    <div v-if="refund.getData == 2">
-                        <div class="consult-txt">
-                            <p class="fs46" v-if="refund.stoAddress != null">退货地址：{{refund.stoAddress}}</p>
-                            <p class="fs46" v-if="refund.returnExplain != null">退货说明：{{refund.returnExplain}}</p>
-                            <p class="fs46" v-if="refund.stoPhone != null">商家电话：{{refund.stoPhone}}</p>
-                        </div>
-                    </div>
-                     <!-- 买家回寄的物流信息 取买家物流信息  -->
-                    <div v-if="refund.getData == 3">
-                        <div class="consult-txt">
-                            <p class="fs46" v-if="refund.wlCompany != null">物流公司：{{refund.wlCompany}}</p>
-                            <p class="fs46" v-if="refund.wlNo != null">退货单号：{{refund.wlNo}}</p>
-                            <p class="fs46" v-if="refund.returnAddress != null">退货地址：{{refund.returnAddress}}</p>
-                        </div>
-                    </div>
-                    <!-- 退款成功 -- >
-                    <!-- <div class="consult-txt2">
-                        <p class="fs46">退款金额:{{refund.retMoney|moneySplit1}}.{{refund.retMoney|moneySplit2}}元</p>
-                        <p class="fs46">• 退回微信 <span>7,199.00元</span></p>
-                    </div> -->
                     <!-- 显示按钮 -->
-                    <div class="consult-footer">
-                        <div class="consult-botton fs46">修改退款申请</div>
+                    <div class="consult-footer" v-if="refund.isShowReturnWuLiuButton == 1">
+                        <div class="consult-botton fs46">退款申请</div>
                     </div>
                 </div>
             </div>
@@ -76,7 +49,7 @@ export default {
       returnId: this.$route.params.returnId, //退款id
       returnArr: [], //初始化数据
       status: -1,
-      errorMsg:"暂无协商详情"
+      errorMsg: "暂无协商详情"
     };
   },
   mounted() {
@@ -100,15 +73,16 @@ export default {
       _this.ajaxRequest({
         url: h5App.activeAPI.return_log_post,
         data: _data,
-        status:false,
+        status: false,
         success: function(data) {
           if (data.data == null || data.data.length == 0) {
             _this.status = 1;
             return;
           }
           _this.returnArr = data.data; //返回数据
-          console.log(_this.returnData);
+          console.log(_this.returnArr, "_this.returnArr");
           _this.returnArr.forEach((item, index) => {
+            console.log(item.remark, "remark");
             if (item.retHandlingWay == 2) {
               //我要退款退货
               item.refundType = "退货并退款";

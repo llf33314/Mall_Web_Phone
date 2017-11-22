@@ -142,6 +142,13 @@
     return_log_post: '/phoneOrder/L6tgXlBFeK/returnLogList',
     /*提交订单的接口 */
     submit_order_post: '/phoneOrder/L6tgXlBFeK/submitOrder',
+    /*********************以下接口是进入评论页面的接口**********/
+    /*进入评论页面的接口 */
+    to_comment_product_post: '/phoneComment/L6tgXlBFeK/toCommentProduct',
+    /*添加评论的接口 */
+    save_comment_post: '/phoneComment/L6tgXlBFeK/saveComment',
+    /*评论成功后的接口 */
+    comment_success_post: '/phoneComment/L6tgXlBFeK/commentSuccess',
     /**********************以下接口是提交订单页面相关接口 */
     /*获取提交订单的数据 */
     to_order_post: '/phoneOrder/L6tgXlBFeK/toOrder',
@@ -159,11 +166,11 @@
     add_pifa_post: '/phoneWholesaler/L6tgXlBFeK/addWholesaler',
 
     /**********************以下接口是超级销售员相关接口*****************************/
-    is_apply_seller_post : '/phoneSellers/L6tgXlBFeK/isApplySeller',
+    is_apply_seller_post: '/phoneSellers/L6tgXlBFeK/isApplySeller',
     //获取销售员获取短信验证码
-    seller_send_msg_post:'/phoneSellers/L6tgXlBFeK/getValCode',
+    seller_send_msg_post: '/phoneSellers/L6tgXlBFeK/getValCode',
     //获取销售员获取短信验证码
-    add_seller_post:'/phoneSellers/L6tgXlBFeK/addSellers'
+    add_seller_post: '/phoneSellers/L6tgXlBFeK/addSellers'
 
   };
 

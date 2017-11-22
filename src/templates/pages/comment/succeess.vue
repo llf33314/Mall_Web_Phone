@@ -1,21 +1,15 @@
 <template>
-<div id='app' class="shop-wrapper share-wrapper">
-        <div class="comment-main share-main">
-            <p class="share-title">这个宝贝很不错，你也来看看吧!</p>
-            <div class="comment-content share-content" v-if="comment != null">
-                <p class="comment-txt fs46">{{comment.content}}</p>
-                <div class="comment-photo border clearfix" v-if="imageList != null && imageList.length > 0">
-                    <div class="comment-img border-img" v-for="image in imageList">
-                        <default-img :background="imgUrl+image.imageUrl"
-                            :isHeadPortrait="0">
-                        </default-img>
-                    </div>
-                </div>
-            </div>
-            <div class="comment-goods clearfix share-content" v-if="product != null" @click="toProductDetail">
+<div id='app' class="shop-wrapper order-wrapper"  v-if="comment != null ">
+    <header class="deltails-header deltails-padding0 shop-textc">
+            <i class="iconfont icon-chenggong"></i>
+            <p class="fs52">评论成功</p>
+    </header>
+    <div class="comment-main order-item" v-if="comment != null">
+        <div class="comment-content">
+            <div class="comment-goods clearfix" v-if="product != null" @click="toProductDetail">
                 <div class="goods-img">
                     <default-img :background="imgUrl+product.productImageUrl"
-                        :isHeadPortrait="0">
+                            :isHeadPortrait="0">
                     </default-img>
                 </div>
                 <div class="goods-txt">
@@ -23,25 +17,34 @@
                     <p class="fs36 shopGray">
                         <em v-if="product.productSpecifica != null">{{product.productSpecifica}}/</em>{{product.productNum}}件
                     </p>
+                    <p class="fs36 shopGray"
+                    style="color:#e4393c;">{{comment.feel}}</p>
+                </div>
+            </div>
+            <p class="comment-txt fs46" v-if="comment != null">{{comment.content}}</p>
+            <div class="comment-photo border clearfix" v-if="imageList != null && imageList.length > 0">
+                <div class="comment-img border-img" v-for="image in imageList">
+                    <default-img :background="imgUrl+image.imageUrl"
+                            :isHeadPortrait="0">
+                    </default-img>
                 </div>
             </div>
         </div>
-        <section class="shop-footer comment-footer3">
-            <div class="shop-max-button fs52" @click="toProductDetail">
-                去看看
-            </div>
-        </section>
-    </div>  
+    </div>
+    <section class="shop-footer comment-footer2"  v-if="comment != null ">
+        <div class="shop-max-button fs52 shop-bg" @click="toShareComment">
+            分享评价给好友
+        </div>
+    </section>
+</div>
 </template>
 
 <script>
 import defaultImg from "components/defaultImg";
 export default {
-  name: "myAddress",
-
+  name: "succeed",
   data() {
     return {
-      isShow: false,
       background:
         "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1501765343077&di=5d3652848769c1abd7eb25dea007bb1d&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D450%252C600%2Fsign%3Dcf8442791bd8bc3ec65d0eceb7bb8a28%2Fb3119313b07eca80c63dcea4932397dda14483bd.jpg",
       busId: this.$route.params.busId || sessionStorage.getItem("busId"),
@@ -57,7 +60,7 @@ export default {
   },
   mounted() {
     this.loadDatas(); //初始化数据
-    this.commonFn.setTitle("评论分享");
+    this.commonFn.setTitle("评论成功");
     this.$store.commit("show_footer", false); //隐藏底部导航栏
   },
   beforeDestroy() {
@@ -95,6 +98,12 @@ export default {
         }
       });
     },
+    toShareComment() {
+      let busId = this.busId;
+      let id = this.id;
+      //前往分享订单的页面
+      this.$router.push("/comment/share/" + busId + "/" + id);
+    },
     toProductDetail() {
       //前往商品详情也页面
       let orderType = this.product.orderType || 0;
@@ -122,6 +131,28 @@ export default {
 <style lang="less" scoped>
 @import "../../../assets/css/mixins.less";
 @import "../../../assets/css/base.less";
+.deltails-header {
+  color: #fff;
+  .ik-box;
+  .ik-box-pack(center);
+  .ik-box-orient(vertical);
+  padding-left: 115/@dev-Width *1rem;
+  width: 100%;
+  background-size: 100%;
+  height: 316/@dev-Width *1rem;
+  background-position: center;
+  background-image: url("../../../assets/img/pinglun_bg.jpg");
+  margin-bottom: 30/@dev-Width *1rem;
+  & > p:first-child {
+    margin-bottom: 30/@dev-Width *1rem;
+  }
+}
+.deltails-padding0 {
+  padding-left: 0;
+  i {
+    font-size: 148/@dev-Width *1rem;
+  }
+}
 .comment-main {
   width: 100%;
   padding-bottom: 134/@dev-Width *1rem;
@@ -226,43 +257,6 @@ export default {
       padding: 0 40/@dev-Width *1rem;
     }
   }
-  .comment-main-footer {
-    width: 100%;
-    padding: 0 45/@dev-Width *1rem;
-    background: #fff;
-    font-size: 0;
-    .comment-button {
-      text-align: center;
-      width: 33%;
-      display: inline-block;
-      padding: 48/@dev-Width *1rem 0;
-      color: #888;
-      i {
-        font-size: 68/@dev-Width *1rem;
-      }
-      & > i:first-child {
-        display: inline-block;
-      }
-      & > i:last-child {
-        display: none;
-      }
-    }
-    .selected {
-      color: #e4393c;
-      & > i:first-child {
-        display: none;
-      }
-      & > i:last-child {
-        display: inline-block;
-      }
-    }
-  }
-}
-.comment-footer1 {
-  .shop-max-button {
-    height: 134/@dev-Width *1rem;
-    .border-radius(0);
-  }
 }
 .comment-footer2 {
   .shop-max-button {
@@ -270,50 +264,6 @@ export default {
     width: 92%;
     margin: 0 auto;
     color: #fff;
-  }
-}
-.comment-footer3 {
-  .shop-max-button {
-    height: 134/@dev-Width *1rem;
-    width: 92%;
-    margin: 0 auto;
-    color: #fff;
-    font-weight: bold;
-    .border-radius(50px);
-    border: 1px solid #f53e18;
-    background: -o-radial-gradient(#f55211, #f6423a); /* Opera 11.1 - 12.0 */
-    background: -webkit-radial-gradient(
-      #f55211,
-      #e7242c
-    ); /* Safari 5.1 - 6.0 */
-    background: -moz-radial-gradient(#f55211, #f6423a); /* Firefox 3.6 - 15 */
-    background: radial-gradient(#f55211, #f6423a); /* 标准的语法 */
-  }
-}
-.share-wrapper {
-  width: 100%;
-  height: 100%;
-  background: url("../../../assets/img/fengxiang_bg.jpg")no-repeat;
-  background-size: cover;
-  .share-main {
-    font-size: 0;
-    width: 100%;
-    padding: 100/@dev-Width *1rem 36/@dev-Width *1rem;
-  }
-  .share-title {
-    width: 100%;
-    font-size: 70/@dev-Width *1rem;
-    text-align: center;
-    color: #fff;
-    font-weight: bold;
-    text-shadow: 2px 3px 2px rgba(0, 0, 0, 0.2);
-    margin-bottom: 60/@dev-Width *1rem;
-  }
-  .share-content {
-    background: #fff;
-    margin: 0 auto;
-    .border-radius(8px);
-    margin-bottom: 45/@dev-Width *1rem;
   }
 }
 </style>

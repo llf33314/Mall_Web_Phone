@@ -25,6 +25,8 @@ const my_comment = resolve => require(['pages/comment/myComment'], resolve);
 //my_comment => 我的评论
 const Comment_Share = resolve => require(['pages/comment/share'], resolve);
 //Comment_share => 评论分享
+const Comment_success = resolve => require(['pages/comment/succeess'], resolve);
+//Comment_success => 评论成功
 const Goods = resolve => require(['pages/goods/index'], resolve);
 //Goods => 商品详情
 const Goods_Comment = resolve => require(['pages/goods/child/comment'], resolve);
@@ -136,11 +138,18 @@ export default new Router({
         title: '评论'
       }
     }, {
+      path: '/comment/success/:busId/:id',
+      name: 'Comment_success',
+      component: Comment_success,
+      meta: {
+        title: '评论成功'
+      }
+    },{
       path: '/comment/share/:busId/:id',
       name: 'share',
       component: Comment_Share,
       meta: {
-        title: '分享成功'
+        title: '评论分享成功'
       }
     }, {
       path: '/goods/details/:shopId/:busId/:type/:goodsId/:activityId',
