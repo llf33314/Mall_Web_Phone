@@ -273,7 +273,7 @@ export default new Router({
         title: '购物车'
       }
     },{
-      path: '/mycomment',
+      path: '/my/comment/:busId',
       name: 'my_comment',
       component: my_comment,
       meta: {
