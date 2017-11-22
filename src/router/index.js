@@ -53,6 +53,9 @@ const my_order_list = resolve => require(['pages/order/index'], resolve);
 //my_order_list =>订单列表
 const my_order_detail = resolve => require(['pages/order/order'], resolve);
 //my_order_detail => 订单详情
+const help_Pay = resolve => require(['pages/order/helpPay'], resolve);
+//help_Pay => 找人代付
+
 
 const return_classify = resolve => require(['pages/refund/index'], resolve);
 //return_classify => 申请退款类型
@@ -278,6 +281,13 @@ export default new Router({
       component: my_comment,
       meta: {
         title: '我的评论'
+      }
+    },{
+      path: '/helpPay',
+      name: 'help_Pay',
+      component: help_Pay,
+      meta: {
+        title: '找人代付'
       }
     }
 
