@@ -7,10 +7,9 @@
             <i class="iconfont icon-sousuo shop"></i>
         </div>
         <div class="header-nav fs40">
-            <div  
-                @click="showNav()">
+            <div @click="showNav()">
                 分类
-                <i class="iconfont icon-fenlei"></i>
+                <i class="iconfont icon-fenlei2" style="font-size:14px; "></i>
                 <!-- sidebar_a, #sidebar_b -->
             </div>
             <div :class="[sort =='new'?'shop-font':'']" 
@@ -22,10 +21,14 @@
                 销量
             </div>
             <div class="price"
-            :class="[sort =='price'?'shop-font':'']" 
                 @click="switchProduc('price')">
-                价格
-                <i class="iconfont icon-sort-small-b shop-font"></i>
+                <span :class="[sort =='price'?'shop-font':'']">价格</span>
+                <span style="color: #ccc;">
+                  <i class="iconfont icon-paixu2" 
+                  :class="{'shop-font':desc_num == 0}"></i>  
+                  <i class="iconfont icon-paixu" 
+                  :class="{'shop-font':desc_num == 1}"></i> 
+                </span>
             </div>
             <div>
                 <i class="icon-fenglei" 
@@ -45,7 +48,8 @@
                     v-for="(item,index) in classNav"
                     :class="[selectedClass == index?'selected':'']" 
                     v-text="item.group_name"
-                    @click="selected(index,item.group_id,item.is_child,item.group_name)">
+                    @click="selected(index,item.group_id,item.is_child,item.group_name)"
+                    :key="index">
                 </li>
             </ul>
         </transition>
@@ -397,7 +401,21 @@ export default {
         position: absolute;
         z-index: 3;
         .price{
-            position: relative;
+            span{
+                position: relative;
+                margin: 0 0.5px;
+                i{
+                    position: absolute;
+                    left: 0;
+                    font-size: 22/@dev-Width *1rem;
+                }
+                .icon-paixu{
+                    bottom: 0;
+                }
+                .icon-paixu2{
+                   top: 1px;
+                }
+            }
         }
     }
     .header-search{
