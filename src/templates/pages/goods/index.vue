@@ -1,146 +1,34 @@
 <template>
 <div class="goods-wrapper">
     <div class="goods-main">
-        <banner :banner="goodsData.imageList" :imgUrl="imgUrl"></banner>
-        <section class="goods-info">
-            <div class="goods-top " :class="[ type == 4 ?'border':'']">
-                <div class="goods-info-name">
-                    <em class="em-tag" v-if="goodsData.productLabel">{{goodsData.productLabel}}</em>
-                    <span class="fs42">{{goodsData.productName}}</span>
-                </div>
-            
-                <div class="fs40  goods-info-other">
-                    <div class="shop-font" v-if="type != 5">
-                        <span v-if=" type== 3">秒杀价</span>
-                        <span v-else-if="type== 1">团购价:</span>
-                        <span v-else-if="type== 4">当前价:</span>
-                        <span v-else-if="type== 6">预售价:</span>
-                        <span class="fs50" v-else-if="type== 5">
-                            {{goodsData.productPrice | moneySplit1}}.{{goodsData.productPrice | moneySplit2}}积分
-                        </span>
-                        <span v-else >价格:</span>
-                        ￥<span class="fs50" v-if="goodsData.productPrice > 0">{{goodsData.productPrice | moneySplit1}}</span>.{{goodsData.productPrice | moneySplit2}}
-                        <span v-if="type== 7">批发价：￥{{goodsData.pfPrice}}</span>
-                        <span class="shopGray" v-if="goodsData.auctionResult >= 0 ">抢拍{{goodsData.auctionResult.auctionNumber}}次</span>
-                    </div>
-                    <span class="fs50 shop-font" v-else>{{goodsData.productPrice | moneySplit1}}.{{goodsData.productPrice | moneySplit2}} 积分</span>
-                    <count-down :times="goodsData.activityTimes"
-                    ></count-down>
-                </div>
-                <div class="fs40  goods-info-other" v-if=" type == 4 || type == 7">
-                    <div v-if="type == 7 " class="shopGray">
-                        <!-- 原价<del>￥{{goodsData.productCostPrice}}</del> -->
-                        <span class="shop-font" v-if="goodsData.hyPrice > 0"> 会员价：￥{{goodsData.hyPrice}}</span>
-                    </div>
-                    <div class="shop-font" v-if="goodsData.auctionResult != '' &&  type == 4">
-                        <span >保证金：</span>
-                        ￥<span class="fs50" >{{goodsData.auctionResult.depositMoney | moneySplit1 }}</span>.{{goodsData.auctionResult.depositMoney | moneySplit2}}
-                        <span class="shopGray">不成拍卖后退还</span>
-                    </div>
-                    <div class="fs36 shopGray" v-if=" type != 7">{{goodsData.auctionResult.marginNumber}}人已报名</div>
-                </div>
-                <p class="goods-info-other fs40 shopGray" v-if="type != 4">
-                    <span v-if="type != 0 && type != 7 ">
-                        <del>￥{{goodsData.productCostPrice}}</del>
-                    </span>
-                    <span v-if="type == 0 || type == 7 ">
-                        运费: ￥{{goodsData.freightMoney}}
-                    </span>
-                    <span v-if="type == 0 || type == 7 ">
-                        库存:{{goodsData.productStockTotal}}
-                    </span>
-                    <span v-if="type == 7 ">
-                        关注量:{{goodsData.attentionNum}}
-                    </span>
-                    <span>
-                        销量:{{goodsData.productSaleTotal}}
-                    </span>
-                </p>
-            </div>
-            <div class="goods-bottom shopGray" v-if=" type ==4 ">
-                <p class="fs40 ">
-                    <span>起拍价：￥{{goodsData.auctionResult.aucStartPrice}}</span>
-                    <span v-if="goodsData.auctionResult.aucLowestPrice>=0">保留价：￥{{goodsData.auctionResult.aucLowestPrice}}</span>
-                    <span v-if="goodsData.auctionResult.aucLowestPrice>=0">保证金：￥{{goodsData.auctionResult.depositMoney}}</span>
-                </p>
-                <p class="fs40 ">
-                    <span v-if="goodsData.auctionResult.aucType == 2 ">加价幅度：￥{{goodsData.auctionResult.aucAddPrice}}</span>
-                    <span v-if="goodsData.auctionResult.aucType == 1 ">降价幅度：每{{goodsData.auctionResult.aucLowerPriceTime}}分钟降价
-                        ￥{{goodsData.auctionResult.aucLowerPrice}}
-                    </span>
-                </p>
-                <p class="fs40 ">
-                    <span >拍卖方式：{{goodsData.auctionResult.aucTypeVal}}</span>
-                </p>
-                <p class="fs40 ">
-                    <span >服务支持：支持7天无理由退货</span>
-                </p>
-            </div>
-        </section>
-        <section class="goods-selected"
-                v-if="goodsData.isShowCardRecevie == 1"
+        <!--banner-->
+        <banner :banner="goodsData.imageList" :imgUrl="imgUrl">
+        </banner>
+        <!--商品信息-->
+        <goods-info :row="goodsData">
+        </goods-info>
+        <!--查看所含优惠卷-->
+        <coupons v-if="goodsData.isShowCardRecevie == 1"
                 @click="isCardRecevie=true">
-            <div class="goods-selected-main" >
-                <div class="fs40">
-                    查看所含优惠卷
-                </div>
-                <i class="iconfont icon-jiantou-copy shopGray"></i>
-            </div>
-        </section>
-        <section class="goods-selected"
-                v-if="type == 7"
-                @click="wholesaleShow()">
-            <div class="goods-selected-main" >
-                <div class="fs40" v-if="pifaResult.pfType == 1">
-                    <!--手批-->
-                    我要批发 :
-                    <span v-if="pifaResult.pfSetObj.isSpHand == 1 && pifaResult.pfSetObj.spHand != ''">{{pifaResult.pfSetObj.spHand}}</span>
-                    <span v-else>1</span>手起批
-                </div>
-                <div class="fs40" v-if="pifaResult.pfType == 2">
-                    <!--混批-->
-                    我要批发 : 
-                    <span v-if="pifaResult.pfSetObj.isHpNum == 1 && pifaResult.pfSetObj.hpNum != ''">{{pifaResult.pfSetObj.hpNum}}件</span>
-                    <span v-if="pifaResult.pfSetObj.isHpNum == 1 && pifaResult.pfSetObj.isHpMoney == 1">或</span>
-                    <span v-if="pifaResult.pfSetObj.isHpMoney == 1 && pifaResult.pfSetObj.hpMoney != ''">{{pifaResult.pfSetObj.hpMoney}}元</span>
-                    <span v-if="pifaResult.pfSetObj.isHpNum ==0 && pifaResult.pfSetObj.isHpMoney == 0">1件</span>
-                    起混批
-                </div> 
-                <i class="iconfont icon-jiantou-copy shopGray"></i>
-            </div>
-        </section>
-        <!-- <section class="goods-selected" 
-                v-if="goodsData.isSpecifica"
+        </coupons>
+        <!--批发条件显示-->
+        <pifa-limit :row="pifaResult"
+                    v-if="type == 7 && pifaResult !=''"
+                    @click="wholesaleShow()">
+        </pifa-limit>
+        <!--已选规格显示-row所选规格--num所选数量-->
+        <limit  :row="dialogData.values" 
+                :num="spec_num"
                 @click="isShow=true">
-            <div class="goods-selected-main" >
-                <div class="fs40">
-                    已选  {{dialogData.values}} {{spec_num}}份 
-                </div> 
-                <i class="iconfont icon-jiantou-copy shopGray"></i>
-            </div>
-        </section> -->
-        <section class="goods-selected" 
-                @click="isShow=true">
-            <div class="goods-selected-main" >
-                <div class="fs40">
-                    已选 {{dialogData.values}} {{spec_num}}份 
-                </div> 
-                <i class="iconfont icon-jiantou-copy shopGray"></i>
-            </div>
-        </section>
-        <section class="goods-address" v-if="goodsData.memberAddress">
-            <div class="goods-address-main border">
-                <div class="fs40 goods-address-txt text-overflow">
-                    <i class="iconfont icon-dingwei shopFont"></i>
-                    送至：{{goodsData.memberAddress}}
-                </div>
-                <i class="iconfont icon-jiantou-copy shopGray"></i>
-            </div>
-            <div class="shopGray fs40 goods-address-postage">
-                运费 :{{goodsData.freightMoney}}
-            </div>
-        </section>
+        </limit>
+        <!--地址显示--选择-->
+        <address-freight :row="goodsData">
+        </address-freight>
+        <!---认证---->
+        <prove :row="goodsData">
+        </prove>
         <section class="goods-prove">
+            //todo
             <span class="fs40" >
                 <i class="iconfont icon-chenggong shopGreen" v-if="goodsData.stoType"></i>
                 {{goodsData.stoType}}
@@ -154,6 +42,7 @@
                 线下门店
             </span>
         </section>
+        <!---店铺信息与收藏---->
         <section class="goods-shop">
             <div class="goods-shop-main clearfix">
                 <div class="goods-shop-info">
@@ -188,6 +77,22 @@
                 </div>
             </div>
         </section>
+        <!---竞拍玩法---->
+        <section class="goods-auction" v-if="type == 4">
+            <div class="goods-auction-title border ">
+                <span class="fs42">竞拍玩法</span>
+                <span class="fs42">玩法详情
+                    <i class="icon-jiantou-copy iconfont" style="color:#c7c7cc;vertical-align: middle;" ></i>
+                </span>
+            </div>
+            <div class="goods-auction-rule">
+                <span ><em>1</em>出价竞拍</span>
+                <span ><em>2</em>获拍转单</span>
+                <span ><em>3</em>支付订单</span>
+                <span ><em>4</em>竞拍成功</span>
+            </div> 
+        </section>
+        <!----商品详情-规格-评论---->
         <section class="goods-content">
             <div class="goods-content-nav shop-header">
                 <div class="header-nav">
@@ -201,24 +106,69 @@
                     </div>
                 </div>
             </div>
+            <!----详情---->
             <div class="goods-details fs40"
                 v-show="isDetails == 'details' ">
                 <div v-html="detailsData"></div>
             </div>
+            <!--规格-->
             <spec v-if="isDetails == 'spec'"></spec>
+            <!--评论-->
             <comment v-if="isDetails == 'comment'"></comment>
-            <technical-support v-if="$store.state.isAdvert == 1"></technical-support>
+            <!--商品详情底部-->
+            <div class="goods-content-nav">
+                <p class="goods-nav border">
+                    <span class="fs40">店铺主页</span>
+                    <span class="fs40">会员中心</span>
+                    <span class="fs40">关注我们</span>
+                    <span class="fs40">线下门店</span>
+                </p>
+                <!---技术认证---->
+                <technical-support v-if="$store.state.isAdvert == 1"></technical-support>
+            </div>
         </section>
+        <!--底部按钮-->
+        <section class="goods-footer" style="background:0;z-index:3;" >
+            <!---拍卖保证金---->
+            <div class="goods-footer-botton  fs50 shop-bg" v-if="type == 4 &&  goodsData.auctionResult.isShowDeposit == 1 " >
+                交保证金报名
+            </div>
+            <!---拍卖转订单---->
+            <div class="goods-footer-botton  fs50 shop-bg" v-if="type == 4 && goodsData.auctionResult.isReturnOrder == 1 " >
+                转订单
+            </div>
+             <!---拍卖失败显示按钮---->
+            <div class="goods-footer-botton  fs50 shop-bg" 
+                v-if="type == 4 && goodsData.auctionResult.activityStatus == -1 && goodsData.auctionResult.isWin != 1" >
+                查看更多商品
+            </div>
+            <!---立即拍下---->
+            <div class="goods-auction-choice" v-if="type == 4 &&  goodsData.auctionResult.isLijiPai == 1 " >
+                <div class="goods-auction-box ">isLijiPai
+                    <em><i class="icon-jian iconfont"></i></em>
+                    <div class="" >
+                        <input  type="text" placeholder="拍下金额"/>
+                    </div>
+                    <em><i class="icon-jiaimg iconfont"></i></em>
+                </div>
+                <div class="goods-auction-bottom shop-bg fs52">立即拍下</div>
+            </div>
+        </section>
+        <!---底部菜单---->
         <section class="goods-footer" style="background:0">
+            <!---下架显示---->
             <div class="goods-footer-no fs40" v-if="isSoldOut">
                 商品已经下架啦~
             </div>
+            <!---活动显示---->
             <div class="goods-footer-no fs40" v-if="isSoldOut">
                 活动已结束
             </div>
-            <div class="goods-footer-botton ui-col-2 fs50 shop-bg" v-if="type == 4 || type == 6 ">
-                交保证金报名
+             <!---预售---->
+            <div class="goods-footer-botton ui-col-2 fs50 shop-bg" v-if="type == 6 && goodsData.auctionResult.isReturnOrder == 1" >
+                {{goodsData.auctionResult.isReturnOrder}}预售
             </div>
+            <!---底部菜单---->
             <div class="goods-footer-content">
                 <div class="goods-footer-botton ui-col-1 fs32">
                     <i class="iconfont icon-xiaoxi shop-font"></i>
@@ -230,21 +180,38 @@
                     <em class="goods-footer-num shop-bg" v-if="goodsData.shopCartNum">{{goodsData.shopCartNum }}
                     </em>
                 </div>
+                <!--团购-->
                 <div class="goods-footer-botton ui-col-2 fs50 shop-yellow"
                     :class="{'shopFff':isSoldOut}"
-                    v-if=" goodsData.isShowAddShopButton == 1"
+                    v-if=" goodsData.isShowAddShopButton == 1 && type == 1"
+                    @click="dialogShow">
+                    <p class="fs40">￥{{goodsData.productPrice}}</p>
+                    <p class="fs32">单独购买</p>
+                </div>
+                <div class="goods-footer-botton ui-col-2 fs50 shop-bg"
+                    :class="{'shopFff':isSoldOut}"
+                    v-if=" goodsData.isShowLiJiBuyButton == 1 && type == 1"
+                    @click="dialogShow">
+                    <p class="fs40">￥240.00//todo</p>
+                    <p class="fs32">3人拼团价//todo</p>
+                </div>
+                <!--不是团购-->
+                <div class="goods-footer-botton ui-col-2 fs50 shop-yellow"
+                    :class="{'shopFff':isSoldOut}"
+                    v-if=" goodsData.isShowAddShopButton == 1 && type != 1"
                     @click="dialogShow">
                     加入购物车
                 </div>
                 <div class="goods-footer-botton ui-col-2 fs50 shop-bg"
                     :class="{'shopFff':isSoldOut}"
-                    v-if=" goodsData.isShowLiJiBuyButton == 1"
+                    v-if=" goodsData.isShowAddShopButton == 1 && type != 1"
                     @click="dialogShow">
                     立即购买
                 </div>
             </div>
         </section>
     </div>
+    <!-----正常购买弹出框------>
     <div class="goods-dialog" 
         v-if="isShow"
         @click.self="isShow =false">
@@ -271,6 +238,7 @@
                     <p class="fs36 shopGray" v-if="goodsData.maxBuyNum">限购数量：{{goodsData.maxBuyNum}}</p>
                 </div>
             </div>
+            <!---选择规格---->
             <div class="goods-dialog-choice">
                     <div class="goods-choice-list clearfix" v-for="(item,key) in specificaList" :key="key">
                     <div class="goods-choice-title fs36">{{item.specName}}
@@ -297,17 +265,30 @@
                 </div>
             </div>
             <div class="goods-dialog-footer">
+                <!--不是团购-->
                 <div class="goods-dialog-button fs52 shop-yellow" @click="addCard(1)"
-                    v-if=" goodsData.isShowAddShopButton == 1">
+                    v-if=" goodsData.isShowAddShopButton == 1 && type != 1">
                     加入购物车
                 </div>
                 <div class="goods-dialog-button fs52  shop-bg" @click="lijiBuy(0)"
-                   v-if=" goodsData.isShowLiJiBuyButton == 1">
+                   v-if=" goodsData.isShowLiJiBuyButton == 1 && type != 1">
                     立即购买
                 </div> 
+                 <!--团购-->
+                <div class="goods-dialog-button fs52 shop-yellow" @click="addCard(1)"
+                    v-if=" goodsData.isShowAddShopButton == 1 && type == 1">
+                    <p class="fs40">￥{{dialogData.productPrice}}</p>
+                    <p class="fs32">单独购买</p>
+                </div>
+                <div class="goods-dialog-button fs52  shop-bg" @click="lijiBuy(0)"
+                   v-if=" goodsData.isShowLiJiBuyButton == 1 && type !== 1">
+                    <p class="fs40">￥240.00//todo</p>
+                    <p class="fs32">3人拼团价//todo</p>
+                </div>
             </div>
         </div>
     </div>
+    <!-----批发购买弹出框------>
     <div class="goods-dialog" 
         v-if="isWholesale"
         @click.self="isWholesale =false">
@@ -513,17 +494,33 @@
 <script>
 
 import defaultImg from 'components/defaultImg';
-import countDown from '../home/classify_child/countDown';//倒计时
-import banner from './child/banner';//倒计时
+import banner from './child/banner';//banner
+import goodsInfo from './child/goodsInfo';//商品信息
+import coupons from './child/coupons';//查看优惠券包
+import pifaLimit from './child/pifa/pifaLimit';//批发条件显示
+import limit from './child/limit';//已选规格显示
+import addressFreight from './child/addressFreight';//地址运费
+import prove from './child/prove';//认证
 import technicalSupport from 'components/technicalSupport' //技术支持
-import comment from './child/comment' //技术支持
-import spec from './child/spec' //技术支持
-import filter from '../../../lib/filters'// 价钱过滤器
-import spDialog from 'components/spDialog' //技术支持
+import comment from './child/comment' //商品详情评论
+import spec from './child/spec' //商品详情规格
+import filter from '../../../lib/filters'// 过滤器
+import spDialog from 'components/spDialog' //卡卷包
 
 export default {
     components: {
-        defaultImg,countDown,technicalSupport,banner,comment,spec,spDialog
+        defaultImg,
+        technicalSupport,
+        banner,
+        comment,
+        spec,
+        spDialog,
+        goodsInfo,
+        coupons,
+        pifaLimit,
+        limit,
+        addressFreight,
+        prove
     },
     data () {
         return {
@@ -581,7 +578,8 @@ export default {
             ],
             flag:false,
             //newDialogData:'',
-            arrDialog:''
+            arrDialog:'',
+            
         }
     },
     watch: {
@@ -634,6 +632,9 @@ export default {
         
     },
     methods: {
+        aaaaa(){
+            console.log(111)
+        },
         dialogShow(){
             //弹出正常的
             console.log(this.isShow )
@@ -648,7 +649,7 @@ export default {
         phoneProductAjax(){
             let _this = this ;
             let activityId = _this.$route.params.activityId
-            activityId == 'undefined' ? activityId=0 : activityId;
+            activityId == 'undefined' ? activityId = 0 : activityId;
             this.ajaxRequest({
                 'status': false,
                 'url': h5App.activeAPI.phoneProduct_getProduct_post,
@@ -662,7 +663,7 @@ export default {
                     activityId: activityId,
                 },
                 'success':function(data){
-                    console.log(data);
+                    console.log(data,'data');
                     
                     if(data.code == 1006 || data.code == 1007 || data.code == 1011){
                         _this.isSoldOut = true;
@@ -674,9 +675,9 @@ export default {
                     _this.imgUrl = data.imgUrl;
                     _this.webPath = data.webPath;
 
-
                     if(_this.type == 4){//拍卖，分割价钱
-                        let depositMoney = data.data.auctionResult.depositMoney
+                    console.log(data,'拍卖数据')
+
                     }
                     
                     //"pfStatus"--//批发状态  0 未审核  1审核通过   -1 审核不通过  -2还未申请 
@@ -1311,6 +1312,7 @@ export default {
 <style lang="less">
 @import '../../../assets/css/mixins.less';
 @import '../../../assets/css/base.less';
+@import '../../../assets/css/common.less';
 .goods-wrapper{
     width: 100%;
     position: relative;
@@ -1452,6 +1454,38 @@ export default {
                 .goods-shop-tel{
                     width: 64%;
                 }
+            }
+        }
+    }
+    .goods-auction{
+        width:100%;
+        padding-left: 30/@dev-Width *1rem;
+        .goods-auction-title{
+            padding: 35/@dev-Width *1rem 0;
+            padding-right: 30/@dev-Width *1rem;
+            .shop-box-center;
+            span{
+                .shop-show;
+            }
+        }
+        .goods-auction-rule{
+            width: 100%;
+            padding: 46/@dev-Width *1rem 0;
+            text-align: center;
+            .fs36;
+            span{
+                margin: 0 3px;
+            }
+            em{
+                .shop-inblock;
+                .fs40;
+                width: 50/@dev-Width *1rem;
+                heigth: 50/@dev-Width *1rem;
+                line-height: 50/@dev-Width *1rem;
+                background: #e4393c;
+                color:#fff;
+                margin-right:2px;
+                .border-radius(100%);
             }
         }
     }
@@ -1809,7 +1843,65 @@ export default {
         border-bottom-right-radius: 3px;
     }
 }
-
+.goods-auction-choice{
+    width: 100%;
+    background: #e8ecf2;
+    height: 135 /@dev-Width *1rem;
+    .goods-auction-box{
+        float: left;
+        width: 74%;
+        height: 100%;
+        padding: 20/@dev-Width *1rem 50 /@dev-Width *1rem;
+        .shop-box-center;
+        &>em{
+            text-align: center;
+            font-size: 60/@dev-Width *1rem;
+            color:#999;
+            .shop-inblock;
+            width: 97/@dev-Width *1rem;
+            height: 97/@dev-Width *1rem;
+            background: #fff;
+            border:1px solid #dddddd;
+            .border-radius(100%);
+        }
+        &>div{
+            width: 60%;
+            border:1px solid #dddddd;
+            .border-radius(5px);
+            height: 100%;
+            background: #fff;
+            color: #3e3e3e;
+            input{
+                max-width: 100%;
+                text-align: center;
+                height: 100%;
+                color: #3e3e3e;
+                .fs50;
+            }
+        }
+        
+    }
+    .goods-auction-bottom{
+        float: left;
+        width: 26%;
+        height: 100%;
+        text-align: center;
+        line-height: 135 /@dev-Width *1rem;
+    }
+}
+.goods-content-nav{
+    width: 100%;
+    padding: 0 26/@dev-Width *1rem;
+    background: #fff;
+    margin-top:15/@dev-Width *1rem;
+    .goods-nav{
+        text-align: center;
+        padding: 30/@dev-Width *1rem 0;
+        span{
+            padding: 20/@dev-Width *1rem
+        }
+    }
+}
 @keyframes dialogShow{
     from {bottom: -100%;}
     to {bottom: 0%;}
