@@ -19,19 +19,22 @@ export default {
     data(){
         return {
            time:{},
-           isShow:false
+           isShow:false,
+           Interval:''
         }
     },
     watch: {
         'times':function(a,b){
-            this.time = '';
-            console.log(a,b)
-            this.time = a;
-            this.setTiming ();
+            let _this = this;
+            _this.time = '';
+            _this.time = a;
+            if(_this.Interval)clearInterval(_this.Interval);
+            if(a===0) this.isShow = false;
+            _this.setTiming (a);
         }
     },
     mounted() {
-        this.setTiming (this.times);
+            this.setTiming (this.times);
     },
     methods: {
         /**
@@ -40,9 +43,10 @@ export default {
         setTiming (time) {  //倒计时
             let _this = this;
             let Time = _this.times;
-            let Interval =  setInterval(() =>{  //做定时器
+            _this.time = '';
+            this.Interval =  setInterval(() =>{  //做定时器
                 if(Time===0){ //时间结束
-                    clearInterval(Interval);
+                    clearInterval(_this.Interval);
                     _this.time = _this.timer(0);
                 }else{// 时间未结束
                     Time--;

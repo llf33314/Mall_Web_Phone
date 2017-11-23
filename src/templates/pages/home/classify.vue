@@ -63,8 +63,9 @@
     <section class="clearfix" 
             :class="[isList?'classify-content1':'classify-content2']" 
             v-if="subList !=='' ">
-        <div class="classify-item" v-for="goods in subList"
-            @click="goods_jump(goods)">
+        <div class="classify-item" v-for="(goods,index) in subList"
+            @click="goods_jump(goods)"
+            :key="index">
             <div class="classify-img" >
                 <default-img :background="goods.image_url"
                             :isHeadPortrait="0">
@@ -223,13 +224,7 @@ export default {
                     let newSubList = data.data.productList.subList;//商品数组
                     newSubList.forEach((item,index)=>{
                         item.price = _this.commonFn.moneySplit(item.price)//价钱显示效果
-                        // if(item.times){
-                        //     console.log(1111)
-                        //     item.times = _this.commonFn.timer(item.times);
-                        // }
                     })
-                    // console.log(_this.commonFn.timer(1773389))
-                    // console.log(newSubList,'newSubList')
 
                     if (_this.curPage === 1) {//第一页数据
                         _this.subList = newSubList;
@@ -272,9 +267,9 @@ export default {
         setTitle(){
             //1.团购 3.秒杀 4.拍卖 5 粉币 6预售 7批发
             let _this = this;
+            this.type = _this.$route.params.type
             let  title = {1:'团购',3:'秒杀',4:'拍卖',5:'粉币',6:'预售',7:'批发'}
             _this.commonFn.setTitle(title[this.type] || '分类详情');
-
             let _keyword = this.$route.params.keywords || this.$store.state.keywords ;
             _keyword === 'k=k'?_this.keyWord = '':_this.keyWord = _keyword || '';
 
@@ -346,9 +341,9 @@ export default {
             }
         },
         goods_jump(e){
-
-            if(e.activity == null || e.activity == '' || typeof(e.activity) == "undefined"){
-                e.activity = 0;
+            console.log(e,'跳转数据')
+            if(e.activityId == null || e.activityId == '' || typeof(e.activityId) == "undefined"){
+                e.activityId = 0;
             }
 
             let shopId =  e.shop_id ||this.$store.state.shopId ||this.$store.state.shopId || this.$route.params.shopId;
@@ -359,7 +354,7 @@ export default {
                 busId: busId,
                 type : type,
             });
-            this.$router.push('/goods/details/'+shopId+'/'+busId+'/'+type+'/'+e.id+'/'+e.activity);
+            this.$router.push('/goods/details/'+shopId+'/'+busId+'/'+type+'/'+e.id+'/'+e.activityId);
         },
         /** 
          *关闭分类
