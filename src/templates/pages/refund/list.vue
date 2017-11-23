@@ -118,6 +118,7 @@ export default {
     };
   },
   mounted() {
+    this.setTitle();
     let _this = this;
     this.getOrderList({
       curPage: 1

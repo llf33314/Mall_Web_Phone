@@ -109,7 +109,7 @@ export default {
     return {
       isShow: false,
       background: "",
-      busId:this.$route.params.busId || sessionStorage.getItem("busId"), //商家id
+      busId: this.$route.params.busId || sessionStorage.getItem("busId"), //商家id
       orderDetailId: this.$route.params.orderDetailId, //订单详情id
       returnType: this.$route.params.returnType, //退款方式
       returnId: this.$route.params.returnId, //退款id
@@ -140,7 +140,7 @@ export default {
     technicalSupport
   },
   mounted() {
-    this.commonFn.setTitle("申请退款");
+    this.commonFn.setTitle(Language.title_return_apply_msg);//退款申请
     this.$store.commit("show_footer", false); //隐藏底部导航栏
     this.submitReturnUrl = sessionStorage.getItem("refundReturnUrl");
     if (this.submitReturnUrl != null && this.submitReturnUrl != "") {

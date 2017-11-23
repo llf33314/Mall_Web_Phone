@@ -168,7 +168,7 @@ export default {
       busId: this.$route.params.busId || sessionStorage.getItem("busId"),
       isNavshow: "my",
       myData: null,
-      memberName: "未知用户", //用户名
+      memberName: Language.unknown_user_msg, //用户名
       isOpenPf: false, //是否开启批发 true 开启
       isOpenSeller: false, //是否开启销售员
       background:
@@ -181,7 +181,7 @@ export default {
     technicalSupport
   },
   mounted() {
-    this.commonFn.setTitle("我的");
+    this.commonFn.setTitle(Language.title_my_msg);
     this.loads();
   },
   methods: {
@@ -218,7 +218,7 @@ export default {
       let _sellerStatus = _myData.sellerStatus;
       let _isShow = false; //是否显示弹出框
       let msg = {
-        dialogTitle: "超级销售员提示",
+        dialogTitle: Language.seller_tishi_msg,
         dialogMsg: _myData.sellerErrorMsg
       };
       //是否需要申请销售员的状态
@@ -266,7 +266,7 @@ export default {
       let _pfStatus = _myData.pfStatus;
       let _isShow = false; //是否显示弹出框
       let msg = {
-        dialogTitle: "批发商提示",
+        dialogTitle: Language.pifa_tishi_msg,
         dialogMsg: _myData.pfErrorMsg
       };
       //没有开通批发商

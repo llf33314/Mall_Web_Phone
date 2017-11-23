@@ -122,19 +122,19 @@ export default {
       provinceArr: [
         {
           id: 0,
-          city_name: "请选择省"
+          city_name: Language.province_null_msg
         }
       ],
       cityArr: [
         {
           id: 0,
-          city_name: "请选择市"
+          city_name: Language.city_null_msg
         }
       ],
       areaArr: [
         {
           id: 0,
-          city_name: "请选择区"
+          city_name: Language.area_null_msg
         }
       ],
       addressDetail: ""
@@ -143,9 +143,9 @@ export default {
   mounted() {
     this.loadDatas(); //初始化数据
     if (this.id > 0) {
-      this.commonFn.setTitle("编辑地址");
+      this.commonFn.setTitle(Language.edit_address_msg);
     } else {
-      this.commonFn.setTitle("新增地址");
+      this.commonFn.setTitle(Language.add_address_msg);
     }
     this.$store.commit("show_footer", false); //隐藏底部导航栏
   },
@@ -239,7 +239,7 @@ export default {
             id: 0
           };
           if (type == 1) {
-            defaultObj.city_name = "请选择省";
+            defaultObj.city_name = Language.province_null_msg;
             myData = [defaultObj].concat(myData);
             //给省份赋值
             _this.provinceArr = myData;
@@ -254,7 +254,7 @@ export default {
               _this.getAreas(addressObj.memProvince, 2, false, null);
             }
           } else if (type == 2) {
-            defaultObj.city_name = "请选择市";
+            defaultObj.city_name = Language.city_null_msg;
             myData = [defaultObj].concat(myData);
             _this.cityArr = myData;
             if (_isNull(addressObj.memCity)) {
@@ -267,7 +267,7 @@ export default {
               _this.getAreas(addressObj.memCity, 3, false, null);
             }
           } else if (type == 3) {
-            defaultObj.city_name = "请选择区";
+            defaultObj.city_name = Language.area_null_msg;
             myData = [defaultObj].concat(myData);
             //给区域赋值
             _this.areaArr = myData;
@@ -336,7 +336,7 @@ export default {
           _isNull(addressObj.memCity) ||
           _isNull(addressObj.memArea)
         ) {
-          _shopTips(Language.areas_null_msg);
+          _shopTips(Language.province_areas_null_msg);
           return false;
         }
       } else if (type == 4) {
