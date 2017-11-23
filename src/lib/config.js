@@ -188,7 +188,9 @@
     //获取销售员获取短信验证码
     seller_send_msg_post: '/phoneSellers/L6tgXlBFeK/getValCode',
     //获取销售员获取短信验证码
-    add_seller_post: '/phoneSellers/L6tgXlBFeK/addSellers'
+    add_seller_post: '/phoneSellers/L6tgXlBFeK/addSellers',
+    // 获取超级销售员首页
+    sellect_index_post: '/phoneSellers/L6tgXlBFeK/sellerIndex'
 
   };
 

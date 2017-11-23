@@ -4,7 +4,7 @@
     <header class="orderTotal-header" :class="[orderData.proType == 0,'order-header']">
         <!-- 导航 -->
         <div class="header-top">
-            <div class="fs46">
+            <div class="fs46" @click="backBefore">
                 <i class="iconfont icon-jiantou-copy1"></i>
                 返回
             </div>
@@ -12,7 +12,7 @@
                 首页
             </div>
         </div>
-        <div v-if="orderData.proTypeId == 0">
+        <div v-if="orderData.proTypeId == 0 && isShowAddress">
         <!-- 收货地址区域 -->
           <div class="header-bottom clearfix" v-if="hasAddress && memberAddresss != null"
            @click="toAddress">
@@ -373,7 +373,8 @@ export default {
       selectObj: {}, //记录选中的对象
       isSelectDaodianPay: false, //是否选择了到店支付
       ids: "", //当 from = 0 时 此值为购物车id;  如 from = 2 时 此值为订单id
-      isShowFlowPhone: false //是否显示流量充值
+      isShowFlowPhone: false, //是否显示流量充值
+      isShowAddress: true
     };
   },
   components: {
@@ -393,7 +394,15 @@ export default {
     if (this.$route.params.from != null) {
       this.from = this.$route.params.from;
     }
-    this.loadDatas(); //初始化协商详情数据
+    let data = this.$store.state.orderData;
+    console.log(data, "datas", this.commonFn.isNull(data) || data.length == 0);
+    if (this.commonFn.isNull(data) || data.length == 0) {
+      this.loadDatas(); //初始化协商详情数据
+    } else {
+      let imgUrl = this.$store.state.imgUrl;
+      this.imgUrl = imgUrl; //图片域名
+      this.getorderResult(data, this);
+    }
   },
   beforeDestroy() {
     //离开后的操作
@@ -516,43 +525,50 @@ export default {
             return;
           }
           let myData = data.data;
-          _this.orderData = myData;
-          _this.memberAddresss = myData.memberAddressDTO; //选中的收货地址
-          if (_this.memberAddresss != null) {
-            _this.hasAddress = true;
-          }
-          _this.payWayList = myData.payWayList; //支付方式
-          _this.orderList = myData.busResultList; //订单集合
           _this.imgUrl = data.imgUrl; //图片域名
-          _this.orderList.forEach((item, index) => {
-            if (myData.proTypeId == 0) {
-              item.isSelectDiscount = true;
-            }
-            if (
-              item.deliveryWayList != null &&
-              item.deliveryWayList.length > 0 &&
-              item.selectDelivery == null
-            ) {
-              //默认选中第一个配送方式
-              item.selectDelivery = item.deliveryWayList[0]; //选中的配送方式
-            }
-            item.productFreightMoneyOld = item.productFreightMoney;
-            if (item.selectTakeTime != null) {
-              _this.showTakeTime(item.takeId, item.busId);
-            }
-          });
-          //支付方式集合
-          if (myData.selectPayWay != null) {
-            _this.selectPayWay = myData.selectPayWay;
-          } else if (_this.payWayList != null && _this.payWayList.length > 0) {
-            //赋值默认的支付方式
-            _this.selectPayWay = _this.payWayList[0];
-          }
-          _this.orderData.typePriceName =
-            Language.order_type_price_name[myData.type];
-          _this.caculationOrder(0); //初始化计算订单
+          _this.getorderResult(myData, _this);
         }
       });
+    },
+    getorderResult(myData, _this) {
+      _this.orderData = myData;
+      _this.memberAddresss = myData.memberAddressDTO; //选中的收货地址
+      if (_this.memberAddresss != null) {
+        _this.hasAddress = true;
+      }
+      _this.payWayList = myData.payWayList; //支付方式
+      _this.orderList = myData.busResultList; //订单集合
+      _this.orderList.forEach((item, index) => {
+        if (myData.proTypeId == 0) {
+          item.isSelectDiscount = true;
+        }
+        if (
+          item.deliveryWayList != null &&
+          item.deliveryWayList.length > 0 &&
+          item.selectDelivery == null
+        ) {
+          //默认选中第一个配送方式
+          item.selectDelivery = item.deliveryWayList[0]; //选中的配送方式
+        } else {
+          if (item.selectDelivery.id == 2) {
+            _this.isShowAddress = false;
+          }
+        }
+        item.productFreightMoneyOld = item.productFreightMoney;
+        if (item.selectTakeTime != null) {
+          _this.showTakeTime(item.takeId, item.busId);
+        }
+      });
+      //支付方式集合
+      if (myData.selectPayWay != null) {
+        _this.selectPayWay = myData.selectPayWay;
+      } else if (_this.payWayList != null && _this.payWayList.length > 0) {
+        //赋值默认的支付方式
+        _this.selectPayWay = _this.payWayList[0];
+      }
+      _this.orderData.typePriceName =
+        Language.order_type_price_name[myData.type];
+      _this.caculationOrder(0); //初始化计算订单
     },
     /**
      * 显示弹出框
@@ -603,6 +619,7 @@ export default {
             item.selectDelivery = data[1];
 
             if (obj.id == 2) {
+              _this.isShowAddress = false;
               //到店自提
               _this.showTakeTime(item.takeId, item.busId);
               //选择了货到付款
@@ -611,6 +628,7 @@ export default {
                 _this.clearPayWay(2);
               }
             } else {
+              _this.isShowAddress = true;
               //没有选择到店自提，但选择了支付方式，则清空选择的支付方式
               if (this.selectPayWay.id == 6) {
                 _this.clearPayWay(6);
@@ -781,6 +799,9 @@ export default {
      * 进入新增收货地址页面
      */
     toAddress() {
+      this.orderData.selectPayWay = this.selectPayWay;
+      this.$store.commit("img_url", this.imgUrl);
+      this.$store.commit("orderData_change", this.orderData);
       sessionStorage.setItem("addressBeforeUrl", location.href);
       this.$router.push("/address/" + this.busId);
     },
@@ -820,6 +841,9 @@ export default {
         return;
       }
       this.submitOrder();
+    },
+    backBefore() {
+      //返回前页
     }
   }
 };

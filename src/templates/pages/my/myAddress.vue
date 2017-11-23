@@ -13,7 +13,7 @@
                     </div>
                 </div>
                 <div class="shop-add-footer">
-                    <div  @click="defaultAddress(address.id,address.memberId)">
+                    <div  @click="defaultAddress(address.id,address.memberId,address)">
                         <i class="iconfont icon-xuanzhong" :class="[address.memberDefault == 1?'shop-font':'shop-gray' ] "></i>
                         设为默认
                     </div>
@@ -101,7 +101,7 @@ export default {
       //跳转到编辑地址页面
       this.$router.push("/address/edit/" + busId + "/" + id);
     },
-    defaultAddress(id,memberId) {
+    defaultAddress(id, memberId, obj) {
       //设为默认地址
       let _this = this;
       let _data = {
@@ -115,7 +115,16 @@ export default {
         url: h5App.activeAPI.default_address_post,
         data: _data,
         success: function(data) {
-          location.reload();
+          // location.reload();
+          let addressBeforeUrl = sessionStorage.getItem("addressBeforeUrl");
+          // console.log("addressBeforeUrl", addressBeforeUrl);
+          let orderData = _this.$store.state.orderData;
+          orderData.memberAddressDTO = obj;
+          if (addressBeforeUrl != null) {
+            location.href = addressBeforeUrl;
+          } else {
+            _this.$router.push("/my/center/" + _this.busId);
+          }
         }
       });
     }

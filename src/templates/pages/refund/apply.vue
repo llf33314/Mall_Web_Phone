@@ -237,7 +237,7 @@ export default {
       //改变手机号事件
       let flag = this.commonFn.validPhone(this.returnTelphone);
       if (!flag) {
-        this.$parent.$refs.bubble.show_tips("请填写正确的手机号码");
+        this.$parent.$refs.bubble.show_tips(Language.telephone_msg);
       }
       return flag;
     },
@@ -297,7 +297,7 @@ export default {
         return;
       }
       if (_this.returnTelphone == null || _this.returnTelphone == "") {
-        _this.$parent.$refs.bubble.show_tips("请填写手机号码");
+        _this.$parent.$refs.bubble.show_tips(Language.telephone_msg);
       }
       if (!_this.blurPhone()) {
         return;

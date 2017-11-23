@@ -23,7 +23,10 @@ var defaults = {
   confirmButtonText: CONFIRM_TEXT,
   cancelButtonText: CANCEL_TEXT,
   confirmButtonClass: '',
-  cancelButtonClass: ''
+  cancelButtonClass: '',
+  lat:0,
+  lng:0,
+  http: 'http://apis.map.qq.com/tools/locpicker?search=1&type=1&key=GQKBZ-BKZW6-ZCVSQ-MD5GX-MYNBQ-LSBPK&referer=myapp',
 };
 
 import Vue from 'vue';
@@ -87,6 +90,9 @@ var showNextMsg = function() {
         if (options.hasOwnProperty(prop)) {
           instance[prop] = options[prop];
         }
+      }
+      if(instance.lat && instance.lng){
+        instance.http += '&coord='+instance.lat+','+instance.lng
       }
       if (options.callback === undefined) {
         instance.callback = defaultCallback;

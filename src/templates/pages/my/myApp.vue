@@ -277,13 +277,13 @@ export default {
         msg.btnNum = 1;
         _isShow = true;
       } else if (_pfStatus == "1") {
-        //跳转至超级批发商首页
+        //跳转至批发商首页
         _this.returnPifaAll();
       } else if (_pfStatus == -1) {
         //审核失败，询问是否跳转至申请批发商页面
         msg.btnNum = 2;
         msg.callback = {
-          btnOne: _this.returnApplyPifa
+          btnOne: _this.returnPifaAll
         };
         _isShow = true;
       }
@@ -297,22 +297,50 @@ export default {
     },
     returnSellerIndex() {
       //跳转至超级销售员首页
+      this.$router.push("/seller/index/" + this.busId);
     },
     returnApplyPifa() {
       //跳转至批发商申请页面
       this.$router.push("/wholesale/apply/" + this.busId);
     },
     returnPifaAll() {
+      let shopId = sessionStorage.getItem("shopId");
+      let busId = this.busId;
+      if (shopId == null || shopId == "") {
+        getShopId();
+        return;
+      }
       //跳转至批发商品页面
+      this.$router.push("/classify/" + shopId + "/" + busId + "/0/k=k");
     },
     returnMyOrder(type) {
       this.$router.push("/order/list/" + this.busId + "/" + type);
     },
     returnRefundOrder() {
       this.$router.push("/return/list/" + this.busId);
-    },toReturnMyComment(){
+    },
+    toReturnMyComment() {
       //跳转到我的评论
-       this.$router.push("/my/comment/" + this.busId);
+      this.$router.push("/my/comment/" + this.busId);
+    }, //获取店铺id
+    getShopId(busId) {
+      let _this = this;
+      _this.ajaxRequest({
+        url: h5App.activeAPI.get_shop_id_post,
+        data: {
+          busId: busId
+        },
+        success: function(data) {
+          let shopId = data.data;
+          if (shopId != null && shopId != "" && typeof shopId != "undefined") {
+            sessionStorage.setItem("shopId", shopId);
+            _this.$store.commit("mutationData", { shopId: shopId });
+            _this.returnPifaAll();
+          }
+          return shopId;
+        }
+      });
+      // return shopId;
     }
   }
 };

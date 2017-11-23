@@ -21,6 +21,8 @@ const state = {
     showfooter:1,//底部导航显示隐藏
     isAdvert:'',//是否显示技术支持
     pageId:'',//首页id
+    orderData:null,
+    imgUrl:""
 }
 const actions ={
     
@@ -30,7 +32,7 @@ const actions ={
 const getters = {
 
 }
-
+//this.$store.commit('mutationData',{showfooter:true});
 // 状态值的改变方法,操作状态值, 提交mutations是更改Vuex状态的唯一方法
 const mutations = {
     mutationData:(state,data) => {
@@ -45,6 +47,8 @@ const mutations = {
     show_footer:(state,Booleans)=>state.showfooter =  Booleans,
     is_Advert:(state,number)=>state.isAdvert = number,
     goods_details:(state,data)=>state.goodsdetails = data,
+    orderData_change:(state,data)=>state.orderData = data,
+    img_url:(state,data)=>state.imgUrl = data,
 }
 
 const tipMsg = {

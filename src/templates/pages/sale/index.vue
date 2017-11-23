@@ -1,27 +1,27 @@
 
 <template>
-    <div class="shop-wrapper sale-wrapper">
-        <header class="sale-header">
+    <div class="shop-wrapper sale-wrapper" v-if="sellerObj != null">
+        <header class="sale-header" v-if="member != null">
             <div class="header-img">
-                <default-img :background="background"
+                <default-img :background="member.headimgurl"
                             :isHeadPortrait="1">
                 </default-img>
             </div>
-            <p class="fs60">权律二</p>
+            <p class="fs60">{{member.nickname}}</p>
         </header>
         <div class="index-main">
             <div class="index-msg border">
                 <div class="index-msg-item">
                     <p class="index-msg-title fs46">累计佣金(元)</p>
-                    <p class="index-msg-money fs70">0.00</p>
+                    <p class="index-msg-money fs70">{{sellerObj.seller.totalCommission || 0}}</p>
                 </div>
                 <div class="index-msg-item">
                     <p class="index-msg-title fs46">积分</p>
-                    <p class="index-msg-money fs70">0.00</p>
+                    <p class="index-msg-money fs70">{{sellerObj.seller.incomeIntegral || 0}}</p>
                 </div>
                 <div class="index-msg-item">
                     <p class="index-msg-title fs46">销售总额(元)</p>
-                    <p class="index-msg-money fs70">0.00</p>
+                    <p class="index-msg-money fs70">{{sellerObj.seller.saleMoney || 0}}</p>
                 </div>
             </div>
             <div class="index-nav clearfix">
@@ -44,7 +44,7 @@
                         <i class="iconfont icon-kehu"></i>
                     </div>
                     <p class="fs40">我的客户 <br/>
-                        <span class="shop-font">0</span><span class="shopGray">个</span></p>
+                        <span class="shop-font">{{sellerObj.sellerCount}}</span><span class="shopGray">个</span></p>
                 </div>
                 <div class="nav-item">
                     <div class="nav-icon">
@@ -58,7 +58,7 @@
                         <i class="iconfont icon-icon-test"></i>
                     </div>
                     <p class="fs40">客户订单<br/>
-                        <span class="shop-font">0</span><span class="shopGray">单</span>
+                        <span class="shop-font">{{sellerObj.sellerOrderCount}}</span><span class="shopGray">单</span>
                     </p>
                 </div>
                 <div class="nav-item">
@@ -92,120 +92,133 @@
 </template>
 
 <script>
-
-    import defaultImg from 'components/defaultImg'
-    export default {
-        data() {
-            return {
-
-            }
-        },
-        components:{
-            defaultImg
-        },
-
-        //实例初始化最之前，无法获取到data里的数据
-        beforeCreate(){
-            
-
-        },
-        //在挂载开始之前被调用
-        beforeMount(){
-
-            this.$store.commit('show_footer',false);
-        },
-        //已成功挂载，相当ready()
-        mounted(){
-
-
-
-        },
-        //相关操作事件
-        methods: {
-            background:''
+import defaultImg from "components/defaultImg";
+export default {
+  data() {
+    return {
+      busId: this.$route.params.busId || sessionStorage.getItem("busId"),
+      sellerObj: null,
+      member: null
+    };
+  },
+  components: {
+    defaultImg
+  },
+  //已成功挂载，相当ready()
+  mounted() {
+    this.loadDatas(); //初始化数据
+    this.commonFn.setTitle("超级销售员");
+    this.$store.commit("show_footer", false); //隐藏底部导航栏
+  },
+  beforeDestroy() {
+    //离开后的操作
+    this.$store.commit("show_footer", true); //显示底部导航栏
+  },
+  //相关操作事件
+  methods: {
+    loadDatas() {
+      //初始化数据
+      let _this = this;
+      let _data = {
+        busId: _this.busId, //商家id
+        url: location.href, //当前页面的地址
+        browerType: _this.$store.state.browerType //浏览器类型
+      };
+      _this.ajaxRequest({
+        url: h5App.activeAPI.sellect_index_post,
+        data: _data,
+        success: function(data) {
+          let myData = data.data;
+          _this.imgUrl = data.imgUrl;
+          console.log(myData, "myData");
+          _this.sellerObj = myData;
+          _this.member = myData.member;
         }
+      });
     }
+  }
+};
 </script>
 
 <style lang="less">
-    @import '../../../assets/css/mixins.less';
-    @import '../../../assets/css/base.less';
+@import "../../../assets/css/mixins.less";
+@import "../../../assets/css/base.less";
 
-    .sale-wrapper{
-        width: 100%;
-        position: relative;
-        .sale-header{
-            width: 100%;
-            height: 520/@dev-Width *1rem;
-            background: url('../../../assets/img/sale.jpg')no-repeat;
-            background-size: cover;
-            .ik-box;
-            .ik-box-pack(center);
-            .ik-box-align(center);
-            .ik-box-orient(vertical);
-            color: #fff;
-            .header-img{
-                width: 204/@dev-Width *1rem;
-                height: 204/@dev-Width *1rem;
-                background-size:cover;
-                background-position: center;
-                .border-radius(100%);
-                overflow: hidden;
-                margin-bottom: 20/@dev-Width *1rem;
-            }
-        }
-        .index-main{
-            width: 100%;
-            background: #fff;
-            .index-msg{
-                width: 100%;
-                .ik-box;
-                height: 250/@dev-Width *1rem;
-                box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2)
-            }
-            .index-msg-item{
-                width: 33.33%;
-                .ik-box-align(center);
-                .ik-box-pack(center);
-                .ik-box-orient(vertical);
-                height: 100%;
-                .ik-box;
-            }
-            .index-nav{
-                width: 100%;
-                &>div:nth-child(3n){
-                    border-right: 0;
-                }
-            }
-            .nav-item{
-                float: left;
-                width: 33.333%;
-                height: 415/@dev-Width *1rem;
-                border-bottom: 1px solid #ededed;
-                border-right: 1px solid #ededed;
-                .ik-box;
-                .ik-box-align(center);
-                .ik-box-pack(center);
-                .ik-box-orient(vertical);
-                p{
-                    text-align: center;
-                }
-            }
-            .nav-icon{
-                font-size: 0;
-                width: 150/@dev-Width *1rem;
-                height: 150/@dev-Width *1rem;
-                text-align: center;
-                line-height: 150/@dev-Width *1rem;
-                background: url('../../../assets/img/nav_bg.png') repeat;
-                .border-radius(10px);
-                margin-bottom: 32/@dev-Width *1rem;
-                i{
-                    font-size: 100/@dev-Width *1rem;
-                    color: #fff;
-                }
-            }
-        }
+.sale-wrapper {
+  width: 100%;
+  position: relative;
+  .sale-header {
+    width: 100%;
+    height: 520/@dev-Width *1rem;
+    background: url("../../../assets/img/sale.jpg")no-repeat;
+    background-size: cover;
+    .ik-box;
+    .ik-box-pack(center);
+    .ik-box-align(center);
+    .ik-box-orient(vertical);
+    color: #fff;
+    .header-img {
+      width: 204/@dev-Width *1rem;
+      height: 204/@dev-Width *1rem;
+      background-size: cover;
+      background-position: center;
+      .border-radius(100%);
+      overflow: hidden;
+      margin-bottom: 20/@dev-Width *1rem;
     }
+  }
+  .index-main {
+    width: 100%;
+    background: #fff;
+    .index-msg {
+      width: 100%;
+      .ik-box;
+      height: 250/@dev-Width *1rem;
+      box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+    }
+    .index-msg-item {
+      width: 33.33%;
+      .ik-box-align(center);
+      .ik-box-pack(center);
+      .ik-box-orient(vertical);
+      height: 100%;
+      .ik-box;
+    }
+    .index-nav {
+      width: 100%;
+      & > div:nth-child(3n) {
+        border-right: 0;
+      }
+    }
+    .nav-item {
+      float: left;
+      width: 33.333%;
+      height: 415/@dev-Width *1rem;
+      border-bottom: 1px solid #ededed;
+      border-right: 1px solid #ededed;
+      .ik-box;
+      .ik-box-align(center);
+      .ik-box-pack(center);
+      .ik-box-orient(vertical);
+      p {
+        text-align: center;
+      }
+    }
+    .nav-icon {
+      font-size: 0;
+      width: 150/@dev-Width *1rem;
+      height: 150/@dev-Width *1rem;
+      text-align: center;
+      line-height: 150/@dev-Width *1rem;
+      background: url("../../../assets/img/nav_bg.png") repeat;
+      .border-radius(10px);
+      margin-bottom: 32/@dev-Width *1rem;
+      i {
+        font-size: 100/@dev-Width *1rem;
+        color: #fff;
+      }
+    }
+  }
+}
 </style>
 

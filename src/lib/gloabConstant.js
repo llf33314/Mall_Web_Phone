@@ -1,6 +1,7 @@
 (function () {
 
 	const language = {
+		telephone_msg:"请输入正确的手机号",
 		submit_order_title: '提交订单',
 		select_pay_way_msg: '请选择支付方式',
 		select_delivery_msg: '请选择配送方式',
@@ -31,7 +32,16 @@
 		pifa_validate_code_msg: "请输入验证码",
 		pifa_remark_length_msg: "备注的长度不能超过100个字",
 		comment_content_null_msg: "请填写评论内容",
-		comment_content_length_msg: "评论内容字数不能超过240个字"
+		comment_content_length_msg: "评论内容字数不能超过240个字",
+
+		address_name_null_msg:"请填写收件人姓名",
+		address_name_length_msg : "收件人姓名的字数不能超过25个字",
+		province_null_msg:"请选择省份",
+		city_null_msg : "请选择市",
+		areas_null_msg :"请选择省市区",
+		address_null_msg:"请填写详情地址",
+		address_length_msg:"联系地址的字数不能超过25个字",
+		address_code_length_msg:"门牌号码的字数不超过15个字"
 	};
 
 

@@ -191,7 +191,7 @@ export default new Router({
         title: '我的'
       }
     }, {
-      path: '/seller/:busId',
+      path: '/seller/index/:busId',
       name: 'Sale_index',
       component: Sale_index,
       meta: {
