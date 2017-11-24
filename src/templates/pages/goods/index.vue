@@ -8,90 +8,41 @@
         <goods-info :row="goodsData">
         </goods-info>
         <!--查看所含优惠卷-->
-        <coupons v-if="goodsData.isShowCardRecevie == 1"
-                @click="isCardRecevie=true">
+        <div @click="isCardRecevie=true"
+            v-if="goodsData.isShowCardRecevie == 1">
+        <coupons >  
         </coupons>
+        </div>
         <!--批发条件显示-->
-        <pifa-limit :row="pifaResult"
-                    v-if="type == 7 && pifaResult !=''"
-                    @click="wholesaleShow()">
-        </pifa-limit>
+        <section class="goods-selected" 
+                v-if="type == 7 && pifaResult !=''"
+                @click="wholesaleShow()">
+            <pifa-limit :row="pifaResult"></pifa-limit>
+        </section>
         <!--已选规格显示-row所选规格--num所选数量-->
-        <limit  :row="dialogData.values" 
-                :num="spec_num"
+        <section class="goods-selected" 
                 @click="isShow=true">
-        </limit>
+            <limit  :row="dialogData.values" 
+                    :num="spec_num">
+            </limit>
+        </section>
         <!--地址显示--选择-->
         <address-freight :row="goodsData">
         </address-freight>
         <!---认证---->
         <prove :row="goodsData">
         </prove>
-        <section class="goods-prove">
-            //todo
-            <span class="fs40" >
-                <i class="iconfont icon-chenggong shopGreen" v-if="goodsData.stoType"></i>
-                {{goodsData.stoType}}
-            </span>
-            <span class="fs40" v-if="goodsData.isSecuritytrade == true">
-                <i class="iconfont icon-chenggong shopGreen"></i>
-                担保交易
-            </span>
-            <span class="fs40">
-                <i class="iconfont icon-chenggong shopGreen"></i>
-                线下门店
-            </span>
-        </section>
+        <!----团购-参团---->
+        <join-group :row="goodsData.joinList"
+                    :imgUrl="imgUrl"
+                    v-if="type == 1 && goodsData.joinList != ''">
+        </join-group>
         <!---店铺信息与收藏---->
-        <section class="goods-shop">
-            <div class="goods-shop-main clearfix">
-                <div class="goods-shop-info">
-                    <div class="goods-shop-img">
-                        <default-img :background="imgUrl+goodsData.shopImageUrl"
-                            :isHeadPortrait="0">
-                        </default-img>
-                    </div>
-                    <div class="goods-shop-txt">
-                        <div class="goods-shop-name">
-                            <span class="fs46 text-overflow">{{goodsData.shopName}}</span>
-                            <em class="em-flag" v-if="goodsData.categoryName">旗舰店</em>
-                        </div>
-                        <div class="fs40 shopGray text-overflow">
-                            {{goodsData.shopAddress}}
-                        </div>
-                    </div>
-                </div>
-                <div class="goods-shop-rigtn">
-                    <div class="shopborder goods-shop-buttom fs42" 
-                        v-if="!goodsData.isCollect"
-                        @click="collectProductAjax()">收藏商品
-                    </div>
-                    <div class="shopborder goods-shop-buttom fs42"
-                        @click="collectProductAjax()"
-                        v-else>已收藏
-                    </div>
-                    <div class="shopborder goods-shop-buttom fs42" 
-                    @click="shop()">进店逛逛td
-                        <!-- (跳首页) -->
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!---竞拍玩法---->
-        <section class="goods-auction" v-if="type == 4">
-            <div class="goods-auction-title border ">
-                <span class="fs42">竞拍玩法</span>
-                <span class="fs42">玩法详情
-                    <i class="icon-jiantou-copy iconfont" style="color:#c7c7cc;vertical-align: middle;" ></i>
-                </span>
-            </div>
-            <div class="goods-auction-rule">
-                <span ><em>1</em>出价竞拍</span>
-                <span ><em>2</em>获拍转单</span>
-                <span ><em>3</em>支付订单</span>
-                <span ><em>4</em>竞拍成功</span>
-            </div> 
-        </section>
+        <shop-collection :row="goodsData" :imgUrl="imgUrl"></shop-collection>
+        <!----团购-拼团玩法---->
+        <group-method v-if="type == 1"></group-method>
+        <!---拍卖-竞拍玩法---->
+        <auction-method v-if="type == 4"></auction-method>
         <!----商品详情-规格-评论---->
         <section class="goods-content">
             <div class="goods-content-nav shop-header">
@@ -116,16 +67,7 @@
             <!--评论-->
             <comment v-if="isDetails == 'comment'"></comment>
             <!--商品详情底部-->
-            <div class="goods-content-nav">
-                <p class="goods-nav border">
-                    <span class="fs40">店铺主页</span>
-                    <span class="fs40">会员中心</span>
-                    <span class="fs40">关注我们</span>
-                    <span class="fs40">线下门店</span>
-                </p>
-                <!---技术认证---->
-                <technical-support v-if="$store.state.isAdvert == 1"></technical-support>
-            </div>
+            <goods-footer></goods-footer>
         </section>
         <!--底部按钮-->
         <section class="goods-footer" style="background:0;z-index:3;" >
@@ -184,6 +126,7 @@
                 <div class="goods-footer-botton ui-col-2 fs50 shop-yellow"
                     :class="{'shopFff':isSoldOut}"
                     v-if=" goodsData.isShowAddShopButton == 1 && type == 1"
+                    style="color:#fff"
                     @click="dialogShow">
                     <p class="fs40">￥{{goodsData.productPrice}}</p>
                     <p class="fs32">单独购买</p>
@@ -191,20 +134,23 @@
                 <div class="goods-footer-botton ui-col-2 fs50 shop-bg"
                     :class="{'shopFff':isSoldOut}"
                     v-if=" goodsData.isShowLiJiBuyButton == 1 && type == 1"
+                    style="color:#fff"
                     @click="dialogShow">
-                    <p class="fs40">￥240.00//todo</p>
-                    <p class="fs32">3人拼团价//todo</p>
+                    <p class="fs40">￥240.00</p>
+                    <p class="fs32">3人拼团价</p>
                 </div>
                 <!--不是团购-->
                 <div class="goods-footer-botton ui-col-2 fs50 shop-yellow"
                     :class="{'shopFff':isSoldOut}"
+                    style="color:#fff"
                     v-if=" goodsData.isShowAddShopButton == 1 && type != 1"
                     @click="dialogShow">
                     加入购物车
                 </div>
                 <div class="goods-footer-botton ui-col-2 fs50 shop-bg"
+                    style="color:#fff"
                     :class="{'shopFff':isSoldOut}"
-                    v-if=" goodsData.isShowAddShopButton == 1 && type != 1"
+                    v-if=" goodsData.isShowLiJiBuyButton == 1 && type != 1"
                     @click="dialogShow">
                     立即购买
                 </div>
@@ -281,7 +227,7 @@
                     <p class="fs32">单独购买</p>
                 </div>
                 <div class="goods-dialog-button fs52  shop-bg" @click="lijiBuy(0)"
-                   v-if=" goodsData.isShowLiJiBuyButton == 1 && type !== 1">
+                   v-if=" goodsData.isShowLiJiBuyButton == 1 && type == 1">
                     <p class="fs40">￥240.00//todo</p>
                     <p class="fs32">3人拼团价//todo</p>
                 </div>
@@ -501,7 +447,11 @@ import pifaLimit from './child/pifa/pifaLimit';//批发条件显示
 import limit from './child/limit';//已选规格显示
 import addressFreight from './child/addressFreight';//地址运费
 import prove from './child/prove';//认证
-import technicalSupport from 'components/technicalSupport' //技术支持
+import joinGroup from './child/group/joinGroup';//参加团购展示
+import shopCollection from './child/shopCollection';//收藏店铺和店铺信息
+import auctionMethod from './child/auction/auctionMethod';//竞拍玩法
+import groupMethod from './child/group/groupMethod';//拼团玩法
+import goodsFooter from './child/goodsFooter';//商品详请内导航
 import comment from './child/comment' //商品详情评论
 import spec from './child/spec' //商品详情规格
 import filter from '../../../lib/filters'// 过滤器
@@ -510,7 +460,6 @@ import spDialog from 'components/spDialog' //卡卷包
 export default {
     components: {
         defaultImg,
-        technicalSupport,
         banner,
         comment,
         spec,
@@ -520,7 +469,12 @@ export default {
         pifaLimit,
         limit,
         addressFreight,
-        prove
+        prove,
+        joinGroup,
+        shopCollection,
+        groupMethod,
+        auctionMethod,
+        goodsFooter
     },
     data () {
         return {
@@ -632,9 +586,6 @@ export default {
         
     },
     methods: {
-        aaaaa(){
-            console.log(111)
-        },
         dialogShow(){
             //弹出正常的
             console.log(this.isShow )
@@ -1185,31 +1136,6 @@ export default {
             })
         },
         /** 
-         * 收藏店铺
-         */
-        collectProductAjax(){
-            let _this = this;
-            _this.ajaxRequest({
-                'url': h5App.activeAPI.phoneProduct_collectProduct_post,
-                'data':{
-                    busId: _this.$store.state.busId,
-                    url: _this.$store.state.loginDTO_URL,
-                    browerType: _this.$store.state.browerType,
-                    productId :  _this.$route.params.goodsId,
-                },
-                'success':function(data){
-                    if(data.code == 0){
-                        _this.goodsData.isCollect = !_this.goodsData.isCollect;
-                        if(_this.goodsData.isCollect){
-                            _this.$parent.$refs.bubble.show_tips('收藏成功');
-                        }else{
-                            _this.$parent.$refs.bubble.show_tips('取消成功');
-                        }
-                    }
-                } 
-            })
-        },
-        /** 
          * 切换副导航
          * @param name 名字
         */
@@ -1221,15 +1147,15 @@ export default {
          * 商品详情请求
          */
         detailsAjax(){
-        let _this = this;
-        _this.ajaxRequest({
-            'url': h5App.activeAPI.phoneProduct_getProductDetail_post,
-            'data':{
-                productId :  _this.$route.params.goodsId,
-            },
-            'success':function(data){
-                _this.detailsData = data.data;
-                } 
+            let _this = this;
+            _this.ajaxRequest({
+                'url': h5App.activeAPI.phoneProduct_getProductDetail_post,
+                'data':{
+                    productId :  _this.$route.params.goodsId,
+                },
+                'success':function(data){
+                    _this.detailsData = data.data;
+                    } 
             })
         },
         /**
@@ -1309,7 +1235,8 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" >
+
 @import '../../../assets/css/mixins.less';
 @import '../../../assets/css/base.less';
 @import '../../../assets/css/common.less';
@@ -1523,9 +1450,6 @@ export default {
         .goods-footer-content{
             .ik-box;
             background: #fff;
-            &>div:nth-last-child(2),&>div:nth-last-child(1){
-            color: #fff;
-            }
         }
         .goods-footer-botton{
             position: relative;
