@@ -21,7 +21,8 @@ export default {
     };
   },
   mounted() {
-    this.selectNav = this.$route.params.type;
+    this.selectNav = this.$route.params.type || 0;
+
   },
   methods: {
     selects(e) {
@@ -38,6 +39,13 @@ export default {
         this.$router.push('/cart/'+shopId+'/'+ busId + "/" + e);
         return
       }
+      this.onValue(e);
+    },
+    /** 
+    * 传参 
+    */
+    onValue(e){
+      this.$emit('change',e);
     }
   }
 };
