@@ -80,6 +80,8 @@ const myAddress = resolve => require(['pages/my/myAddress'], resolve);
 const address = resolve => require(['pages/my/address'], resolve);
 //address => 编辑地址
 
+const groupbuydetail= resolve => require(['pages/groupbuy/groupbuydetail'], resolve);
+//groupbuydetail 团购详情页面
 Vue.use(Router)
 
 export default new Router({
@@ -309,8 +311,16 @@ export default new Router({
       meta: {
         title: '编辑地址页面'
       }
+    },{
+      path: '/groupbuy/detail/:busId/:id',
+      name: 'groupbuydetail',
+      component: groupbuydetail,
+      meta: {
+        title: '团购详情'
+      }
     }
     
 
+    
   ]
 })
