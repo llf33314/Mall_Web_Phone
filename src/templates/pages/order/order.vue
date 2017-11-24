@@ -140,7 +140,7 @@
         <technical-support v-if="$store.state.isAdvert == 1"></technical-support>
     </section>
     <section class="shop-footer-fixed deltails-footer"
-    v-if="order.isShowKanWuLiuButton == 1 || order.isShowReceiveGoodButton == 1 || order.isShowGoPayButton == 1 || order.isShowDeleteButton == 1">
+    v-if="order.isShowKanWuLiuButton == 1 || order.isShowReceiveGoodButton == 1 || order.isShowGoPayButton == 1 || order.isShowDeleteButton == 1 || order.orderType == 1">
         <!-- <div class="deltails-button fs40 shop-bg" v-if="order.isShowKanWuLiuButton == 1"
           >
             查看物流
@@ -156,6 +156,14 @@
         <div class="deltails-button fs40 shop-bg" v-if="order.isShowDeleteButton == 1" 
         @click="showDialogDelete(order.orderId)">
             删除订单
+        </div>
+        <div class="deltails-button fs40 shop-bg" v-if="order.isShowDeleteButton == 1" 
+        @click="showDialogDelete(order.orderId)">
+            删除订单
+        </div>
+        <div class="deltails-button fs40 shop-bg" v-if="order.orderType == 1 && order.activityId > 0" 
+        @click="groupBuyDetail(order.activityId)">
+            查看团购详情
         </div>
     </section>
     <section class="shop-main-no fs40 my-bond" v-if="isShow">
@@ -229,6 +237,9 @@ export default {
           });
           _this.orderType = order.orderType; //活动类型
           _this.activityId = order.activityId; //活动id
+          _this.busId = order.busId;
+          sessionStorage.setItem("busId", order.busId);
+          this.$store.commit("mutationData", { busId: order.busId });
         }
       });
     },
@@ -236,7 +247,7 @@ export default {
       //弹出删除订单的弹出框
       this.showDeleteOrderDialog(orderId);
     },
-    returnGoPay(orderId,busId) {
+    returnGoPay(orderId, busId) {
       // 去支付 跳转至提交订单页面
       this.$router.push("/order/settlement/" + busId + "/2/" + orderId);
     },
@@ -272,9 +283,9 @@ export default {
       //调用关闭退款的接口
       this.showCloseReturnDialog(returnId);
     },
-    goComment(orderDetailId,busId) {
+    goComment(orderDetailId, busId) {
       //跳入去评价的页面
-      this.$router.push("/comment/"+busId+"/"+orderDetailId);
+      this.$router.push("/comment/" + busId + "/" + orderDetailId);
     },
     toProductDetail(productId, shopId, busId) {
       //跳转至商品详情页面
@@ -290,6 +301,11 @@ export default {
           "/" +
           this.activityId
       );
+    },
+    groupBuyDetail(groupBuyId) {
+      //查看团购详情
+      let busId = this.busId;
+      this.$router.push("/groupbuy/detail/" + busId + "/" + groupBuyId);
     }
   }
 };

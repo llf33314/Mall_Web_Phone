@@ -128,7 +128,7 @@
                     v-if=" goodsData.isShowAddShopButton == 1 && type == 1"
                     style="color:#fff"
                     @click="dialogShow">
-                    <p class="fs40">￥{{goodsData.productPrice}}</p>
+                    <p class="fs40">￥{{goodsData.hyPrice > 0 ? goodsData.hyPrice : goodsData.groupPrice}}</p>
                     <p class="fs32">单独购买</p>
                 </div>
                 <div class="goods-footer-botton ui-col-2 fs50 shop-bg"
@@ -136,8 +136,8 @@
                     v-if=" goodsData.isShowLiJiBuyButton == 1 && type == 1"
                     style="color:#fff"
                     @click="dialogShow">
-                    <p class="fs40">￥240.00</p>
-                    <p class="fs32">3人拼团价</p>
+                    <p class="fs40">￥{{goodsData.groupPrice}}</p>
+                    <p class="fs32">{{goodsData.groupPeopleNum}}人拼团价</p>
                 </div>
                 <!--不是团购-->
                 <div class="goods-footer-botton ui-col-2 fs50 shop-yellow"
@@ -175,8 +175,12 @@
                 </div>
                 <div class="goods-dialog-txt">
                     <p class="fs42 shop-font">
+                        <span  v-if="type != 1">
                         <span class="fs32">¥</span>{{dialogData.inv_price | moneySplit1}}<span class="fs32">.{{dialogData.inv_price | moneySplit2}}</span>
-
+                        </span>
+                        <span  v-if="type == 1">
+                        <span class="fs32">¥</span>{{dialogData.groupPrice | moneySplit1}}<span class="fs32">.{{dialogData.groupPrice | moneySplit2}}</span>
+                        </span>
                         <span class="fs36 " v-if="dialogData.hyPrice"> 会员价 :{{dialogData.hyPrice}}</span>
                     </p>
                     <p class="fs36 shopGray" >库存：{{dialogData.inv_num}}</p>
@@ -221,15 +225,15 @@
                     立即购买
                 </div> 
                  <!--团购-->
-                <div class="goods-dialog-button fs52 shop-yellow" @click="addCard(1)"
+                <div class="goods-dialog-button fs52 shop-yellow"  @click="lijiBuy(0,0)"
                     v-if=" goodsData.isShowAddShopButton == 1 && type == 1">
-                    <p class="fs40">￥{{dialogData.productPrice}}</p>
+                    <p class="fs40">￥{{dialogData.hyPrice > 0 ? dialogData.hyPrice : dialogData.inv_price}}</p>
                     <p class="fs32">单独购买</p>
                 </div>
-                <div class="goods-dialog-button fs52  shop-bg" @click="lijiBuy(0)"
+                <div class="goods-dialog-button fs52  shop-bg" @click="lijiBuy(0,1)"
                    v-if=" goodsData.isShowLiJiBuyButton == 1 && type == 1">
-                    <p class="fs40">￥240.00//todo</p>
-                    <p class="fs32">3人拼团价//todo</p>
+                    <p class="fs40">￥{{dialogData.groupPrice}}</p>
+                    <p class="fs32">{{goodsData.groupPeopleNum}}人拼团价</p>
                 </div>
             </div>
         </div>
@@ -1067,7 +1071,6 @@ export default {
             for(var i = 0 ;i<$('.js-specValue .shop-bg').length;i++){
                 specs.push($('.js-specValue .shop-bg').eq(i).attr('value'));
             }
-            console.log(specs,'specs');
             //获取选中值的规格集合
             _this.guigePrice.forEach((item,i) => {
                 //判断两个数组完全相等 转字符串比较
@@ -1080,6 +1083,8 @@ export default {
                     //_this.selected_spec =  item.values.toString() 
                 }
             })
+            console.log(specs,'specs',_this.dialogData);
+            
             
             //切换时规格时 如果规格 购买数量大于库存数量 则等于库存数量
 
@@ -1167,7 +1172,8 @@ export default {
             this.$router.push('/cart/'+shopId+'/'+busId+'/0');
         },
         //立即购买
-        lijiBuy(type){
+        lijiBuy(type,orderType){
+            
             // let price = 
             let _this = this;
             console.log(_this.dialogData)
@@ -1207,6 +1213,18 @@ export default {
                 // arr = JSON.parse(arr);
                 _data.pifaSpecificaDTOList = JSON.stringify(arr);
             }
+            if(_this.type == 1){
+                //团购
+                 if(orderType == 1){
+                    _data.price = _this.dialogData.groupPrice;
+                } 
+            }
+            //普通购买
+            if(orderType == 0){
+                _data.type = 0;
+                _data.activityId = 0;
+            }
+           
             console.log("_data",_data);
             _this.ajaxRequest({
                 url: h5App.activeAPI.liji_buy_post,

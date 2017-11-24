@@ -8,7 +8,7 @@
             <div class="fs40  goods-info-other">
                 <div class="shop-font" v-if="type != 5">
                     <span v-if=" type== 3">秒杀价</span>
-                    <span v-else-if="type== 1">团购价:</span>
+                    <span v-else-if="type== 1">团购价: ￥<span class="fs50" v-if="goodsData.groupPrice > 0">{{goodsData.groupPrice | moneySplit1}}</span>.{{goodsData.groupPrice | moneySplit2}}</span>
                     <span v-else-if="type== 4">当前价:</span>
                     <span v-else-if="type== 4 && goodsData.auctionResult.isWin == 1">出价{{goodsData.auctionResult.auctionNumber}}次</span>
                     <span v-else-if="type== 6">预售价:</span>
@@ -16,7 +16,9 @@
                         {{goodsData.productPrice | moneySplit1}}.{{goodsData.productPrice | moneySplit2}}积分
                     </span>
                     <span v-else >价格:</span>
+                    <span v-if="type != 1">
                     ￥<span class="fs50" v-if="goodsData.productPrice > 0">{{goodsData.productPrice | moneySplit1}}</span>.{{goodsData.productPrice | moneySplit2}}
+                    </span>
                     <span v-if="type== 7">批发价：￥{{goodsData.pfPrice}}</span>
                     <span class="shopGray" v-if="goodsData.auctionResult >= 0 ">抢拍{{goodsData.auctionResult.auctionNumber}}次</span>
                 </div>
