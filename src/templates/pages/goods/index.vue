@@ -72,7 +72,8 @@
         <!--底部按钮-->
         <section class="goods-footer" style="background:0;z-index:3;" >
             <!---拍卖保证金---->
-            <div class="goods-footer-botton  fs50 shop-bg" v-if="type == 4 &&  goodsData.auctionResult.isShowDeposit == 1 " >
+            <div class="goods-footer-botton  fs50 shop-bg" v-if="type == 4 &&  goodsData.auctionResult.isShowDeposit == 1 " 
+                @click="marginDeposit">
                 交保证金报名
             </div>
             <!---拍卖转订单---->
@@ -128,7 +129,7 @@
                     v-if=" goodsData.isShowAddShopButton == 1 && type == 1"
                     style="color:#fff"
                     @click="dialogShow">
-                    <p class="fs40">￥{{goodsData.hyPrice > 0 ? goodsData.hyPrice : goodsData.groupPrice}}</p>
+                    <p class="fs40">￥{{goodsData.hyPrice > 0 ? goodsData.hyPrice : goodsData.productPrice}}</p>
                     <p class="fs32">单独购买</p>
                 </div>
                 <div class="goods-footer-botton ui-col-2 fs50 shop-bg"
@@ -137,7 +138,7 @@
                     style="color:#fff"
                     @click="dialogShow">
                     <p class="fs40">￥{{goodsData.groupPrice}}</p>
-                    <p class="fs32">{{goodsData.groupPeopleNum}}人拼团价</p>
+                    <p class="fs32">{{goodsData.groupPeopleNum}}人拼团</p>
                 </div>
                 <!--不是团购-->
                 <div class="goods-footer-botton ui-col-2 fs50 shop-yellow"
@@ -1236,6 +1237,14 @@ export default {
                 }
             });
             
+        },marginDeposit(){
+            //缴纳保证金报名
+            let product = this.goodsData;
+            let aucId = product.activityId;
+            let proId = this.goodsId;
+            let invId = product.invId || 0;
+            let busId = this.$route.params.busId || sessionStorage.getItem("busId");
+            this.$router.push( "/auction/bond/" + busId + "/" + proId + "/" + aucId + "/" + invId + "/0");
         }
     },
     beforeDestroy() {

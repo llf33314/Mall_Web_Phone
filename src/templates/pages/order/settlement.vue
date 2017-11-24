@@ -334,7 +334,7 @@
 import footerNav from "components/footerNav";
 import defaultImg from "components/defaultImg";
 import shopDialog from "components/shopDialog";
-import payWayDialog from "components/payWayDialog";
+import payWayDialog from "components/payWayDialog";//支付方式
 import technicalSupport from "components/technicalSupport"; //技术支持
 import dialogModular from "components/dialogModular"; //技术支持
 import couponDialog from "./componet/couponDialog"; //优惠券弹出框

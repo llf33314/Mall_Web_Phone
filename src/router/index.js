@@ -121,14 +121,14 @@ export default new Router({
         title: '分类'
       },
     }, , {
-      path: '/auction/bond',
+      path: '/auction/bond/:busId/:proId/:aucId/:invId/:agree',
       name: 'bond',
       component: Auction_Bond,
       meta: {
         title: '保证金'
       }
     }, {
-      path: '/auction/agreement',
+      path: '/auction/agreement/:busId/:proId/:aucId/:invId',
       name: 'agreement',
       component: Auction_Agreement,
       meta: {

@@ -190,7 +190,11 @@
     //获取销售员获取短信验证码
     add_seller_post: '/phoneSellers/L6tgXlBFeK/addSellers',
     // 获取超级销售员首页
-    sellect_index_post: '/phoneSellers/L6tgXlBFeK/sellerIndex'
+    sellect_index_post: '/phoneSellers/L6tgXlBFeK/sellerIndex',
+    /**********************以下接口是团购相关接口*****************************/
+    goupbuy_detail_post: '',
+    /**********************以下接口是拍卖相关接口*****************************/
+    get_margin_post:"/phoneAuction/L6tgXlBFeK/toAddMargin"
 
   };
 

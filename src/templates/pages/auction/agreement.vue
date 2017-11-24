@@ -113,7 +113,7 @@
             <div class="shop-logo"></div>
         </section>
         <section class="auction-footer shop-footer-fixed">
-            <div class="auction-buttom fs50 shop-bg">
+            <div class="auction-buttom fs50 shop-bg" @click="returnAuction">
                     我已阅读并同意
             </div> 
         </section>
@@ -122,65 +122,85 @@
 </template>
 
 <script>
-
 export default {
-  name: 'agreement',	
+  name: "agreement",
 
-  data () {
-    return {
-    
-    }
+  data() {
+    return {};
   },
-  components:{
-	  
+  components: {},
+  mounted() {
+    this.commonFn.setTitle("用户竞拍服务协议");
+    this.$store.commit("show_footer", false); //隐藏底部导航栏
+  },
+  beforeDestroy() {
+    //离开后的操作
+    this.$store.commit("show_footer", true); //显示底部导航栏
   },
   methods: {
-
+    returnAuction() {
+      let param = this.$route.params;
+      let busId = param.busId || sessionStorage.getItem("busId"); //商家id
+      let proId = param.proId; //商品id
+      let aucId = param.aucId; //拍卖id
+      let invId = param.invId;
+      this.$router.push(
+        "/auction/bond/" +
+          busId +
+          "/" +
+          proId +
+          "/" +
+          aucId +
+          "/" +
+          invId +
+          "/1"
+      );
+    }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
-@import '../../../assets/css/mixins.less';
-@import '../../../assets/css/base.less';
-.auction-wrapper{
-    width: 100%;
-    position: relative;
+@import "../../../assets/css/mixins.less";
+@import "../../../assets/css/base.less";
+.auction-wrapper {
+  width: 100%;
+  position: relative;
 }
-.agreement-main{
+.agreement-main {
+  width: 100%;
+  position: relative;
+  padding-bottom: 160/@dev-Width *1rem;
+  .agreement-content {
     width: 100%;
-    position: relative;
-    padding-bottom: 160/@dev-Width *1rem;
-    .agreement-content{
-        width: 100%;
-        padding: 30/@dev-Width *1rem 45/@dev-Width *1rem 50/@dev-Width *1rem;
-        .agreement-h1{
-            width: 100%;
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 20/@dev-Width *1rem
-        }
-        .agreement-text{
-            width: 100%;
-            .agreement-title{
-                text-align: justify;
-            }
-            .agreement-txt{
-                text-indent: 2em;
-                text-align: justify;
-            }
-        }
+    padding: 30/@dev-Width *1rem 45/@dev-Width *1rem 50/@dev-Width *1rem;
+    .agreement-h1 {
+      width: 100%;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 20/@dev-Width *1rem;
     }
-    .auction-footer{
-        width: 100%;
-        .auction-buttom{
-            width: 100%;
-            height: 158/@dev-Width *1rem;
-            .ik-box;
-            .ik-box-align(center);
-            .ik-box-pack(center);
-            color: #fff;
-        }
+    .agreement-text {
+      width: 100%;
+      .agreement-title {
+        text-align: justify;
+      }
+      .agreement-txt {
+        text-indent: 2em;
+        text-align: justify;
+      }
     }
+  }
+  .auction-footer {
+    width: 100%;
+    .auction-buttom {
+      width: 100%;
+      height: 158/@dev-Width *1rem;
+      .ik-box;
+      .ik-box-align(center);
+      .ik-box-pack(center);
+      color: #fff;
+    }
+  }
 }
 </style>

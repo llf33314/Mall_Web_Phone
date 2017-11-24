@@ -50,7 +50,7 @@
           </div>
         </div>
         <div class="group-join-div">
-          <div class="group-button-yellow fs50">呼唤朋友来参团</div>
+          <div class="group-button-yellow fs50" @click="isShowShare=true">呼唤朋友来参团</div>
         </div>
       </div>
   </section>
@@ -76,7 +76,7 @@
   </section>
   <section class="shop-footer-fixed">
       <div class="goods-footer-botton ui-col-2 fs50 shop-yellow"
-          style="color:#fff">
+          style="color:#fff" @click="moreGroupbuy">
           更多拼团
       </div>
       <div class="goods-footer-botton ui-col-2 fs50 shop-bg"
@@ -84,24 +84,37 @@
           我也要参团
       </div>
   </section>
+  <!-- 分享 -->
+  <section class="grounpShare-main" v-show="isShowShare">
+    <div class="grounpShare-bg" :style="{backgroundImage: 'url(' + grounpShare + ')'}">
+        <img :src="grounpShare">
+    </div>
+    <div class="grounpShare-botton-box">
+      <div class="grounpShare-botton shop-font" @click="isShowShare=false">
+          我知道了
+      </div>
+    </div>
+</section>
 </div>
 </template>
 
 <script>
 import defaultImg from "components/defaultImg";
-import tuangoubg from "assets/img/tungoubg.jpg"
+import tuangoubg from "assets/img/tungoubg.jpg";
+import grounpSharebg from "assets/img/grounpShare.png";
 export default {
-
   data() {
     return {
-      tuangoubg: tuangoubg
+      tuangoubg: tuangoubg,
+      grounpShare: grounpSharebg,
+      isShowShare: false//是否显示分享
     };
   },
   components: {
     defaultImg
   },
   mounted() {
-    // this.loadDatas(); //初始化协商详情数据
+    // this.loadDatas(); //初始化数据
     this.commonFn.setTitle(Language.title_pifa_apply_msg);
     this.$store.commit("show_footer", false); //隐藏底部导航栏
   },
@@ -127,6 +140,10 @@ export default {
           }
         }
       });
+    },
+    moreGroupbuy(){
+      //更多来拼团
+      
     }
   }
 };
@@ -139,7 +156,7 @@ export default {
 .group-wapper {
   width: 100%;
   position: relative;
-  padding-bottom:150 /@dev-Width * 1rem;
+  padding-bottom: 150 /@dev-Width * 1rem;
   .group-main {
     background: #fff;
     .group-top {
@@ -166,21 +183,21 @@ export default {
       }
     }
     .group-time {
+      text-align: center;
+      height: 200 /@dev-Width * 1rem;
+      padding: 62 /@dev-Width * 1rem 0;
+      color: #fff;
+      background: url("../../../assets/img/tuangou_bg2.jpg")no-repeat;
+      background-size: 100% 100%;
+      em {
+        background: #cb080b;
+        display: inline-block;
+        width: 62/@dev-Width * 1rem;
+        height: 62/@dev-Width * 1rem;
         text-align: center;
-        height: 200 /@dev-Width * 1rem;
-        padding: 62 /@dev-Width * 1rem 0;
-        color: #fff;
-        background: url('../../../assets/img/tuangou_bg2.jpg')no-repeat;
-        background-size: 100% 100%;
-        em {
-          background: #cb080b;
-          display: inline-block;
-          width: 62/@dev-Width * 1rem;
-          height: 62/@dev-Width * 1rem;
-          text-align: center;
-          line-height: 66/@dev-Width * 1rem;
-          .border-radius(5px)
-        }
+        line-height: 66/@dev-Width * 1rem;
+        .border-radius(5px);
+      }
     }
     .group-middle {
       width: 100%;
@@ -225,7 +242,9 @@ export default {
           background-color: #ff8522;
           text-align: center;
           color: #fff;
-          padding: 40/@dev-Width * 1rem 0;
+          // padding: 40/@dev-Width * 1rem 0;
+          height: 150/@dev-Width * 1rem;
+          line-height: 150/@dev-Width * 1rem;
           margin: 0px auto;
         }
       }
@@ -236,35 +255,35 @@ export default {
       text-align: center;
       padding: 72/@dev-Width * 1rem 0 66/@dev-Width * 1rem;
     }
-    .group-goods-box{
+    .group-goods-box {
       width: 100%;
-      padding: 0 7/@dev-Width * 1rem ;
-      &>div:nth-of-type(2n){
+      padding: 0 7/@dev-Width * 1rem;
+      & > div:nth-of-type(2n) {
         margin-right: 0;
       }
     }
-    .group-goods{
+    .group-goods {
       float: left;
       width: 49.5%;
-      margin-right: 10/@dev-Width * 1rem ;
-      margin-bottom: 15/@dev-Width * 1rem ;
+      margin-right: 10/@dev-Width * 1rem;
+      margin-bottom: 15/@dev-Width * 1rem;
       background: #fff;
-      .group-goods-img{
+      .group-goods-img {
         margin: 2px auto 0;
-        width: 540/@dev-Width * 1rem ;
-        height: 540/@dev-Width * 1rem ;
+        width: 540/@dev-Width * 1rem;
+        height: 540/@dev-Width * 1rem;
         overflow: hidden;
       }
-      .group-goods-text{
+      .group-goods-text {
         width: 100%;
         padding: 20/@dev-Width * 1rem;
         padding-bottom: 15/@dev-Width * 1rem;
         line-height: 1;
-        p:first-child{
+        p:first-child {
           margin-bottom: 60/@dev-Width * 1rem;
         }
       }
-      .group-goods-time{
+      .group-goods-time {
         font-size: 0;
         border: 1px solid #e4393c;
         height: 70/@dev-Width * 1rem;
@@ -272,20 +291,20 @@ export default {
         overflow: hidden;
         margin-top: 15/@dev-Width * 1rem;
         .border-radius(3px);
-        span{
-          display:block;
-          line-height:70/@dev-Width * 1rem;
+        span {
+          display: block;
+          line-height: 70/@dev-Width * 1rem;
           height: 70/@dev-Width * 1rem;
           text-align: center;
         }
-        &>span:first-child{
+        & > span:first-child {
           width: 32%;
           height: 70/@dev-Width * 1rem;
           color: #fff;
           background: #e4393c;
           text-align: center;
         }
-        &>span:last-child{
+        & > span:last-child {
           width: 68%;
           color: #e4393c;
         }
@@ -296,14 +315,46 @@ export default {
 .font-weight {
   font-weight: bolder;
 }
-.shop-footer-fixed{
+.shop-footer-fixed {
   width: 100%;
   .shop-box-justify;
-  .goods-footer-botton{
+  .goods-footer-botton {
     width: 50%;
     height: 135/@dev-Width * 1rem;
     text-align: center;
-    line-height:135/@dev-Width * 1rem;
+    line-height: 135/@dev-Width * 1rem;
+  }
+}
+.grounpShare-main {
+  width: 100%;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  top: 0;
+  left: 0;
+  .grounpShare-bg {
+    background-size: 100% 100%;
+    img {
+      width: 100%;
+      height: auto;
+      opacity: 0;
+    }
+  }
+  .grounpShare-botton-box {
+    width: 100%;
+    position: absolute;
+    bottom: 293 /@dev-Width * 1rem;
+  }
+  .grounpShare-botton {
+    margin: 0 auto;
+    width: 415/@dev-Width * 1rem;
+    border: 10/@dev-Width * 1rem solid #f9ddab;
+    padding: 50/@dev-Width * 1rem;
+    line-height: 1;
+    .border-radius(50px);
+    background: #fff7e9;
+    font-size: 68 /@dev-Width * 1rem;
   }
 }
 </style>

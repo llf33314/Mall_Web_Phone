@@ -238,10 +238,10 @@ export default {
         } else {
           if (_sellerStatus == "-1") {
             //审核失败，询问是否跳转至申请销售员页面
-            msg.btnNum = 2;
-            msg.callback = {
-              btnOne: _this.returnApplySeller
-            };
+            msg.btnNum = 1;
+            // msg.callback = {
+            //   btnOne: _this.returnApplySeller
+            // };
             _isShow = true;
           } else {
             //还未申请销售员 跳转至销售员申请页面
