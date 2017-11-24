@@ -1,68 +1,101 @@
 <template>
-<div id='app' class="shop-wrapper group-wapper">
-    <section class="group-main">
-      <div class="group_top shop-textc border" >
-          <div class="group_img">
+<div class="shop-wrapper group-wapper">
+  <section class="group-main">
+      <div class="group-top " :style="{backgroundImage: 'url(' + tuangoubg + ')'}">
+          <div class="group-img">
               <default-img :background="a"
                           :isHeadPortrait="0">
               </default-img>
           </div>
-          <div class="group_title fs40">
-            商品名称
-          </div>
-          <div class="group_price fs36">团购价：￥30.00</div>
-          <div class="group_time shop-bg fs40">
-            剩余<em>0</em>天<em class="hour">23</em>时<em class="minute">59</em>分<em class="minute">59</em>秒
+          <div class="group-title fs40">
+            <p>商品名称</p>
+            <div class="group-price fs36 shop-font">团购价：<span class="fs40">￥30</span>.00</div>
           </div>
       </div>
-       <div class="group_middle" >
-          <div class="group_kaituan border shop-textc fs44 font-weight">
-            还差<em class="shop-font">2</em>人就要开团啦
+      <div class="group-time fs40 border">
+          剩余 <em> 0 </em> 天
+          <em >23</em>时
+          <em>59</em>分
+          <em >59</em>秒
+      </div>
+      <div class="group-middle" >
+        <div class="group-kaituan border shop-textc fs44 font-weight">
+          还差<em class="shop-font">2</em>人就要开团啦
+        </div>
+        <div class="group-items border shop-box-center" >
+          <div class="left ">
+            <span class="img">
+              <default-img :background="a"
+                          :isHeadPortrait="0">
+              </default-img>
+            </span>
+            <span class="fs40">悟空</span>
+            <span class="fs40 shop-bg group-bgs">团长</span>
           </div>
-          <div class="group-items border shop-box-center" >
-            <div class="left ">
-              <span class="img">
-                <default-img :background="a"
-                            :isHeadPortrait="0">
-                </default-img>
-              </span>
-              <span class="fs40">悟空</span>
-              <span class="fs40 shop-bg group-bgs">团长</span>
-            </div>
-            <div class="right">
-              <span class="fs36">2017-07-12 03:40:56 开团</span>
-            </div>
+          <div class="right">
+            <span class="fs36">2017-07-12 03:40:56 开团</span>
           </div>
-          <div class="group-items border shop-box-center" >
-            <div class="left ">
-              <span class="img">
-                <default-img :background="a"
-                            :isHeadPortrait="0">
-                </default-img>
-              </span>
-              <span class="fs40">悟空</span>
-            </div>
-            <div class="right">
-              <span class="fs36">2017-07-12 03:40:56 参团</span>
-            </div>
+        </div>
+        <div class="group-items border shop-box-center" >
+          <div class="left ">
+            <span class="img">
+              <default-img :background="a"
+                          :isHeadPortrait="0">
+              </default-img>
+            </span>
+            <span class="fs40">悟空</span>
           </div>
-         <div class="group-join-div">
-            <div class="group-button-yellow fs50">呼唤朋友来参团</div>
-         </div>
-       </div>
-    </section>
-    <section class="group_section">
-        <div class="title_div fs40 font-weight">其他团购</div>
-    </section>
+          <div class="right">
+            <span class="fs36">2017-07-12 03:40:56 参团</span>
+          </div>
+        </div>
+        <div class="group-join-div">
+          <div class="group-button-yellow fs50">呼唤朋友来参团</div>
+        </div>
+      </div>
+  </section>
+  <section class="group-section">
+      <div class="title-div fs40 font-weight">其他团购</div>
+      <div class="group-goods-box clearfix">
+        <div class="group-goods">
+          <div class="group-goods-img">
+            <default-img :background="a"
+                        :isHeadPortrait="0">
+            </default-img>
+          </div>
+          <div class="group-goods-text">
+            <p class="fs42">商品名称商品名称</p>
+            <p class="shop-font fs32">3人团：￥<span class="fs40">68</span>.00</p>
+            <div class="group-goods-time">
+              <span class="fs36">距离结束</span>
+              <span class="fs36">0天 23时 59分 59秒</span>
+            </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="shop-footer-fixed">
+      <div class="goods-footer-botton ui-col-2 fs50 shop-yellow"
+          style="color:#fff">
+          更多拼团
+      </div>
+      <div class="goods-footer-botton ui-col-2 fs50 shop-bg"
+          style="color:#fff">
+          我也要参团
+      </div>
+  </section>
 </div>
 </template>
 
 <script>
 import defaultImg from "components/defaultImg";
+import tuangoubg from "assets/img/tungoubg.jpg"
 export default {
-  name: "apply",
+
   data() {
-    return {};
+    return {
+      tuangoubg: tuangoubg
+    };
   },
   components: {
     defaultImg
@@ -84,9 +117,9 @@ export default {
         url: location.href, //当前页面的地址
         browerType: _this.$store.state.browerType //浏览器类型
       };
-      _this.ajaxRequest({
-        url: h5App.activeAPI.get_pf_apply_remark_post,
-        data: _data,
+      -this.ajaxRequest({
+        url: h5App.activeAPI.title_pifa_apply_msg,
+        data: -data,
         success: function(data) {
           let myData = data.data;
           if (myData != null) {
@@ -102,47 +135,56 @@ export default {
 <style lang="less" scoped>
 @import "../../../assets/css/mixins.less";
 @import "../../../assets/css/base.less";
+@import "../../../assets/css/common.less";
 .group-wapper {
   width: 100%;
-  height: 100%;
   position: relative;
+  padding-bottom:150 /@dev-Width * 1rem;
   .group-main {
     background: #fff;
-    .group_top {
-      width: 70vw;
-      height: auto;
-      margin: 0px auto;
-      overflow: hidden;
-      .group_img {
-        width: 100%;
+    .group-top {
+      width: 100%;
+      background-size: 100% 100%;
+      padding-top: 56/@dev-Width * 1rem;
+      .group-img {
+        width: 70vw;
         height: 70vw;
+        margin: 0 auto;
+        overflow: hidden;
       }
-      .group_title {
-        margin: 40 /@dev-Width * 1rem 0;
+      .group-title {
+        margin: 0 auto;
+        padding: 36/@dev-Width * 1rem 0 60/@dev-Width * 1rem;
+        width: 70vw;
+        background: #fff;
+        text-align: center;
+        color: #242424;
+        line-height: 1;
       }
-      .group_price {
-        margin-bottom: 92 /@dev-Width * 1rem;
-      }
-      .group_time {
-        height: 151 /@dev-Width * 1rem;
-        line-height: 151 /@dev-Width * 1rem;
-        em {
-          background: #cb080b;
-          height: 65 /@dev-Width * 1rem;
-          padding: 0 10 /@dev-Width * 1rem;
-          margin: 0 15/@dev-Width * 1rem;
-        }
-        em.hour {
-          margin-left: 45/@dev-Width * 1rem;
-        }
-        em.minute {
-          margin-left: 10/@dev-Width * 1rem;
-        }
+      .group-price {
+        margin-top: 38 /@dev-Width * 1rem;
       }
     }
-    .group_middle {
+    .group-time {
+        text-align: center;
+        height: 200 /@dev-Width * 1rem;
+        padding: 62 /@dev-Width * 1rem 0;
+        color: #fff;
+        background: url('../../../assets/img/tuangou_bg2.jpg')no-repeat;
+        background-size: 100% 100%;
+        em {
+          background: #cb080b;
+          display: inline-block;
+          width: 62/@dev-Width * 1rem;
+          height: 62/@dev-Width * 1rem;
+          text-align: center;
+          line-height: 66/@dev-Width * 1rem;
+          .border-radius(5px)
+        }
+    }
+    .group-middle {
       width: 100%;
-      .group_kaituan {
+      .group-kaituan {
         padding: 40/@dev-Width * 1rem 0;
       }
       .group-items {
@@ -164,7 +206,7 @@ export default {
           }
           .group-bgs {
             .border-radius(50px);
-            padding: 10/@dev-Width * 1rem;
+            padding: 15/@dev-Width * 1rem 25/@dev-Width * 1rem;
           }
         }
         .left {
@@ -189,14 +231,79 @@ export default {
       }
     }
   }
-  .group_section {
-    .title_div {
+  .group-section {
+    .title-div {
       text-align: center;
-      padding: 63/@dev-Width * 1rem 0;
+      padding: 72/@dev-Width * 1rem 0 66/@dev-Width * 1rem;
+    }
+    .group-goods-box{
+      width: 100%;
+      padding: 0 7/@dev-Width * 1rem ;
+      &>div:nth-of-type(2n){
+        margin-right: 0;
+      }
+    }
+    .group-goods{
+      float: left;
+      width: 49.5%;
+      margin-right: 10/@dev-Width * 1rem ;
+      margin-bottom: 15/@dev-Width * 1rem ;
+      background: #fff;
+      .group-goods-img{
+        margin: 2px auto 0;
+        width: 540/@dev-Width * 1rem ;
+        height: 540/@dev-Width * 1rem ;
+        overflow: hidden;
+      }
+      .group-goods-text{
+        width: 100%;
+        padding: 20/@dev-Width * 1rem;
+        padding-bottom: 15/@dev-Width * 1rem;
+        line-height: 1;
+        p:first-child{
+          margin-bottom: 60/@dev-Width * 1rem;
+        }
+      }
+      .group-goods-time{
+        font-size: 0;
+        border: 1px solid #e4393c;
+        height: 70/@dev-Width * 1rem;
+        .shop-box-justify;
+        overflow: hidden;
+        margin-top: 15/@dev-Width * 1rem;
+        .border-radius(3px);
+        span{
+          display:block;
+          line-height:70/@dev-Width * 1rem;
+          height: 70/@dev-Width * 1rem;
+          text-align: center;
+        }
+        &>span:first-child{
+          width: 32%;
+          height: 70/@dev-Width * 1rem;
+          color: #fff;
+          background: #e4393c;
+          text-align: center;
+        }
+        &>span:last-child{
+          width: 68%;
+          color: #e4393c;
+        }
+      }
     }
   }
 }
 .font-weight {
   font-weight: bolder;
+}
+.shop-footer-fixed{
+  width: 100%;
+  .shop-box-justify;
+  .goods-footer-botton{
+    width: 50%;
+    height: 135/@dev-Width * 1rem;
+    text-align: center;
+    line-height:135/@dev-Width * 1rem;
+  }
 }
 </style>
