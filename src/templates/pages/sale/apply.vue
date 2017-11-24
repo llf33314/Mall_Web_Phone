@@ -130,7 +130,7 @@ export default {
       let _this = this;
       let waitTime = this.waitTime;
       if (waitTime == 0) {
-        this.getCodeMsg = "获取验证码";
+        this.getCodeMsg = Language.get_validate_code_msg; //获取验证码
         waitTime = 60;
       } else {
         this.getCodeMsg = waitTime + "秒后重发";
@@ -177,7 +177,7 @@ export default {
         busId: _this.busId, //商家id
         url: location.href, //当前页面的地址
         browerType: _this.$store.state.browerType, //浏览器类型
-        userName : _this.name, //姓名必传
+        userName: _this.name, //姓名必传
         companyName: _this.companyName, //公司名称必传
         telephone: _this.telephone, //手机号码必传
         remark: _this.remark, //备注
@@ -196,9 +196,9 @@ export default {
       var _this = this;
       let msg = {
         btnNum: "1", //按钮数
-        dialogTitle: "提交成功", //提示,
-        dialogMsg: "您已提交申请，请耐心等待", //内容,
-        btnOne: "好的", //确定
+        dialogTitle: Language.submit_success_msg, //提示,(提交成功)
+        dialogMsg: Language.submit_apply_wait_msg, //内容,(您已提交申请，请耐心等待)
+        btnOne: Language.good_msg, //确定(好的)
         callback: {
           btnOne: function() {
             _this.toReturnMyApp();

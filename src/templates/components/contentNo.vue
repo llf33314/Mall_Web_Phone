@@ -21,6 +21,12 @@
         <p class="fs36 shopGray">您的购物车还没有任何商品</p>
         <span class="no-button shopborder fs36"  @click="lockMall">去逛逛</span>
       </div>
+      <div class="no-shopcart" v-if="statu == 4">
+       <div class="shop-no-icon2">
+          <i class="icon-zanwudizhi iconfont"></i>
+        </div>
+        <a class="fs42" style="color:#333"> {{errorMsg || '暂不相关信息'}}</a>
+      </div>
     </div>
   </div>
 </template>
@@ -75,6 +81,20 @@ export default {
       i {
         color: #fff;
         font-size: 150/@dev-Width *1rem;
+      }
+    }
+    .shop-no-icon2 {
+      width: 215/@dev-Width *1rem;
+      height: 215/@dev-Width *1rem;
+      margin: 0 auto;
+
+      margin-bottom: 100/@dev-Width *1rem;
+      .ik-box;
+      .ik-box-align(center);
+      .ik-box-pack(center);
+      i {
+        color: #d1d2d4 !important;
+        font-size: 178/@dev-Width *1rem;
       }
     }
     p {

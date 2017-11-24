@@ -125,13 +125,7 @@ export default {
   name: "myorder",
   data() {
     return {
-      homeNav: [
-        { id: 0, name: "全部" },
-        { id: 1, name: "待付款" },
-        { id: 2, name: "待发货" },
-        { id: 3, name: "待收货" },
-        { id: 4, name: "已完成" }
-      ],
+      homeNav: Language.order_nav_msg,
       isNavshow: "my",
       statu: 1,
       bondStatu: 2,
@@ -269,17 +263,17 @@ export default {
       sessionStorage.setItem("refundReturnUrl", location.href);
       this.$router.push("/return/classify/" + this.busId + "/" + orderDetailId);
     },
-    returnToComment(orderDetailId,busId) {
+    returnToComment(orderDetailId, busId) {
       //跳转至去评价页面
-      this.$router.push("/comment/"+busId+"/"+orderDetailId);
+      this.$router.push("/comment/" + busId + "/" + orderDetailId);
     },
     returnToPay(orderId, busId) {
       // 去支付 跳转至提交订单页面
       this.$router.push("/order/settlement/" + busId + "/2/" + orderId);
     },
-    returnDaifu(orderId,busId) {
+    returnDaifu(orderId, busId) {
       //跳转至代付详情页面
-      this.$router.push( "/daifu/" + busId + "/" + orderId);
+      this.$router.push("/daifu/" + busId + "/" + orderId);
     },
     returnOrderDetail(orderId) {
       //跳转至订单详情页面
@@ -288,19 +282,19 @@ export default {
     setTitle() {
       //设置页头
       let _this = this;
-      let titles = "我的订单";
-      if (_this.type > 0 && _this.type < 5) {
-        titles = _this.homeNav[_this.type].name + "订单";
-      } else if (_this.type == 5) {
-        titles = "待评价订单";
-      } else if (_this.type == 6) {
-        titles = "退款订单";
-      } else if (_this.type == 7) {
-        titles = "团购订单";
-      } else if (_this.type == 8) {
-        titles = "秒杀订单";
-      }
-      this.commonFn.setTitle(titles);
+      // let titles = "我的订单";//我的订单
+      // if (_this.type > 0 && _this.type < 5) {
+      //   titles = _this.homeNav[_this.type].name + "订单";//订单
+      // } else if (_this.type == 5) {
+      //   titles = "待评价订单";//待评价订单
+      // } else if (_this.type == 6) {
+      //   titles = "退款订单";//退款订单
+      // } else if (_this.type == 7) {
+      //   titles = "团购订单";//团购订单
+      // } else if (_this.type == 8) {
+      //   titles = "秒杀订单";//秒杀订单
+      // }
+      this.commonFn.setTitle(Language.order_title_data_msg[_this.type].name);
     }
   }
 };

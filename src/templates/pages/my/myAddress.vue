@@ -29,6 +29,9 @@
                     </div>
                 </div>
             </div>
+            <section class="shop-main-no fs40 my-bond" v-if="isShow">
+                <content-no :statu='4' :errorMsg="error"></content-no>
+            </section>
             <technical-support v-if="$store.state.isAdvert == 1 && !isShowBottom"></technical-support>
             <div class="bottom-div clearfix">
               <technical-support v-if="$store.state.isAdvert == 1 && isShowBottom"></technical-support>
@@ -42,6 +45,7 @@
 
 <script>
 import technicalSupport from "components/technicalSupport"; //技术支持
+import contentNo from "components/contentNo";
 export default {
   name: "myAddress",
 
@@ -49,15 +53,19 @@ export default {
     return {
       busId: this.$route.params.busId || sessionStorage.getItem("busId"), //商家id
       addressArr: [], //地址集合
-      isShowBottom: false
+      isShowBottom: false,
+      isShow: true,
+      bondStatu: 2,
+      error: Language.address_null_error_msg
     };
   },
   components: {
-    technicalSupport
+    technicalSupport,
+    contentNo
   },
   mounted() {
     this.loadDatas(); //初始化数据
-    this.commonFn.setTitle("我的地址");
+    this.commonFn.setTitle(Language.title_my_address_msg);
     this.$store.commit("show_footer", false); //隐藏底部导航栏
   },
   beforeDestroy() {
@@ -65,15 +73,6 @@ export default {
     this.$store.commit("show_footer", true); //显示底部导航栏
   },
   methods: {
-    /**
-     * 删除地址
-     */
-    deleteItme(e) {
-      console.log(1);
-      $(e.target)
-        .parents(".shop-add-itme")
-        .remove();
-    },
     loadDatas() {
       //初始化数据
       let _this = this;
@@ -87,11 +86,16 @@ export default {
         data: _data,
         success: function(data) {
           let myData = data.data;
+          if (myData == null || myData.length == 0) {
+            _this.isShowBottom = true;
+            return;
+          }
           _this.imgUrl = data.imgUrl;
           _this.addressArr = myData;
           if (myData.length < 5) {
             _this.isShowBottom = true;
           }
+          _this.isShow = false;
           console.log(myData, "myData");
         }
       });
