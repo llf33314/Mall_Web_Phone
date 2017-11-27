@@ -76,6 +76,8 @@ const auction_mybond = resolve => require(['pages/auction/mybond'], resolve);
 const auction_success = resolve => require(['pages/auction/succeed'], resolve);
 //auction_success 保证金缴纳成功
 
+const preOrderEposit = resolve => require(['pages/auction/preOrderEposit'], resolve);
+//preOrderEposit => 提交定金
 
 const shoppingCart = resolve => require(['pages/shoppingCart/index'], resolve);
 //my_order_detail => 物流信息
@@ -337,6 +339,13 @@ export default new Router({
       component: auction_success,
       meta: {
         title: '保证金缴纳成功'
+      }
+    },{
+      path: '/auction/eposit/:busId/:aucId',
+      name: 'preOrderEposit',
+      component: preOrderEposit,
+      meta: {
+        title: '提交定金'
       }
     }
     
