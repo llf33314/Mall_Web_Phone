@@ -401,6 +401,13 @@ var Rxports = {
 		   return false;
 	   }
 	   return true;
+   },isInt(data){
+	   try{
+		data = parseInt(data);
+	   }catch(e){
+		   return false;
+	   }
+	   return true;
    }
 };
 

@@ -67,7 +67,7 @@
                                 <p class="fs42 text-overflow"  @click="toProductDetail(product.productId,product.shopId,bus.busId)">{{product.productName}}</p>
                                 <p class="fs36 shopGray" v-if="product.productSpecificaValue != null">{{product.productSpecificaValue}}</p>
                                 <div class="fs42 shop-font orderTotal-money">
-                                    <div> 
+                                    <div>
                                       <p  v-if="product.productOldPrice > product.productPrice && orderData.type > 0" style="margin-bottom:0" >
                                         <span class="span-block">原价：</span>
                                         <del>¥{{product.productOldPrice | moneySplit1}}.{{product.productOldPrice | moneySplit2}}</del>
@@ -75,7 +75,7 @@
                                         </p>
                                       <p>
                                         <span class="span-block" 
-                                        v-if="orderData.type == 1 && orderData.typePriceName != null">{{orderData.typePriceName}}：</span>
+                                        v-if="orderData.type > 0 && orderData.typePriceName != null">{{orderData.typePriceName}}：</span>
                                         ¥{{product.productPrice | moneySplit1}}.{{product.productPrice | moneySplit2}}
                                       </p>
                                     </div>
@@ -395,10 +395,10 @@ export default {
       this.from = this.$route.params.from;
     }
     let data = this.$store.state.orderData;
-    console.log(data, "datas", this.commonFn.isNull(data) || data.length == 0);
     if (this.commonFn.isNull(data) || data.length == 0) {
       this.loadDatas(); //初始化协商详情数据
     } else {
+      console.log(data, "datas", this.commonFn.isNull(data) || data.length == 0);
       let imgUrl = this.$store.state.imgUrl;
       this.imgUrl = imgUrl; //图片域名
       this.getorderResult(data, this);
@@ -519,11 +519,6 @@ export default {
         url: h5App.activeAPI.to_order_post,
         data: _data,
         success: function(data) {
-          if (data.code != 0) {
-            _this.bondStatu = 1;
-            _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
-            return;
-          }
           let myData = data.data;
           _this.imgUrl = data.imgUrl; //图片域名
           _this.getorderResult(myData, _this);
@@ -569,6 +564,7 @@ export default {
       _this.orderData.typePriceName =
         Language.order_type_price_name[myData.type];
       _this.caculationOrder(0); //初始化计算订单
+
     },
     /**
      * 显示弹出框

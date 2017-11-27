@@ -73,6 +73,8 @@ const logistics_return = resolve => require(['pages/refund/logistics'], resolve)
 
 const auction_mybond = resolve => require(['pages/auction/mybond'], resolve);
 //auction_mybond => 我的保证金/我的定金
+const auction_success = resolve => require(['pages/auction/succeed'], resolve);
+//auction_success 保证金缴纳成功
 
 
 const shoppingCart = resolve => require(['pages/shoppingCart/index'], resolve);
@@ -323,11 +325,18 @@ export default new Router({
         title: '团购详情'
       }
     },{
-      path: '/auction/mybond/:busId/',
+      path: '/auction/mybond/:busId',
       name: 'auction_mybond',
       component: auction_mybond,
       meta: {
         title: '我的保证金/我的定金'
+      }
+    },{
+      path: '/auction/success/:busId',
+      name: 'auction_success',
+      component: auction_success,
+      meta: {
+        title: '保证金缴纳成功'
       }
     }
     

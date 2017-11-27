@@ -32,9 +32,9 @@
                     <span class="shop-font" v-if="goodsData.hyPrice > 0"> 会员价：￥{{goodsData.hyPrice}}</span>
                 </div>
                 <!----拍卖进行中---->
-                <div class="shop-font" v-if="type == 4 && goodsData.auctionResult.isWin < 0">
+                <div class="shop-font" v-if="type == 4 && goodsData.auctionResult.isWin < 0 && goodsData.auctionResult.depositMoney > 0">
                     <span >保证金：</span>
-                    ￥<span class="fs50" >{{goodsData.auctionResult.depositMoney | moneySplit1 }}</span>.{{goodsData.auctionResult.depositMoney | moneySplit2}}
+                    ￥<span class="fs50">{{goodsData.auctionResult.depositMoney | moneySplit1 }}</span>.{{goodsData.auctionResult.depositMoney | moneySplit2}}
                     <span class="shopGray">不成拍卖后退还</span>
                 </div>
                 <!----拍卖胜出------>

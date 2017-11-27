@@ -36,7 +36,7 @@
                 <a class="shopBlue" @click="xieyi">《用户竞拍服务协议》</a>
             </div>
             <div class="payMoney-buttom fs52">
-                <div class="shop-max-button shop-bg" style="color: #fff;">
+                <div class="shop-max-button shop-bg" style="color: #fff;" @click="submitData">
                     交保证金
                 </div>
             </div>
@@ -63,11 +63,11 @@ export default {
   data() {
     return {
       isShow: false,
-      busId: this.$route.params.busId || sessionStorage.getItem("busId"),
-      proId: this.$route.params.proId,
-      aucId: this.$route.params.aucId,
-      invId: this.$route.params.invId,
-      agree: this.$route.params.agree,
+      busId: this.$route.params.busId || sessionStorage.getItem("busId"), //商家id
+      proId: this.$route.params.proId, //商品id
+      aucId: this.$route.params.aucId, //拍卖id
+      invId: this.$route.params.invId, //规格id
+      agree: this.$route.params.agree, //是否同意  1 同意
       isAgree: false, //是否同意
       auctionObj: null, //拍卖对象
       productObj: null, //商品对象
@@ -86,7 +86,7 @@ export default {
     }
     this.commonFn.setTitle("交保证金报名");
     this.$store.commit("show_footer", false); //隐藏底部导航栏
-    // this.loadData();
+    this.loadData();
   },
   beforeDestroy() {
     //离开后的操作
@@ -119,18 +119,65 @@ export default {
         }
       });
     },
+    submitData() {
+      let _this = this;
+      let _myData = this.auctionObj;
+      let _productObj = this.productObj;
+      let _selectPayWay = this.selectPayWay;
+      let _commonFn = this.commonFn;
+      if (!this.isAgree) {
+        _this.$parent.$refs.bubble.show_tips("请阅读用户竞拍协议"); //调用气泡显示
+        return;
+      }
+      //提交数据
+      let _data = {
+        busId: _this.busId, //商家id
+        url: location.href, //当前页面的地址
+        browerType: _this.$store.state.browerType, //浏览器类型
+        proId: _productObj.id, //商品id
+        aucId: this.aucId, //拍卖id
+        marginMoney: _myData.aucMargin, //保证金金额 必传
+        proName: _productObj.proName, //商品名称
+        proImgUrl: _myData.imageObj.image_url, //商品图片
+        proSpecificaIds: _myData.proSpecificaIds, //商品规格id
+        payWay: _selectPayWay.id //选择的支付方式
+      };
+      console.log(_data, "---");
+      _this.ajaxRequest({
+        url: h5App.activeAPI.add_margin_post,
+        data: _data,
+        success: function(data) {
+          //各种跳转
+          let reData = data.data;
+          let url = reData.payUrl;
+          if (_commonFn.isNotNull(url)) {
+            location.href = url;
+            return;
+          }
+          if (reData.payWay == 2) {
+            let busId = _this.busId;
+            //跳转到支付成功页面
+            url = "/auction/success/" + busId;
+            _this.$router.push(url);
+          }
+        }
+      });
+    },
+    //跳转到协议页面
     xieyi() {
-      let busId = this.busId;
-      let aucId = this.aucId;
-      let proId = this.proId;
-      let invId = this.invId || 0;
+      let busId = this.busId; //商家id
+      let aucId = this.aucId; //拍卖id
+      let proId = this.proId; //商品id
+      let invId = this.invId || 0; //库存id
       this.$router.push(
         "/auction/agreement/" + busId + "/" + proId + "/" + aucId + "/" + invId
       );
     },
+    //显示 弹出框
     showDialog() {
       this.isShowPayWay = true;
     },
+    //选中弹出框
     selectDialogChange(data) {
       this.selectPayWay = data[1];
     }

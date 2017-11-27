@@ -17,10 +17,12 @@ Vue.mixin({
 	  * @param return 
 	*/
 	ajaxRequest(opt) {
-        
             let vm = this;
             let opts = opt || {};
             let status = opt.status || true;
+            if(typeof(opt.status) != 'undefined'){
+                status = opt.status;
+            }
             let loading = opt.loading || false;
             if (!opts.url) {
                 alert('请填写接口地址');
@@ -62,7 +64,6 @@ Vue.mixin({
                         }
                         //商家已过期（需要跳转）
                         if(res.data.code == 1004){
-
                             return
                         }
                         //请求失败 1 请求数据为空1000  参数传值不完整1003

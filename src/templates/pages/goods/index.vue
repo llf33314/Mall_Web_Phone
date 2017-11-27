@@ -71,42 +71,45 @@
         </section>
         <!--底部按钮-->
         <section class="goods-footer" style="background:0;z-index:3;" >
-            <!---拍卖保证金---->
+            <!---拍卖保证金-->
             <div class="goods-footer-botton  fs50 shop-bg" v-if="type == 4 &&  goodsData.auctionResult.isShowDeposit == 1 " 
                 @click="marginDeposit">
                 交保证金报名
             </div>
-            <!---拍卖转订单---->
-            <div class="goods-footer-botton  fs50 shop-bg" v-if="type == 4 && goodsData.auctionResult.isReturnOrder == 1 " >
+            <!---拍卖转订单-->
+            <div class="goods-footer-botton  fs50 shop-bg" v-if="type == 4 && goodsData.auctionResult.isReturnOrder == 1 " 
+                @click="lijiBuy(0)">
                 转订单
             </div>
-             <!---拍卖失败显示按钮---->
+             <!---拍卖失败显示按钮-->
             <div class="goods-footer-botton  fs50 shop-bg" 
                 v-if="type == 4 && goodsData.auctionResult.activityStatus == -1 && goodsData.auctionResult.isWin != 1" >
                 查看更多商品
             </div>
-            <!---立即拍下---->
+            <!---立即拍下-->
             <div class="goods-auction-choice" v-if="type == 4 &&  goodsData.auctionResult.isLijiPai == 1 " >
-                <div class="goods-auction-box ">isLijiPai
-                    <em><i class="icon-jian iconfont"></i></em>
+                <div class="goods-auction-paixia-button shop-bg fs52" @click="lijiBuy(0)">立即拍下</div>
+            </div>
+             <!---立即出价-->
+            <div class="goods-auction-choice" v-if="type == 4 &&  goodsData.auctionResult.isChujia == 1 " >
+                <div class="goods-auction-box ">
+                    <em @click="auctionJian"><i class="icon-jian iconfont"></i></em>
                     <div class="" >
-                        <input  type="text" placeholder="拍下金额"/>
+                        <input  type="text" placeholder="拍下金额" v-model="chujiaMoney"/>
                     </div>
-                    <em><i class="icon-jiaimg iconfont"></i></em>
+                    <em @click="auctionAdd"><i class="icon-jiaimg iconfont"></i></em>
                 </div>
-                <div class="goods-auction-bottom shop-bg fs52">立即拍下</div>
+                <div class="goods-auction-bottom shop-bg fs52" @click="addOffer">立即出价</div>
             </div>
         </section>
         <!---底部菜单---->
-        <section class="goods-footer" style="background:0">
-            <!---下架显示---->
+        <section class="goods-footer" style="background:0" v-show="isShowButtom">
+            {{isSoldOut}}
+            <!---下架显示  或 活动被删除显示 -->
             <div class="goods-footer-no fs40" v-if="isSoldOut">
-                商品已经下架啦~
+                {{SoldOut}}
             </div>
-            <!---活动显示---->
-            <div class="goods-footer-no fs40" v-if="isSoldOut">
-                活动已结束
-            </div>
+            <!-- 活动显示 -->
              <!---预售---->
             <div class="goods-footer-botton ui-col-2 fs50 shop-bg" v-if="type == 6 && goodsData.auctionResult.isReturnOrder == 1" >
                 {{goodsData.auctionResult.isReturnOrder}}预售
@@ -443,1426 +446,1558 @@
 </div>
 </template>
 <script>
-
-import defaultImg from 'components/defaultImg';
-import banner from './child/banner';//banner
-import goodsInfo from './child/goodsInfo';//商品信息
-import coupons from './child/coupons';//查看优惠券包
-import pifaLimit from './child/pifa/pifaLimit';//批发条件显示
-import limit from './child/limit';//已选规格显示
-import addressFreight from './child/addressFreight';//地址运费
-import prove from './child/prove';//认证
-import joinGroup from './child/group/joinGroup';//参加团购展示
-import shopCollection from './child/shopCollection';//收藏店铺和店铺信息
-import auctionMethod from './child/auction/auctionMethod';//竞拍玩法
-import groupMethod from './child/group/groupMethod';//拼团玩法
-import goodsFooter from './child/goodsFooter';//商品详请内导航
-import comment from './child/comment' //商品详情评论
-import spec from './child/spec' //商品详情规格
-import filter from '../../../lib/filters'// 过滤器
-import spDialog from 'components/spDialog' //卡卷包
+import defaultImg from "components/defaultImg";
+import banner from "./child/banner"; //banner
+import goodsInfo from "./child/goodsInfo"; //商品信息
+import coupons from "./child/coupons"; //查看优惠券包
+import pifaLimit from "./child/pifa/pifaLimit"; //批发条件显示
+import limit from "./child/limit"; //已选规格显示
+import addressFreight from "./child/addressFreight"; //地址运费
+import prove from "./child/prove"; //认证
+import joinGroup from "./child/group/joinGroup"; //参加团购展示
+import shopCollection from "./child/shopCollection"; //收藏店铺和店铺信息
+import auctionMethod from "./child/auction/auctionMethod"; //竞拍玩法
+import groupMethod from "./child/group/groupMethod"; //拼团玩法
+import goodsFooter from "./child/goodsFooter"; //商品详请内导航
+import comment from "./child/comment"; //商品详情评论
+import spec from "./child/spec"; //商品详情规格
+import filter from "../../../lib/filters"; // 过滤器
+import spDialog from "components/spDialog"; //卡卷包
 
 export default {
-    components: {
-        defaultImg,
-        banner,
-        comment,
-        spec,
-        spDialog,
-        goodsInfo,
-        coupons,
-        pifaLimit,
-        limit,
-        addressFreight,
-        prove,
-        joinGroup,
-        shopCollection,
-        groupMethod,
-        auctionMethod,
-        goodsFooter
-    },
-    data () {
-        return {
-            isShow:false,
-            isSoldOut:false,//判断下架
-            SoldOut:'',//错误信息
-            isCardRecevie: false,//判断不是卡卷包
-            goodsId:'',
-            path:'',
-            imgUrl:'',
-            webPath:'',
-            goodsData:{
-                auctionResult:{
-                    depositMoney:''
-                },
-                productPrice:[
-                    '',''
-                ]
-            },
-            pifaResult:{
-                pfSetObj:{}
-            },//批发数据
-            imgSelecte:0,
-            type:'',
-            isProductCode:false,//商品编号,
-            guigePrice:'',//规格集合分类
-            specificaList:'',//规格集合
-            detailsData:'',//商品详情数据
-            spec_num:'',//不是批发的选择数
-            isDetails: 'details',
-            wholesaleId:'',
-            isWholesale:'',
-            selected_spec:'',
-            dialogData:'',
-            w_dialogData:'',
-            w_guigePrice:'',
-            w_specificaList:'', 
-            w_pfStatus:false,//是否能批发条件
-            w_specNum:0,//批发手批数量,
-            pifaTotal:0,//批发总价
-            pifaAmount:0,//批发总数
-            min_nav:[
-                {
-                    title:'商品详情',
-                    name:'details'
-                },
-                {
-                    title:'规格参数',
-                    name:'spec'
-                },
-                {
-                    title:'商品评价',
-                    name:'comment'
-                }
-            ],
-            flag:false,
-            //newDialogData:'',
-            arrDialog:'',
-            
+  components: {
+    defaultImg,
+    banner,
+    comment,
+    spec,
+    spDialog,
+    goodsInfo,
+    coupons,
+    pifaLimit,
+    limit,
+    addressFreight,
+    prove,
+    joinGroup,
+    shopCollection,
+    groupMethod,
+    auctionMethod,
+    goodsFooter
+  },
+  data() {
+    return {
+      isShow: false,
+      isSoldOut: false, //判断下架
+      SoldOut: "", //错误信息
+      isCardRecevie: false, //判断不是卡卷包
+      goodsId: "",
+      path: "",
+      imgUrl: "",
+      webPath: "",
+      goodsData: {
+        auctionResult: {
+          depositMoney: ""
+        },
+        productPrice: ["", ""]
+      },
+      pifaResult: {
+        pfSetObj: {}
+      }, //批发数据
+      imgSelecte: 0,
+      type: "",
+      isProductCode: false, //商品编号,
+      guigePrice: "", //规格集合分类
+      specificaList: "", //规格集合
+      detailsData: "", //商品详情数据
+      spec_num: "", //不是批发的选择数
+      isDetails: "details",
+      wholesaleId: "",
+      isWholesale: "",
+      selected_spec: "",
+      dialogData: "",
+      w_dialogData: "",
+      w_guigePrice: "",
+      w_specificaList: "",
+      w_pfStatus: false, //是否能批发条件
+      w_specNum: 0, //批发手批数量,
+      pifaTotal: 0, //批发总价
+      pifaAmount: 0, //批发总数
+      min_nav: [
+        {
+          title: "商品详情",
+          name: "details"
+        },
+        {
+          title: "规格参数",
+          name: "spec"
+        },
+        {
+          title: "商品评价",
+          name: "comment"
         }
-    },
-    watch: {
-        'flag'(){
-            let _this = this;
-            let arr=[]
-            //在所有规格中 获取已选择商品 数量>1的商品
-            _this.w_guigePrice.forEach((item,i)=>{
-                if(item.productNum>0){
-                    arr.push(item);
-                }
-            })
-            _this.pifaAmount = 0;
-            _this.pifaTotal = 0;
-
-            //切换规划分类数量显示
-            let newArr = _this.newArrDialog();
-            arr.forEach((item,i)=>{
-                newArr.forEach((test,j)=>{
-                    if(test.id == item.specifica_ids[0]){
-                        test.num += item.productNum;
-                    }
-                })
-                //计算总数
-                _this.pifaAmount  += item.productNum;
-                //计算总价
-                _this.pifaTotal += ( item.inv_price * item.productNum);
-            })
-
-            console.log(arr,'arr');
-
-            _this.arrDialog = newArr;
-            _this.newDialog = arr;
-        },
-        'isShow'(a,b){
-            console.log(this.isCardRecevie,'isCardRecevie')
-            if(a){
-                this.commonFn.disableScroll();
-            }else{
-                this.commonFn.allowScroll();
-            }
-        },
-        'isWholesale'(a,b){
-             if(a){
-                this.commonFn.disableScroll();
-            }else{
-                this.commonFn.allowScroll();
-            }
+      ],
+      flag: false,
+      //newDialogData:'',
+      arrDialog: "",
+      isShowButtom:false,//是否显示底部菜单
+      chujiaMoney : 0,//出价金额
+    };
+  },
+  watch: {
+    flag() {
+      let _this = this;
+      let arr = [];
+      //在所有规格中 获取已选择商品 数量>1的商品
+      _this.w_guigePrice.forEach((item, i) => {
+        if (item.productNum > 0) {
+          arr.push(item);
         }
-        
+      });
+      _this.pifaAmount = 0;
+      _this.pifaTotal = 0;
+
+      //切换规划分类数量显示
+      let newArr = _this.newArrDialog();
+      arr.forEach((item, i) => {
+        newArr.forEach((test, j) => {
+          if (test.id == item.specifica_ids[0]) {
+            test.num += item.productNum;
+          }
+        });
+        //计算总数
+        _this.pifaAmount += item.productNum;
+        //计算总价
+        _this.pifaTotal += item.inv_price * item.productNum;
+      });
+
+      console.log(arr, "arr");
+
+      _this.arrDialog = newArr;
+      _this.newDialog = arr;
     },
-    methods: {
-        dialogShow(){
-            //弹出正常的
-            console.log(this.isShow )
-            // debugger
-            // if(!this.isSoldOut) return;
-            this.isShow = true;
-            // console.log(this.isShow )
-        },
-        /** 
+    isShow(a, b) {
+      console.log(this.isCardRecevie, "isCardRecevie");
+      if (a) {
+        this.commonFn.disableScroll();
+      } else {
+        this.commonFn.allowScroll();
+      }
+    },
+    isWholesale(a, b) {
+      if (a) {
+        this.commonFn.disableScroll();
+      } else {
+        this.commonFn.allowScroll();
+      }
+    }
+  },
+  methods: {
+    dialogShow() {
+      //弹出正常的
+      console.log(this.isShow);
+      // debugger
+      // if(!this.isSoldOut) return;
+      this.isShow = true;
+      // console.log(this.isShow )
+    },
+    /** 
          * 查询商品接口
         */
-        phoneProductAjax(){
-            let _this = this ;
-            let activityId = _this.$route.params.activityId
-            activityId == 'undefined' ? activityId = 0 : activityId;
-            this.ajaxRequest({
-                'status': false,
-                'url': h5App.activeAPI.phoneProduct_getProduct_post,
-                'data':{
-                    url: _this.$store.state.loginDTO_URL,
-                    browerType: _this.$store.state.browerType,
-                    shopId : _this.$store.state.shopId,
-                    busId : _this.$store.state.busId,
-                    productId :  _this.$route.params.goodsId,
-                    type: _this.$route.params.type,
-                    activityId: activityId,
-                },
-                'success':function(data){
-                    console.log(data,'data');
-                    
-                    if(data.code == 1006 || data.code == 1007 || data.code == 1011){
-                        _this.isSoldOut = true;
-                        _this.SoldOut = data.msg;
-                    }
-
-                    _this.goodsData = data.data;
-                    _this.path = data.path;
-                    _this.imgUrl = data.imgUrl;
-                    _this.webPath = data.webPath;
-
-                    if(_this.type == 4){//拍卖，分割价钱
-                    console.log(data,'拍卖数据')
-
-                    }
-                    
-                    //"pfStatus"--//批发状态  0 未审核  1审核通过   -1 审核不通过  -2还未申请 
-                    if(_this.type == 7 ){//批发状态
-                        let _pfStatus = data.data.pifaResult.pfStatus;
-                        _this.pifaResult = data.data.pifaResult;
-                        _pfStatus < 0? _this.w_pfStatus = false : _this.w_pfStatus = true;
-                    }
-                    //商品详情请求
-                    _this.detailsAjax();
-                    //弹出规格初始数据--有规格匹配
-                    if(data.data.isSpecifica){
-                        let _type = _this.$route.params.type;
-                        if(_this.$route.params.type == 7){
-                            _this.wholesaleAjax({
-                                productId: _this.$route.params.goodsId,
-                                invId: data.data.invId,
-                                type: 7,
-                                activityId: activityId,
-                                isShowCommission: data.data.isShowCommission
-                            });//批发购买规格
-                            _type = 0;
-                        }
-                        _this.productDetailAjax({//根据类型购买价格 (_type = 0  是批发正常购买规格)
-                            productId: _this.$route.params.goodsId,
-                            invId: data.data.invId,
-                            type: _type,
-                            activityId: activityId,
-                            isShowCommission: data.data.isShowCommission
-                        });
-                        return
-                    }
-                    
-                    //弹出规格初始数据--无规格匹配
-                    if(_this.$route.params.type == 7){
-                        //弹出框数据规定为 添加数据
-                        let _data = data.data;
-                        
-                        _this.w_dialogData = {
-                            maxBuyNum:_data.maxBuyNum,//限购数量
-                            pfPrice:_data.pfPrice,//批发价格
-                            inv_num:_data.productStockTotal,//库存
-                            inv_code:_data.productCode,//默认编号
-                            isSpec: true, //没有数据判断
-                            productNum:1//购买数量
-                        }
-                        //库存为0,购买数量默认为值判断
-                        _data.productStockTotal==0? _this.w_dialogData.productNum = 0:_this.w_dialogData.productNum = 1;
-                        //默认图片 主图显示
-                        let imageLists = _this.goodsData.imageList;
-                        imageLists.forEach((item,index)=>{
-                                if(item.isMainImages == 1){
-                                    _this.w_dialogData.specifica_img_url = item.imageUrl;
-                                }  
-                        })
-                        //console.log(_this.w_dialogData,'w_dialogData无规格')
-                    }
-                    _this.dialogData = data.data;
-
-                    _this.dialogData.inv_price = data.data.productPrice;//价钱
-                    _this.dialogData.inv_code = data.data.productCode;//默认编号
-                    _this.dialogData.inv_num = data.data.productStockTotal;//默认库存
-                    _this.dialogData.values = '';
-                    let imageLists = _this.goodsData.imageList;
-                    imageLists.forEach((item,index)=>{
-                            if(item.isMainImages == 1){
-                                _this.dialogData.specifica_img_url = item.imageUrl;
-                            }  
-                    })
-                    _this.dialogData.productStockTotal==0? _this.spec_num = 0:_this.spec_num = 1;
-                    //console.log(_this.dialogData,'dialogData无规格');
-                    
-                    
-                }
-            })
+    phoneProductAjax() {
+      let _this = this;
+      let activityId = _this.$route.params.activityId;
+      activityId == "undefined" ? (activityId = 0) : activityId;
+      this.ajaxRequest({
+        status: false,
+        url: h5App.activeAPI.phoneProduct_getProduct_post,
+        data: {
+          url: _this.$store.state.loginDTO_URL,
+          browerType: _this.$store.state.browerType,
+          shopId: _this.$store.state.shopId,
+          busId: _this.$store.state.busId,
+          productId: _this.$route.params.goodsId,
+          type: _this.$route.params.type,
+          activityId: activityId
         },
-        /** 
+        success: function(data) {
+          console.log(data, "data");
+
+          if (data.code == 1006 || data.code == 1007 || data.code == 1011) {
+            _this.isSoldOut = true;
+            _this.SoldOut = data.msg;
+            return;
+          }
+
+          _this.goodsData = data.data;
+          _this.path = data.path;
+          _this.imgUrl = data.imgUrl;
+          _this.webPath = data.webPath;
+
+          if (_this.type == 4) {
+            //拍卖，分割价钱
+            console.log(data, "拍卖数据");
+            let auctionData = _this.goodsData.auctionResult;
+            _this.chujiaMoney = auctionData.nowPrice;
+          }
+
+          //"pfStatus"--//批发状态  0 未审核  1审核通过   -1 审核不通过  -2还未申请
+          if (_this.type == 7) {
+            //批发状态
+            let _pfStatus = data.data.pifaResult.pfStatus;
+            _this.pifaResult = data.data.pifaResult;
+            _pfStatus < 0
+              ? (_this.w_pfStatus = false)
+              : (_this.w_pfStatus = true);
+          }
+          //商品详情请求
+          _this.detailsAjax();
+          //弹出规格初始数据--有规格匹配
+          if (data.data.isSpecifica) {
+            let _type = _this.$route.params.type;
+            if (_this.$route.params.type == 7) {
+              _this.wholesaleAjax({
+                productId: _this.$route.params.goodsId,
+                invId: data.data.invId,
+                type: 7,
+                activityId: activityId,
+                isShowCommission: data.data.isShowCommission
+              }); //批发购买规格
+              _type = 0;
+            }
+            _this.productDetailAjax({
+              //根据类型购买价格 (_type = 0  是批发正常购买规格)
+              productId: _this.$route.params.goodsId,
+              invId: data.data.invId,
+              type: _type,
+              activityId: activityId,
+              isShowCommission: data.data.isShowCommission
+            });
+            return;
+          }
+
+          //弹出规格初始数据--无规格匹配
+          if (_this.$route.params.type == 7) {
+            //弹出框数据规定为 添加数据
+            let _data = data.data;
+
+            _this.w_dialogData = {
+              maxBuyNum: _data.maxBuyNum, //限购数量
+              pfPrice: _data.pfPrice, //批发价格
+              inv_num: _data.productStockTotal, //库存
+              inv_code: _data.productCode, //默认编号
+              isSpec: true, //没有数据判断
+              productNum: 1 //购买数量
+            };
+            //库存为0,购买数量默认为值判断
+            _data.productStockTotal == 0
+              ? (_this.w_dialogData.productNum = 0)
+              : (_this.w_dialogData.productNum = 1);
+            //默认图片 主图显示
+            let imageLists = _this.goodsData.imageList;
+            imageLists.forEach((item, index) => {
+              if (item.isMainImages == 1) {
+                _this.w_dialogData.specifica_img_url = item.imageUrl;
+              }
+            });
+            //console.log(_this.w_dialogData,'w_dialogData无规格')
+          }
+          _this.dialogData = data.data;
+
+          _this.dialogData.inv_price = data.data.productPrice; //价钱
+          _this.dialogData.inv_code = data.data.productCode; //默认编号
+          _this.dialogData.inv_num = data.data.productStockTotal; //默认库存
+          _this.dialogData.values = "";
+          let imageLists = _this.goodsData.imageList;
+          imageLists.forEach((item, index) => {
+            if (item.isMainImages == 1) {
+              _this.dialogData.specifica_img_url = item.imageUrl;
+            }
+          });
+          _this.dialogData.productStockTotal == 0
+            ? (_this.spec_num = 0)
+            : (_this.spec_num = 1);
+          //console.log(_this.dialogData,'dialogData无规格');
+        }
+      });
+    },
+    /** 
          * 查询商品规格接口(规格弹出框调用) -- 批发
          */
-        wholesaleAjax(data){
-            let _this = this;
-            let _data = data
-            _this.ajaxRequest({
-                'url': h5App.activeAPI.phoneProduct_getSpecifica_post,
-                'data':data,
-                'success':function(data){
-                    //console.log(data,'批发数据');
-                    _this.w_specificaList = data.data.specificaList;
-                    _this.w_guigePrice = data.data.guigePrice;
+    wholesaleAjax(data) {
+      let _this = this;
+      let _data = data;
+      _this.ajaxRequest({
+        url: h5App.activeAPI.phoneProduct_getSpecifica_post,
+        data: data,
+        success: function(data) {
+          //console.log(data,'批发数据');
+          _this.w_specificaList = data.data.specificaList;
+          _this.w_guigePrice = data.data.guigePrice;
 
-                    data.data.guigePrice.forEach((item,i)=>{//弹出规格初始值
-                        item.specifica_ids = item.specifica_ids.split(',');
-                        item.values = item.values.split(',');//批发 规格数组 分割
-                        item.productNum = 0;//每个规格集合添加默认数量
-                        if(item.id == _data.invId){
-                            _this.w_dialogData = item;
-                            
-                            if(data.data.specificaList.length>0){//批发 第一组数据 默认id
-                                _this.wholesaleId = item.specifica_ids[0];
-                            }
-                            if(!item.specifica_img_url){
-                                //判断是规格集合里面是否有匹配图片没有使用img主图
-                                let imageLists = _this.goodsData.imageList;
-                                    imageLists.forEach((item,index)=>{
-                                        if(item.isMainImages == 1){
-                                            _this.w_dialogData.specifica_img_url = item.imageUrl;
-                                        }  
-                                });
-                            }
-                        }
-                    })
-                }
-            })
-        },
-        /** 
+          data.data.guigePrice.forEach((item, i) => {
+            //弹出规格初始值
+            item.specifica_ids = item.specifica_ids.split(",");
+            item.values = item.values.split(","); //批发 规格数组 分割
+            item.productNum = 0; //每个规格集合添加默认数量
+            if (item.id == _data.invId) {
+              _this.w_dialogData = item;
+
+              if (data.data.specificaList.length > 0) {
+                //批发 第一组数据 默认id
+                _this.wholesaleId = item.specifica_ids[0];
+              }
+              if (!item.specifica_img_url) {
+                //判断是规格集合里面是否有匹配图片没有使用img主图
+                let imageLists = _this.goodsData.imageList;
+                imageLists.forEach((item, index) => {
+                  if (item.isMainImages == 1) {
+                    _this.w_dialogData.specifica_img_url = item.imageUrl;
+                  }
+                });
+              }
+            }
+          });
+        }
+      });
+    },
+    /** 
          * 查询商品规格接口(规格弹出框调用)
          */
-        productDetailAjax(data){
-            let _this = this;
-            let _data = data;
-            let activityId = _this.$route.params.activityId;
-            this.ajaxRequest({
-                'url': h5App.activeAPI.phoneProduct_getSpecifica_post,
-                'data':_data,
-                'success':function(data){
-                    // console.log(data,'不是批发规格数据');
-                    _this.specificaList = data.data.specificaList;
-                    _this.guigePrice = data.data.guigePrice;
+    productDetailAjax(data) {
+      let _this = this;
+      let _data = data;
+      let activityId = _this.$route.params.activityId;
+      this.ajaxRequest({
+        url: h5App.activeAPI.phoneProduct_getSpecifica_post,
+        data: _data,
+        success: function(data) {
+          // console.log(data,'不是批发规格数据');
+          _this.specificaList = data.data.specificaList;
+          _this.guigePrice = data.data.guigePrice;
 
-                    _this.guigePrice.forEach((item,i)=>{//弹出规格初始值
-                        item.specifica_ids = item.specifica_ids.split(',');
-                        item.productNum = 1;
-                        if(item.id == _data.invId){
-                            _this.dialogData = item;
-                            _this.spec_num = item.productNum
-                            if(!item.specifica_img_url){
-                                //判断是规格集合里面是否有匹配图片没有使用img主图
-                                let imageLists = _this.goodsData.imageList;
-                                    imageLists.forEach((item,index)=>{
-                                        if(item.isMainImages == 1){
-                                            _this.dialogData.specifica_img_url = item.imageUrl;
-                                        }  
-                                });
-                            }
-                        }
-                    })
-                }
-            })
-
-        },
-        /** 
+          _this.guigePrice.forEach((item, i) => {
+            //弹出规格初始值
+            item.specifica_ids = item.specifica_ids.split(",");
+            item.productNum = 1;
+            if (item.id == _data.invId) {
+              _this.dialogData = item;
+              _this.spec_num = item.productNum;
+              if (!item.specifica_img_url) {
+                //判断是规格集合里面是否有匹配图片没有使用img主图
+                let imageLists = _this.goodsData.imageList;
+                imageLists.forEach((item, index) => {
+                  if (item.isMainImages == 1) {
+                    _this.dialogData.specifica_img_url = item.imageUrl;
+                  }
+                });
+              }
+            }
+          });
+        }
+      });
+    },
+    /** 
          * 规格数量加减--正常购买
          */
-        addSpec_number(e){
-            let _this =this;
-            
-            //判断是否是input输入
-            let re = /^[0-9]+$/ ;
-            
-            if(!re.test(_this.spec_num)){
-                _this.$parent.$refs.bubble.show_tips('请输入大于0的整数');
-                _this.spec_num = 0 
-            };
-            //库存为0 
-            if( _this.dialogData.inv_num == 0){
-                _this.$parent.$refs.bubble.show_tips('商品已售罄');
-                return
-            }
-            if(_this.spec_num<0){
-                _this.$parent.$refs.bubble.show_tips('数量不能小于1');
-            _this.spec_num = 1;
-                return
-            }
-            if( e === '-'){//减小时，
-                if( _this.spec_num<=1){
-                    _this.$parent.$refs.bubble.show_tips('数量不能小于1');
-                    return
-                }
-                _this.spec_num  --;
-            }else{//增减时
-                // 限购数量不为零时，购买数量不能超出限购数量
-                if(_this.goodsData.maxBuyNum && ( _this.spec_num >= _this.goodsData.maxBuyNum)){
-                    _this.$parent.$refs.bubble.show_tips('超出限购数量');
-                    return
-                }
-                //超出规格库存
-                if(_this.spec_num >= _this.dialogData.inv_num){
-                    _this.$parent.$refs.bubble.show_tips('超出现有库存量');
-                    _this.spec_num = _this.dialogData.inv_num
-                    return
-                }
-                if(e === '+'){
-                    _this.spec_num  ++;
-                    return
-                }
-            }
-        },
-        /** 
+    addSpec_number(e) {
+      let _this = this;
+
+      //判断是否是input输入
+      let re = /^[0-9]+$/;
+
+      if (!re.test(_this.spec_num)) {
+        _this.$parent.$refs.bubble.show_tips("请输入大于0的整数");
+        _this.spec_num = 0;
+      }
+      //库存为0
+      if (_this.dialogData.inv_num == 0) {
+        _this.$parent.$refs.bubble.show_tips("商品已售罄");
+        return;
+      }
+      if (_this.spec_num < 0) {
+        _this.$parent.$refs.bubble.show_tips("数量不能小于1");
+        _this.spec_num = 1;
+        return;
+      }
+      if (e === "-") {
+        //减小时，
+        if (_this.spec_num <= 1) {
+          _this.$parent.$refs.bubble.show_tips("数量不能小于1");
+          return;
+        }
+        _this.spec_num--;
+      } else {
+        //增减时
+        // 限购数量不为零时，购买数量不能超出限购数量
+        if (
+          _this.goodsData.maxBuyNum &&
+          _this.spec_num >= _this.goodsData.maxBuyNum
+        ) {
+          _this.$parent.$refs.bubble.show_tips("超出限购数量");
+          return;
+        }
+        //超出规格库存
+        if (_this.spec_num >= _this.dialogData.inv_num) {
+          _this.$parent.$refs.bubble.show_tips("超出现有库存量");
+          _this.spec_num = _this.dialogData.inv_num;
+          return;
+        }
+        if (e === "+") {
+          _this.spec_num++;
+          return;
+        }
+      }
+    },
+    /** 
          * 规格数量加减--批发手批
          */
-        addw_specNum(c){
-            let _this =this;
-            //库存为0
-            let _data=[];
+    addw_specNum(c) {
+      let _this = this;
+      //库存为0
+      let _data = [];
 
-            let id = this.wholesaleId;//当前id
-            /*
+      let id = this.wholesaleId; //当前id
+      /*
             有规格 - 从返回规格列表中获取（w_guigePrice）
             无规格 - 从初始默认数据中获取（w_dialogData）
             */
-            //当前id过滤出
-            if(_this.w_guigePrice == ''){
-                if(id == _this.w_dialogData.specifica_ids[0]){
-                    _data.push(_this.w_dialogData);
-                }
-            }else{
-                if(_this.w_guigePrice[0].specifica_ids.length == 1){
-                     _this.w_guigePrice.forEach((item,i)=>{
-                        _data.push(item);
-                    })
-                }else{
-                    _this.w_guigePrice.forEach((item,i)=>{
-                        if(id == item.specifica_ids[0]){
-                        _data.push(item);
-                        } 
-                    })
-
-                }
+      //当前id过滤出
+      if (_this.w_guigePrice == "") {
+        if (id == _this.w_dialogData.specifica_ids[0]) {
+          _data.push(_this.w_dialogData);
+        }
+      } else {
+        if (_this.w_guigePrice[0].specifica_ids.length == 1) {
+          _this.w_guigePrice.forEach((item, i) => {
+            _data.push(item);
+          });
+        } else {
+          _this.w_guigePrice.forEach((item, i) => {
+            if (id == item.specifica_ids[0]) {
+              _data.push(item);
             }
-            console.log(_data,'_data')
-            _data.forEach((item,i)=>{
-                //vue监听不到数组里面的数据，改变vue里面的数据，实现dom重新渲染；
-                _this.w_guigePrice.push([]);
-                _this.w_guigePrice.pop();
+          });
+        }
+      }
+      console.log(_data, "_data");
+      _data.forEach((item, i) => {
+        //vue监听不到数组里面的数据，改变vue里面的数据，实现dom重新渲染；
+        _this.w_guigePrice.push([]);
+        _this.w_guigePrice.pop();
 
-                if( item.inv_num == 0){
-                    item.productNum = 0;
-                    _this.$parent.$refs.bubble.show_tips('商品已售罄');
-                    return
-                }
-                if( item.productNum < 0){
-                    _this.$parent.$refs.bubble.show_tips('数量不能小于1');
-                    item.productNum = 1;
-                    return
-                }
+        if (item.inv_num == 0) {
+          item.productNum = 0;
+          _this.$parent.$refs.bubble.show_tips("商品已售罄");
+          return;
+        }
+        if (item.productNum < 0) {
+          _this.$parent.$refs.bubble.show_tips("数量不能小于1");
+          item.productNum = 1;
+          return;
+        }
 
-                if( c === '-'){//减小时，
-                    if( item.productNum <= 0){
-                        _this.$parent.$refs.bubble.show_tips('数量不能小于0');
-                        return
-                    }
-                    item.productNum--;
-                }else{//增减时
-                    //超出规格库存
-                    if( item.productNum.num >= _data.inv_num){
-                        _this.$parent.$refs.bubble.show_tips('超出现有库存量');
-                        item.productNum = _data.inv_num
-                        return
-                    }
-                    // 限购数量不为零时，购买数量不能超出限购数量
-                    if(_this.goodsData.maxBuyNum && ( item.num  >= _this.goodsData.maxBuyNum)){
-                        _this.$parent.$refs.bubble.show_tips('超出限购数量');
-                        return
-                    }
-                    if(c === '+'){
-                        item.productNum ++;
-                    }
-                } 
-            })
+        if (c === "-") {
+          //减小时，
+          if (item.productNum <= 0) {
+            _this.$parent.$refs.bubble.show_tips("数量不能小于0");
+            return;
+          }
+          item.productNum--;
+        } else {
+          //增减时
+          //超出规格库存
+          if (item.productNum.num >= _data.inv_num) {
+            _this.$parent.$refs.bubble.show_tips("超出现有库存量");
+            item.productNum = _data.inv_num;
+            return;
+          }
+          // 限购数量不为零时，购买数量不能超出限购数量
+          if (
+            _this.goodsData.maxBuyNum &&
+            item.num >= _this.goodsData.maxBuyNum
+          ) {
+            _this.$parent.$refs.bubble.show_tips("超出限购数量");
+            return;
+          }
+          if (c === "+") {
+            item.productNum++;
+          }
+        }
+      });
 
+      _this.pifaTotal = 0; //总钱
+      _this.pifaAmount = 0; //总数
 
-            _this.pifaTotal = 0;//总钱
-            _this.pifaAmount = 0;//总数
+      let newArr = _this.arrDialog || _this.newArrDialog();
+      let arr = [];
+      _this.w_specNum = 0;
+      newArr.forEach((e, j) => {
+        //分类显示小图标个数 =  分类里任意一个数量* 分类下的规格length
+        if (e.id == id) {
+          e.num = _data[0].productNum * _data.length;
+        }
 
-            let newArr = _this.arrDialog || _this.newArrDialog();
-            let arr=[];
-            _this.w_specNum =0
-            newArr.forEach((e,j)=>{
-                //分类显示小图标个数 =  分类里任意一个数量* 分类下的规格length
-                if( e.id == id ){
-                    e.num = _data[0].productNum * _data.length;
-                }
-                
-                 _this.w_specNum += e.num
-            })
-            _this.w_specNum = _this.w_specNum / _data.length ;
+        _this.w_specNum += e.num;
+      });
+      _this.w_specNum = _this.w_specNum / _data.length;
 
-            _this.w_guigePrice.forEach((item,i)=>{
-                let n = item.productNum * Number(item.inv_price);
+      _this.w_guigePrice.forEach((item, i) => {
+        let n = item.productNum * Number(item.inv_price);
 
-                _this.pifaTotal = _this.pifaTotal + Number(n);
+        _this.pifaTotal = _this.pifaTotal + Number(n);
 
-                _this.pifaAmount +=  item.productNum;
-                
-
-            })
-            _this.arrDialog = newArr;
-        },
-        /** 
+        _this.pifaAmount += item.productNum;
+      });
+      _this.arrDialog = newArr;
+    },
+    /** 
          * 多个规格时 选择上层导航数据整理
         */
-        newArrDialog(){
-            let _this = this;
-            let newArr= [];
-            _this.w_specificaList[0].specValues.forEach((item,j)=> {
-                let obj ={
-                            id:'',
-                            value:'',
-                            num:0,
-                            inv_num:0
-                };
-                obj.id =  item.id;
-                obj.value =  item.specValue;
+    newArrDialog() {
+      let _this = this;
+      let newArr = [];
+      _this.w_specificaList[0].specValues.forEach((item, j) => {
+        let obj = {
+          id: "",
+          value: "",
+          num: 0,
+          inv_num: 0
+        };
+        obj.id = item.id;
+        obj.value = item.specValue;
 
-                let a = null;
+        let a = null;
 
-                _this.w_guigePrice.forEach((test,i)=>{
-                    if(test.specifica_ids[0] == obj.id){
-                        if(a < test.inv_num){
-                            a = test.inv_num;
-                            obj.inv_num = a;
-                        }
-                    }   
-                })
-                newArr.push(obj);
-            })
-            
-            return newArr;
-        },
-        /** 
+        _this.w_guigePrice.forEach((test, i) => {
+          if (test.specifica_ids[0] == obj.id) {
+            if (a < test.inv_num) {
+              a = test.inv_num;
+              obj.inv_num = a;
+            }
+          }
+        });
+        newArr.push(obj);
+      });
+
+      return newArr;
+    },
+    /** 
          * 规格数量加减--批发混批
          */
-        w_addSpecNumber(e,index){
-            let _this =this;
-            let _data;//当前要改变的数据
-            //监听flag变化,input输入watch监听不了
+    w_addSpecNumber(e, index) {
+      let _this = this;
+      let _data; //当前要改变的数据
+      //监听flag变化,input输入watch监听不了
 
-            _this.flag = !_this.flag;
-        
-            /*
+      _this.flag = !_this.flag;
+
+      /*
             有规格 - 从返回规格列表中获取（w_guigePrice）
             无规格 - 从初始默认数据中获取（w_dialogData）
             */
-            _this.w_guigePrice == '' ?_data = _this.w_dialogData:_data =_this.w_guigePrice[index];
+      _this.w_guigePrice == ""
+        ? (_data = _this.w_dialogData)
+        : (_data = _this.w_guigePrice[index]);
 
-            let re = /^[0-9]+$/ ;
-            
-            if(!re.test( _data.productNum)){
-                _this.$parent.$refs.bubble.show_tips('请输入大于0的整数');
-                _data.productNum = 0 
-            };
-            //库存为0 
-            if( _data.inv_num == 0){
-                _data.inv_num = 0 ;
-                if(_this.w_guigePrice == ''){
-                    _this.$set(_this.w_dialogData,'productNum',0);
-                    
-                }else{
-                    _this.$set(_this.w_guigePrice,index,_data)
-                }
-                
-                _this.$parent.$refs.bubble.show_tips('商品已售罄');
-                return
-            }
+      let re = /^[0-9]+$/;
 
-            if(_data.productNum < 0){
-                _this.$parent.$refs.bubble.show_tips('数量不能小于0');
-                _this.$set(_this.w_guigePrice[index],'productNum',0)
-                return
-            }
-            if( e === '-'){//减小时，
-                if( _data.productNum<=0){
-                    _this.$parent.$refs.bubble.show_tips('数量不能小于0');
-                    return
-                }
+      if (!re.test(_data.productNum)) {
+        _this.$parent.$refs.bubble.show_tips("请输入大于0的整数");
+        _data.productNum = 0;
+      }
+      //库存为0
+      if (_data.inv_num == 0) {
+        _data.inv_num = 0;
+        if (_this.w_guigePrice == "") {
+          _this.$set(_this.w_dialogData, "productNum", 0);
+        } else {
+          _this.$set(_this.w_guigePrice, index, _data);
+        }
 
-                //_this.w_guigePrice[num].productNum=_data.productNum--;
-                _data.productNum--;
-                _this.$set(_this.w_guigePrice,index,_data)
-            }else{//增减时
-                //限购数量不为零时，购买数量不能超出限购数量
-                if(_this.goodsData.maxBuyNum && ( _data.productNum >= _this.goodsData.maxBuyNum)){
-                    _this.$parent.$refs.bubble.show_tips('超出限购数量');
-                    return
-                }
-                //库存不为0，超出规格库存
-                if(_data.productNum >= _data.inv_num){
-                    _this.$parent.$refs.bubble.show_tips('超出现有库存量');
-                    _data.productNum = _data.inv_num;
-                    return
-                }
-                if(e === '+'){
-                    _this.w_guigePrice[index].productNum = _data.productNum ++;
-                    // _this.w_guigePrice.push([]);
-                    // _this.w_guigePrice.pop();
-                    _data.productNum++;
-                    _this.$set(_this.w_guigePrice,index,_data)
-                    
-                    return
-                }
-            }
-        },
-        /** 
+        _this.$parent.$refs.bubble.show_tips("商品已售罄");
+        return;
+      }
+
+      if (_data.productNum < 0) {
+        _this.$parent.$refs.bubble.show_tips("数量不能小于0");
+        _this.$set(_this.w_guigePrice[index], "productNum", 0);
+        return;
+      }
+      if (e === "-") {
+        //减小时，
+        if (_data.productNum <= 0) {
+          _this.$parent.$refs.bubble.show_tips("数量不能小于0");
+          return;
+        }
+
+        //_this.w_guigePrice[num].productNum=_data.productNum--;
+        _data.productNum--;
+        _this.$set(_this.w_guigePrice, index, _data);
+      } else {
+        //增减时
+        //限购数量不为零时，购买数量不能超出限购数量
+        if (
+          _this.goodsData.maxBuyNum &&
+          _data.productNum >= _this.goodsData.maxBuyNum
+        ) {
+          _this.$parent.$refs.bubble.show_tips("超出限购数量");
+          return;
+        }
+        //库存不为0，超出规格库存
+        if (_data.productNum >= _data.inv_num) {
+          _this.$parent.$refs.bubble.show_tips("超出现有库存量");
+          _data.productNum = _data.inv_num;
+          return;
+        }
+        if (e === "+") {
+          _this.w_guigePrice[index].productNum = _data.productNum++;
+          // _this.w_guigePrice.push([]);
+          // _this.w_guigePrice.pop();
+          _data.productNum++;
+          _this.$set(_this.w_guigePrice, index, _data);
+
+          return;
+        }
+      }
+    },
+    /** 
          * 批发条件--判断批发资格
          */
-        wholesaleShow(){
-            let _this = this;
-            let data = _this.goodsData.pifaResult;
-            console.log(data,'pifaResult');
-            //console.log(_this.w_dialogData,'w_dialogData',_this.w_guigePrice,_this.w_specificaList);
-            
-            //"pfStatus"--//批发状态  0 未审核  1审核通过   -1 审核不通过  -2还未申请
-            if(!_this.w_pfStatus){//跳转申请页
-                _this.$parent.$refs.bubble.show_tips(data.pfErrorMsg);
-                _this.$router.push('/wholesale/apply');
-                return
-            }
-            _this.isWholesale = true;
-        },
-        /**
+    wholesaleShow() {
+      let _this = this;
+      let data = _this.goodsData.pifaResult;
+      console.log(data, "pifaResult");
+      //console.log(_this.w_dialogData,'w_dialogData',_this.w_guigePrice,_this.w_specificaList);
+
+      //"pfStatus"--//批发状态  0 未审核  1审核通过   -1 审核不通过  -2还未申请
+      if (!_this.w_pfStatus) {
+        //跳转申请页
+        _this.$parent.$refs.bubble.show_tips(data.pfErrorMsg);
+        _this.$router.push("/wholesale/apply");
+        return;
+      }
+      _this.isWholesale = true;
+    },
+    /**
          * 选择规格 
          * @param id 选择INV_id
          */
-        choice_product(e,id){
-            let _this = this ;
-            let specs= [],invid;
-            
-            if(id){
-                _this.wholesaleId = id;
-            }
+    choice_product(e, id) {
+      let _this = this;
+      let specs = [],
+        invid;
 
-            if(e){//获取选中值 存成数组
-                $(e.target).siblings().removeClass('shop-bg');
-                $(e.target).addClass('shop-bg');
-            }
-            for(var i = 0 ;i<$('.js-specValue .shop-bg').length;i++){
-                specs.push($('.js-specValue .shop-bg').eq(i).attr('value'));
-            }
-            //获取选中值的规格集合
-            _this.guigePrice.forEach((item,i) => {
-                //判断两个数组完全相等 转字符串比较
-                if(specs.toString() === item.specifica_ids.toString()){
-                    
-                    if(!item.specifica_img_url){
-                        item.specifica_img_url = _this.dialogData.specifica_img_url;
-                    }
-                    _this.dialogData = item;
-                    //_this.selected_spec =  item.values.toString() 
-                }
-            })
-            console.log(specs,'specs',_this.dialogData);
-            
-            
-            //切换时规格时 如果规格 购买数量大于库存数量 则等于库存数量
+      if (id) {
+        _this.wholesaleId = id;
+      }
 
-            if( _this.spec_num  >= _this.dialogData.inv_num){
-                _this.spec_num = _this.dialogData.inv_num;
-            }
+      if (e) {
+        //获取选中值 存成数组
+        $(e.target)
+          .siblings()
+          .removeClass("shop-bg");
+        $(e.target).addClass("shop-bg");
+      }
+      for (var i = 0; i < $(".js-specValue .shop-bg").length; i++) {
+        specs.push(
+          $(".js-specValue .shop-bg")
+            .eq(i)
+            .attr("value")
+        );
+      }
+      //获取选中值的规格集合
+      _this.guigePrice.forEach((item, i) => {
+        //判断两个数组完全相等 转字符串比较
+        if (specs.toString() === item.specifica_ids.toString()) {
+          if (!item.specifica_img_url) {
+            item.specifica_img_url = _this.dialogData.specifica_img_url;
+          }
+          _this.dialogData = item;
+          //_this.selected_spec =  item.values.toString()
+        }
+      });
+      console.log(specs, "specs", _this.dialogData);
 
-        },
-        /** 
+      //切换时规格时 如果规格 购买数量大于库存数量 则等于库存数量
+
+      if (_this.spec_num >= _this.dialogData.inv_num) {
+        _this.spec_num = _this.dialogData.inv_num;
+      }
+    },
+    /** 
          * 添加购物车 e==1正常购买，e==2 批发购买
          */
-        addCard(c,e){
-            let  _this = this;
-            let data;//添加商品
-            let ajaxdata={//请求数据
-                busId: _this.$store.state.busId,
-                url: _this.$store.state.loginDTO_URL,
-                browerType: _this.$store.state.browerType,
-                productId :  _this.$route.params.goodsId,
-            };
-            if(c===1){
-                //正常购买
-                data = _this.dialogData;
-                ajaxdata.productNum = data.productNum;
-                ajaxdata.price = data.inv_price;
-            }else{
-                if($(e.target).hasClass('shopRgba')) return;
-                //批发购买
-                data = _this.newDialog;
-                let arr = {}
-                data.forEach((item,i)=>{
-                    arr[item.xsid] = {
-                        num:item.productNum,
-                        value:item.values.toString(),
-                        price:item.inv_price
-                    } 
-                })
-                ajaxdata.proSpecId = JSON.stringify(arr);
-                ajaxdata.productNum=_this.pifaAmount;
-                ajaxdata.price = _this.goodsData.pfPrice;
-            } 
+    addCard(c, e) {
+      let _this = this;
+      let data; //添加商品
+      let ajaxdata = {
+        //请求数据
+        busId: _this.$store.state.busId,
+        url: _this.$store.state.loginDTO_URL,
+        browerType: _this.$store.state.browerType,
+        productId: _this.$route.params.goodsId
+      };
+      if (c === 1) {
+        //正常购买
+        data = _this.dialogData;
+        ajaxdata.productNum = data.productNum;
+        ajaxdata.price = data.inv_price;
+      } else {
+        if ($(e.target).hasClass("shopRgba")) return;
+        //批发购买
+        data = _this.newDialog;
+        let arr = {};
+        data.forEach((item, i) => {
+          arr[item.xsid] = {
+            num: item.productNum,
+            value: item.values.toString(),
+            price: item.inv_price
+          };
+        });
+        ajaxdata.proSpecId = JSON.stringify(arr);
+        ajaxdata.productNum = _this.pifaAmount;
+        ajaxdata.price = _this.goodsData.pfPrice;
+      }
 
-            _this.ajaxRequest({
-                'url': h5App.activeAPI.phoneShopCart_addShopCart_post,
-                'data':ajaxdata,
-                'success':function(data){
-                    let msg={
-                        type :'success',
-                        msg :  res.data.msg
-                    }
-                    _this.$parent.$refs.bubble.show_tips(msg);
-                    
-                } 
-            })
-        },
-        /** 
+      _this.ajaxRequest({
+        url: h5App.activeAPI.phoneShopCart_addShopCart_post,
+        data: ajaxdata,
+        success: function(data) {
+          let msg = {
+            type: "success",
+            msg: res.data.msg
+          };
+          _this.$parent.$refs.bubble.show_tips(msg);
+        }
+      });
+    },
+    /** 
          * 切换副导航
          * @param name 名字
         */
-        nav_change(name){
-            this.nav_choice = name;
-            this.isDetails = name
-        },
-        /**
-         * 商品详情请求
-         */
-        detailsAjax(){
-            let _this = this;
-            _this.ajaxRequest({
-                'url': h5App.activeAPI.phoneProduct_getProductDetail_post,
-                'data':{
-                    productId :  _this.$route.params.goodsId,
-                },
-                'success':function(data){
-                    _this.detailsData = data.data;
-                    } 
-            })
-        },
-        /**
-         * 购物车跳转
-         */
-        shoppingCart(){
-            let shopId =  this.$route.params.shopId;
-            let busId =  this.$route.params.busId;
-            this.$router.push('/cart/'+shopId+'/'+busId+'/0');
-        },
-        //立即购买
-        lijiBuy(type,orderType){
-            
-            // let price = 
-            let _this = this;
-            console.log(_this.dialogData)
-            let _data = {
-                productId:_this.goodsId,//商品id，必传
-                busId:_this.$route.params.busId,//商家id，必传
-                productNum:_this.spec_num,//productNum	商品数量，必传	 
-                price: _this.dialogData.inv_price,//商品价格，必传
-                type:_this.type//查看商品类型，1.团购商品 3.秒杀商品 4.拍卖商品 5 粉币商品 6预售商品 7批发商品
-
-            };
-            if(_this.dialogData.xsid != null){
-             _data.productSpecificas = _this.dialogData.xsid.toString();
-            }
-            if(_this.dialogData.id != null){
-                _data.invId = _this.dialogData.id;
-            }
-            if(_this.type != null && _this.$route.params.activityId != null){
-                _data.activityId = _this.$route.params.activityId;//活动id
-            }
-            if(_this.$route.params.joinActivityId != null){
-                _data.joinActivityId = _this.$route.params.joinActivityId;
-            }
-            if(type > 0){
-                //获取批发规格
-                 //批发购买
-                let pfDatas = _this.newDialog;
-                let arr = []
-                pfDatas.forEach((item,i)=>{
-                    let pfObj= {
-                        productNum : item.productNum,
-                        specificaValueIds : item.xsid.toString()
-                    };
-                    arr.push(pfObj);
-                    // _this.$set(arr,arr.length,pfObj);
-                })
-                // arr = JSON.parse(arr);
-                _data.pifaSpecificaDTOList = JSON.stringify(arr);
-            }
-            if(_this.type == 1){
-                //团购
-                 if(orderType == 1){
-                    _data.price = _this.dialogData.groupPrice;
-                } 
-            }
-            //普通购买
-            if(orderType == 0){
-                _data.type = 0;
-                _data.activityId = 0;
-            }
-           
-            console.log("_data",_data);
-            _this.ajaxRequest({
-                url: h5App.activeAPI.liji_buy_post,
-                data: _data,
-                success: function(data) {
-                    _this.commonFn.allowScroll();
-                    //跳转到提交订单的页面
-                    _this.$router.push("/order/settlement/"+_this.$route.params.busId+"/0");
-                }
-            });
-            
-        },marginDeposit(){
-            //缴纳保证金报名
-            let product = this.goodsData;
-            let aucId = product.activityId;
-            let proId = this.goodsId;
-            let invId = product.invId || 0;
-            let busId = this.$route.params.busId || sessionStorage.getItem("busId");
-            this.$router.push( "/auction/bond/" + busId + "/" + proId + "/" + aucId + "/" + invId + "/0");
-        }
+    nav_change(name) {
+      this.nav_choice = name;
+      this.isDetails = name;
     },
-    beforeDestroy() {
-        this.$store.commit('show_footer',true);
-    },  
-    mounted () {
-        this.$store.commit('show_footer',false);
-        
-        this.commonFn.setTitle( '商品详情');
-        this.goodsId = this.$route.params.goodsId;
+    /**
+     * 商品详情请求
+     */
+    detailsAjax() {
+      let _this = this;
+      _this.ajaxRequest({
+        url: h5App.activeAPI.phoneProduct_getProductDetail_post,
+        data: {
+          productId: _this.$route.params.goodsId
+        },
+        success: function(data) {
+          _this.detailsData = data.data;
+        }
+      });
+    },
+    /**
+     * 购物车跳转
+     */
+    shoppingCart() {
+      let shopId = this.$route.params.shopId;
+      let busId = this.$route.params.busId;
+      this.$router.push("/cart/" + shopId + "/" + busId + "/0");
+    },
+    //立即购买
+    lijiBuy(type, orderType) {
+      // let price =
+      let _this = this;
+      console.log(_this.dialogData);
+      let _data = {
+        productId: _this.goodsId, //商品id，必传
+        busId: _this.$route.params.busId, //商家id，必传
+        productNum: _this.spec_num, //productNum	商品数量，必传
+        price: _this.dialogData.inv_price, //商品价格，必传
+        type: _this.type //查看商品类型，1.团购商品 3.秒杀商品 4.拍卖商品 5 粉币商品 6预售商品 7批发商品
+      };
+      if (_this.dialogData.xsid != null) {
+        _data.productSpecificas = _this.dialogData.xsid.toString();
+      }
+      if (_this.dialogData.id != null) {
+        _data.invId = _this.dialogData.id;
+      }
+      if (_this.type != null && _this.$route.params.activityId != null) {
+        _data.activityId = _this.$route.params.activityId; //活动id
+      }
+      if (_this.$route.params.joinActivityId != null) {
+        _data.joinActivityId = _this.$route.params.joinActivityId;
+      }
+      if (type > 0) {
+        //获取批发规格
+        //批发购买
+        let pfDatas = _this.newDialog;
+        let arr = [];
+        pfDatas.forEach((item, i) => {
+          let pfObj = {
+            productNum: item.productNum,
+            specificaValueIds: item.xsid.toString()
+          };
+          arr.push(pfObj);
+          // _this.$set(arr,arr.length,pfObj);
+        });
+        // arr = JSON.parse(arr);
+        _data.pifaSpecificaDTOList = JSON.stringify(arr);
+      }
+      if (_this.type == 1) {
+        //团购
+        if (orderType == 1) {
+          _data.price = _this.dialogData.groupPrice;
+        }
+      }
+      //普通购买
+      if (orderType == 0) {
+        _data.type = 0;
+        _data.activityId = 0;
+      }
 
-        this.phoneProductAjax();
-        this.type = this.$route.params.type;
+      console.log("_data", _data);
+      _this.ajaxRequest({
+        url: h5App.activeAPI.liji_buy_post,
+        data: _data,
+        success: function(data) {
+          _this.commonFn.allowScroll();
+          //跳转到提交订单的页面
+          _this.$router.push(
+            "/order/settlement/" + _this.$route.params.busId + "/0"
+          );
+        }
+      });
+    },
+    /**
+     * 缴纳保证金报名
+     */
+    marginDeposit() {
+      //缴纳保证金报名
+      let product = this.goodsData;
+      let aucId = product.activityId;
+      let proId = this.goodsId;
+      let invId = product.invId || 0;
+      let busId = this.$route.params.busId || sessionStorage.getItem("busId");
+      this.$router.push("/auction/bond/" + busId + "/" + proId +"/" +aucId + "/" + invId + "/0");
+    },
+    /**
+     * 拍卖出价减
+     */
+    auctionJian(){
+        let _auctionData = this.goodsData.auctionResult;
+        let _chujiaMoney = this.chujiaMoney;
+        let _num =_chujiaMoney - _auctionData.aucAddPrice;
+        if(!this.commonFn.isInt(_num) || _num <= 0 || _num < _auctionData.nowPrice){
+            return;
+        }
+        this.chujiaMoney = _num.toFixed(2)*1;
+    },
+    /**
+     * 拍卖出价加
+     */
+    auctionAdd(){
+        let _auctionData = this.goodsData.auctionResult;
+        let _chujiaMoney = this.chujiaMoney;
+        let _num =_chujiaMoney + _auctionData.aucAddPrice;
+        console.log(_num,"_num")
+        if(!this.commonFn.isInt(_num) || _num <= 0){
+            return;
+        }
+        this.chujiaMoney = _num.toFixed(2)*1;
+    },
+    /**
+     * 拍卖出价
+     */
+    addOffer(){
+        let _this = this;
+        let _goodsData = this.goodsData; 
+        let _auctionData = this.goodsData.auctionResult;
+        let _shop_tips = this.$parent.$refs.bubble.show_tips;
+        let _chujiaMoney = this.chujiaMoney;
+        if(_goodsData.activityStatus == 0){
+            _shop_tips("拍卖还未开始不能出价");
+            return;
+        }else if(_goodsData.activityStatus == -1){
+            _shop_tips("拍卖已结束，不能出价");
+            return;
+        }
+        var test = /^[0-9]{1,6}(\.\d{1,2})?$/;
+        //判断是否是数字
+        if(!test.test(_chujiaMoney) || _chujiaMoney*1 == 1){
+            _shop_tips("请输入大于0的6小位数");
+            return;
+        }else if(_chujiaMoney*1 < _auctionData.nowPrice){
+            _shop_tips("不能低于当前价");
+            return;
+        }
+        let _data = {
+            busId: this.$route.params.busId || sessionStorage.getItem("busId"), //商家id
+            url: location.href, //当前页面的地址
+            browerType: this.$store.state.browerType, //浏览器类型
+            proId: this.$route.params.goodsId,//商品id
+            aucId: this.$route.params.activityId,//拍卖id
+            aucPrice: _chujiaMoney,//出价
+            proName: _goodsData.productName,//商品名称
+            proSpecificaIds : this.dialogData.xsid.toString(),//商品规格id
+            proImgUrl : _goodsData.imageList[0].imageUrl
+        };
+        console.log(_data);
+        _this.ajaxRequest({
+        url: h5App.activeAPI.add_offer_post,
+        data: _data,
+        loading:true,
+        success: function(data) {
+          let msg = {
+            type: "success",
+            msg: "出价成功"
+          };
+          _this.$parent.$refs.bubble.show_tips(msg);
+          window.setTimeout(function(){
+                location.reload();
+          },1000); 
+        }
+      });
     }
-}
+  },
+  beforeDestroy() {
+    this.$store.commit("show_footer", true);
+  },
+  mounted() {
+    this.$store.commit("show_footer", false);
+
+    this.commonFn.setTitle("商品详情");
+    this.goodsId = this.$route.params.goodsId;
+
+    this.phoneProductAjax();
+    this.type = this.$route.params.type;
+    this.isShowButtom = true;
+
+    //清空提交订单的参数
+    this.$store.commit("img_url", null);
+    this.$store.commit("orderData_change", null);
+  }
+};
 </script>
 
 <style lang="less" >
-
-@import '../../../assets/css/mixins.less';
-@import '../../../assets/css/base.less';
-@import '../../../assets/css/common.less';
-.goods-wrapper{
-    width: 100%;
-    position: relative;
-    section{
-        margin-bottom: 30/@dev-Width *1rem;
-        background: #fff;
-        font-size: 0;
-    }
-    .goods-main{
-        padding-bottom: 168/@dev-Width *1rem;
-    }
-    
-    .goods-info{
-        width: 100%;
-        padding: 30/@dev-Width *1rem 46/@dev-Width *1rem;
-        .goods-info-money{
-            margin: 15/@dev-Width *1rem 0;
-            .shopGray{
-                margin-left: 20/@dev-Width *1rem;
-            }
-        }
-        .goods-bottom{
-            width: 100%;
-            padding-top: 5px;
-        }
-        .goods-info-other{
-            .ik-box;
-            .ik-box-pack(justify);
-            margin-top: 5px;
-            &>span{
-                display: block;
-            }
-            .goods-info-time{
-                span{
-                   color: #333333;
-                   margin: 3px;
-                }
-                em{
-                   font-size: 32/@dev-Width *1rem;
-                   display: inline-block;
-                   background: #ffcc00;
-                   color: #333333;
-                   padding: 1px 2px;
-                   .border-radius(3px);
-                }
-            }
-        }
-    }
-    .goods-selected{
-        width: 100%;
-        padding: 30/@dev-Width *1rem 22/@dev-Width *1rem 30/@dev-Width *1rem 46/@dev-Width *1rem;
-        .goods-selected-main{
-            width: 100%;
-            .ik-box;
-            .ik-box-align(center);
-            .ik-box-pack(justify);
-            i{
-                color: #c7c7cc;
-            }
-        }
-    }
-    .goods-address{
-        width: 100%;
-        padding-left: 46/@dev-Width *1rem;
-        .goods-address-main{
-            width: 100%;
-            padding: 30/@dev-Width *1rem 0;
-            .goods-address-txt{
-                width: 94%;
-                float: left;
-            }
-            .shopGray{
-                color: #c7c7cc;
-            }
-        }
-        .goods-address-postage{
-            padding: 30/@dev-Width *1rem 0;
-        }
-    }
-    .goods-prove{
-        padding: 48/@dev-Width *1rem 30/@dev-Width *1rem;
-        line-height: 1;
-        span{
-            margin-right: 30/@dev-Width *1rem;
-        }
-        i{
-            font-size: 48/@dev-Width *1rem;
-            font-weight: bold;
-            margin-right: 3px;
-            vertical-align: -0.02rem;
-        }
-    }
-    .goods-shop{
-        padding: 28/@dev-Width *1rem 30/@dev-Width *1rem ;
-        .goods-shop-main{
-            width: 100%;
-            .goods-shop-info{
-                float: left;
-                width: 60%;
-            }
-            .goods-shop-rigtn{
-                float: right;
-                width: 40%;
-                height: 158/@dev-Width *1rem;
-                .ik-box;
-                .ik-box-align(center);
-                .ik-box-pack(justify);
-                .goods-shop-buttom{
-                    display: block;
-                    .border-radius(3px);
-                    padding: 5px 3px;
-                }
-            }
-            .goods-shop-img{
-                vertical-align: 0.4rem;
-                display: inline-block;
-                width: 88/@dev-Width *1rem;
-                height: 88/@dev-Width *1rem;
-                background-size: cover;
-                .border-radius(100%);
-                overflow: hidden;
-                
-            }
-            .goods-shop-txt{
-                display: inline-block;
-                width: 82%;
-                margin-left: 25 /@dev-Width *1rem;
-                .goods-shop-name{
-                    margin-bottom: 30 /@dev-Width *1rem;
-                }
-                span{
-                    max-width: 74%;
-                    display: inline-block;
-                    vertical-align: -2px;
-                }
-                .goods-shop-km{
-                    width: 33%;
-                }
-                .goods-shop-tel{
-                    width: 64%;
-                }
-            }
-        }
-    }
-    .goods-auction{
-        width:100%;
-        padding-left: 30/@dev-Width *1rem;
-        .goods-auction-title{
-            padding: 35/@dev-Width *1rem 0;
-            padding-right: 30/@dev-Width *1rem;
-            .shop-box-center;
-            span{
-                .shop-show;
-            }
-        }
-        .goods-auction-rule{
-            width: 100%;
-            padding: 46/@dev-Width *1rem 0;
-            text-align: center;
-            .fs36;
-            span{
-                margin: 0 3px;
-            }
-            em{
-                .shop-inblock;
-                .fs40;
-                width: 50/@dev-Width *1rem;
-                heigth: 50/@dev-Width *1rem;
-                line-height: 50/@dev-Width *1rem;
-                background: #e4393c;
-                color:#fff;
-                margin-right:2px;
-                .border-radius(100%);
-            }
-        }
-    }
-    .goods-content{
-        width: 100%;
-        // padding-bottom: 1.05333333rem;
-        position: relative;
-        background: 0;
-        .goods-content-nav{
-            position: relative;
-        }
-        .goods-content-photo{
-            width: 100%;
-            img{
-                width: 100%;
-                height: auto;
-                display: block;
-            }
-        }
-    }
-    .goods-footer{
-        margin: 0;
-        width: 100%;
-        position: fixed;
-        bottom: 0;
-        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.1);
-        z-index: 2;
-        .goods-footer-no{
-            text-align: center;
-            background: rgba(0, 0, 0, 0.6);
-            color: #fff;
-            line-height: l;
-            padding: 38/@dev-Width *1rem 0;
-        }
-        .goods-footer-content{
-            .ik-box;
-            background: #fff;
-        }
-        .goods-footer-botton{
-            position: relative;
-            height: 158/@dev-Width *1rem;
-            text-align: center;
-            .ik-box;
-            .ik-box-align(center);
-            .ik-box-pack(center);
-            .ik-box-orient(vertical);
-            i{
-                margin-bottom: 10/@dev-Width *1rem;
-                display: block;
-                font-size: 68/@dev-Width *1rem;
-            }
-            em{
-                font-size: 12px;
-                text-align: center;
-                position: absolute;
-                top: 5%;
-                right: 20%;
-                min-width: 18px;
-                // min-height: 18px;
-                line-height: 18px;
-                color: #fff;
-                display: block;
-                .border-radius(100%);
-            }
-        }
-        .border-left{
-            border-left: 1px solid #f1f1f1; 
-        }
-    }
-    .ui-col-2{
-        .ik-box-flex(3)
-    }
-    .ui-col-1{
-        .ik-box-flex(2)
-    }
-    .goods-dialog{
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        position: fixed;
-        z-index: 99;
-        top: 0;
-        left: 0;
-        .goods-dialog-main{
-            width: 100%;
-            position: absolute;
-            background: #fff;
-            bottom: 0;
-            animation: dialogShow 0.2s;
-            -moz-animation: dialogShow 0.2s;	/* Firefox */
-            -webkit-animation: dialogShow 0.2s;
-        }
-        .goods-dialog-title{
-            font-size: 0;
-            width: 100%;
-            padding-left:  30/@dev-Width *1rem;
-            .ik-box;
-            .ik-box-pack(justify);
-            .ik-box-align(center);
-            div{
-                padding: 30/@dev-Width *1rem 0;
-                width: 90%;
-            }
-            i{
-                padding: 30/@dev-Width *1rem;
-                display: block;
-            }
-        }
-        .goods-dialog-detl{
-            padding:  15/@dev-Width *1rem 0;
-            padding-left:  30/@dev-Width *1rem;
-            width: 100%;
-            .goods-dialog-img{
-                //border: 1px solid #eee;
-                width: 265/@dev-Width *1rem;
-                height: 265/@dev-Width *1rem;
-                float: left;
-                background-size: 100%;
-                margin-right: 30/@dev-Width *1rem;
-                overflow: hidden;
-            }
-            .goods-dialog-txt{
-                float: left;
-                width: 70%;
-                padding: 10/@dev-Width *1rem 0;
-                p{
-                    margin-bottom: 10/@dev-Width *1rem;
-                }
-                .fs42{
-                    margin-bottom: 30/@dev-Width *1rem;
-                }
-            }
-        }
-        .goods-dialog-choice{
-            padding-left:  30/@dev-Width *1rem;
-            width: 100%;
-            font-size: 0;
-            padding-bottom: 20/@dev-Width *1rem;
-            .goods-choice-list2{
-                width: 100%;
-                .ik-box;
-                .ik-box-align(center);
-                .ik-box-pack(justify);
-                height: 168 / @dev-Width *1rem;
-                span{
-                    display: inline-block;
-                    padding: 20/@dev-Width *1rem;
-                    background: #f3f2f8;
-                    .border-radius(3px);
-                    margin-right: 35/@dev-Width *1rem;
-                }
-            }
-            .goods-choice-option1{
-                width: 100%;
-                padding-right: 35/@dev-Width *1rem;
-                padding-bottom: 35/@dev-Width *1rem;
-                .goods-choice-li{
-                    width: 100%;
-                    .ik-box;
-                    .ik-box-align(center);
-                    .ik-box-pack(justify);
-                    margin-bottom: 5px;
-                    div:first-of-type{
-                        .ik-box-pack(start);
-                    }
-                    div{
-                        min-width: 17.5%;
-                        .ik-box;
-                        .ik-box-align(center);
-                        .ik-box-pack(center);
-                    }
-                    .goods-option-number{
-                        .ik-box-pack(end);
-                        width: 30%;
-                    }
-                }
-            }
-            .goods-choice-option2{
-                width: 100%;
-                padding-right: 35/@dev-Width *1rem;
-                padding-bottom: 35/@dev-Width *1rem;
-                .goods-choice-ul{
-                    width: 100%;
-                    .ik-box;
-                    padding-right:35/@dev-Width *1rem; 
-                    li{
-                        text-align: center;
-                    }
-                    &>li:first-child{
-                        text-align: left;
-                    }
-                    &>li:last-child{
-                        text-align: right;
-                    }
-                }
-                .goods-choice-li{
-                    .ik-box-flex(1);
-                }
-            }
-            .goods-choice-option2{
-                .goods-choice-li{
-                    p{
-                        width: 100%;
-                        height: 120/@dev-Width *1rem;
-                        .ik-box;
-                        .ik-box-align(center);
-                        .ik-box-pack(center);
-                    }
-                }
-                .goods-choice-ul{
-                    &>li:first-child{
-                        p{
-                            .ik-box-pack(start);
-                        }
-                    }
-                    &>li:last-child{
-                        p{
-                             .ik-box-pack(end);
-                        }
-                    }
-                }
-                .goods-option-number{
-                    font-size: 0;
-                    p{
-                        font-size: 0;
-                    }
-                    em{
-                        margin-right: 2px;
-                        font-size: 42/ @dev-Width *1rem;
-                    }
-                    &>P>em:first-child,&>P>em:last-child{
-                        font-weight: bold;
-                        color: #87858f;
-                    }
-                }
-            }
-            .goods-choice-list{
-                width: 100%;
-                margin-top: 48 / @dev-Width *1rem;
-                .goods-choice-title{
-                    float: left;
-                    color: #87858f;
-                    width: 90/@dev-Width *1rem;
-                    margin-right: 20/@dev-Width *1rem;
-                    height: 92 / @dev-Width *1rem;
-                    .ik-box;
-                    .ik-box-align(center);
-                    line-height: 15px;
-                }
-                .goods-choice-box{
-                    float: left;
-                    width: 88%;
-                    em{
-                        position: relative;
-                    }
-                    i{
-                        text-align: center;
-                        display: block;
-                        position: absolute;
-                        top: -18/ @dev-Width *1rem;
-                        right: -18/ @dev-Width *1rem;
-                        .border-radius(100%);
-                        width: 50 / @dev-Width *1rem;
-                        height: 50 / @dev-Width *1rem;
-                        line-height: 46 / @dev-Width *1rem;
-                        border: 1px solid #fff;
-                        background:#ff3b30;
-                        color: #fff;
-                    }
-                }
-            }
-            .goods-choice-Total{
-                width: 100%;
-                padding: 40/@dev-Width *1rem  40/@dev-Width *1rem 0;
-            }
-        }
-        .goods-dialog-footer{
-            width: 100%;
-            .ik-box;
-            .goods-dialog-button{
-                .ik-box-flex(1);
-                text-align: center;
-                color: #fff;
-                padding: 40/@dev-Width *1rem 0;
-            }
-        }
-    }
-
-}
-.goods-details{
-    width: 100%;
+@import "../../../assets/css/mixins.less";
+@import "../../../assets/css/base.less";
+@import "../../../assets/css/common.less";
+.goods-wrapper {
+  width: 100%;
+  position: relative;
+  section {
+    margin-bottom: 30/@dev-Width *1rem;
     background: #fff;
-    text-align: center;
-    img{
+    font-size: 0;
+  }
+  .goods-main {
+    padding-bottom: 168/@dev-Width *1rem;
+  }
+
+  .goods-info {
+    width: 100%;
+    padding: 30/@dev-Width *1rem 46/@dev-Width *1rem;
+    .goods-info-money {
+      margin: 15/@dev-Width *1rem 0;
+      .shopGray {
+        margin-left: 20/@dev-Width *1rem;
+      }
+    }
+    .goods-bottom {
+      width: 100%;
+      padding-top: 5px;
+    }
+    .goods-info-other {
+      .ik-box;
+      .ik-box-pack(justify);
+      margin-top: 5px;
+      & > span {
+        display: block;
+      }
+      .goods-info-time {
+        span {
+          color: #333333;
+          margin: 3px;
+        }
+        em {
+          font-size: 32/@dev-Width *1rem;
+          display: inline-block;
+          background: #ffcc00;
+          color: #333333;
+          padding: 1px 2px;
+          .border-radius(3px);
+        }
+      }
+    }
+  }
+  .goods-selected {
+    width: 100%;
+    padding: 30/@dev-Width *1rem 22/@dev-Width *1rem 30/@dev-Width *1rem 46/@dev-Width *1rem;
+    .goods-selected-main {
+      width: 100%;
+      .ik-box;
+      .ik-box-align(center);
+      .ik-box-pack(justify);
+      i {
+        color: #c7c7cc;
+      }
+    }
+  }
+  .goods-address {
+    width: 100%;
+    padding-left: 46/@dev-Width *1rem;
+    .goods-address-main {
+      width: 100%;
+      padding: 30/@dev-Width *1rem 0;
+      .goods-address-txt {
+        width: 94%;
+        float: left;
+      }
+      .shopGray {
+        color: #c7c7cc;
+      }
+    }
+    .goods-address-postage {
+      padding: 30/@dev-Width *1rem 0;
+    }
+  }
+  .goods-prove {
+    padding: 48/@dev-Width *1rem 30/@dev-Width *1rem;
+    line-height: 1;
+    span {
+      margin-right: 30/@dev-Width *1rem;
+    }
+    i {
+      font-size: 48/@dev-Width *1rem;
+      font-weight: bold;
+      margin-right: 3px;
+      vertical-align: -0.02rem;
+    }
+  }
+  .goods-shop {
+    padding: 28/@dev-Width *1rem 30/@dev-Width *1rem;
+    .goods-shop-main {
+      width: 100%;
+      .goods-shop-info {
+        float: left;
+        width: 60%;
+      }
+      .goods-shop-rigtn {
+        float: right;
+        width: 40%;
+        height: 158/@dev-Width *1rem;
+        .ik-box;
+        .ik-box-align(center);
+        .ik-box-pack(justify);
+        .goods-shop-buttom {
+          display: block;
+          .border-radius(3px);
+          padding: 5px 3px;
+        }
+      }
+      .goods-shop-img {
+        vertical-align: 0.4rem;
+        display: inline-block;
+        width: 88/@dev-Width *1rem;
+        height: 88/@dev-Width *1rem;
+        background-size: cover;
+        .border-radius(100%);
+        overflow: hidden;
+      }
+      .goods-shop-txt {
+        display: inline-block;
+        width: 82%;
+        margin-left: 25 /@dev-Width *1rem;
+        .goods-shop-name {
+          margin-bottom: 30 /@dev-Width *1rem;
+        }
+        span {
+          max-width: 74%;
+          display: inline-block;
+          vertical-align: -2px;
+        }
+        .goods-shop-km {
+          width: 33%;
+        }
+        .goods-shop-tel {
+          width: 64%;
+        }
+      }
+    }
+  }
+  .goods-auction {
+    width: 100%;
+    padding-left: 30/@dev-Width *1rem;
+    .goods-auction-title {
+      padding: 35/@dev-Width *1rem 0;
+      padding-right: 30/@dev-Width *1rem;
+      .shop-box-center;
+      span {
+        .shop-show;
+      }
+    }
+    .goods-auction-rule {
+      width: 100%;
+      padding: 46/@dev-Width *1rem 0;
+      text-align: center;
+      .fs36;
+      span {
+        margin: 0 3px;
+      }
+      em {
+        .shop-inblock;
+        .fs40;
+        width: 50/@dev-Width *1rem;
+        heigth: 50/@dev-Width *1rem;
+        line-height: 50/@dev-Width *1rem;
+        background: #e4393c;
+        color: #fff;
+        margin-right: 2px;
+        .border-radius(100%);
+      }
+    }
+  }
+  .goods-content {
+    width: 100%;
+    // padding-bottom: 1.05333333rem;
+    position: relative;
+    background: 0;
+    .goods-content-nav {
+      position: relative;
+    }
+    .goods-content-photo {
+      width: 100%;
+      img {
         width: 100%;
         height: auto;
+        display: block;
+      }
     }
-}
-.goods-info-txt{
+  }
+  .goods-footer {
+    margin: 0;
     width: 100%;
-    padding: 30/@dev-Width *1rem 0;
-    color: #87858f;
-}
-.shop-header{
     position: fixed;
+    bottom: 0;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+    .goods-footer-no {
+      text-align: center;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      line-height: l;
+      padding: 38/@dev-Width *1rem 0;
+    }
+    .goods-footer-content {
+      .ik-box;
+      background: #fff;
+    }
+    .goods-footer-botton {
+      position: relative;
+      height: 158/@dev-Width *1rem;
+      text-align: center;
+      .ik-box;
+      .ik-box-align(center);
+      .ik-box-pack(center);
+      .ik-box-orient(vertical);
+      i {
+        margin-bottom: 10/@dev-Width *1rem;
+        display: block;
+        font-size: 68/@dev-Width *1rem;
+      }
+      em {
+        font-size: 12px;
+        text-align: center;
+        position: absolute;
+        top: 5%;
+        right: 20%;
+        min-width: 18px;
+        // min-height: 18px;
+        line-height: 18px;
+        color: #fff;
+        display: block;
+        .border-radius(100%);
+      }
+    }
+    .border-left {
+      border-left: 1px solid #f1f1f1;
+    }
+  }
+  .ui-col-2 {
+    .ik-box-flex(3);
+  }
+  .ui-col-1 {
+    .ik-box-flex(2);
+  }
+  .goods-dialog {
     width: 100%;
-    background: #fff;
-    .header-nav{
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    z-index: 99;
+    top: 0;
+    left: 0;
+    .goods-dialog-main {
+      width: 100%;
+      position: absolute;
+      background: #fff;
+      bottom: 0;
+      animation: dialogShow 0.2s;
+      -moz-animation: dialogShow 0.2s; /* Firefox */
+      -webkit-animation: dialogShow 0.2s;
+    }
+    .goods-dialog-title {
+      font-size: 0;
+      width: 100%;
+      padding-left: 30/@dev-Width *1rem;
+      .ik-box;
+      .ik-box-pack(justify);
+      .ik-box-align(center);
+      div {
+        padding: 30/@dev-Width *1rem 0;
+        width: 90%;
+      }
+      i {
+        padding: 30/@dev-Width *1rem;
+        display: block;
+      }
+    }
+    .goods-dialog-detl {
+      padding: 15/@dev-Width *1rem 0;
+      padding-left: 30/@dev-Width *1rem;
+      width: 100%;
+      .goods-dialog-img {
+        //border: 1px solid #eee;
+        width: 265/@dev-Width *1rem;
+        height: 265/@dev-Width *1rem;
+        float: left;
+        background-size: 100%;
+        margin-right: 30/@dev-Width *1rem;
+        overflow: hidden;
+      }
+      .goods-dialog-txt {
+        float: left;
+        width: 70%;
+        padding: 10/@dev-Width *1rem 0;
+        p {
+          margin-bottom: 10/@dev-Width *1rem;
+        }
+        .fs42 {
+          margin-bottom: 30/@dev-Width *1rem;
+        }
+      }
+    }
+    .goods-dialog-choice {
+      padding-left: 30/@dev-Width *1rem;
+      width: 100%;
+      font-size: 0;
+      padding-bottom: 20/@dev-Width *1rem;
+      .goods-choice-list2 {
+        width: 100%;
         .ik-box;
-        .header-itme{
-            position: relative;
+        .ik-box-align(center);
+        .ik-box-pack(justify);
+        height: 168 / @dev-Width *1rem;
+        span {
+          display: inline-block;
+          padding: 20/@dev-Width *1rem;
+          background: #f3f2f8;
+          .border-radius(3px);
+          margin-right: 35/@dev-Width *1rem;
+        }
+      }
+      .goods-choice-option1 {
+        width: 100%;
+        padding-right: 35/@dev-Width *1rem;
+        padding-bottom: 35/@dev-Width *1rem;
+        .goods-choice-li {
+          width: 100%;
+          .ik-box;
+          .ik-box-align(center);
+          .ik-box-pack(justify);
+          margin-bottom: 5px;
+          div:first-of-type {
+            .ik-box-pack(start);
+          }
+          div {
+            min-width: 17.5%;
             .ik-box;
             .ik-box-align(center);
             .ik-box-pack(center);
-            .ik-box-flex(1);
-            .ik-box-orient(vertical);
+          }
+          .goods-option-number {
+            .ik-box-pack(end);
+            width: 30%;
+          }
         }
-        a{
-            display: block;
-            text-align: center
-        }
-    }
-}
-.goods-choice-box2{
-    em,input{
-        padding: 0;
-        line-height: 90/ @dev-Width *1rem;
-        color: #87858f;
-        width: 98/ @dev-Width *1rem;
-        height: 90/ @dev-Width *1rem;
-        text-align: center;
-        margin-right: 2px;
-        .border-radius(0);
-        font-weight: bold;
-        font-size: 68/ @dev-Width *1rem;
-        vertical-align: top;
-    }
-    &>em:first-of-type{
-        border-top-left-radius: 3px;
-        border-bottom-left-radius: 3px;
-    }
-    input{
-        font-size: 40/ @dev-Width *1rem;
-        font-weight:normal;
-        color: #333;
-        width: 128/ @dev-Width *1rem;
-        border: 0;
-        margin-right: 2px;
-    }
-    &>em:last-of-type{
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
-    }
-}
-.goods-auction-choice{
-    width: 100%;
-    background: #e8ecf2;
-    height: 135 /@dev-Width *1rem;
-    .goods-auction-box{
-        float: left;
-        width: 74%;
-        height: 100%;
-        padding: 20/@dev-Width *1rem 50 /@dev-Width *1rem;
-        .shop-box-center;
-        &>em{
+      }
+      .goods-choice-option2 {
+        width: 100%;
+        padding-right: 35/@dev-Width *1rem;
+        padding-bottom: 35/@dev-Width *1rem;
+        .goods-choice-ul {
+          width: 100%;
+          .ik-box;
+          padding-right: 35/@dev-Width *1rem;
+          li {
             text-align: center;
-            font-size: 60/@dev-Width *1rem;
-            color:#999;
-            .shop-inblock;
-            width: 97/@dev-Width *1rem;
-            height: 97/@dev-Width *1rem;
-            background: #fff;
-            border:1px solid #dddddd;
-            .border-radius(100%);
+          }
+          & > li:first-child {
+            text-align: left;
+          }
+          & > li:last-child {
+            text-align: right;
+          }
         }
-        &>div{
-            width: 60%;
-            border:1px solid #dddddd;
-            .border-radius(5px);
-            height: 100%;
-            background: #fff;
-            color: #3e3e3e;
-            input{
-                max-width: 100%;
-                text-align: center;
-                height: 100%;
-                color: #3e3e3e;
-                .fs50;
+        .goods-choice-li {
+          .ik-box-flex(1);
+        }
+      }
+      .goods-choice-option2 {
+        .goods-choice-li {
+          p {
+            width: 100%;
+            height: 120/@dev-Width *1rem;
+            .ik-box;
+            .ik-box-align(center);
+            .ik-box-pack(center);
+          }
+        }
+        .goods-choice-ul {
+          & > li:first-child {
+            p {
+              .ik-box-pack(start);
             }
+          }
+          & > li:last-child {
+            p {
+              .ik-box-pack(end);
+            }
+          }
         }
-        
+        .goods-option-number {
+          font-size: 0;
+          p {
+            font-size: 0;
+          }
+          em {
+            margin-right: 2px;
+            font-size: 42/ @dev-Width *1rem;
+          }
+          & > p > em:first-child,
+          & > p > em:last-child {
+            font-weight: bold;
+            color: #87858f;
+          }
+        }
+      }
+      .goods-choice-list {
+        width: 100%;
+        margin-top: 48 / @dev-Width *1rem;
+        .goods-choice-title {
+          float: left;
+          color: #87858f;
+          width: 90/@dev-Width *1rem;
+          margin-right: 20/@dev-Width *1rem;
+          height: 92 / @dev-Width *1rem;
+          .ik-box;
+          .ik-box-align(center);
+          line-height: 15px;
+        }
+        .goods-choice-box {
+          float: left;
+          width: 88%;
+          em {
+            position: relative;
+          }
+          i {
+            text-align: center;
+            display: block;
+            position: absolute;
+            top: -18/ @dev-Width *1rem;
+            right: -18/ @dev-Width *1rem;
+            .border-radius(100%);
+            width: 50 / @dev-Width *1rem;
+            height: 50 / @dev-Width *1rem;
+            line-height: 46 / @dev-Width *1rem;
+            border: 1px solid #fff;
+            background: #ff3b30;
+            color: #fff;
+          }
+        }
+      }
+      .goods-choice-Total {
+        width: 100%;
+        padding: 40/@dev-Width *1rem 40/@dev-Width *1rem 0;
+      }
     }
-    .goods-auction-bottom{
-        float: left;
-        width: 26%;
-        height: 100%;
+    .goods-dialog-footer {
+      width: 100%;
+      .ik-box;
+      .goods-dialog-button {
+        .ik-box-flex(1);
         text-align: center;
-        line-height: 135 /@dev-Width *1rem;
+        color: #fff;
+        padding: 40/@dev-Width *1rem 0;
+      }
     }
+  }
 }
-.goods-content-nav{
+.goods-details {
+  width: 100%;
+  background: #fff;
+  text-align: center;
+  img {
     width: 100%;
-    padding: 0 26/@dev-Width *1rem;
-    background: #fff;
-    margin-top:15/@dev-Width *1rem;
-    .goods-nav{
-        text-align: center;
-        padding: 30/@dev-Width *1rem 0;
-        span{
-            padding: 20/@dev-Width *1rem
-        }
+    height: auto;
+  }
+}
+.goods-info-txt {
+  width: 100%;
+  padding: 30/@dev-Width *1rem 0;
+  color: #87858f;
+}
+.shop-header {
+  position: fixed;
+  width: 100%;
+  background: #fff;
+  .header-nav {
+    .ik-box;
+    .header-itme {
+      position: relative;
+      .ik-box;
+      .ik-box-align(center);
+      .ik-box-pack(center);
+      .ik-box-flex(1);
+      .ik-box-orient(vertical);
     }
+    a {
+      display: block;
+      text-align: center;
+    }
+  }
 }
-@keyframes dialogShow{
-    from {bottom: -100%;}
-    to {bottom: 0%;}
+.goods-choice-box2 {
+  em,
+  input {
+    padding: 0;
+    line-height: 90/ @dev-Width *1rem;
+    color: #87858f;
+    width: 98/ @dev-Width *1rem;
+    height: 90/ @dev-Width *1rem;
+    text-align: center;
+    margin-right: 2px;
+    .border-radius(0);
+    font-weight: bold;
+    font-size: 68/ @dev-Width *1rem;
+    vertical-align: top;
+  }
+  & > em:first-of-type {
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+  }
+  input {
+    font-size: 40/ @dev-Width *1rem;
+    font-weight: normal;
+    color: #333;
+    width: 128/ @dev-Width *1rem;
+    border: 0;
+    margin-right: 2px;
+  }
+  & > em:last-of-type {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
 }
-@-moz-keyframes dialogShow{ /* Firefox */
-    from {bottom: -100%;}
-    to {bottom: 0%;}
+.goods-auction-choice {
+  width: 100%;
+  background: #e8ecf2;
+  height: 158/@dev-Width *1rem;
+
+  .goods-auction-box {
+    float: left;
+    width: 74%;
+    height: 100%;
+    padding: 20/@dev-Width *1rem 50 /@dev-Width *1rem;
+    .shop-box-center;
+    & > em {
+      text-align: center;
+      font-size: 60/@dev-Width *1rem;
+      color: #999;
+      .shop-inblock;
+      width: 97/@dev-Width *1rem;
+      height: 97/@dev-Width *1rem;
+      background: #fff;
+      border: 1px solid #dddddd;
+      .border-radius(100%);
+    }
+    & > div {
+      width: 60%;
+      border: 1px solid #dddddd;
+      .border-radius(5px);
+      height: 100%;
+      background: #fff;
+      color: #3e3e3e;
+      input {
+        max-width: 100%;
+        text-align: center;
+        height: 100%;
+        color: #3e3e3e;
+        .fs50;
+      }
+    }
+  }
+  .goods-auction-bottom {
+    float: left;
+    width: 26%;
+    height: 100%;
+    text-align: center;
+    line-height: 158 /@dev-Width *1rem;
+  }
+  .goods-auction-paixia-button {
+    float: left;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    line-height: 158 /@dev-Width *1rem;
+  }
 }
-@-webkit-keyframes dialogShow{/* Safari 和 Chrome */
-    from {bottom: -100%;}
-    to {bottom: 0%;}
+.goods-content-nav {
+  width: 100%;
+  padding: 0 26/@dev-Width *1rem;
+  background: #fff;
+  margin-top: 15/@dev-Width *1rem;
+  .goods-nav {
+    text-align: center;
+    padding: 30/@dev-Width *1rem 0;
+    span {
+      padding: 20/@dev-Width *1rem;
+    }
+  }
+}
+@keyframes dialogShow {
+  from {
+    bottom: -100%;
+  }
+  to {
+    bottom: 0%;
+  }
+}
+@-moz-keyframes dialogShow {
+  /* Firefox */
+  from {
+    bottom: -100%;
+  }
+  to {
+    bottom: 0%;
+  }
+}
+@-webkit-keyframes dialogShow {
+  /* Safari 和 Chrome */
+  from {
+    bottom: -100%;
+  }
+  to {
+    bottom: 0%;
+  }
 }
 </style>

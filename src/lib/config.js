@@ -194,7 +194,12 @@
     /**********************以下接口是团购相关接口*****************************/
     goupbuy_detail_post: '',
     /**********************以下接口是拍卖相关接口*****************************/
-    get_margin_post:"/phoneAuction/L6tgXlBFeK/toAddMargin"
+    get_margin_post: "/phoneAuction/L6tgXlBFeK/toAddMargin",
+    //获取缴纳保证金页面信息
+    add_margin_post: "/phoneAuction/L6tgXlBFeK/addMargin",
+    //缴纳保证金
+    add_offer_post:"/phoneAuction/L6tgXlBFeK/addOffer"
+    //拍卖出价
 
   };
 
