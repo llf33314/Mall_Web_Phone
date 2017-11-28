@@ -85,7 +85,7 @@
                         <span v-else-if=" type == 7 ">批发:￥</span>
                         <span v-else>￥</span>
                         <span class="fs42">{{goods.price[0]}}</span>.{{goods.price[1]}}
-                        <span v-if="type == 5">积分</span>
+                        <span v-if="type == 5">粉币</span>
                     </p>
                     <p class="fs32 shopGray">销量 :{{goods.sale_total}}</p>
                 </div>

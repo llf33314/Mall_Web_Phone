@@ -1,6 +1,6 @@
 <template>
 <section class="goods-auction" >
-    <div class="goods-auction-title border ">
+    <div class="goods-auction-title border " >
         <span class="fs42">竞拍玩法</span>
         <span class="fs42">玩法详情
             <i class="icon-jiantou-copy iconfont" style="color:#c7c7cc;vertical-align: middle;" ></i>

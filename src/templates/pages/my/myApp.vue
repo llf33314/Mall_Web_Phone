@@ -92,7 +92,7 @@
                 </div>
             </div>
             <div class="my-path">
-                <div class="my-list border">
+                <div class="my-list border" @click="toAuction">
                     <div>
                         <i class="iconfont icon-jingpai"></i>
                         我的竞拍
@@ -322,7 +322,12 @@ export default {
     toReturnMyComment() {
       //跳转到我的评论
       this.$router.push("/my/comment/" + this.busId);
-    }, //获取店铺id
+    },
+    toAuction(){
+      let busId = this.busId;
+      this.$router.push("/auction/myBidding/"+busId+"/1");
+    },
+     //获取店铺id
     getShopId(busId) {
       let _this = this;
       _this.ajaxRequest({

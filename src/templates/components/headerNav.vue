@@ -14,7 +14,7 @@
 </template>
 <script>
 export default {
-  props: ["headers","status"],
+  props: ["headers", "status"],
   data: function() {
     return {
       selectNav: ""
@@ -22,30 +22,34 @@ export default {
   },
   mounted() {
     this.selectNav = this.$route.params.type || 0;
-
+  },
+  watch: {
+    $route() {
+      this.selectNav = this.$route.params.type || 0;
+    }
   },
   methods: {
     selects(e) {
       this.selectNav = e;
       let busId = this.$route.params.busId;
       let shopId = this.$route.params.shopId;
-      
-      if(this.status === 'order' ){
-        this.$router.push('/order/list/'+ busId + "/" + e);
-        return
+
+      if (this.status === "order") {
+        this.$router.push("/order/list/" + busId + "/" + e);
+        return;
       }
-      if(this.status === 'cart' ){
-        console.log('cart',e)
-        this.$router.push('/cart/'+shopId+'/'+ busId + "/" + e);
-        return
+      if (this.status === "cart") {
+        console.log("cart", e);
+        this.$router.push("/cart/" + shopId + "/" + busId + "/" + e);
+        return;
       }
       this.onValue(e);
     },
     /** 
     * 传参 
     */
-    onValue(e){
-      this.$emit('change',e);
+    onValue(e) {
+      this.$emit("change", e);
     }
   }
 };

@@ -2,7 +2,7 @@
 <div class="goods-wrapper">
     <div class="goods-main">
         <!--banner-->
-        <banner :banner="goodsData.imageList" :imgUrl="imgUrl">
+        <banner :banner="goodsData.imageList" :imgUrl="imgUrl" v-if="goodsData.imageList != null">
         </banner>
         <!--商品信息-->
         <goods-info :row="goodsData">
@@ -42,7 +42,7 @@
         <!----团购-拼团玩法---->
         <group-method v-if="type == 1"></group-method>
         <!---拍卖-竞拍玩法---->
-        <auction-method v-if="type == 4"></auction-method>
+        <a href="javascript:void(0);" @click="marginNotice"><auction-method v-if="type == 4" ></auction-method></a>
         <!----商品详情-规格-评论---->
         <section class="goods-content">
             <div class="goods-content-nav shop-header">
@@ -70,7 +70,7 @@
             <goods-footer></goods-footer>
         </section>
         <!--底部按钮-->
-        <section class="goods-footer" style="background:0;z-index:3;" >
+        <section class="goods-footer" style="background:0;z-index:3;" v-if="type == 4 && goodsData.auctionResult != null" >
             <!---拍卖保证金-->
             <div class="goods-footer-botton  fs50 shop-bg" v-if="type == 4 &&  goodsData.auctionResult.isShowDeposit == 1 " 
                 @click="marginDeposit">
@@ -104,15 +104,9 @@
         </section>
         <!---底部菜单---->
         <section class="goods-footer" style="background:0" v-show="isShowButtom">
-            {{isSoldOut}}
             <!---下架显示  或 活动被删除显示 -->
             <div class="goods-footer-no fs40" v-if="isSoldOut">
                 {{SoldOut}}
-            </div>
-            <!-- 活动显示 -->
-             <!---预售---->
-            <div class="goods-footer-botton ui-col-2 fs50 shop-bg" v-if="type == 6 && goodsData.auctionResult.isReturnOrder == 1" >
-                {{goodsData.auctionResult.isReturnOrder}}预售
             </div>
             <!---底部菜单---->
             <div class="goods-footer-content">
@@ -143,7 +137,29 @@
                     <p class="fs40">￥{{goodsData.groupPrice}}</p>
                     <p class="fs32">{{goodsData.groupPeopleNum}}人拼团</p>
                 </div>
-                <!--不是团购-->
+                <!--预售 -->
+                <div class="goods-footer-botton ui-col-2 fs50 shop-bg"
+                    style="color:#fff"
+                    :class="{'shopFff':isSoldOut}"
+                    v-if="type == 6 && goodsData.presaleResult != null && goodsData.presaleResult.isShowPresaleButton == 1"
+                     @click="dialogShow">
+                    立即预定
+                </div>
+                <div class="goods-footer-botton ui-col-2 fs50 shop-bg"
+                    style="color:#fff"
+                    :class="{'shopFff':isSoldOut}"
+                    v-if="type == 6 && goodsData.presaleResult != null && goodsData.presaleResult.isShowWeiMoneyButton == 1"
+                    >
+                    支付尾款
+                </div>
+                <div class="goods-footer-botton ui-col-2 fs50 shop-bg"
+                    style="color:#fff"
+                    :class="{'shopFff':isSoldOut}"
+                    v-if="type == 6 && goodsData.presaleResult != null && goodsData.presaleResult.isShowStartButton == 1"
+                     >
+                    即将开售
+                </div>
+                <!--普通购买-->
                 <div class="goods-footer-botton ui-col-2 fs50 shop-yellow"
                     :class="{'shopFff':isSoldOut}"
                     style="color:#fff"
@@ -219,7 +235,7 @@
                 </div>
             </div>
             <div class="goods-dialog-footer">
-                <!--不是团购-->
+                <!--普通购买-->
                 <div class="goods-dialog-button fs52 shop-yellow" @click="addCard(1)"
                     v-if=" goodsData.isShowAddShopButton == 1 && type != 1">
                     加入购物车
@@ -228,6 +244,14 @@
                    v-if=" goodsData.isShowLiJiBuyButton == 1 && type != 1">
                     立即购买
                 </div> 
+                <!-- 预售 -->
+                <div class="goods-dialog-button fs52  shop-bg"
+                    style="color:#fff"
+                    :class="{'shopFff':isSoldOut}"
+                    v-if="type == 6 && goodsData.presaleResult != null && goodsData.presaleResult.isShowPresaleButton == 1"
+                    @click="preasaleYuding">
+                    立即预定
+                </div>
                  <!--团购-->
                 <div class="goods-dialog-button fs52 shop-yellow"  @click="lijiBuy(0,0)"
                     v-if=" goodsData.isShowAddShopButton == 1 && type == 1">
@@ -463,6 +487,7 @@ import comment from "./child/comment"; //商品详情评论
 import spec from "./child/spec"; //商品详情规格
 import filter from "../../../lib/filters"; // 过滤器
 import spDialog from "components/spDialog"; //卡卷包
+import activity from "./js/activity.js"; //卡卷包
 
 export default {
   components: {
@@ -494,9 +519,7 @@ export default {
       imgUrl: "",
       webPath: "",
       goodsData: {
-        auctionResult: {
-          depositMoney: ""
-        },
+        auctionResult: null,
         productPrice: ["", ""]
       },
       pifaResult: {
@@ -1200,162 +1223,8 @@ export default {
       let shopId = this.$route.params.shopId;
       let busId = this.$route.params.busId;
       this.$router.push("/cart/" + shopId + "/" + busId + "/0");
-    },
-    //立即购买
-    lijiBuy(type, orderType) {
-      // let price =
-      let _this = this;
-      console.log(_this.dialogData);
-      let _data = {
-        productId: _this.goodsId, //商品id，必传
-        busId: _this.$route.params.busId, //商家id，必传
-        productNum: _this.spec_num, //productNum	商品数量，必传
-        price: _this.dialogData.inv_price, //商品价格，必传
-        type: _this.type //查看商品类型，1.团购商品 3.秒杀商品 4.拍卖商品 5 粉币商品 6预售商品 7批发商品
-      };
-      if (_this.dialogData.xsid != null) {
-        _data.productSpecificas = _this.dialogData.xsid.toString();
-      }
-      if (_this.dialogData.id != null) {
-        _data.invId = _this.dialogData.id;
-      }
-      if (_this.type != null && _this.$route.params.activityId != null) {
-        _data.activityId = _this.$route.params.activityId; //活动id
-      }
-      if (_this.$route.params.joinActivityId != null) {
-        _data.joinActivityId = _this.$route.params.joinActivityId;
-      }
-      if (type > 0) {
-        //获取批发规格
-        //批发购买
-        let pfDatas = _this.newDialog;
-        let arr = [];
-        pfDatas.forEach((item, i) => {
-          let pfObj = {
-            productNum: item.productNum,
-            specificaValueIds: item.xsid.toString()
-          };
-          arr.push(pfObj);
-          // _this.$set(arr,arr.length,pfObj);
-        });
-        // arr = JSON.parse(arr);
-        _data.pifaSpecificaDTOList = JSON.stringify(arr);
-      }
-      if (_this.type == 1) {
-        //团购
-        if (orderType == 1) {
-          _data.price = _this.dialogData.groupPrice;
-        }
-      }
-      //普通购买
-      if (orderType == 0) {
-        _data.type = 0;
-        _data.activityId = 0;
-      }
-
-      console.log("_data", _data);
-      _this.ajaxRequest({
-        url: h5App.activeAPI.liji_buy_post,
-        data: _data,
-        success: function(data) {
-          _this.commonFn.allowScroll();
-          //跳转到提交订单的页面
-          _this.$router.push(
-            "/order/settlement/" + _this.$route.params.busId + "/0"
-          );
-        }
-      });
-    },
-    /**
-     * 缴纳保证金报名
-     */
-    marginDeposit() {
-      //缴纳保证金报名
-      let product = this.goodsData;
-      let aucId = product.activityId;
-      let proId = this.goodsId;
-      let invId = product.invId || 0;
-      let busId = this.$route.params.busId || sessionStorage.getItem("busId");
-      this.$router.push("/auction/bond/" + busId + "/" + proId +"/" +aucId + "/" + invId + "/0");
-    },
-    /**
-     * 拍卖出价减
-     */
-    auctionJian(){
-        let _auctionData = this.goodsData.auctionResult;
-        let _chujiaMoney = this.chujiaMoney;
-        let _num =_chujiaMoney - _auctionData.aucAddPrice;
-        if(!this.commonFn.isInt(_num) || _num <= 0 || _num < _auctionData.nowPrice){
-            return;
-        }
-        this.chujiaMoney = _num.toFixed(2)*1;
-    },
-    /**
-     * 拍卖出价加
-     */
-    auctionAdd(){
-        let _auctionData = this.goodsData.auctionResult;
-        let _chujiaMoney = this.chujiaMoney;
-        let _num =_chujiaMoney + _auctionData.aucAddPrice;
-        console.log(_num,"_num")
-        if(!this.commonFn.isInt(_num) || _num <= 0){
-            return;
-        }
-        this.chujiaMoney = _num.toFixed(2)*1;
-    },
-    /**
-     * 拍卖出价
-     */
-    addOffer(){
-        let _this = this;
-        let _goodsData = this.goodsData; 
-        let _auctionData = this.goodsData.auctionResult;
-        let _shop_tips = this.$parent.$refs.bubble.show_tips;
-        let _chujiaMoney = this.chujiaMoney;
-        if(_goodsData.activityStatus == 0){
-            _shop_tips("拍卖还未开始不能出价");
-            return;
-        }else if(_goodsData.activityStatus == -1){
-            _shop_tips("拍卖已结束，不能出价");
-            return;
-        }
-        var test = /^[0-9]{1,6}(\.\d{1,2})?$/;
-        //判断是否是数字
-        if(!test.test(_chujiaMoney) || _chujiaMoney*1 == 1){
-            _shop_tips("请输入大于0的6小位数");
-            return;
-        }else if(_chujiaMoney*1 < _auctionData.nowPrice){
-            _shop_tips("不能低于当前价");
-            return;
-        }
-        let _data = {
-            busId: this.$route.params.busId || sessionStorage.getItem("busId"), //商家id
-            url: location.href, //当前页面的地址
-            browerType: this.$store.state.browerType, //浏览器类型
-            proId: this.$route.params.goodsId,//商品id
-            aucId: this.$route.params.activityId,//拍卖id
-            aucPrice: _chujiaMoney,//出价
-            proName: _goodsData.productName,//商品名称
-            proSpecificaIds : this.dialogData.xsid.toString(),//商品规格id
-            proImgUrl : _goodsData.imageList[0].imageUrl
-        };
-        console.log(_data);
-        _this.ajaxRequest({
-        url: h5App.activeAPI.add_offer_post,
-        data: _data,
-        loading:true,
-        success: function(data) {
-          let msg = {
-            type: "success",
-            msg: "出价成功"
-          };
-          _this.$parent.$refs.bubble.show_tips(msg);
-          window.setTimeout(function(){
-                location.reload();
-          },1000); 
-        }
-      });
     }
+    
   },
   beforeDestroy() {
     this.$store.commit("show_footer", true);

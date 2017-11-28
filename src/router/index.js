@@ -13,12 +13,6 @@ const Search = resolve => require(['pages/home/search'], resolve);
 //Search => 搜索页
 const Classify = resolve => require(['pages/home/classify'], resolve);
 //Classify => 首页分类
-const Auction_Bond = resolve => require(['pages/auction/bond'], resolve);
-//Auction_bond => 拍卖保证金
-const Auction_Agreement = resolve => require(['pages/auction/agreement'], resolve);
-//Auction_agreement => 用户竞拍服务协议
-const Auction_Succeed = resolve => require(['pages/auction/succeed'], resolve);
-//Auction_succeed => 用户竞拍服务协议
 const Comment = resolve => require(['pages/comment/comment'], resolve);
 //Comment => 评论
 const my_comment = resolve => require(['pages/comment/myComment'], resolve);
@@ -57,6 +51,7 @@ const help_Pay = resolve => require(['pages/order/helpPay'], resolve);
 //help_Pay => 找人代付
 
 
+/***************      退款相关页面     ******************/
 const return_classify = resolve => require(['pages/refund/index'], resolve);
 //return_classify => 申请退款类型
 const return_list = resolve => require(['pages/refund/list'], resolve);
@@ -71,25 +66,37 @@ const logistics_return = resolve => require(['pages/refund/logistics'], resolve)
 //my_order_detail => 物流信息
 
 
-const auction_mybond = resolve => require(['pages/auction/mybond'], resolve);
-//auction_mybond => 我的保证金/我的定金
+/***************      拍卖相关页面     ******************/
+const Auction_Bond = resolve => require(['pages/auction/bond'], resolve);
+//Auction_bond => 拍卖保证金
+const Auction_Agreement = resolve => require(['pages/auction/agreement'], resolve);
+//Auction_agreement => 用户竞拍服务协议
+const Auction_Succeed = resolve => require(['pages/auction/succeed'], resolve);
+//Auction_succeed => 用户竞拍服务协议
 const auction_success = resolve => require(['pages/auction/succeed'], resolve);
 //auction_success 保证金缴纳成功
-
-const preOrderEposit = resolve => require(['pages/auction/preOrderEposit'], resolve);
-//preOrderEposit => 提交定金
+const margin_notice = resolve => require(['pages/auction/marginNotice'], resolve);
+//margin_notice 保证金须知 
+const auction_bidding = resolve => require(['pages/auction/myBidding'], resolve);
+//auction_bidding 我的竞拍
 
 const shoppingCart = resolve => require(['pages/shoppingCart/index'], resolve);
-//my_order_detail => 物流信息
+//shoppingCart => 购物车页面
 
+
+/***************      预售相关页面     ******************/
+const presaleDeposit = resolve => require(['pages/presale/deposit'], resolve);
+//presaleDeposit => 缴纳预售定金
 
 const myAddress = resolve => require(['pages/my/myAddress'], resolve);
 //myAddress => 地址列表
 const address = resolve => require(['pages/my/address'], resolve);
 //address => 编辑地址
 
-const groupbuydetail= resolve => require(['pages/groupbuy/groupbuydetail'], resolve);
-//groupbuydetail 团购详情页面
+const groupbuydetail = resolve => require(['pages/groupbuy/groupbuydetail'], resolve);
+//groupbuydetail 团购详情页面 
+
+
 Vue.use(Router)
 
 export default new Router({
@@ -128,27 +135,6 @@ export default new Router({
       meta: {
         title: '分类'
       },
-    }, , {
-      path: '/auction/bond/:busId/:proId/:aucId/:invId/:agree',
-      name: 'bond',
-      component: Auction_Bond,
-      meta: {
-        title: '保证金'
-      }
-    }, {
-      path: '/auction/agreement/:busId/:proId/:aucId/:invId',
-      name: 'agreement',
-      component: Auction_Agreement,
-      meta: {
-        title: '协议'
-      }
-    }, {
-      path: '/auction/succeed',
-      name: 'succeed',
-      component: Auction_Succeed,
-      meta: {
-        title: '报名成功'
-      }
     }, {
       path: '/comment/:busId/:orderDetailId',
       name: 'comment',
@@ -163,7 +149,7 @@ export default new Router({
       meta: {
         title: '评论成功'
       }
-    },{
+    }, {
       path: '/comment/share/:busId/:id',
       name: 'share',
       component: Comment_Share,
@@ -221,14 +207,14 @@ export default new Router({
       meta: {
         title: '提交订单'
       }
-    },  {
+    }, {
       path: '/order/settlement/:busId/:from/:ids',
       name: 'subtmit_order_list',
       component: subtmit_order_list,
       meta: {
         title: '提交订单'
       }
-    },{
+    }, {
       path: '/order/list/:busId/:type',
       name: 'my_order_list',
       component: my_order_list,
@@ -291,65 +277,95 @@ export default new Router({
       meta: {
         title: '购物车'
       }
-    },{
+    }, {
       path: '/my/comment/:busId',
       name: 'my_comment',
       component: my_comment,
       meta: {
         title: '我的评论'
       }
-    },{
+    }, {
       path: '/daifu/:busId/:orderId',
       name: 'help_Pay',
       component: help_Pay,
       meta: {
         title: '找人代付'
       }
-    },{
+    }, {
       path: '/address/:busId',
       name: 'myAddress',
       component: myAddress,
       meta: {
         title: '地址列表'
       }
-    },{
+    }, {
       path: '/address/edit/:busId/:id',
       name: 'address',
       component: address,
       meta: {
         title: '编辑地址页面'
       }
-    },{
+    }, {
       path: '/groupbuy/detail/:busId/:id',
       name: 'groupbuydetail',
       component: groupbuydetail,
       meta: {
         title: '团购详情'
       }
-    },{
-      path: '/auction/mybond/:busId',
-      name: 'auction_mybond',
-      component: auction_mybond,
+    }, {
+      path: '/auction/bond/:busId/:proId/:aucId/:invId/:agree',
+      name: 'bond',
+      component: Auction_Bond,
       meta: {
-        title: '我的保证金/我的定金'
+        title: '保证金'
       }
-    },{
+    }, {
+      path: '/auction/agreement/:busId/:proId/:aucId/:invId',
+      name: 'agreement',
+      component: Auction_Agreement,
+      meta: {
+        title: '协议'
+      }
+    }, {
+      path: '/auction/succeed',
+      name: 'succeed',
+      component: Auction_Succeed,
+      meta: {
+        title: '报名成功'
+      }
+    },
+    {
       path: '/auction/success/:busId',
       name: 'auction_success',
       component: auction_success,
       meta: {
         title: '保证金缴纳成功'
       }
-    },{
-      path: '/auction/eposit/:busId/:aucId',
-      name: 'preOrderEposit',
-      component: preOrderEposit,
+    }, {
+      path: '/auction/notice/:busId/:aucId/:type',
+      name: 'margin_notice',
+      component: margin_notice,
       meta: {
-        title: '提交定金'
+        title: '保证金须知'
+      }
+    }, {
+      path: '/auction/myBidding/:busId/:type',
+      name: 'auction_bidding',
+      component: auction_bidding,
+      meta: {
+        title: '我的竞拍'
+      }
+    }, {
+      path: '/presale/deosit/:busId/:proId/:presaleId/:invId/:num',
+      name: 'presaleDeposit',
+      component: presaleDeposit,
+      meta: {
+        title: '预售交定金'
       }
     }
-    
 
-    
+
+
+
   ]
 })

@@ -198,8 +198,18 @@
     //获取缴纳保证金页面信息
     add_margin_post: "/phoneAuction/L6tgXlBFeK/addMargin",
     //缴纳保证金
-    add_offer_post:"/phoneAuction/L6tgXlBFeK/addOffer"
+    add_offer_post: "/phoneAuction/L6tgXlBFeK/addOffer",
     //拍卖出价
+    get_bid_post: "/phoneAuction/L6tgXlBFeK/shopdetails",
+    //抢拍记录
+    my_bidding_post: "/phoneAuction/L6tgXlBFeK/myBiddingList",
+    //我的竞拍
+    my_margin_post: "/phoneAuction/L6tgXlBFeK/myMarginList",
+    //我的保证金
+    my_huo_post: "/phoneAuction/L6tgXlBFeK/myHuoPaiList",
+    //我的货品
+    /**********************以下接口是预售相关接口*****************************/
+    get_presale_deposit:"/phonePresale/L6tgXlBFeK/toAddDeposit"
 
   };
 

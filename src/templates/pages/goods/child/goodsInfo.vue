@@ -13,7 +13,7 @@
                     <span v-else-if="type== 4 && goodsData.auctionResult.isWin == 1">出价{{goodsData.auctionResult.auctionNumber}}次</span>
                     <span v-else-if="type== 6">预售价:</span>
                     <span class="fs50" v-else-if="type== 5">
-                        {{goodsData.productPrice | moneySplit1}}.{{goodsData.productPrice | moneySplit2}}积分
+                        {{goodsData.productPrice | moneySplit1}}.{{goodsData.productPrice | moneySplit2}}粉币
                     </span>
                     <span v-else >价格:</span>
                     <span v-if="type != 1">
@@ -22,31 +22,42 @@
                     <span v-if="type== 7">批发价：￥{{goodsData.pfPrice}}</span>
                     <span class="shopGray" v-if="goodsData.auctionResult >= 0 ">抢拍{{goodsData.auctionResult.auctionNumber}}次</span>
                 </div>
-                <span class="fs50 shop-font" v-else>{{goodsData.productPrice | moneySplit1}}.{{goodsData.productPrice | moneySplit2}} 积分</span>
-                <count-down :times="goodsData.activityTimes"
-                ></count-down>
+                <span class="fs50 shop-font" v-else>{{goodsData.productPrice | moneySplit1}}.{{goodsData.productPrice | moneySplit2}} 粉币</span>
+                <count-down :times="goodsData.activityTimes" ></count-down>
             </div>
-            <div class="fs40  goods-info-other" v-if=" type == 4 || type == 7">
+            <div class="fs40  goods-info-other" v-if=" type == 4 || type == 7 || type == 6">
                 <div v-if="type == 7 " class="shopGray">
                     <!-- 原价<del>￥{{goodsData.productCostPrice}}</del> -->
                     <span class="shop-font" v-if="goodsData.hyPrice > 0"> 会员价：￥{{goodsData.hyPrice}}</span>
                 </div>
                 <!----拍卖进行中---->
-                <div class="shop-font" v-if="type == 4 && goodsData.auctionResult.isWin < 0 && goodsData.auctionResult.depositMoney > 0">
-                    <span >保证金：</span>
-                    ￥<span class="fs50">{{goodsData.auctionResult.depositMoney | moneySplit1 }}</span>.{{goodsData.auctionResult.depositMoney | moneySplit2}}
-                    <span class="shopGray">不成拍卖后退还</span>
+                <div v-if="type == 4">
+                    <div class="shop-font" v-if="goodsData.auctionResult.isWin < 0 && goodsData.auctionResult.depositMoney > 0">
+                        <span >保证金：</span>
+                        ￥<span class="fs50">{{goodsData.auctionResult.depositMoney | moneySplit1 }}</span>.{{goodsData.auctionResult.depositMoney | moneySplit2}}
+                        <span class="shopGray">不成拍卖后退还</span>
+                    </div>
+                    <!----拍卖胜出------>
+                    <div class="shopGray" v-if="goodsData.activityStatus == -1">
+                        <p class="shop-box-center fs36">
+                            <span class="shop-font shop-show" v-if="goodsData.auctionResult.isWin == 1">恭喜！您已胜出！</span>
+                            <span class="shop-font shop-show" v-else>恭喜！您已胜出！</span>
+                            <span class="shop-show">关注量:{{goodsData.attentionNum}}</span>
+                        </p>
+                        <p class="shopGray " style="font-size:12px">请在24小时内提交订单：若在24小时内未提交订单，系统将自动关闭交易并扣除您的 保证用于赔付送拍机构金</p>
+                    </div>
+                    <div class="fs36 shopGray" v-if="goodsData.auctionResult.isWin != 1">{{goodsData.auctionResult.marginNumber}}人已报名</div>
                 </div>
-                <!----拍卖胜出------>
-                <div class="shopGray" v-if="type == 4 && goodsData.activityStatus == -1">
-                    <p class="shop-box-center fs36">
-                        <span class="shop-font shop-show" v-if="goodsData.auctionResult.isWin == 1">恭喜！您已胜出！</span>
-                        <span class="shop-font shop-show" v-else>恭喜！您已胜出！</span>
-                        <span class="shop-show">关注量:{{goodsData.attentionNum}}</span>
-                    </p>
-                    <p class="shopGray " style="font-size:12px">请在24小时内提交订单：若在24小时内未提交订单，系统将自动关闭交易并扣除您的 保证用于赔付送拍机构金</p>
+                <div v-if="type == 6 && goodsData.presaleResult != null">
+                    <div class="shop-font" v-if="goodsData.presaleResult.dingMoney > 0">
+                        <span >{{goodsData.presaleResult.payDespositStatus == 0 ? "定金" : "定金已付"}}：</span>
+                        ￥<span class="fs50">{{goodsData.presaleResult.dingMoney | moneySplit1 }}</span>.{{goodsData.presaleResult.dingMoney | moneySplit2}}
+                    </div>
+                    <div class="shop-font" v-if="goodsData.presaleResult.payDespositStatus == 1 && goodsData.presaleResult.weiMoney > 0">
+                        <span >尾款应付：</span>
+                        ￥<span class="fs50">{{goodsData.presaleResult.weiMoney | moneySplit1 }}</span>.{{goodsData.presaleResult.weiMoney | moneySplit2}}
+                    </div>
                 </div>
-                <div class="fs36 shopGray" v-if=" goodsData.auctionResult.isWin != 1 && type != 7 ">{{goodsData.auctionResult.marginNumber}}人已报名</div>
             </div>
             <p class="goods-info-other fs40 shopGray" v-if="type != 4">
                 <span v-if="type != 0 && type != 7 ">
