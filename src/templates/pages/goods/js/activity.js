@@ -124,16 +124,19 @@ Vue.mixin({
 				preId = this.$route.params.activityId; //活动id
 			}
 			let num = this.spec_num;
-			this.$router.push("/presale/deosit/" + busId + "/" + proId + "/" + preId + "/" + invId + "/" + num);
+			this.$router.push("/presale/deposit/" + busId + "/" + proId + "/" + preId + "/" + invId + "/" + num);
+		}, jijiangPresale() {
+			this.$parent.$refs.bubble.show_tips("预售还没开始，请耐心等待");
 		},
 		/**
 		 * 立即购买 
-		 * @param {type} type   批发类型 1，手批 2，混批  0 普通商品
+		 * @param {type} type   批发类型 1，手批 2，混批 3预售交纳尾款  0 普通商品
 		 * @param {orderType} orderType 商品类型，1.团购商品 3.秒杀商品 4.拍卖商品 5 粉币商品 6预售商品 7批发商品 (ps:活动商品可以普通购买  )
 		 */
 		lijiBuy(type, orderType) {
 			// let price =
 			let _this = this;
+			let goodsData = this.goodsData;
 			console.log(_this.dialogData);
 			let _data = {
 				productId: _this.goodsId, //商品id，必传
@@ -154,7 +157,7 @@ Vue.mixin({
 			if (_this.$route.params.joinActivityId != null) {
 				_data.joinActivityId = _this.$route.params.joinActivityId;
 			}
-			if (type > 0) {
+			if (type == 1 || type == 2) {
 				//获取批发规格
 				//批发购买
 				let pfDatas = _this.newDialog;
@@ -169,6 +172,15 @@ Vue.mixin({
 				});
 				// arr = JSON.parse(arr);
 				_data.pifaSpecificaDTOList = JSON.stringify(arr);
+			} else if (type == 3) {
+				//交纳尾款，计算尾款的单价（页面展示的是总价）
+				let presale = goodsData.presaleResult;
+				if (presale != null) {
+					if (presale.isShowWeiMoneyButton != null && presale.isShowWeiMoneyButton == 1) {
+						_data.productNum = presale.orderNum;
+						_data.price = this.commonFn.floatDiv(presale.weiMoney, presale.orderNum);
+					}
+				}
 			}
 			if (_this.type == 1) {
 				//团购
@@ -188,6 +200,7 @@ Vue.mixin({
 				data: _data,
 				success: function (data) {
 					_this.commonFn.allowScroll();
+					sessionStorage.setItem("payUrl", location.href);
 					//跳转到提交订单的页面
 					_this.$router.push(
 						"/order/settlement/" + _this.$route.params.busId + "/0"

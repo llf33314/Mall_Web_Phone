@@ -176,6 +176,7 @@ export default {
           let id = data.data;
           //跳入评论成功页面
           _this.$router.push("/comment/success/" + busId + "/" + id);
+          _this.commonFn.loading(_this, false);
         }
       });
     },

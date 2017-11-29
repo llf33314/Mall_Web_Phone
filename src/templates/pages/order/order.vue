@@ -249,6 +249,7 @@ export default {
     },
     returnGoPay(orderId, busId) {
       // 去支付 跳转至提交订单页面
+      sessionStorage.setItem("payUrl",location.href);
       this.$router.push("/order/settlement/" + busId + "/2/" + orderId);
     },
     confirmReceipt(orderId) {

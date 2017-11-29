@@ -128,7 +128,7 @@
                         <i class="iconfont icon-jiantou-copy"></i>
                     </div>
                 </div>
-                <div class="my-list border">
+                <div class="my-list border" @click="toDeposit">
                     <div>
                         <i class="iconfont icon-daishouchanpin"></i>
                         我的预售
@@ -313,21 +313,29 @@ export default {
       //跳转至批发商品页面
       this.$router.push("/classify/" + shopId + "/" + busId + "/0/k=k");
     },
+    //我的订单
     returnMyOrder(type) {
       this.$router.push("/order/list/" + this.busId + "/" + type);
     },
+    //退款列表
     returnRefundOrder() {
       this.$router.push("/return/list/" + this.busId);
     },
+    //我的评论
     toReturnMyComment() {
-      //跳转到我的评论
       this.$router.push("/my/comment/" + this.busId);
     },
-    toAuction(){
+    //我的拍卖
+    toAuction() {
       let busId = this.busId;
-      this.$router.push("/auction/myBidding/"+busId+"/1");
+      this.$router.push("/auction/myBidding/" + busId + "/1");
     },
-     //获取店铺id
+    //我的定金
+    toDeposit() {
+      let busId = this.busId;
+      this.$router.push("/presale/myDeposit/" + busId+"/1");
+    },
+    //获取店铺id
     getShopId(busId) {
       let _this = this;
       _this.ajaxRequest({

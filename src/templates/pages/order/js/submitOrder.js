@@ -49,7 +49,7 @@ Vue.mixin({
 						//跳转到积分商城的页面
 					}
 					_this.$router.push(url);
-
+					_this.commonFn.loading(_this, false);
 				}
 			});
 		},

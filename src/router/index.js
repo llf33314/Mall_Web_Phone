@@ -71,8 +71,6 @@ const Auction_Bond = resolve => require(['pages/auction/bond'], resolve);
 //Auction_bond => 拍卖保证金
 const Auction_Agreement = resolve => require(['pages/auction/agreement'], resolve);
 //Auction_agreement => 用户竞拍服务协议
-const Auction_Succeed = resolve => require(['pages/auction/succeed'], resolve);
-//Auction_succeed => 用户竞拍服务协议
 const auction_success = resolve => require(['pages/auction/succeed'], resolve);
 //auction_success 保证金缴纳成功
 const margin_notice = resolve => require(['pages/auction/marginNotice'], resolve);
@@ -87,6 +85,8 @@ const shoppingCart = resolve => require(['pages/shoppingCart/index'], resolve);
 /***************      预售相关页面     ******************/
 const presaleDeposit = resolve => require(['pages/presale/deposit'], resolve);
 //presaleDeposit => 缴纳预售定金
+const myPresaleDeposit = resolve => require(['pages/presale/myDeposit'], resolve);
+//myPresaleDeposit => 我的定金
 
 const myAddress = resolve => require(['pages/my/myAddress'], resolve);
 //myAddress => 地址列表
@@ -326,14 +326,7 @@ export default new Router({
       meta: {
         title: '协议'
       }
-    }, {
-      path: '/auction/succeed',
-      name: 'succeed',
-      component: Auction_Succeed,
-      meta: {
-        title: '报名成功'
-      }
-    },
+    }, 
     {
       path: '/auction/success/:busId',
       name: 'auction_success',
@@ -356,15 +349,21 @@ export default new Router({
         title: '我的竞拍'
       }
     }, {
-      path: '/presale/deosit/:busId/:proId/:presaleId/:invId/:num',
+      path: '/presale/deposit/:busId/:proId/:presaleId/:invId/:num',
       name: 'presaleDeposit',
       component: presaleDeposit,
       meta: {
         title: '预售交定金'
       }
+    }, {
+      path: '/presale/myDeposit/:busId/:type',
+      name: 'myPresaleDeposit',
+      component: myPresaleDeposit,
+      meta: {
+        title: '我的定金'
+      }
     }
-
-
+    
 
 
   ]

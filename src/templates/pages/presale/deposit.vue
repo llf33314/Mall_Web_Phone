@@ -19,16 +19,24 @@
                     <div class="payMoney-title fs40">
                         支付方式
                     </div>
-                    <div class="payMoney-txt fs40">
+                    <div class="payMoney-txt fs40 shop-font">
                         {{selectPayWay.wayName}}
                     </div>
                 </div>
                 <div class="payMoney-item border" v-if="presaleObj.presale != null">
                     <div class="payMoney-title fs40">
-                        应付金额
+                        支付定金
                     </div>
-                    <div class="payMoney-txt fs40">
-                        ￥{{presaleObj.presale.depositPercent}}
+                    <div class="payMoney-txt fs40 shop-font" v-if="presaleObj.presale.depositPercent > 0">
+                        ￥{{presaleObj.presale.depositPercent | moneySplit1}}.{{presaleObj.presale.depositPercent | moneySplit2}}
+                    </div>
+                </div>
+                <div class="payMoney-item border" v-if="presaleObj.orderPrice != null && presaleObj.orderPrice > 0">
+                    <div class="payMoney-title fs40">
+                        订购金额
+                    </div>
+                    <div class="payMoney-txt fs40 shop-font">
+                        ￥{{presaleObj.orderPrice | moneySplit1}}.{{presaleObj.orderPrice | moneySplit2}}
                     </div>
                 </div>
             </div>
@@ -57,6 +65,7 @@
 <script>
 import payWayDialog from "components/payWayDialog"; //支付方式
 import defaultImg from "components/defaultImg";
+import filters from "@/lib/filters";
 export default {
   name: "myAddress",
 
@@ -81,7 +90,8 @@ export default {
   },
   components: {
     payWayDialog,
-    defaultImg
+    defaultImg,
+    filters
   },
   mounted() {
     if (this.agree == 1) {
@@ -128,31 +138,30 @@ export default {
     },
     submitData() {
       let _this = this;
-      let _myData = this.presaleObj;
+      let presaleObj = this.presaleObj;
       let _productObj = this.productObj;
       let _selectPayWay = this.selectPayWay;
       let _commonFn = this.commonFn;
-      if (!this.isAgree) {
-        _this.$parent.$refs.bubble.show_tips("请阅读用户竞拍协议"); //调用气泡显示
-        return;
-      }
       //提交数据
       let _data = {
         busId: _this.busId, //商家id
         url: location.href, //当前页面的地址
         browerType: _this.$store.state.browerType, //浏览器类型
-        proId: _productObj.id, //商品id
-        aucId: this.aucId, //拍卖id
-        marginMoney: _myData.aucMargin, //保证金金额 必传
+        productId: _productObj.id, //商品id
+        presaleId: this.presaleId, //拍卖id
+        depositMoney: presaleObj.presale.depositPercent, //定金金额 必传
         proName: _productObj.proName, //商品名称
-        proImgUrl: _myData.imageObj.image_url, //商品图片
-        proSpecificaIds: _myData.proSpecificaIds, //商品规格id
-        payWay: _selectPayWay.id //选择的支付方式
+        proImgUrl: this.productImage.image_url, //商品图片
+        proSpecificaIds: presaleObj.proSpecificaIds, //商品规格id
+        payWay: _selectPayWay.id, //选择的支付方式
+        orderMoney: presaleObj.orderPrice, //订购价  预定时价格必传
+        proNum: this.num //订购数量
       };
       console.log(_data, "---");
       _this.ajaxRequest({
-        url: h5App.activeAPI.add_margin_post,
+        url: h5App.activeAPI.add_deposit_post,
         data: _data,
+        loading: true,
         success: function(data) {
           //各种跳转
           let reData = data.data;
@@ -164,9 +173,11 @@ export default {
           if (reData.payWay == 2) {
             let busId = _this.busId;
             //跳转到支付成功页面
-            url = "/auction/success/" + busId;
-            _this.$router.push(url);
+            // url = "/auction/success/" + busId;
+            // _this.$router.push(url);
+            _this.toProduct();
           }
+          _this.commonFn.loading(_this, false);
         }
       });
     },

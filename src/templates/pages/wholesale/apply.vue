@@ -152,7 +152,9 @@ export default {
         url: h5App.activeAPI.pifa_send_msg_post,
         data: _data,
         loading: true,
-        success: function(data) {}
+        success: function(data) {
+          _this.commonFn.loading(_this, false);
+        }
       });
     },
     submitApply() {
@@ -183,6 +185,7 @@ export default {
         loading: true,
         success: function(data) {
           _this.showDialogs();
+          _this.commonFn.loading(_this, false);
         }
       });
     },

@@ -146,6 +146,7 @@ export default {
       _this.ajaxRequest({
         url: h5App.activeAPI.add_margin_post,
         data: _data,
+        loading: true,
         success: function(data) {
           //各种跳转
           let reData = data.data;
@@ -160,6 +161,7 @@ export default {
             url = "/auction/success/" + busId;
             _this.$router.push(url);
           }
+          _this.commonFn.loading(_this, false);
         }
       });
     },

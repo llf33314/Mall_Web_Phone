@@ -209,7 +209,12 @@
     my_huo_post: "/phoneAuction/L6tgXlBFeK/myHuoPaiList",
     //我的货品
     /**********************以下接口是预售相关接口*****************************/
-    get_presale_deposit:"/phonePresale/L6tgXlBFeK/toAddDeposit"
+    get_presale_deposit: "/phonePresale/L6tgXlBFeK/toAddDeposit",
+    //进入预售缴纳定金页面的接口
+    add_deposit_post: "/phonePresale/L6tgXlBFeK/addDeposit",
+    //缴纳定金的接口
+    my_deposit_post: "/phonePresale/L6tgXlBFeK/myDepositList"
+    //我的定金接口
 
   };
 

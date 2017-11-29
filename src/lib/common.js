@@ -65,7 +65,7 @@ var Rxports = {
 		});
 
 	},*/
-	
+
 	/**
      * 设置根字体
      * 750设计稿  设计稿尺寸 / 100
@@ -387,8 +387,8 @@ var Rxports = {
 	/**
 	 * 判断对象是否为空
 	 */
-	isNull(data){
-		if(data == null || data == "" || typeof(data) == "undefined"){
+	isNull(data) {
+		if (data == null || data == "" || typeof (data) == "undefined") {
 			return true;
 		}
 		return false;
@@ -396,19 +396,29 @@ var Rxports = {
 	/**
 	* 判断对象是否不为空
 	*/
-   isNotNull(data){
-	   if(data == null || data == "" || typeof(data) == "undefined"){
-		   return false;
-	   }
-	   return true;
-   },isInt(data){
-	   try{
-		data = parseInt(data);
-	   }catch(e){
-		   return false;
-	   }
-	   return true;
-   }
+	isNotNull(data) {
+		if (data == null || data == "" || typeof (data) == "undefined") {
+			return false;
+		}
+		return true;
+	}, 
+	/**
+	 * 判断是否是数字
+	 */
+	isInt(data) {
+		try {
+			data = parseInt(data);
+		} catch (e) {
+			return false;
+		}
+		return true;
+	}, 
+	/**
+	 * 开启或关闭loading
+	 */
+	loading(_this,flag) {
+		_this.$parent.$refs.loading.show(flag);//关闭loading*/
+	}
 };
 
 Vue.prototype.commonFn = Rxports;

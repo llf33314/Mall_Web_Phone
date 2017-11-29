@@ -891,6 +891,7 @@ export default {
                     //结算 成功跳转 订单页面 /order/settlement/:busId/1/:shopCartIds（购物车id）
                     shopCartIds = shopCartIds.toString();
                     let busId = this.$route.params.busId || this.$store.state.busId;
+                    sessionStorage.setItem("payUrl",location.href);
                     _this.$router.push('/order/settlement/'+busId+'/1/'+shopCartIds);
                 }else{
                      //编辑 请求成功后 清空之前编辑商品集合

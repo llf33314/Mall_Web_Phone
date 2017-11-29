@@ -30,6 +30,9 @@ export default {
   },
   methods: {
     selects(e) {
+      if (e == -1) {
+        return;
+      }
       this.selectNav = e;
       let busId = this.$route.params.busId;
       let shopId = this.$route.params.shopId;

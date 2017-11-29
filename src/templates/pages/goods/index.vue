@@ -21,7 +21,7 @@
         </section>
         <!--已选规格显示-row所选规格--num所选数量-->
         <section class="goods-selected" 
-                @click="isShow=true">
+                @click="dialogShow">
             <limit  :row="dialogData.values" 
                     :num="spec_num">
             </limit>
@@ -149,14 +149,14 @@
                     style="color:#fff"
                     :class="{'shopFff':isSoldOut}"
                     v-if="type == 6 && goodsData.presaleResult != null && goodsData.presaleResult.isShowWeiMoneyButton == 1"
-                    >
+                    @click="lijiBuy(3)">
                     支付尾款
                 </div>
                 <div class="goods-footer-botton ui-col-2 fs50 shop-bg"
-                    style="color:#fff"
+                    style="color:#fff;background-color:#999999"
                     :class="{'shopFff':isSoldOut}"
                     v-if="type == 6 && goodsData.presaleResult != null && goodsData.presaleResult.isShowStartButton == 1"
-                     >
+                     @click="jijiangPresale">
                     即将开售
                 </div>
                 <!--普通购买-->
@@ -619,6 +619,21 @@ export default {
       console.log(this.isShow);
       // debugger
       // if(!this.isSoldOut) return;
+      if(this.goodsData != null){
+        let presale = this.goodsData.presaleResult;
+        if(presale != null){
+          if(presale.isShowWeiMoneyButton != null && presale.isShowWeiMoneyButton == 1){
+            let msg ={
+              btnNum: 1 ,//按钮显示个数
+              btnOne: '确定',//按钮文字
+              dialogTitle:'预售提醒',
+              dialogMsg: '您已经交纳了定金，不能更改规格',
+            }
+            this.$parent.$refs.dialog.showDialog(msg);//调用方法
+            return;
+          }
+        }
+      }
       this.isShow = true;
       // console.log(this.isShow )
     },

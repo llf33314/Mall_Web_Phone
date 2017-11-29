@@ -7,11 +7,13 @@
         </div>
         <div class="goodsinfo-text">
             <p class="goodsinfo-name">{{obj.pro_name || obj.proName}}
-                <em>{{obj.auc_type == 1 ? "降价拍" : "升价拍"}}</em>
+                <em v-if="obj.auc_type != null">{{obj.auc_type == 1 ? "降价拍" : "升价拍"}}</em>
             </p>
             <p class="fs42" v-if="obj.auc_price != null && obj.aucNo == null "> &nbsp;</p>
             <p class="fs42" v-if="obj.auc_price != null ||  obj.marginMoney  != null">保证金：<span class="shop-font">￥{{obj.auc_price || obj.marginMoney | moneySplit1}}.<span class="fs32">{{obj.auc_price || obj.marginMoney | moneySplit2}}</span></span></p>
             <p class="fs42" v-if="obj.aucNo != null">竞拍编号：<span>{{obj.aucNo}}</span></p>
+            <p class="fs42" v-if="obj.depositMoney != null">定金：<span>{{obj.depositMoney}}</span></p>
+            <p class="fs42" v-if="obj.depositNo != null">定金编号：<span>{{obj.depositNo}}</span></p>
         </div>
     </div>
 </template>
@@ -36,9 +38,7 @@ export default {
     };
   },
   mounted() {},
-  methods: {
-    
-  }
+  methods: {}
 };
 </script>
 

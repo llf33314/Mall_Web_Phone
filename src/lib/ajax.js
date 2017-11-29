@@ -49,9 +49,9 @@ Vue.mixin({
                 if (res.status == 200) {
     
                     if (opts.success) {
-                        if(typeof(vm.$parent.$refs.loading) != "undefined"){
-                            vm.$parent.$refs.loading.show(false);//关闭loading*/
-                        }
+                        // if(typeof(vm.$parent.$refs.loading) != "undefined"){
+                        //     vm.$parent.$refs.loading.show(false);//关闭loading*/
+                        // }
                         
                         //需要登陆（需要跳转）
                         if(res.data.code == 1001){

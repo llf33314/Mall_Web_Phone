@@ -334,7 +334,7 @@
 import footerNav from "components/footerNav";
 import defaultImg from "components/defaultImg";
 import shopDialog from "components/shopDialog";
-import payWayDialog from "components/payWayDialog";//支付方式
+import payWayDialog from "components/payWayDialog"; //支付方式
 import technicalSupport from "components/technicalSupport"; //技术支持
 import dialogModular from "components/dialogModular"; //技术支持
 import couponDialog from "./componet/couponDialog"; //优惠券弹出框
@@ -398,7 +398,11 @@ export default {
     if (this.commonFn.isNull(data) || data.length == 0) {
       this.loadDatas(); //初始化协商详情数据
     } else {
-      console.log(data, "datas", this.commonFn.isNull(data) || data.length == 0);
+      console.log(
+        data,
+        "datas",
+        this.commonFn.isNull(data) || data.length == 0
+      );
       let imgUrl = this.$store.state.imgUrl;
       this.imgUrl = imgUrl; //图片域名
       this.getorderResult(data, this);
@@ -511,7 +515,9 @@ export default {
         url: location.href,
         browerType: _this.$store.state.browerType
       };
-      if (_this.from == 2) {
+      if (_this.from == 1) {
+        _data.cartIds = _this.$route.params.ids;
+      } else if (_this.from == 2) {
         _data.orderId = _this.$route.params.ids;
       }
       _this.ajaxRequest({
@@ -564,7 +570,6 @@ export default {
       _this.orderData.typePriceName =
         Language.order_type_price_name[myData.type];
       _this.caculationOrder(0); //初始化计算订单
-
     },
     /**
      * 显示弹出框
@@ -840,6 +845,10 @@ export default {
     },
     backBefore() {
       //返回前页
+      let url = sessionStorage.getItem("payUrl");
+      if (this.commonFn.isNotNull(url)) {
+        location.href = url;
+      }
     }
   }
 };
