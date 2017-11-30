@@ -35,7 +35,7 @@
         <!----团购-参团---->
         <join-group :row="goodsData.joinList"
                     :imgUrl="imgUrl"
-                    v-if="type == 1 && goodsData.joinList != ''">
+                    v-if="type == 1 && goodsData.joinList != null && goodsData.joinList.length > 0">
         </join-group>
         <!---店铺信息与收藏---->
         <shop-collection :row="goodsData" :imgUrl="imgUrl"></shop-collection>
@@ -199,6 +199,7 @@
                         <span class="fs32">¥</span>{{dialogData.inv_price | moneySplit1}}<span class="fs32">.{{dialogData.inv_price | moneySplit2}}</span>
                         </span>
                         <span  v-if="type == 1">
+                        <span class="fs36">团购价:</span>
                         <span class="fs32">¥</span>{{dialogData.groupPrice | moneySplit1}}<span class="fs32">.{{dialogData.groupPrice | moneySplit2}}</span>
                         </span>
                         <span class="fs36 " v-if="dialogData.hyPrice"> 会员价 :{{dialogData.hyPrice}}</span>

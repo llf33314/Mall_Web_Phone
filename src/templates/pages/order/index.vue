@@ -283,18 +283,6 @@ export default {
     setTitle() {
       //设置页头
       let _this = this;
-      // let titles = "我的订单";//我的订单
-      // if (_this.type > 0 && _this.type < 5) {
-      //   titles = _this.homeNav[_this.type].name + "订单";//订单
-      // } else if (_this.type == 5) {
-      //   titles = "待评价订单";//待评价订单
-      // } else if (_this.type == 6) {
-      //   titles = "退款订单";//退款订单
-      // } else if (_this.type == 7) {
-      //   titles = "团购订单";//团购订单
-      // } else if (_this.type == 8) {
-      //   titles = "秒杀订单";//秒杀订单
-      // }
       this.commonFn.setTitle(Language.order_title_data_msg[_this.type].name);
     }
   }

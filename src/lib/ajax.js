@@ -52,7 +52,6 @@ Vue.mixin({
                         // if(typeof(vm.$parent.$refs.loading) != "undefined"){
                         //     vm.$parent.$refs.loading.show(false);//关闭loading*/
                         // }
-                        
                         //需要登陆（需要跳转）
                         if(res.data.code == 1001){
                             return
@@ -75,6 +74,9 @@ Vue.mixin({
                                     msg :  res.data.msg
                                 }
                                 vm.$parent.$refs.bubble.show_tips(msg);
+                                if(typeof(vm.$parent.$refs.loading) != "undefined"){
+                                    vm.$parent.$refs.loading.show(false);//关闭loading*/
+                                }
                                 return
                             }
                         }
@@ -100,7 +102,9 @@ Vue.mixin({
                 } else {
                     console.log('catch');
                 }
-                vm.$parent.$refs.loading.show(false);//关闭loading*/
+                if(typeof(vm.$parent.$refs.loading) != "undefined"){
+                    vm.$parent.$refs.loading.show(false);//关闭loading*/
+                }
             });
     
         },

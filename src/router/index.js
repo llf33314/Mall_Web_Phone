@@ -97,6 +97,10 @@ const groupbuydetail = resolve => require(['pages/groupbuy/groupbuydetail'], res
 //groupbuydetail 团购详情页面 
 
 
+const myCollect = resolve => require(['pages/my/myCollect'], resolve);
+//groupbuydetail 我的收藏 
+
+
 Vue.use(Router)
 
 export default new Router({
@@ -306,7 +310,7 @@ export default new Router({
         title: '编辑地址页面'
       }
     }, {
-      path: '/groupbuy/detail/:busId/:id',
+      path: '/groupbuy/detail/:busId/:id/:joinId/:memberId',
       name: 'groupbuydetail',
       component: groupbuydetail,
       meta: {
@@ -326,7 +330,7 @@ export default new Router({
       meta: {
         title: '协议'
       }
-    }, 
+    },
     {
       path: '/auction/success/:busId',
       name: 'auction_success',
@@ -362,8 +366,15 @@ export default new Router({
       meta: {
         title: '我的定金'
       }
+    }, {
+      path: '/my/collect/:busId',
+      name: 'myCollect',
+      component: myCollect,
+      meta: {
+        title: '我的收藏'
+      }
     }
-    
+
 
 
   ]

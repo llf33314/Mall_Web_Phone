@@ -72,7 +72,7 @@
                         <i class="iconfont icon-jiantou-copy"></i>
                     </div>
                 </div>
-                <div class="my-list border">
+                <div class="my-list border" @click="toCollect">
                     <div>
                         <i class="iconfont icon-fav"></i>
                         我的收藏
@@ -333,7 +333,12 @@ export default {
     //我的定金
     toDeposit() {
       let busId = this.busId;
-      this.$router.push("/presale/myDeposit/" + busId+"/1");
+      this.$router.push("/presale/myDeposit/" + busId + "/1");
+    },
+    //我的收藏
+    toCollect() {
+      let busId = this.busId;
+      this.$router.push("/my/collect/" + busId);
     },
     //获取店铺id
     getShopId(busId) {

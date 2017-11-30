@@ -398,11 +398,6 @@ export default {
     if (this.commonFn.isNull(data) || data.length == 0) {
       this.loadDatas(); //初始化协商详情数据
     } else {
-      console.log(
-        data,
-        "datas",
-        this.commonFn.isNull(data) || data.length == 0
-      );
       let imgUrl = this.$store.state.imgUrl;
       this.imgUrl = imgUrl; //图片域名
       this.getorderResult(data, this);
@@ -440,37 +435,37 @@ export default {
       if (!_this.isSelectDaodianPay) {
         return;
       }
-      let _orderData = _this.orderData;
-      //定义运费差价
-      let chaFreightMoney = 0;
-      _this.orderList.forEach((bus, index) => {
-        let freightMoney = bus.productFreightMoney;
-        let oldFreightMoney = bus.productFreightMoneyOld;
-        let busFreight = 0;
-        if (payWayId == 6) {
-          busFreight = freightMoney;
-        } else {
-          busFreight = -freightMoney;
-        }
-        bus.shopResultList.forEach((shop, index) => {
-          shop.totalFreightMoney = _floatSub(
-            shop.totalFreightMoney,
-            busFreight
-          );
-        });
-        bus.productFreightMoneyOld = _floatSub(oldFreightMoney, busFreight);
-        // console.log(bus.totalMoney, "----", busFreight);
-        bus.totalMoney = _floatSub(bus.totalMoney, busFreight);
-        bus.totalNewPrice = _floatSub(bus.totalNewPrice, busFreight);
+      // let _orderData = _this.orderData;
+      // //定义运费差价
+      // let chaFreightMoney = 0;
+      // _this.orderList.forEach((bus, index) => {
+      //   let freightMoney = bus.productFreightMoney;
+      //   let oldFreightMoney = bus.productFreightMoneyOld;
+      //   let busFreight = 0;
+      //   if (payWayId == 6) {
+      //     busFreight = freightMoney;
+      //   } else {
+      //     busFreight = -freightMoney;
+      //   }
+      //   bus.shopResultList.forEach((shop, index) => {
+      //     shop.totalFreightMoney = _floatSub(
+      //       shop.totalFreightMoney,
+      //       busFreight
+      //     );
+      //   });
+      //   bus.productFreightMoneyOld = _floatSub(oldFreightMoney, busFreight);
+      //   // console.log(bus.totalMoney, "----", busFreight);
+      //   bus.totalMoney = _floatSub(bus.totalMoney, busFreight);
+      //   bus.totalNewPrice = _floatSub(bus.totalNewPrice, busFreight);
 
-        chaFreightMoney = _floatAdd(chaFreightMoney, busFreight);
+      //   chaFreightMoney = _floatAdd(chaFreightMoney, busFreight);
 
-        _this.$set(_this.orderList, index, bus);
-      });
-      let totalPayMoney = _orderData.totalPayMoney;
-      _orderData.totalPayMoney = _floatSub(totalPayMoney, chaFreightMoney);
-      _orderData.totalMoney = _floatSub(_orderData.totalMoney, chaFreightMoney);
-      // console.log(totalPayMoney, "---", "totalPayMoney", chaFreightMoney);
+      //   _this.$set(_this.orderList, index, bus);
+      // });
+      // let totalPayMoney = _orderData.totalPayMoney;
+      // _orderData.totalPayMoney = _floatSub(totalPayMoney, chaFreightMoney);
+      // _orderData.totalMoney = _floatSub(_orderData.totalMoney, chaFreightMoney);
+      // // console.log(totalPayMoney, "---", "totalPayMoney", chaFreightMoney);
     }
   },
   methods: {
@@ -500,6 +495,56 @@ export default {
         // payWayLists.forEach((way, index) => {
         // });
       });
+    },
+    //改变到店自提  选择了到店自提后 清空运费
+    changeDeliv(item) {
+      // console.log(item,"item")
+      let _this = this;
+
+      let _commonFn = this.commonFn;
+      let _floatSub = _commonFn.floatSub; //减法
+      let _floatAdd = _commonFn.floatAdd; //加法
+      if (_commonFn.isNull(this.selectPayWay)) {
+        return;
+      }
+      let deliverWayId = item.selectDelivery.id;
+      if (deliverWayId == 2) {
+        _this.isSelectDaodianPay = true;
+      }
+      if (!_this.isSelectDaodianPay) {
+        return;
+      }
+      let _orderData = _this.orderData;
+      //定义运费差价
+      let chaFreightMoney = 0;
+      _this.orderList.forEach((bus, index) => {
+        let freightMoney = bus.productFreightMoney;
+        let oldFreightMoney = bus.productFreightMoneyOld;
+        let busFreight = 0;
+        if (deliverWayId == 2) {
+          busFreight = freightMoney;
+        } else {
+          busFreight = -freightMoney;
+        }
+        bus.shopResultList.forEach((shop, index) => {
+          shop.totalFreightMoney = _floatSub(
+            shop.totalFreightMoney,
+            busFreight
+          );
+        });
+        bus.productFreightMoneyOld = _floatSub(oldFreightMoney, busFreight);
+        // console.log(bus.totalMoney, "----", busFreight);
+        bus.totalMoney = _floatSub(bus.totalMoney, busFreight);
+        bus.totalNewPrice = _floatSub(bus.totalNewPrice, busFreight);
+
+        chaFreightMoney = _floatAdd(chaFreightMoney, busFreight);
+
+        _this.$set(_this.orderList, index, bus);
+      });
+      let totalPayMoney = _orderData.totalPayMoney;
+      _orderData.totalPayMoney = _floatSub(totalPayMoney, chaFreightMoney);
+      _orderData.totalMoney = _floatSub(_orderData.totalMoney, chaFreightMoney);
+      // console.log(totalPayMoney, "---", "totalPayMoney", chaFreightMoney);
     },
     order_ulShow() {
       $(".orderTotal-ul").toggleClass("shop-hide");
@@ -636,6 +681,7 @@ export default {
               }
             }
             _this.changePayWay();
+            _this.changeDeliv(item);
             break;
           }
         }

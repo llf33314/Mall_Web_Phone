@@ -3,7 +3,7 @@
     <!--页头状态-->
     <header class="deltails-header shipped" v-if="order.orderStatus != 4" >
         <p class="fs52">{{order.orderStatusName}}</p>
-        <p class="fs40" v-if="order.orderStatusMsg != ''">{{order.orderStatusMsg}}</p>
+        <p class="fs40 p-msg" v-if="order.orderStatusMsg != ''">{{order.orderStatusMsg}}</p>
     </header> 
     <header class="deltails-header deltails-padding0 shop-textc  success" v-if="order.orderStatus == 4" >
         <i class="iconfont icon-chenggong"></i>
@@ -162,7 +162,7 @@
             删除订单
         </div>
         <div class="deltails-button fs40 shop-bg" v-if="order.orderType == 1 && order.activityId > 0" 
-        @click="groupBuyDetail(order.activityId)">
+        @click="groupBuyDetail(order.activityId,order.joinId,order.buyerUserId)">
             查看团购详情
         </div>
     </section>
@@ -207,6 +207,7 @@ export default {
     //把路由带来的参数保存到页面
     _this.loadOrderDetail(); //初始化订单详情数据
     _this.$store.commit("show_footer", false); //隐藏底部导航栏
+     this.commonFn.setTitle("订单详情");
   },
   beforeDestroy() {
     //离开后的操作
@@ -249,7 +250,7 @@ export default {
     },
     returnGoPay(orderId, busId) {
       // 去支付 跳转至提交订单页面
-      sessionStorage.setItem("payUrl",location.href);
+      sessionStorage.setItem("payUrl", location.href);
       this.$router.push("/order/settlement/" + busId + "/2/" + orderId);
     },
     confirmReceipt(orderId) {
@@ -303,10 +304,19 @@ export default {
           this.activityId
       );
     },
-    groupBuyDetail(groupBuyId) {
+    groupBuyDetail(groupBuyId, joinId, memberId) {
       //查看团购详情
       let busId = this.busId;
-      this.$router.push("/groupbuy/detail/" + busId + "/" + groupBuyId);
+      this.$router.push(
+        "/groupbuy/detail/" +
+          busId +
+          "/" +
+          groupBuyId +
+          "/" +
+          joinId +
+          "/" +
+          memberId
+      );
     }
   }
 };
@@ -471,6 +481,9 @@ export default {
   margin-bottom: 30/@dev-Width *1rem;
   & > p:first-child {
     margin-bottom: 30/@dev-Width *1rem;
+  }
+  .p-msg{
+    width: 50%
   }
 }
 .deltails-padding0 {

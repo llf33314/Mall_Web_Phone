@@ -60,6 +60,11 @@ export default {
   .goodsinfo-text {
     float: right;
     width: 70%;
+    .pro-price {
+      span:first-child {
+        margin-right: 10/@dev-Width * 1rem;
+      }
+    }
   }
   .goodsinfo-name {
     width: 100%;

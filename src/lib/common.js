@@ -3,68 +3,6 @@ import axios from 'axios';
 import Vue from 'vue'
 
 var Rxports = {
-	/**
-	  * @param {String} type			请求的类型，默认post
-	  * @param {String} url				请求地址
-	  * @param {String} time			超时时间
-	  * @param {Object} data			请求参数
-	  * @param {String} dataType		预期服务器返回的数据类型，xml html json ...
-	  * @param {Object} headers			自定义请求headers
-	  * @param {Function} success		请求成功后，这里会有两个参数,服务器返回数据，返回状态，[data, res]
-	  * @param {Function} error		发送请求前
-	  * @param return 
-	*/
-
-	/*ajax(opt) {
-
-		var opts = opt || {};
-
-		if (!opts.url) {
-			alert('请填写接口地址');
-			return false;
-		}
-		//配置请求头
-		axios({
-			"method": opts.type || 'post',
-			"url": window.h5App.api + opts.url,
-			"params": opts.data || {},
-			"headers": {
-				"Content-type": "application/json;charset=UTF-8"
-			},
-			// `baseURL` 将自动加在 `url` 前面，除非 `url` 是一个绝对 URL。
-			// 它可以通过设置一个 `baseURL` 便于为 axios 实例的方法传递相对 URL
-			//"baseURL": window.h5App.api,//打包时注释
-			"timeout": opts.time || 10 * 1000,
-			"responseType": opts.dataType || 'json'
-		}).then(function (res) {
-
-			if (res.status == 200) {
-
-				if (opts.success) {
-
-					opts.success(res.data, res);
-				}
-
-			} else {
-
-				if (data.error) {
-					opts.error(error);
-				} else {
-					console.log('error');
-				}
-
-			}
-
-		}).catch(function (error) {
-			console.log(error);
-			if (opts.error) {
-				opts.error(error);
-			} else {
-				console.log('catch');
-			}
-		});
-
-	},*/
 
 	/**
      * 设置根字体
@@ -82,31 +20,11 @@ var Rxports = {
 		document.documentElement.style.fontSize = Math.floor(devWidth / (750 / 100)) + 'px';
 		//$('html').css('font-size', Math.floor(devWidth / 31));
 	},
-	/**
-	 * 获取URL参数
-	 * @param name 参数名
-	 * @rteurn {String}
-	 */
-	getQueryString: function (name) {
-		if (!name) return null;
-		return window.location.href.split('?' + name + '=')[1];
-		/*var reg = new RegExp('(^|&|\\?)' + name + '=([^&]*)(&|$)'), array = location.search.match(reg);
-		return array ? decodeURIComponent(array[2]) : null;*/
-	},
-	//JSON字符串转json对象
-	strToJson: function (str) {
-		var json = eval('(' + str + ')');
-		return json;
-	},
 	//进入焦点事件不显示横竖屏
 	input_focus() {
 		$('#app').css('display', 'block');
 		$('.landscape').css('display', 'none');
 		$('.main .footer-nav').addClass('hide');
-	},
-	//失去焦点
-	input_blur() {
-		$('.main .footer-nav').removeClass('hide');
 	},
 	//判断ios和安卓系统
 	isSystem(e) {
@@ -204,124 +122,9 @@ var Rxports = {
 		return phoneReg.test(num);
 	},
 	/**
-	 * url
+	 * 验证物流号
 	 */
-	validURL: function (url) {
-		let regex = /^(https?:\/\/)?[\u4e00-\u9fa50-9a-zA-Z][-\u4e00-\u9fa50-9a-zA-Z]{0,62}(\.[-\u4e00-\u9fa50-9a-zA-Z]{1,63})*(\.[-\u4e00-\u9fa50-9a-zA-Z]{0,62}[\u4e00-\u9fa50-9a-zA-Z])(:[0-9]{0,5})?(\/[\w\.-]*)*(#[^#\s]*)?$/i;
-		if (url.length < 1 || url.length > 256) {
-			return false;
-		}
-		return regex.test(url);
-	},
-	/**
-	 * 校验邮箱
-	 * @param {String} email
-	 * @returns {Boolean}
-	 */
-	validEmail: function (email) {
-		let emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-		//let emailReg = /^\w+[-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-		return emailReg.test(email);
-	},
-	/**
-	 * 校验价格
-	 * @param {String} money
-	 * @returns {Boolean}
-	 */
-	validMoney: function (money) {
-		//不超过6位整数且保留2位小数
-		let moneyReg = /^\d{0,6}(.[0-9]{2})?$/;
-		return moneyReg.test(money);
-	},
-	/**
-	 * 校验身份证
-	 * @param {String} IDcard
-	 * @returns {Boolean}
-	 */
-
-	validIDnumber: function (IDcard) {
-		var factorArr = new Array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2, 1);
-		var parityBit = new Array("1", "0", "X", "9", "8", "7", "6", "5", "4", "3", "2");
-		var varArray = new Array();
-		var intValue;
-		var lngProduct = 0;
-		var intCheckDigit;
-		var intStrLen = IDcard.length;
-		var idNumber = IDcard;
-		// initialize
-		if ((intStrLen != 15) && (intStrLen != 18)) {
-			return false;
-		}
-		// check and set value
-		for (let i = 0; i < intStrLen; i++) {
-			varArray[i] = idNumber.charAt(i);
-			if ((varArray[i] < '0' || varArray[i] > '9') && (i != 17)) {
-				return false;
-			} else if (i < 17) {
-				varArray[i] = varArray[i] * factorArr[i];
-			}
-		}
-		if (intStrLen == 18) {
-			// check date
-			var date8 = idNumber.substring(6, 14);
-			if (Rxports.isDate8(date8) == false) {
-				return false;
-			}
-			// calculate the sum of the products
-			for (let i = 0; i < 17; i++) {
-				lngProduct = lngProduct + varArray[i];
-			}
-			// calculate the check digit
-			intCheckDigit = parityBit[lngProduct % 11];
-			// check last digit
-			if (varArray[17] != intCheckDigit) {
-				return false;
-			}
-		} else { // length is 15
-			// check date
-			var date6 = idNumber.substring(6, 12);
-			if (Rxports.isDate6(date6) == false) {
-				return false;
-			}
-		}
-		return true;
-		// let IDcardReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-		// return IDcardReg.test(IDcard);
-	},
-	//15位身份证
-	isDate6: function (sDate) {
-		if (!/^[0-9]{6}$/.test(sDate)) {
-			return false;
-		}
-		var year, month, day;
-		year = sDate.substring(0, 4);
-		month = sDate.substring(4, 6);
-		if (year < 1700 || year > 2500)
-			return false
-		if (month < 1 || month > 12)
-			return false
-		return true
-	},
-	//18位身份证
-	isDate8: function (sDate) {
-		if (!/^[0-9]{8}$/.test(sDate)) {
-			return false;
-		}
-		var year, month, day;
-		year = sDate.substring(0, 4);
-		month = sDate.substring(4, 6);
-		day = sDate.substring(6, 8);
-		var iaMonthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-		if (year < 1700 || year > 2500)
-			return false
-		if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0))
-			iaMonthDays[1] = 29;
-		if (month < 1 || month > 12)
-			return false
-		if (day < 1 || day > iaMonthDays[month - 1])
-			return false
-		return true
-	}, validateWuliuNo: function (wuliuNo) {
+	validateWuliuNo: function (wuliuNo) {
 		if (!/[a-z-A-Z-0-9]{1,30}$/.test(wuliuNo)) {
 			return false;
 		}
@@ -401,7 +204,7 @@ var Rxports = {
 			return false;
 		}
 		return true;
-	}, 
+	},
 	/**
 	 * 判断是否是数字
 	 */
@@ -412,11 +215,11 @@ var Rxports = {
 			return false;
 		}
 		return true;
-	}, 
+	},
 	/**
 	 * 开启或关闭loading
 	 */
-	loading(_this,flag) {
+	loading(_this, flag) {
 		_this.$parent.$refs.loading.show(flag);//关闭loading*/
 	}
 };

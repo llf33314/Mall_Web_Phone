@@ -228,6 +228,9 @@ Vue.mixin({
 						if (product.orderDetailId != null && product.orderDetailId > 0) {
 							productObj.orderDetailId = product.orderDetailId;
 						}
+						if(orderData.joinActivityId != null){
+							productObj.groupJoinId = orderData.joinActivityId;
+						}
 						_this.$set(productResultList, productResultList.length, productObj);
 					});
 

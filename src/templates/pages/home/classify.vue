@@ -271,7 +271,7 @@ export default {
             let  title = {1:'团购',3:'秒杀',4:'拍卖',5:'粉币',6:'预售',7:'批发'}
             _this.commonFn.setTitle(title[this.type] || '分类详情');
             let _keyword = this.$route.params.keywords || this.$store.state.keywords ;
-            _keyword === 'k=k'?_this.keyWord = '':_this.keyWord = _keyword || '';
+            _keyword === 'k=k' ?_this.keyWord = '':_this.keyWord = _keyword || '';
 
             _this.curPage = 1;
 
@@ -370,7 +370,6 @@ export default {
         let _keyword = this.$store.state.keywords || this.$route.params.keywords;
         _keyword === 'k=k'?_this.keyWord = '':_this.keyWord = _keyword || '';
         _this.curPage = 1;
-        
         _this.setTitle();
 
         _this.classAllAjax();

@@ -66,6 +66,12 @@
     get_home_page_id_post: 'phonePage/L6tgXlBFeK/getHomePageId',
     /*获取店铺id*/
     get_shop_id_post: 'phonePage/L6tgXlBFeK/getShopId',
+    /*获取我的页面数据*/
+    my_center_post: '/phoneMember/L6tgXlBFeK/toUser',
+    /*我的收藏 */ 
+    my_collect_post: '/phoneMember/L6tgXlBFeK/collectList',
+    /*删除收藏 */ 
+    delete_collect_post: '/phoneMember/L6tgXlBFeK/deleteCollect',
     /***********************   以下接口都是 商品分类页面相关接口 ***********************/
     //商品详情
     /*商品搜索接口*/
@@ -108,8 +114,6 @@
     phoneShopCart_removeShopCart_post: '/phoneShopCart/L6tgXlBFeK/removeShopCart',
     /*去结算接口 */
     phoneShopCart_shopCartOrder_post: '/phoneShopCart/L6tgXlBFeK/shopCartOrder',
-    /*获取我的页面数据*/
-    my_center_post: '/phoneMember/L6tgXlBFeK/toUser',
     /*获取商城首页数据 */
     mall_index_post: '/phonePage/L6tgXlBFeK/getHomePageId',
     /***********************   以下接口都是 订单相关的接口 ***********************/
@@ -192,7 +196,7 @@
     // 获取超级销售员首页
     sellect_index_post: '/phoneSellers/L6tgXlBFeK/sellerIndex',
     /**********************以下接口是团购相关接口*****************************/
-    goupbuy_detail_post: '',
+    goupbuy_detail_post: '/phoneGroupBuy/L6tgXlBFeK/groupBuyDetail',
     /**********************以下接口是拍卖相关接口*****************************/
     get_margin_post: "/phoneAuction/L6tgXlBFeK/toAddMargin",
     //获取缴纳保证金页面信息

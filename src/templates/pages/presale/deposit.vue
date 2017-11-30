@@ -65,7 +65,7 @@
 <script>
 import payWayDialog from "components/payWayDialog"; //支付方式
 import defaultImg from "components/defaultImg";
-import filters from "@/lib/filters";
+import filte from "@/lib/filters"; //过滤器
 export default {
   name: "myAddress",
 

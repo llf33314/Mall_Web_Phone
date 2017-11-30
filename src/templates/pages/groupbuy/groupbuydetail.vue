@@ -1,89 +1,91 @@
 <template>
 <div class="shop-wrapper group-wapper">
-  <section class="group-main">
+  <section class="group-main" v-if="groupProduct != null">
       <div class="group-top " :style="{backgroundImage: 'url(' + tuangoubg + ')'}">
-          <div class="group-img">
-              <default-img :background="a"
+          <div class="group-img" @click="toProductDetail(groupProduct.id,groupProduct.shopId,groupProduct.busId,groupObj.groupId)">
+              <default-img :background="imgUrl+groupProduct.imageUrl"
                           :isHeadPortrait="0">
               </default-img>
           </div>
           <div class="group-title fs40">
-            <p>商品名称</p>
-            <div class="group-price fs36 shop-font">团购价：<span class="fs40">￥30</span>.00</div>
+            <p  @click="toProductDetail(groupProduct.id,groupProduct.shopId,groupProduct.busId,groupObj.groupId)">{{groupProduct.proName}}</p>
+            <div class="group-price fs36 shop-font">团购价：<span class="fs40">￥{{groupProduct.price | moneySplit1}}</span>.{{groupProduct.price | moneySplit2}}</div>
           </div>
       </div>
-      <div class="group-time fs40 border">
-          剩余 <em> 0 </em> 天
-          <em >23</em>时
-          <em>59</em>分
-          <em >59</em>秒
-      </div>
+       <count-down :times="times" :type="3"  v-if="times != null && times > 0"></count-down>
+      <!-- <div class="group-time fs40 border" v-if="times != null && times.length > 0">
+          剩余 <em>{{times.DD}}</em> 天
+          <em >{{times.HH}}</em>时
+          <em>{{times.mm}}</em>分
+          <em >{{times.ss}}</em>秒
+      </div> -->
       <div class="group-middle" >
-        <div class="group-kaituan border shop-textc fs44 font-weight">
-          还差<em class="shop-font">2</em>人就要开团啦
+        <div class="group-kaituan border shop-textc fs44 font-weight" v-if="groupObj.chaPeopleNum > 0">
+          还差<em class="shop-font">{{groupObj.chaPeopleNum}}</em>人就要开团啦
         </div>
-        <div class="group-items border shop-box-center" >
+        <div class="group-items border shop-box-center" v-if="joinList != null && joinList.length > 0"
+          v-for="(join,index) in joinList" :key="index">
           <div class="left ">
             <span class="img">
-              <default-img :background="a"
+              <default-img :background="join.headimgurl"
                           :isHeadPortrait="0">
               </default-img>
             </span>
-            <span class="fs40">悟空</span>
-            <span class="fs40 shop-bg group-bgs">团长</span>
+            <span class="fs40">{{join.nickname}}</span>
+            <span class="fs40 shop-bg group-bgs" v-if="join.joinType == 1">团长</span>
           </div>
           <div class="right">
-            <span class="fs36">2017-07-12 03:40:56 开团</span>
+            <span class="fs36">{{join.joinTime | format}} 开团</span>
           </div>
         </div>
-        <div class="group-items border shop-box-center" >
-          <div class="left ">
-            <span class="img">
-              <default-img :background="a"
-                          :isHeadPortrait="0">
-              </default-img>
-            </span>
-            <span class="fs40">悟空</span>
-          </div>
-          <div class="right">
-            <span class="fs36">2017-07-12 03:40:56 参团</span>
-          </div>
-        </div>
-        <div class="group-join-div">
+        <div class="group-join-div" v-if="groupObj.chaPeopleNum > 0 && groupObj.isMember == 1">
           <div class="group-button-yellow fs50" @click="isShowShare=true">呼唤朋友来参团</div>
         </div>
       </div>
   </section>
-  <section class="group-section">
+  <section class="group-section" v-if="productArr != null">
       <div class="title-div fs40 font-weight">其他团购</div>
-      <div class="group-goods-box clearfix">
-        <div class="group-goods">
+      <div class="group-goods-box clearfix" >
+        <div class="group-goods"  v-for="(product,index) in productArr" :key="index"
+        @click="toProductDetail(product.id,product.shop_id,busId,product.activityId)">
           <div class="group-goods-img">
-            <default-img :background="a"
+            <default-img :background="product.image_url"
                         :isHeadPortrait="0">
             </default-img>
           </div>
           <div class="group-goods-text">
-            <p class="fs42">商品名称商品名称</p>
-            <p class="shop-font fs32">3人团：￥<span class="fs40">68</span>.00</p>
-            <div class="group-goods-time">
+            <p class="fs42 group-names">{{product.pro_name}}</p>
+            <p class="shop-font fs32">{{product.peopleNum}}人团：￥<span class="fs40">{{product.price | moneySplit1}}</span>.{{product.price | moneySplit2}}</p>
+            <count-down :times="product.times" :type="2" ></count-down>
+            <!-- <div class="group-goods-time">
               <span class="fs36">距离结束</span>
-              <span class="fs36">0天 23时 59分 59秒</span>
-            </div>
+              <span class="fs36">
+                <em>0</em> 天
+                <em >0</em>时
+                <em>00</em>分
+                <em >00</em>秒
+              </span>
+            </div> -->
         </div>
       </div>
     </div>
   </section>
-  <section class="shop-footer-fixed">
+  <section class="shop-footer-fixed" v-if="groupObj != null && groupObj.isMember == 0">
       <div class="goods-footer-botton ui-col-2 fs50 shop-yellow"
           style="color:#fff" @click="moreGroupbuy">
           更多拼团
       </div>
       <div class="goods-footer-botton ui-col-2 fs50 shop-bg"
-          style="color:#fff">
+          style="color:#fff" @click="toSubmitOrder">
           我也要参团
       </div>
   </section>
+   <section class="shop-footer-fixed" v-if="groupObj != null && groupObj.isMember == 1">
+       <div class="goods-footer-botton2 ui-col-2 fs50 shop-yellow"
+          style="color:#fff" @click="toOrderDetail">
+          查看订单详情
+      </div>
+   </section>
   <!-- 分享 -->
   <section class="grounpShare-main" v-show="isShowShare">
     <div class="grounpShare-bg" :style="{backgroundImage: 'url(' + grounpShare + ')'}">
@@ -102,21 +104,59 @@
 import defaultImg from "components/defaultImg";
 import tuangoubg from "assets/img/tungoubg.jpg";
 import grounpSharebg from "assets/img/grounpShare.png";
+import countDown from "../home/classify_child/countDown";
+import filter from "@/lib/filters";
 export default {
   data() {
     return {
       tuangoubg: tuangoubg,
       grounpShare: grounpSharebg,
-      isShowShare: false//是否显示分享
+      isShowShare: false, //是否显示分享
+      busId: this.$route.params.busId || sessionStorage.getItem("busId"), //商家id
+      id: this.$route.params.id, //团购id
+      joinId: this.$route.params.joinId, //参团id
+      memberId: this.$route.params.memberId, //参团会员id
+      groupObj: null, //团购
+      groupProduct: null, //团购商品
+      productArr: null, //商品集合
+      joinList: null, //参团集合
+      imgUrl: null, //图片域名
+      Interval: "",
+      times: 1, //团购倒计时
+      curPage: 1, //当前页数
+      pageCount: 1, //总页数
+      shopId: 0, //店铺id
+      isMore: 2
     };
   },
   components: {
-    defaultImg
+    defaultImg,
+    countDown
+  },
+  watch: {
+    isShowShare(e) {
+      if (e) {
+        this.commonFn.disableScroll(); //禁止页面滚动
+      } else {
+        this.commonFn.allowScroll(); //允许页面滚动
+      }
+    }
   },
   mounted() {
-    // this.loadDatas(); //初始化数据
-    this.commonFn.setTitle(Language.title_pifa_apply_msg);
+    this.loadDatas(); //初始化数据
+    this.commonFn.setTitle("团购详情");
     this.$store.commit("show_footer", false); //隐藏底部导航栏
+    let _this = this;
+
+    $(window).bind("scroll", function() {
+      var isScroll =
+        $(window).scrollTop() > 0 &&
+        $(window).scrollTop() >=
+          $(document).height() - $(window).height() - 1000;
+      if (isScroll) {
+        _this.loadMore();
+      }
+    });
   },
   beforeDestroy() {
     //离开后的操作
@@ -128,22 +168,137 @@ export default {
       let _data = {
         busId: _this.busId, //商家id
         url: location.href, //当前页面的地址
-        browerType: _this.$store.state.browerType //浏览器类型
+        browerType: _this.$store.state.browerType, //浏览器类型
+        id: this.id, //团购id
+        joinId: this.joinId, //参团id
+        buyerUserId: this.memberId
       };
-      -this.ajaxRequest({
-        url: h5App.activeAPI.title_pifa_apply_msg,
-        data: -data,
+      this.ajaxRequest({
+        url: h5App.activeAPI.goupbuy_detail_post,
+        data: _data,
         success: function(data) {
           let myData = data.data;
-          if (myData != null) {
-            _this.pfApplayRemark = myData.pfApplayRemark;
+          console.log(myData, "mydata");
+          _this.groupObj = myData;
+          _this.groupProduct = myData.productMap;
+          _this.times = _this.groupProduct.times;
+          _this.imgUrl = data.imgUrl;
+          // _this.productArr = myData.productList;
+          _this.joinList = myData.joinList;
+
+          _this.shopId = _this.groupProduct.shopId;
+          _this.productAjax();
+        }
+      });
+    },
+    loadMore() {
+      let pageCount = this.pageCount; //总页数
+      if (this.curPage >= pageCount) {
+        this.isMore = 3; //没有更多
+        return;
+      }
+      if (this.isMore != 2) {
+        this.isMore = -1;
+        return;
+      }
+      this.curPage++; //请求页数
+      this.isMore = 2;
+      this.productAjax(this.curPage);
+    },
+    /**
+         * 商品搜索接口
+         */
+    productAjax(curPage) {
+      let _this = this;
+      if (_this.shopId == 0) {
+        return;
+      }
+      let _data = {
+        url: _this.$store.state.loginDTO_URL,
+        browerType: _this.$store.state.browerType,
+        shopId: _this.shopId,
+        busId: _this.busId,
+        type: 1, //	类型，1.团购 3.秒杀 4.拍卖 5 粉币 6预售 7批发	可不传
+        curPage: curPage || 1 //	当前页	可不传
+      };
+      this.ajaxRequest({
+        status: false,
+        url: h5App.activeAPI.phoneProduct_productAll_post,
+        data: _data,
+        success: function(data) {
+          if (data.code == 1) {
+            //接口失败显示
+            _this.subList = [];
+            $(window).unbind("scroll");
+            return;
+          }
+          _this.curPage = data.data.productList.curPage; //当前页数
+          _this.pageCount = data.data.productList.pageCount; //总页数
+          let newSubList = data.data.productList.subList; //商品数组
+          if (_this.curPage === 1) {
+            //第一页数据
+            _this.productArr = newSubList;
+          } else {
+            _this.productArr = _this.productArr.concat(newSubList) || []; //拼接多页数据
+          }
+          _this.isMore = 2;
+          if (_this.curPage >= _this.pageCount) {
+            $(window).unbind("scroll");
+            _this.isMore = 3; //没有更多
           }
         }
       });
     },
-    moreGroupbuy(){
+    //跳转到提交订单页面
+    toSubmitOrder() {
+      let groupProduct = this.groupProduct;
+      let shopId = groupProduct.shopId;
+      let _this = this;
+      let goodsData = this.goodsData;
+      let _data = {
+        productId: groupProduct.id, //商品id，必传
+        busId: this.busId, //商家id，必传
+        productNum: 1, //productNum	商品数量，必传
+        price: groupProduct.price, //商品价格，必传
+        type: 1, //查看商品类型，1.团购商品 3.秒杀商品 4.拍卖商品 5 粉币商品 6预售商品 7批发商品
+        activityId: this.id, //活动id
+        joinActivityId: this.joinId //参团id
+      };
+      if (groupProduct.specificaIds != null) {
+        _data.productSpecificas = groupProduct.specificaIds;
+      }
+      if (groupProduct.invId != null) {
+        _data.invId = groupProduct.id;
+      }
+      console.log("_data", _data);
+      _this.ajaxRequest({
+        url: h5App.activeAPI.liji_buy_post,
+        data: _data,
+        success: function(data) {
+          // _this.commonFn.allowScroll();
+          sessionStorage.setItem("payUrl", location.href);
+          //跳转到提交订单的页面
+          _this.$router.push("/order/settlement/" + _this.busId + "/0");
+        }
+      });
+    },
+    moreGroupbuy() {
       //更多来拼团
-      
+      let shopId = this.groupProduct.shopId;
+      let busId = this.busId;
+      this.$router.push("/classify/" + shopId + "/" + busId + "/1/k=k");
+    },
+    // 跳转到订单详情页面
+    toOrderDetail() {
+      let busId = this.busId;
+      let orderId = this.groupObj.orderId;
+      this.$router.push("/order/detail/" + busId + "/" + orderId);
+    },
+    //跳转到商品详情页面
+    toProductDetail(proId, shopId, busId, groupId) {
+      this.$router.push(
+        "/goods/details/" + shopId + "/" + busId + "/1/" + proId + "/" + groupId
+      );
     }
   }
 };
@@ -180,23 +335,6 @@ export default {
       }
       .group-price {
         margin-top: 38 /@dev-Width * 1rem;
-      }
-    }
-    .group-time {
-      text-align: center;
-      height: 200 /@dev-Width * 1rem;
-      padding: 62 /@dev-Width * 1rem 0;
-      color: #fff;
-      background: url("../../../assets/img/tuangou_bg2.jpg")no-repeat;
-      background-size: 100% 100%;
-      em {
-        background: #cb080b;
-        display: inline-block;
-        width: 62/@dev-Width * 1rem;
-        height: 62/@dev-Width * 1rem;
-        text-align: center;
-        line-height: 66/@dev-Width * 1rem;
-        .border-radius(5px);
       }
     }
     .group-middle {
@@ -281,32 +419,7 @@ export default {
         line-height: 1;
         p:first-child {
           margin-bottom: 60/@dev-Width * 1rem;
-        }
-      }
-      .group-goods-time {
-        font-size: 0;
-        border: 1px solid #e4393c;
-        height: 70/@dev-Width * 1rem;
-        .shop-box-justify;
-        overflow: hidden;
-        margin-top: 15/@dev-Width * 1rem;
-        .border-radius(3px);
-        span {
-          display: block;
-          line-height: 70/@dev-Width * 1rem;
-          height: 70/@dev-Width * 1rem;
-          text-align: center;
-        }
-        & > span:first-child {
-          width: 32%;
-          height: 70/@dev-Width * 1rem;
-          color: #fff;
-          background: #e4393c;
-          text-align: center;
-        }
-        & > span:last-child {
-          width: 68%;
-          color: #e4393c;
+          height: 100/@dev-Width * 1rem;
         }
       }
     }
@@ -317,12 +430,17 @@ export default {
 }
 .shop-footer-fixed {
   width: 100%;
+  z-index: 2;
   .shop-box-justify;
-  .goods-footer-botton {
+  .goods-footer-botton,
+  .goods-footer-botton2 {
     width: 50%;
     height: 135/@dev-Width * 1rem;
     text-align: center;
     line-height: 135/@dev-Width * 1rem;
+  }
+  .goods-footer-botton2 {
+    width: 100% !important;
   }
 }
 .grounpShare-main {
@@ -333,6 +451,7 @@ export default {
   background: rgba(0, 0, 0, 0.5);
   top: 0;
   left: 0;
+  z-index: 11;
   .grounpShare-bg {
     background-size: 100% 100%;
     img {
