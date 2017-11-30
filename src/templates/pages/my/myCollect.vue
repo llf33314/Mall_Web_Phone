@@ -7,6 +7,10 @@
       </div>
       <div class="mybond-main" v-if="collectArr != null">
           <div class="mybond-item" v-for="(collect , index) in collectArr" :key="index">
+             <div class="gou-div1 " v-if="isDelete" @click="check(index)">
+               <i :class="[collect.isCheckDelete ? 'icon-yigouxuan iconfont' : 'icon-yuangy']"></i>
+             </div>
+             <div class="gou-div2">
               <delete-slide class="order-item-content" 
                                 @delete="delete_dialog(1,collect)"
                                 :scope="index">
@@ -24,15 +28,15 @@
                       <span>会员价：{{collect.productMemberPrice | moneySplit1}}.<span class="fs39">{{collect.productMemberPrice | moneySplit2}}</span></span>
                     </p>
                   </div>
+                  </div>
+                </delete-slide>
               </div>
-              </delete-slide>
-              <div class="icon-yuangy gou-div abslute-div" v-if="isDelete"></div>
-              <div class="remove abslute-div" v-if="isDelete">删除</div>
+              <!-- <div class="remove abslute-div" v-if="isDelete">删除</div> -->
           </div>
       </div>
       <section class="collect-bottom" v-if="isDelete">
-         <div class="fs44">
-          <i class="fs40 shop-font " :class="[isShowFinish ? 'icon-yigouxuan iconfont' : 'icon-yuangy']"></i>全选
+         <div class="fs44" @click="allCheck">
+          <i class="fs40 shop-font " :class="[isAllCheckDelete ? 'icon-yigouxuan iconfont' : 'icon-yuangy']"></i>全选
         </div>
         <div class="shop-bg fs50">删除</div>
       </section>
@@ -64,7 +68,8 @@ export default {
       statu: 2, //无信息插件状态
       isShowNo: false, //是否显示没有内容的插件
       isShowMore: false, //是否显示 没有更多的 插件
-      isDelete: true
+      isDelete: true,
+      isAllCheckDelete: false
     };
   },
   mounted() {
@@ -83,8 +88,32 @@ export default {
     }
   },
   methods: {
-    edit() {
-      this.isDelete = true;
+    allCheck() {
+      let isAllCheckDelete = this.isAllCheckDelete ? false : true;
+      let _this = this;
+      this.collectArr.forEach((item, index) => {
+        item.isCheckDelete = isAllCheckDelete ? false : true;
+        _this.$set(_this.collectArr, index, item);
+      });
+
+      isAllCheckDelete = this.isAllCheckDelete ? false : true;
+    },
+    check(i) {
+      let collectArr = this.collectArr;
+      let collect = collectArr[i];
+      collect.isCheckDelete = collect.isCheckDelete || false ? false : true;
+      console.log(collect.isCheckDelete);
+      this.$set(collectArr, i, collect);
+
+      let allCheck = true;
+      for (let j = 0; j < collectArr.length; j++) {
+        let item = collectArr[j];
+        if (!item.isCheckDelete) {
+          allCheck = false;
+          break;
+        }
+      }
+      this.isAllCheckDelete = allCheck;
     },
     /** 
      * 页头导航接值
@@ -168,24 +197,45 @@ export default {
     background: #fff;
     position: relative;
     z-index: 1;
-    .div-left {
-      padding-left: 110/@dev-Width * 1rem !important;
+    font-size: 0;
+    line-height: 1;
+    height: 357/@dev-Width * 1rem;
+
+    .gou-div1 {
+      width: 10%;
+      height: 357/@dev-Width * 1rem;
+      line-height: (357+38+30)/@dev-Width * 1rem;
+      text-align: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      background: #fff;
+    }
+    .gou-div2 {
+      width: 100%;
+      padding-left: 10%;
+      height: 100%;
+      .order-item-content{
+        height: 100%;
+      }
     }
     .goodsinfo-box {
       width: 100%;
       position: relative;
       padding-left: 30/@dev-Width * 1rem;
+      padding: 38/@dev-Width * 1rem 0 30/@dev-Width * 1rem;
       // padding: 30/@dev-Width * 1rem 48/@dev-Width * 1rem;
       .clearfix;
       .goodsinfo-img {
         float: left;
-        width: 295/@dev-Width * 1rem;
-        height: 295/@dev-Width * 1rem;
+        width: 290/@dev-Width * 1rem;
+        height: 290/@dev-Width * 1rem;
         overflow: hidden;
       }
       .goodsinfo-text {
         float: right;
-        width: 70%;
+        width: 68%;
         .pro-price {
           span:first-child {
             margin-right: 10/@dev-Width * 1rem;
@@ -206,24 +256,6 @@ export default {
           line-height: 1;
         }
       }
-    }
-    .remove {
-      height: 100%;
-      width: 15%;
-      line-height: 1.766rem;
-      right: 0;
-      .shop-bg;
-      .fs50;
-      bottom: 0;
-    }
-    .gou-div {
-      left: 2%;
-      bottom: 37%;
-    }
-    .abslute-div {
-      position: absolute;
-      z-index: 2;
-      text-align: center;
     }
   }
   .mybond-item-title {
@@ -265,7 +297,7 @@ export default {
   }
 }
 .icon-yuangy {
-  display: block;
+  display: inline-block;
   width: 70/@dev-Width *1rem;
   height: 70/@dev-Width *1rem;
   line-height: 70/@dev-Width *1rem;

@@ -126,6 +126,7 @@
 </script>
 
 <style scoped lang="less" scoped>
+@import "../../../../assets/css/mixins.less";
   .slider{
     width: 100%;
     height:100%;
@@ -146,10 +147,12 @@
     .remove{
         position: absolute;
         width: 15%;
-        height:1.766rem;
+        height: 100%;
         color: #fff;
         text-align: center;
-        line-height: 1.766rem;
+        .ik-box;
+        .ik-box-pack(center);
+        .ik-box-align(center);
         background:#e4393c;
         right: 0;
         top: 0;
