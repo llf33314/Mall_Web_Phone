@@ -68,9 +68,9 @@
     get_shop_id_post: 'phonePage/L6tgXlBFeK/getShopId',
     /*获取我的页面数据*/
     my_center_post: '/phoneMember/L6tgXlBFeK/toUser',
-    /*我的收藏 */ 
+    /*我的收藏 */
     my_collect_post: '/phoneMember/L6tgXlBFeK/collectList',
-    /*删除收藏 */ 
+    /*删除收藏 */
     delete_collect_post: '/phoneMember/L6tgXlBFeK/deleteCollect',
     /***********************   以下接口都是 商品分类页面相关接口 ***********************/
     //商品详情
@@ -217,9 +217,21 @@
     //进入预售缴纳定金页面的接口
     add_deposit_post: "/phonePresale/L6tgXlBFeK/addDeposit",
     //缴纳定金的接口
-    my_deposit_post: "/phonePresale/L6tgXlBFeK/myDepositList"
+    my_deposit_post: "/phonePresale/L6tgXlBFeK/myDepositList",
     //我的定金接口
-
+    /**********************以下接口是积分相关接口*****************************/
+    integral_product_list_post: "/phoneIntegral/L6tgXlBFeK/integralProductList",
+    // 22.	获取积分商城商品列表
+    integral_image_post: "/phoneIntegral/L6tgXlBFeK/integralImage",
+    //23.	获取积分数量、轮播图片
+    integral_detail_post: "/phoneIntegral/L6tgXlBFeK/integralDetail",
+    //24.	获取积分明细列表
+    integral_record_list_post: "/phoneIntegral/L6tgXlBFeK/recordList",
+    //25.	获取兑换记录列表
+    integral_product_post: "/phoneIntegral/L6tgXlBFeK/integralProduct",
+    //26.	获取积分商品信息
+    record_integral_post: "/phoneIntegral/L6tgXlBFeK/recordIntegral"
+    //27.	兑换积分
   };
 
   window.h5App = h5App;

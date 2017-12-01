@@ -88,13 +88,26 @@ const presaleDeposit = resolve => require(['pages/presale/deposit'], resolve);
 const myPresaleDeposit = resolve => require(['pages/presale/myDeposit'], resolve);
 //myPresaleDeposit => 我的定金
 
+
+/***************      团购相关页面     ******************/
+const groupbuydetail = resolve => require(['pages/groupbuy/groupbuydetail'], resolve);
+//groupbuydetail 团购详情页面 
+
+/***************      积分商城相关页面     ******************/
+const integral_index = resolve => require(['pages/integral/index'], resolve);
+//integral_index 积分商城首页 
+const integral_product = resolve => require(['pages/integral/product'], resolve);
+//integral_product 积分商品页面 
+const integral_detail = resolve => require(['pages/integral/detail'], resolve);
+//integral_detail 积分明细页面
+const integral_record = resolve => require(['pages/integral/record'], resolve);
+//integral_detail 兑换记录页面
+
 const myAddress = resolve => require(['pages/my/myAddress'], resolve);
 //myAddress => 地址列表
 const address = resolve => require(['pages/my/address'], resolve);
 //address => 编辑地址
 
-const groupbuydetail = resolve => require(['pages/groupbuy/groupbuydetail'], resolve);
-//groupbuydetail 团购详情页面 
 
 
 const myCollect = resolve => require(['pages/my/myCollect'], resolve);
@@ -372,6 +385,41 @@ export default new Router({
       component: myCollect,
       meta: {
         title: '我的收藏'
+      }
+    }, {
+      path: '/integral/index/:busId',
+      name: 'integral_index',
+      component: integral_index,
+      meta: {
+        title: '积分商城首页'
+      }
+    }, {
+      path: '/integral/index/:busId',
+      name: 'integral_index',
+      component: integral_index,
+      meta: {
+        title: '积分商城首页'
+      }
+    }, {
+      path: '/integral/product/:busId/:productId/:shopId',
+      name: 'integral_product',
+      component: integral_product,
+      meta: {
+        title: '积分商品'
+      }
+    }, {
+      path: '/integral/detail/:busId/',
+      name: 'integral_detail',
+      component: integral_detail,
+      meta: {
+        title: '积分明细'
+      }
+    }, {
+      path: '/integral/record/:busId/',
+      name: 'integral_record',
+      component: integral_record,
+      meta: {
+        title: '兑换记录'
       }
     }
 

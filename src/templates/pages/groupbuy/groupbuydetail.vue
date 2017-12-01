@@ -202,7 +202,7 @@ export default {
         return;
       }
       this.curPage++; //请求页数
-      this.isMore = 2;
+     this.isMore = -1;
       this.productAjax(this.curPage);
     },
     /**
