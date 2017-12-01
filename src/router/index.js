@@ -374,8 +374,5 @@ export default new Router({
         title: '我的收藏'
       }
     }
-
-
-
   ]
 })
