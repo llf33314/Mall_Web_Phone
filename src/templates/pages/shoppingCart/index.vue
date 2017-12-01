@@ -1070,7 +1070,7 @@ export default {
             .ik-box;
             .ik-box-pack(justify);
             width: 100%;
-            padding: 0 *1rem 30/@dev-Width *1rem  0 40/@dev-Width *1rem;
+            padding: 0  0  0 40/@dev-Width *1rem;
             line-height: 1;
           .order-item-img{
               width: 265  /@dev-Width *1rem;
