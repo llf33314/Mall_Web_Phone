@@ -194,7 +194,7 @@ export default {
         return;
       }
       this.curPage++; //请求页数
-      this.isMore = 2;
+      this.isMore = -1;
       // console.log("加载更多");
       this.getOrderList({
         curPage: this.curPage
@@ -242,7 +242,7 @@ export default {
             _this.orderList = _this.orderList.concat(newOrderList) || []; //拼接多页数据
           }
           _this.isShowNullContent = false;
-          _this.isMore = 2;
+          _this.isMore = -1;
           if (_this.curPage >= _this.pageCount) {
             _this.isMore = 3; //没有更多
           }
@@ -269,7 +269,7 @@ export default {
     },
     returnToPay(orderId, busId) {
       // 去支付 跳转至提交订单页面
-      sessionStorage.setItem("payUrl",location.href);
+      sessionStorage.setItem("payUrl", location.href);
       this.$router.push("/order/settlement/" + busId + "/2/" + orderId);
     },
     returnDaifu(orderId, busId) {

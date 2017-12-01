@@ -90,9 +90,7 @@ export default {
         return;
       }
       this.curPage++; //请求页数
-      console.log("this.curPage",this.curPage,"pageCount",pageCount,"this.isMore",this.isMore)
-      this.isMore = 2;
-      console.log("加载更多");
+      this.isMore = -1;
       this.loadDatas();
     },
     //初始化样式
@@ -117,11 +115,12 @@ export default {
           _this.pageCount = myData.pageCount;
           console.log(myData, "myData");
           _this.isMore = 2;
-           if (_this.curPage === 1) {
+          if (_this.curPage === 1) {
             //第一页数据
             _this.commentArr = myData.commentResultList;
           } else {
-            _this.commentArr = _this.commentArr.concat(myData.commentResultList) || []; //拼接多页数据
+            _this.commentArr =
+              _this.commentArr.concat(myData.commentResultList) || []; //拼接多页数据
           }
           if (_this.curPage >= _this.pageCount) {
             _this.isMore = 3; //没有更多

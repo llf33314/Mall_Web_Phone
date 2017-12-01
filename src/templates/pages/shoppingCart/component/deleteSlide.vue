@@ -27,6 +27,10 @@
         scope: {
             type: Number,
             default: 'index'
+        },
+        titles:{
+            type:String,
+            default:'商品'
         }
     },
     data() {
@@ -99,7 +103,7 @@
             let  _this = this;
             let  msg = {//弹出框组件调用
               'btnNum': '2',
-              'dialogMsg': '是否删除该商品？',
+              'dialogMsg': '是否删除该'+this.titles+'？',
               'btnOne': '是',
               'btnTow': '否',
               'dialogTitle':'提示',
