@@ -2,7 +2,7 @@
 <div class="goods-wrapper">
     <div class="goods-main">
         <!--banner-->
-        <banner :banner="goodsData.imageList" :imgUrl="imgUrl" v-if="goodsData.imageList != null">
+        <banner :banner="goodsData.imageList" :imgUrl="imgUrl"  v-if="goodsData.imageList != null">
         </banner>
         <!--商品信息-->
         <goods-info :row="goodsData">

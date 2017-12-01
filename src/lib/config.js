@@ -63,9 +63,9 @@
     // phoneProduct_post: h5App.env.activeAPI + '/phoneProduct/L6tgXlBFeK/productAll',
     /***********************   以下接口都是 公用接口 ***********************/
     /*获取首页id*/
-    get_home_page_id_post: 'phonePage/L6tgXlBFeK/getHomePageId',
+    get_home_page_id_post: '/phonePage/L6tgXlBFeK/getHomePageId',
     /*获取店铺id*/
-    get_shop_id_post: 'phonePage/L6tgXlBFeK/getShopId',
+    get_shop_id_post: '/phonePage/L6tgXlBFeK/getShopId',
     /*获取我的页面数据*/
     my_center_post: '/phoneMember/L6tgXlBFeK/toUser',
     /*我的收藏 */
@@ -79,7 +79,7 @@
     /*查询历史搜索和推荐搜索接口*/
     phonePage_searchLabel_post: '/phonePage/L6tgXlBFeK/searchLabel',
     /*清空历史搜索接口*/
-    phonePage_clearSearchGroup_post: 'phonePage/L6tgXlBFeK/clearSearchGroup',
+    phonePage_clearSearchGroup_post: '/phonePage/L6tgXlBFeK/clearSearchGroup',
     /*商品分类接口*/
     phoneProduct_classAll_post: '/phoneProduct/L6tgXlBFeK/classAll',
     /*获取商家的客服*/

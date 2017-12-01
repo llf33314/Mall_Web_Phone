@@ -31,7 +31,7 @@ export default {
     components: {
         Swipe,SwipeItem
     },
-    props: ['banner','imgUrl'],
+    props: ['banner','imgUrl','height'],
     data() {  
         return {  
             imgSelecte:0,
@@ -56,13 +56,12 @@ export default {
     },
     computed: { 
     },  
-    mounted () {  
+    mounted () {
+        let _height='';
+        this.height == null?_height =  $('body').width():_height = this.height;
         $('#banner').css({
-            'height': $('body').width()
+            'height':_height
         });
-        // this.banner.forEach(function(item,i) {
-            
-        // });
     }  
   
 }

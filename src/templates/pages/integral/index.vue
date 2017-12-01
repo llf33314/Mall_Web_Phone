@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="integral-middle" v-if="imageList != null && imageList.length > 0">
-      <banner :banner="imageList" :imgUrl="imgUrl"></banner>
+      <banner :banner="imageList" :imgUrl="imgUrl" :height="'1.77rem'"></banner>
     </div>
     <div class="integral-product" v-if="integralList != null">
       <div class="product-item" v-for="(integral , index) in integralList" :key="index" @click="toIntegralProduct(integral)">
@@ -50,7 +50,7 @@ export default {
       memberId: 0, //会员id
       memberIntegral: 0, //会员积分
       curPage: 1, //当前页数
-      pageCount: 1 //总页数
+      pageCount: 1 ,//总页数
     };
   },
   components: {
