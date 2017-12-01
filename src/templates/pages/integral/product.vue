@@ -1,46 +1,72 @@
 <template>
-<div id='app' class="shop-wrapper order-wrapper"  v-if="comment != null ">
-    <header class="deltails-header deltails-padding0 shop-textc">
-            <i class="iconfont icon-chenggong"></i>
-            <p class="fs52">评论成功</p>
-    </header>
-    <div class="comment-main order-item" v-if="comment != null">
-        <div class="comment-content">
-            <div class="comment-goods clearfix" v-if="product != null" @click="toProductDetail">
-                <div class="goods-img">
-                    <default-img :background="imgUrl+product.productImageUrl"
-                            :isHeadPortrait="0">
-                    </default-img>
-                </div>
-                <div class="goods-txt">
-                    <p class="fs40">{{product.productName}}</p>
-                    <p class="fs36 shopGray">
-                        <em v-if="product.productSpecifica != null">{{product.productSpecifica}}/</em>{{product.productNum}}件
-                    </p>
-                    <p class="fs36 shopGray"
-                    style="color:#e4393c;">{{comment.feel == 1 ? "好评" : comment.feel == 0 ? "中评" : comment.feel == -1 ? "差评" : ""}}</p>
-                </div>
-            </div>
-            <p class="comment-txt fs46" v-if="comment != null">{{comment.content}}</p>
-            <div class="comment-photo border clearfix" v-if="imageList != null && imageList.length > 0">
-                <div class="comment-img border-img" v-for="image in imageList">
-                    <default-img :background="imgUrl+image.imageUrl"
-                            :isHeadPortrait="0">
-                    </default-img>
-                </div>
-            </div>
+  <div id='app' class="shop-wrapper integral-wrapper" >
+    <section class="section-content">
+      <div class="integral-banner" v-if="imageList != null && imageList.length > 0">
+        <banner :banner="imageList" :imgUrl="imgUrl"></banner>
+      </div>
+      <div class="integral-title">
+        <div class="title-1">NIKE LUNAREPIC LOW FLYKNIT 2</div>
+        <div class="title-2">
+          <p>129999 积分</p>
+          <p><span>23</span>人兑换</p>
         </div>
-    </div>
-    <section class="shop-footer comment-footer2"  v-if="comment != null ">
-        <div class="shop-max-button fs52 shop-bg" @click="toShareComment">
-            分享评价给好友
+      </div>
+      <div class="guige-div">
+        <div class="guige-title">
+          <p>规格</p>
+          <p class="iconfont icon-jiantou"></p>
         </div>
+        <div class="guige-item">
+          <div class="name-div fs40">
+            <span>颜色</span>
+          </div>
+          <div class="right-div">
+            <span class="nav">银色</span>
+            <span>黑色</span>
+            <span>亮黑色</span>
+            <span>玫瑰金</span>
+          </div>
+        </div>
+        <!-- <div class="guige-item">
+          <div class="name-div fs40">
+            <span>尺寸</span>
+          </div>
+          <div class="right-div">
+            <span class="nav">S</span>
+            <span>M</span>
+            <span>L</span>
+            <span>LL</span>
+            <span>X</span>
+          </div>
+        </div> -->
+        
+        <div class="guige-item2">
+          <div class="name-div fs40">
+            <span>数量</span>
+          </div>
+          <div class="right-div">
+            <em class="em-choice">-</em>
+            <input type="text" class="em-choice" v-model="buyNum"/>
+            <em  class="em-choice">+</em>
+          </div>
+        </div>
+      </div>
+      <div class="integral-remark">
+        <div class="title">兑换说明</div>
+        <div>1、点击【立即兑换】，即可兑换成功；</div>
+        <div>2、在【兑换记录】可查询已兑换的物品；</div>
+        <div>3、兑换时间2017-03-21至2017-04-21.</div>
+      </div>
     </section>
-</div>
+    <section class="shop-footer-fixed">
+      <div class="bottom-bottom">兑换</div>
+    </section>
+  </div>
 </template>
 
 <script>
 import defaultImg from "components/defaultImg";
+import banner from "../goods/child/banner";
 export default {
   name: "succeed",
   data() {
@@ -48,20 +74,30 @@ export default {
       background:
         "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1501765343077&di=5d3652848769c1abd7eb25dea007bb1d&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D450%252C600%2Fsign%3Dcf8442791bd8bc3ec65d0eceb7bb8a28%2Fb3119313b07eca80c63dcea4932397dda14483bd.jpg",
       busId: this.$route.params.busId || sessionStorage.getItem("busId"),
-      id: this.$route.params.id,
+      productId: this.$route.params.productId,
+      shopId: this.$route.params.shopId,
       imgUrl: "", //图片域名
-      comment: null, //评论对象
       product: null, //商品对象
-      imageList: [] //图片集合
+      productDetail: null, //商品详情
+      specificaList: null, //规格集合
+      integral: null, //积分商品信息
+      member: null, //会员对象
+      isMember: 0, //是否是会员 1是
+      guige: null, //默认规格
+      guigePriceList: null, //规格价集合
+      imageList: null, //商品图片集合
+      recordNum: 0,
+      buyNum: 1
     };
   },
   components: {
-    defaultImg
+    defaultImg,
+    banner
   },
   mounted() {
-    // this.loadDatas(); //初始化数据
-    this.commonFn.setTitle("评论成功");
+    this.commonFn.setTitle("积分商品详情");
     this.$store.commit("show_footer", false); //隐藏底部导航栏
+    this.loadDatas(); //初始化图片数据
   },
   beforeDestroy() {
     //离开后的操作
@@ -74,47 +110,28 @@ export default {
       let _data = {
         busId: _this.busId, //商家id
         url: location.href, //当前页面的地址
-        id: this.id, //评论id
-        browerType: _this.$store.state.browerType //浏览器类型
+        browerType: _this.$store.state.browerType, //浏览器类型
+        productId: _this.productId //商品id
       };
       _this.ajaxRequest({
-        url: h5App.activeAPI.comment_success_post,
+        url: h5App.activeAPI.integral_product_post,
         data: _data,
         success: function(data) {
           let myData = data.data;
           _this.imgUrl = data.imgUrl;
-          _this.comment = myData.mallComment;
+          _this.product = myData.product;
+          _this.productDetail = myData.detail;
+          _this.specificaList = myData.specificaList;
+          _this.integral = myData.integral;
+          _this.member = myData.member;
+          _this.isMember = myData.isMember;
+          _this.guige = myData.guige;
+          _this.guigePriceList = myData.guigePriceList;
           _this.imageList = myData.imageList;
-          _this.product = myData.productResult;
+          _this.recordNum = myData.recordNum;
           console.log(myData, "myData");
         }
       });
-    },
-    toShareComment() {
-      let busId = this.busId;
-      let id = this.id;
-      //前往分享订单的页面
-      this.$router.push("/comment/share/" + busId + "/" + id);
-    },
-    toProductDetail() {
-      //前往商品详情也页面
-      let orderType = this.product.orderType || 0;
-      let activityId = this.product.activityId || 0;
-      let shopId = this.product.shopId;
-      let busId = this.busId;
-      let productId = this.product.productId;
-      this.$router.push(
-        "/goods/details/" +
-          shopId +
-          "/" +
-          busId +
-          "/" +
-          orderType +
-          "/" +
-          productId +
-          "/" +
-          activityId
-      );
     }
   }
 };
@@ -123,139 +140,144 @@ export default {
 <style lang="less" scoped>
 @import "../../../assets/css/mixins.less";
 @import "../../../assets/css/base.less";
-.deltails-header {
-  color: #fff;
-  .ik-box;
-  .ik-box-pack(center);
-  .ik-box-orient(vertical);
-  padding-left: 115/@dev-Width *1rem;
-  width: 100%;
-  background-size: 100%;
-  height: 316/@dev-Width *1rem;
-  background-position: center;
-  background-image: url("../../../assets/img/pinglun_bg.jpg");
-  margin-bottom: 30/@dev-Width *1rem;
-  & > p:first-child {
-    margin-bottom: 30/@dev-Width *1rem;
-  }
-}
-.deltails-padding0 {
-  padding-left: 0;
-  i {
-    font-size: 148/@dev-Width *1rem;
-  }
-}
-.comment-main {
-  width: 100%;
-  padding-bottom: 134/@dev-Width *1rem;
-  .comment-goods {
-    background: #fff;
-    padding: 20/@dev-Width *1rem 40/@dev-Width *1rem;
-    margin-bottom: 20/@dev-Width *1rem;
-    .goods-img {
-      float: left;
-      width: 264/@dev-Width *1rem;
-      height: 264/@dev-Width *1rem;
-      background-size: cover;
-      background-position: center;
-    }
-    .goods-txt {
-      width: 72%;
-      float: right;
-      & > p:last-child {
-        margin-top: 48/@dev-Width *1rem;
-      }
-    }
-  }
-  .comment-content {
-    font-size: 0;
-    background: #fff;
-    padding: 40/@dev-Width *1rem 0 0;
+@import "../../../assets/css/common.less";
+.section-content {
+  margin-bottom: 240/@dev-Width *1rem;
+  .integral-banner {
     width: 100%;
-    .comment-textarea {
-      width: 92%;
-      margin: 0 auto;
-      display: block;
-      height: 620/@dev-Width *1rem;
-      border: 1px solid #ededed;
-      background: 0;
-      padding: 10/@dev-Width *1rem;
-    }
-    .comment-photo {
+    height: 1239/@dev-Width *1rem;
+    background: #fff;
+  }
+  .integral-title {
+    width: 100%;
+    height: 198/@dev-Width *1rem;
+    padding: 0 30/@dev-Width *1rem;
+    background: #fff;
+    line-height: 1;
+    .title-1 {
+      .fs50;
+      .text-overflow;
       width: 100%;
-      text-align: justify;
-      padding: 40/@dev-Width *1rem;
-      .comment-upload,
-      .comment-img {
-        //display: inline-block;
+      padding: 40/@dev-Width *1rem 0;
+    }
+    .title-2 {
+      .shop-box-justify;
+      p:first-child {
+        .shop-font;
+      }
+      p {
+        .fs40;
+        color: #a9a9a9;
+        span {
+          color: #000;
+        }
+      }
+    }
+  }
+  .guige-div {
+    background: #fff;
+    .guige-title {
+      padding: 60/@dev-Width *1rem 30/@dev-Width *1rem;
+      .border;
+      .shop-box-center;
+      p {
+        .fs42;
+      }
+      p:first-child {
+        font-weight: bolder;
+      }
+      .icon-jiantou {
+        color: #c7c7cc;
+      }
+    }
+    .guige-item,
+    .guige-item2 {
+      width: 100%;
+      padding: 30/@dev-Width *1rem;
+      line-height: 1;
+      .clearfix;
+      div {
         float: left;
-        position: relative;
-        width: 22%;
-        height: 230/@dev-Width *1rem;
-        background-size: cover;
-        background-position: center;
-        margin-top: 40/@dev-Width *1rem;
-        margin-right: 30/@dev-Width *1rem;
+        font-size: 0;
+        span,
+        em.em-choice {
+          .fs40;
+          display: inline-block;
+          padding: 26/@dev-Width *1rem 34/@dev-Width *1rem;
+          margin: 0 *1rem 20/@dev-Width *1rem 0 20/@dev-Width *1rem;
+        }
+        span.nav {
+          .shop-bg;
+          .border-radius(3px);
+        }
+      }
+      .name-div {
+        color: #87858f;
+        width: 20%;
+        height: auto;
+      }
+      .right-div {
+        width: 80%;
+        em {
+          width: 99/@dev-Width *1rem;
+          color: #87858f;
+          margin: 0 !important;
+        }
         input {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          display: block;
-          top: 0;
-          left: 0;
-          opacity: 0;
+          width: 120/@dev-Width *1rem;
+          border: 0;
+          margin: 0 3/@dev-Width *1rem !important;
+          vertical-align: top;
+          padding: 0;
         }
-      }
-      .comment-img {
-        position: relative;
-        i {
-          width: 60/@dev-Width *1rem;
-          height: 60/@dev-Width *1rem;
+        em,
+        input {
+          height: 90/@dev-Width *1rem;
           text-align: center;
-          line-height: 60/@dev-Width *1rem;
-          background: rgba(0, 0, 0, 0.6);
-          color: #e0e0e8;
-          font-size: 36/@dev-Width *1rem;
-          .border-radius(100%);
-          position: absolute;
-          top: -8%;
-          right: -8%;
-        }
-      }
-      .border-img {
-        border: 1px solid #ededed;
-        width: 26%;
-        height: 280/@dev-Width *1rem;
-      }
-      .comment-upload {
-        color: #999;
-        border: 2px dashed #999;
-        .border-radius(5px);
-        text-align: center;
-        .ik-box;
-        .ik-box-align(center);
-        .ik-box-pack(center);
-        .ik-box-orient(vertical);
-        i {
-          font-size: 88/@dev-Width *1rem;
-        }
-        p {
-          width: 75%;
+          display: inline-block;
+          background: #f3f2f8;
+          .border-radius(0);
         }
       }
     }
-    .comment-txt {
-      width: 100%;
-      padding: 0 40/@dev-Width *1rem;
+    .guige-item2 {
+      padding-bottom: 40/@dev-Width *1rem;
+      .right-div {
+        float: right;
+        margin-right: 40/@dev-Width *1rem;
+
+        width: 31%;
+      }
+    }
+  }
+  .integral-remark {
+    padding: 30/@dev-Width *1rem;
+    margin: 20/@dev-Width *1rem 0;
+    background: #fff;
+    div {
+      .fs40;
+      color: #a9a9a9;
+    }
+    .title {
+      font-weight: bolder;
+      color: #000;
+      margin-bottom: 30/@dev-Width *1rem;
     }
   }
 }
-.comment-footer2 {
-  .shop-max-button {
-    height: 134/@dev-Width *1rem;
-    width: 92%;
-    margin: 0 auto;
+
+.shop-footer-fixed {
+  width: 100%;
+  padding: 47/@dev-Width *1rem 50/@dev-Width *1rem;
+  background: #fff;
+  .bottom-bottom {
+    .shopRose-bg;
+    .fs52;
     color: #fff;
+    text-align: center;
+    width: 100%;
+    height: 146/@dev-Width *1rem;
+    line-height: 146/@dev-Width *1rem;
   }
 }
 </style>
