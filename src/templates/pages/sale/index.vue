@@ -11,15 +11,15 @@
         </header>
         <div class="index-main">
             <div class="index-msg border">
-                <div class="index-msg-item">
+                <div class="index-msg-item" @click="totalIncome(1)">
                     <p class="index-msg-title fs46">累计佣金(元)</p>
                     <p class="index-msg-money fs70">{{sellerObj.seller.totalCommission || 0}}</p>
                 </div>
-                <div class="index-msg-item">
+                <div class="index-msg-item" @click="totalIncome(2)">
                     <p class="index-msg-title fs46">积分</p>
                     <p class="index-msg-money fs70">{{sellerObj.seller.incomeIntegral || 0}}</p>
                 </div>
-                <div class="index-msg-item">
+                <div class="index-msg-item" @click="totalIncome(3)">
                     <p class="index-msg-title fs46">销售总额(元)</p>
                     <p class="index-msg-money fs70">{{sellerObj.seller.saleMoney || 0}}</p>
                 </div>
@@ -32,28 +32,28 @@
                     <p class="fs40">我的商城</p>
                     <p class="fs40">&nbsp</p>
                 </div>
-                <div class="nav-item">
+                <div class="nav-item" @click="sellerRank">
                     <div class="nav-icon">
                         <i class="iconfont icon-paixingbang"></i>
                     </div>
                     <p class="fs40">销售员排行榜</p>
                     <p class="fs40">&nbsp</p>
                 </div>
-                <div class="nav-item">
+                <div class="nav-item" @click="myClient">
                     <div class="nav-icon">
                         <i class="iconfont icon-kehu"></i>
                     </div>
                     <p class="fs40">我的客户 <br/>
                         <span class="shop-font">{{sellerObj.sellerCount}}</span><span class="shopGray">个</span></p>
                 </div>
-                <div class="nav-item">
+                <div class="nav-item" @click="twoCode">
                     <div class="nav-icon">
                         <i class="iconfont icon-icon182"></i>
                     </div>
                     <p class="fs40">二维码</p>
                     <p class="fs40">&nbsp</p>
                 </div>
-                <div class="nav-item">
+                <div class="nav-item" @click="myClientOrder">
                     <div class="nav-icon">
                         <i class="iconfont icon-icon-test"></i>
                     </div>
@@ -61,26 +61,26 @@
                         <span class="shop-font">{{sellerObj.sellerOrderCount}}</span><span class="shopGray">单</span>
                     </p>
                 </div>
-                <div class="nav-item">
+                <div class="nav-item" @click="withdraw">
                     <div class="nav-icon">
                         <i class="iconfont icon-tixian"></i>
                     </div>
                     <p class="fs40">我的提现</p>
                     <p class="fs40">&nbsp</p>
                 </div>
-                <div class="nav-item">
+                <div class="nav-item" @click="promotion">
                     <div class="nav-icon">
                         <i class="iconfont icon-tuwen"></i>
                     </div>
                     <p class="fs40">推广海报</p>
                 </div>
-                <div class="nav-item">
+                <div class="nav-item" @click="returnMember(sellerObj.memberUrl)">
                     <div class="nav-icon">
                         <i class="iconfont icon-huiyuanqia"></i>
                     </div>
                     <p class="fs40">我的会员卡</p>
                 </div>
-                <div class="nav-item">
+                <div class="nav-item" @click="saleRule">
                     <div class="nav-icon">
                         <i class="iconfont icon-kaidianguize"></i>
                     </div>
@@ -125,7 +125,7 @@ export default {
         browerType: _this.$store.state.browerType //浏览器类型
       };
       _this.ajaxRequest({
-        url: h5App.activeAPI.sellect_index_post,
+        url: h5App.activeAPI.seller_index_post,
         data: _data,
         success: function(data) {
           let myData = data.data;
@@ -135,6 +135,42 @@ export default {
           _this.member = myData.member;
         }
       });
+    },
+    //销售员排行榜
+    sellerRank() {
+      this.$router.push("/seller/rank/" + this.busId);
+    },
+    //我的客户
+    myClient() {
+      this.$router.push("/seller/client/" + this.busId);
+    },
+    //客户订单
+    myClientOrder() {
+      this.$router.push("/seller/clientOrder/" + this.busId);
+    },
+    //累计佣金
+    totalIncome(type) {
+      this.$router.push("/seller/totalIncome/" + this.busId + "/" + type);
+    },
+    //我的二维码
+    twoCode() {
+      this.$router.push("/seller/twoCode/" + this.busId);
+    },
+    //推广海报
+    promotion() {
+      this.$router.push("/seller/promotion/" + this.busId);
+    },
+    //销售规则
+    saleRule() {
+      this.$router.push("/seller/saleRule/" + this.busId);
+    },
+    //跳转到会员中心
+    returnMember(url) {
+      location.href = url;
+    },
+    //我的提现
+    withdraw(){
+        this.$router.push("/seller/withdraw/" + this.busId);
     }
   }
 };
@@ -160,8 +196,8 @@ export default {
     .header-img {
       width: 204/@dev-Width *1rem;
       height: 204/@dev-Width *1rem;
-      background-size: cover;
       background-position: center;
+      background-size: cover;
       .border-radius(100%);
       overflow: hidden;
       margin-bottom: 20/@dev-Width *1rem;

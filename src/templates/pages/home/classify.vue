@@ -152,6 +152,9 @@ export default {
                 this.isMore = 3;
                 return
             }
+            if (this.isMore == 2) {
+                return;
+            }
             this.isMore = 2;
             this.productAjax({
                 sort: this.sort,

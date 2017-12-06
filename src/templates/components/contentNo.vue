@@ -25,7 +25,7 @@
        <div class="shop-no-icon2">
           <i class="icon-zanwudizhi iconfont"></i>
         </div>
-        <a class="fs42" style="color:#333"> {{errorMsg || '暂不相关信息'}}</a>
+        <a class="fs42" style="color:#333"> {{errorMsg || '暂无相关信息'}}</a>
       </div>
     </div>
   </div>

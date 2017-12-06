@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="integral-middle" v-if="imageList != null && imageList.length > 0">
-      <banner :banner="imageList" :imgUrl="imgUrl" :height="'1.77rem'"></banner>
+      <banner :banner="imageList" :imgUrl="imgUrl" :height="'1.77rem'" :imgCla="'cla-img'"></banner>
     </div>
     <div class="integral-product" v-if="integralList != null">
       <div class="product-item" v-for="(integral , index) in integralList" :key="index" @click="toIntegralProduct(integral)">
@@ -50,7 +50,7 @@ export default {
       memberId: 0, //会员id
       memberIntegral: 0, //会员积分
       curPage: 1, //当前页数
-      pageCount: 1 ,//总页数
+      pageCount: 1 //总页数
     };
   },
   components: {
@@ -84,13 +84,12 @@ export default {
         this.isMore = 3; //没有更多
         return;
       }
-      if (this.isMore != 2) {
-        this.isMore = -1;
+      if (this.isMore == 2) {
         return;
       }
       console.log(this.isMore, "this.isMore");
       this.curPage++; //请求页数
-      this.isMore = -1;
+      this.isMore = 2;
       this.loadProduct({
         curPage: this.curPage
       });
@@ -148,7 +147,7 @@ export default {
             _this.integralList = _this.integralList.concat(page.subList) || []; //拼接多页数据
           }
           console.log("_this.integralList", _this.integralList);
-          _this.isMore = 2;
+          _this.isMore = 1;
           if (_this.curPage >= _this.pageCount) {
             _this.isMore = 3; //没有更多
 

@@ -29,11 +29,6 @@ const Goods_Details = resolve => require(['pages/goods/index'], resolve);
 //Goods_details => 商品详情-评论
 const Goods_Spec = resolve => require(['pages/goods/child/spec'], resolve);
 //Goods_details => 商品详情-评论
-/***************      超级销售员相关页面     ******************/
-const Sale_index = resolve => require(['pages/sale/index.vue'], resolve);
-//Sale_index =>超级营销员
-const Sale_apply = resolve => require(['pages/sale/apply.vue'], resolve);
-//Sale_index =>超级营销员
 /***************      批发相关页面     ******************/
 const Wholesale_Apply = resolve => require(['pages/wholesale/apply'], resolve);
 //Wholesale_Apply =>批发申请页
@@ -102,6 +97,33 @@ const integral_detail = resolve => require(['pages/integral/detail'], resolve);
 //integral_detail 积分明细页面
 const integral_record = resolve => require(['pages/integral/record'], resolve);
 //integral_detail 兑换记录页面
+
+
+/***************      超级销售员相关页面     ******************/
+const Sale_index = resolve => require(['pages/sale/index.vue'], resolve);
+//Sale_index =>超级营销员
+const Sale_apply = resolve => require(['pages/sale/apply.vue'], resolve);
+//Sale_index =>超级营销员
+const saleRank = resolve => require(['pages/sale/rank.vue'], resolve);
+//saleRank =>销售员排行榜
+const myClient = resolve => require(['pages/sale/client.vue'], resolve);
+//myClient =>我的客户
+const myClientOrder = resolve => require(['pages/sale/clientOrder.vue'], resolve);
+//myClientOrder =>客户订单
+const totalIncome = resolve => require(['pages/sale/totalIncome.vue'], resolve);
+//totalIncome =>累计佣金
+const twoCode = resolve => require(['pages/sale/twoCode.vue'], resolve);
+//twoCode =>我的二维码
+const promotion = resolve => require(['pages/sale/promotion.vue'], resolve);
+//promotion => 推广海报
+const saleRule = resolve => require(['pages/sale/saleRule.vue'], resolve);
+//saleRule => 销售规则
+const myWithdraw = resolve => require(['pages/sale/myWithdraw.vue'], resolve);
+//myWithdraw => 我的提现
+const commissionDetail = resolve => require(['pages/sale/commissionDetail.vue'], resolve);
+//commissionDetail => 佣金明细
+
+
 
 const myAddress = resolve => require(['pages/my/myAddress'], resolve);
 //myAddress => 地址列表
@@ -204,20 +226,6 @@ export default new Router({
         title: '我的'
       }
     }, {
-      path: '/seller/index/:busId',
-      name: 'Sale_index',
-      component: Sale_index,
-      meta: {
-        title: '超级营销员首页'
-      }
-    }, {
-      path: '/seller/apply/:busId',
-      name: 'Sale_apply',
-      component: Sale_apply,
-      meta: {
-        title: '超级营销员申请'
-      }
-    }, {
       path: '/order/settlement/:busId/:from',
       name: 'subtmit_order_list',
       component: subtmit_order_list,
@@ -316,11 +324,25 @@ export default new Router({
         title: '地址列表'
       }
     }, {
+      path: '/address/:busId/:integralId',
+      name: 'myAddress',
+      component: myAddress,
+      meta: {
+        title: '地址列表(积分商城)'
+      }
+    }, {
       path: '/address/edit/:busId/:id',
       name: 'address',
       component: address,
       meta: {
         title: '编辑地址页面'
+      }
+    }, {
+      path: '/address/edit/:busId/:id/:integralId',
+      name: 'address',
+      component: address,
+      meta: {
+        title: '编辑地址页面(积分商城)'
       }
     }, {
       path: '/groupbuy/detail/:busId/:id/:joinId/:memberId',
@@ -408,19 +430,99 @@ export default new Router({
         title: '积分商品'
       }
     }, {
-      path: '/integral/detail/:busId/',
+      path: '/integral/detail/:busId',
       name: 'integral_detail',
       component: integral_detail,
       meta: {
         title: '积分明细'
       }
     }, {
-      path: '/integral/record/:busId/',
+      path: '/integral/record/:busId',
       name: 'integral_record',
       component: integral_record,
       meta: {
         title: '兑换记录'
       }
+    }, {
+      path: '/seller/index/:busId',
+      name: 'Sale_index',
+      component: Sale_index,
+      meta: {
+        title: '超级营销员首页'
+      }
+    }, {
+      path: '/seller/apply/:busId',
+      name: 'Sale_apply',
+      component: Sale_apply,
+      meta: {
+        title: '超级营销员申请'
+      }
+    }, {
+      path: '/seller/rank/:busId',
+      name: 'saleRank',
+      component: saleRank,
+      meta: {
+        title: '销售员排行榜'
+      }
+    }, {
+      path: '/seller/client/:busId',
+      name: 'myClient',
+      component: myClient,
+      meta: {
+        title: '我的客户'
+      }
+    }, {
+      path: '/seller/clientOrder/:busId',
+      name: 'myClientOrder',
+      component: myClientOrder,
+      meta: {
+        title: '客户订单'
+      }
+    }, {
+      path: '/seller/totalIncome/:busId/:type',
+      name: 'totalIncome',
+      component: totalIncome,
+      meta: {
+        title: '累计佣金'
+      }
+    }, {
+      path: '/seller/twoCode/:busId',
+      name: 'twoCode',
+      component: twoCode,
+      meta: {
+        title: '我的二维码'
+      }
+    }, {
+      path: '/seller/promotion/:busId',
+      name: 'promotion',
+      component: promotion,
+      meta: {
+        title: '推广海报'
+      }
+    }, {
+      path: '/seller/saleRule/:busId',
+      name: 'saleRule',
+      component: saleRule,
+      meta: {
+        title: '销售规则'
+      }
+    }, {
+      path: '/seller/withdraw/:busId',
+      name: 'myWithdraw',
+      component: myWithdraw,
+      meta: {
+        title: '我的提现'
+      }
+    }, {
+      path: '/seller/commission/detail/:busId',
+      name: 'commissionDetail',
+      component: commissionDetail,
+      meta: {
+        title: '佣金明细'
+      }
     }
+    
+    
+
   ]
 })

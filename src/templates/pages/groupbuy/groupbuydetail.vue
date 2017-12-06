@@ -197,12 +197,11 @@ export default {
         this.isMore = 3; //没有更多
         return;
       }
-      if (this.isMore != 2) {
-        this.isMore = -1;
+      if (this.isMore == 2) {
         return;
       }
       this.curPage++; //请求页数
-     this.isMore = -1;
+      this.isMore = 2;
       this.productAjax(this.curPage);
     },
     /**
@@ -241,7 +240,7 @@ export default {
           } else {
             _this.productArr = _this.productArr.concat(newSubList) || []; //拼接多页数据
           }
-          _this.isMore = 2;
+          _this.isMore = 1;
           if (_this.curPage >= _this.pageCount) {
             $(window).unbind("scroll");
             _this.isMore = 3; //没有更多

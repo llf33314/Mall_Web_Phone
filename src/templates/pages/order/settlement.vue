@@ -336,7 +336,7 @@ import defaultImg from "components/defaultImg";
 import shopDialog from "components/shopDialog";
 import payWayDialog from "components/payWayDialog"; //支付方式
 import technicalSupport from "components/technicalSupport"; //技术支持
-import dialogModular from "components/dialogModular"; //技术支持
+import dialogModular from "components/dialogModular"; //流量弹出框
 import couponDialog from "./componet/couponDialog"; //优惠券弹出框
 import timesDialog from "./componet/timeDialog"; //时间弹出框
 import takeAddressDialog from "./componet/takeAddressDialog"; //提货地址弹出框

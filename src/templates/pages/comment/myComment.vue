@@ -85,8 +85,7 @@ export default {
         this.isMore = 3; //没有更多
         return;
       }
-      if (this.isMore != 2) {
-        this.isMore = -1;
+       if (this.isMore == 2) {
         return;
       }
       this.curPage++; //请求页数
@@ -114,7 +113,7 @@ export default {
           _this.curPage = myData.curPage;
           _this.pageCount = myData.pageCount;
           console.log(myData, "myData");
-          _this.isMore = 2;
+          _this.isMore = 1;
           if (_this.curPage === 1) {
             //第一页数据
             _this.commentArr = myData.commentResultList;

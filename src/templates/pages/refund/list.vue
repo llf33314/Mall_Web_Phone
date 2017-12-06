@@ -161,12 +161,11 @@ export default {
         this.isMore = 3; //没有更多
         return;
       }
-      if (this.isMore != 2) {
-        this.isMore = -1;
+      if (this.isMore == 2) {
         return;
       }
       console.log("加载更多", this.isMore);
-      this.isMore = -1;
+      this.isMore = 2;
       this.curPage++; //请求页数
       this.getOrderList({
         curPage: this.curPage
@@ -213,7 +212,7 @@ export default {
             _this.orderList = _this.orderList.concat(newOrderList) || []; //拼接多页数据
           }
           _this.isShowNullContent = false;
-          _this.isMore = 2;
+          _this.isMore = 1;
           if (_this.curPage >= _this.pageCount) {
             _this.isMore = 3; //没有更多
           }

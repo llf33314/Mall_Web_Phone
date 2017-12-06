@@ -1,5 +1,5 @@
 <template>
-  <div class="shop-wrapper" style="height: 100%;">
+  <div class="shop-wrapper" style="height: 100%;" :class="{'rose_div':roseColor != null}">
         <section class="shop-main fs40 address-main">
             <div class="indexborder clearfix">
                  <div class="address-list border clearfix">
@@ -137,7 +137,8 @@ export default {
           city_name: Language.area_null_msg
         }
       ],
-      addressDetail: ""
+      addressDetail: "",
+      roseColor: null
     };
   },
   mounted() {
@@ -148,6 +149,9 @@ export default {
       this.commonFn.setTitle(Language.add_address_msg);
     }
     this.$store.commit("show_footer", false); //隐藏底部导航栏
+    if (this.commonFn.isNotNull(sessionStorage.getItem("integralData"))) {
+      this.roseColor = "rose_cla";
+    }
   },
   beforeDestroy() {
     //离开后的操作
@@ -479,6 +483,14 @@ export default {
     .right-txt {
       padding: 40/ @dev-Width * 1rem 0 35/ @dev-Width * 1rem 0;
     }
+  }
+}
+.rose_div{
+  .shop-max-button{
+    background: #f63855 !important;
+  }
+  .icon-dizhi{
+    color: #f63855 !important;
   }
 }
 </style>

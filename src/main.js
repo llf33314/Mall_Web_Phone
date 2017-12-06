@@ -41,14 +41,14 @@ var vm = new Vue({
  * 使用方法
  * @param msg 显示参数
 * let msg ={
-      btnNum: 2 ,按钮显示个数
+      btnNum: 2 ,//按钮显示个数
       btnOne: '',//按钮文字
       btnTow: '',//按钮文字
       dialogTitle:'提示',
       dialogMsg: '我是消息内容？',
       callback: {
-          btnOne: '',点击按执行方法
-          btnTow: ''点击按执行方法
+          btnOne: '',//点击按执行方法
+          btnTow: ''//点击按执行方法
       }
     }
     _this.$parent.$refs.dialog.showDialog(msg);//调用方法

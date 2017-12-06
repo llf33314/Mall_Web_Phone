@@ -74,13 +74,12 @@ export default {
         this.isMore = 3; //没有更多
         return;
       }
-      if (this.isMore != 2) {
-        this.isMore = -1;
+       if (this.isMore == 2) {
         return;
       }
       console.log(this.isMore, "this.isMore");
       this.curPage++; //请求页数
-      this.isMore = -1;
+      this.isMore = 2;
       this.loadIntegralDetail({
         curPage: this.curPage
       });
@@ -119,7 +118,7 @@ export default {
           }
           console.log("_this.integralArr", _this.integralArr);
           // _this.isShowNullContent = false;
-          _this.isMore = 2;
+          _this.isMore = 1;
           if (_this.curPage >= _this.pageCount) {
             _this.isMore = 3; //没有更多
             $(window).unbind("scroll");
@@ -128,7 +127,8 @@ export default {
       });
     },
     back() {
-      window.history.go(-1);
+      // window.history.go(-1);
+      this.$router.push("/integral/index/" + this.busId);
     }
   }
 };

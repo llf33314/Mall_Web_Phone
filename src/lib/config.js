@@ -194,7 +194,27 @@
     //获取销售员获取短信验证码
     add_seller_post: '/phoneSellers/L6tgXlBFeK/addSellers',
     // 获取超级销售员首页
-    sellect_index_post: '/phoneSellers/L6tgXlBFeK/sellerIndex',
+    seller_index_post: '/phoneSellers/L6tgXlBFeK/sellerIndex',
+    //销售员排行榜接口
+    seller_rank_post: '/phoneSellers/L6tgXlBFeK/saleRank',
+    //我的客户接口
+    seller_client_post: '/phoneSellers/L6tgXlBFeK/clientList',
+    //客户订单
+    seller_client_order_post: '/phoneSellers/L6tgXlBFeK/clientOrder',
+    //累计佣金
+    seller_total_income_post: '/phoneSellers/L6tgXlBFeK/totalIncome',
+    //我的二维码
+    seller_two_code_post: '/phoneSellers/L6tgXlBFeK/myTwoCode',
+    //推广海报
+    seller_promotion_post: '/phoneSellers/L6tgXlBFeK/promotion',
+    //销售规则
+    seller_sale_rule_post: '/phoneSellers/L6tgXlBFeK/saleRules',
+    //我的提现
+    seller_my_withdraw_post: '/phoneSellers/L6tgXlBFeK/myWithdrawal',
+    //提现申请
+    seller_add_withdraw_post: '/phoneSellers/L6tgXlBFeK/addWithdrawal',
+    //佣金明细
+    seller_commion_detail_post: '/phoneSellers/L6tgXlBFeK/withdrawalDetail',
     /**********************以下接口是团购相关接口*****************************/
     goupbuy_detail_post: '/phoneGroupBuy/L6tgXlBFeK/groupBuyDetail',
     /**********************以下接口是拍卖相关接口*****************************/

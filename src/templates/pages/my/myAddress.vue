@@ -1,6 +1,6 @@
 <template>
    <section class="shop-main fs40 my-add">
-       <div class="address-div">
+       <div class="address-div" :class="{'rose_div':roseColor != null}">
             <div class="shop-add-itme fs36" itmeid="1" v-if="addressArr != null && addressArr.length > 0"
                 v-for="address in addressArr">
                 <div class="shop-add-txt border clearfix">
@@ -14,7 +14,7 @@
                 </div>
                 <div class="shop-add-footer">
                     <div  @click="defaultAddress(address.id,address.memberId,address)">
-                        <i class="iconfont icon-xuanzhong" :class="[address.memberDefault == 1?'shop-font':'shop-gray' ] "></i>
+                        <i class="iconfont icon-xuanzhong" :class="[address.memberDefault == 1?'shop-font':'shop-gray' ] " ></i>
                         设为默认
                     </div>
                     <div class="shop-add-button2">
@@ -35,7 +35,7 @@
             <technical-support v-if="$store.state.isAdvert == 1 && !isShowBottom"></technical-support>
             <div class="bottom-div clearfix">
               <technical-support v-if="$store.state.isAdvert == 1 && isShowBottom"></technical-support>
-              <div  class="address-add-button fs52 shop-bg" @click="editAddress(0)">
+              <div  class="address-add-button fs52 shop-bg" @click="editAddress(0)" >
                     <i class="icon-jiaimg iconfont fs60"></i>新增收货地址
                 </div>
             </div>
@@ -52,11 +52,14 @@ export default {
   data() {
     return {
       busId: this.$route.params.busId || sessionStorage.getItem("busId"), //商家id
+      integralId: this.$route.params.integralId, //积分id
       addressArr: [], //地址集合
       isShowBottom: false,
       isShow: true,
       bondStatu: 2,
-      error: Language.address_null_error_msg
+      error: Language.address_null_error_msg,
+      integralObj: sessionStorage.getItem("integralData"),
+      roseColor: null
     };
   },
   components: {
@@ -67,6 +70,10 @@ export default {
     this.loadDatas(); //初始化数据
     this.commonFn.setTitle(Language.title_my_address_msg);
     this.$store.commit("show_footer", false); //隐藏底部导航栏
+    if (this.commonFn.isNotNull(sessionStorage.getItem("integralData"))) {
+      this.integralObj = JSON.parse(sessionStorage.getItem("integralData"));
+      this.roseColor = "rose_cla";
+    }
   },
   beforeDestroy() {
     //离开后的操作
@@ -102,8 +109,12 @@ export default {
     },
     editAddress(id) {
       let busId = this.busId;
+      let url = "/address/edit/" + busId + "/" + id;
+      if (this.commonFn.isNotNull(this.integralId)) {
+        url += "/" + this.integralId;
+      }
       //跳转到编辑地址页面
-      this.$router.push("/address/edit/" + busId + "/" + id);
+      this.$router.push(url);
     },
     defaultAddress(id, memberId, obj) {
       //设为默认地址
@@ -119,16 +130,48 @@ export default {
         url: h5App.activeAPI.default_address_post,
         data: _data,
         success: function(data) {
-          // location.reload();
           let addressBeforeUrl = sessionStorage.getItem("addressBeforeUrl");
-          // console.log("addressBeforeUrl", addressBeforeUrl);
           let orderData = _this.$store.state.orderData;
-          orderData.memberAddressDTO = obj;
+          if (orderData != null) {
+            orderData.memberAddressDTO = obj;
+          }
+          if (_this.integralObj != null) {
+            _this.submitIntegralData(id);
+            return;
+          }
           if (addressBeforeUrl != null) {
             location.href = addressBeforeUrl;
           } else {
             _this.$router.push("/my/center/" + _this.busId);
           }
+        }
+      });
+    },
+    submitIntegralData(receiveId) {
+      let integralObj = this.integralObj;
+      let _this = this;
+      let _data = {
+        busId: _this.busId, //商家id
+        url: location.href, //当前页面的地址
+        browerType: _this.$store.state.browerType, //浏览器类型
+        productId: integralObj.productId, //商品id
+        integralId: integralObj.integralId, //积分商品id
+        productNum: integralObj.productNum, //购买id
+        receiveId: receiveId
+      };
+      if (integralObj.productSpecificas != null) {
+        _data.productSpecificas = integralObj.productSpecificas;
+      }
+      _this.ajaxRequest({
+        url: h5App.activeAPI.record_integral_post,
+        loading: true,
+        data: _data,
+        success: function(data) {
+          _this.commonFn.loading(_this, false); //关闭loading
+          //进入地址列表页面
+          sessionStorage.removeItem("addressBeforeUrl");
+          sessionStorage.removeItem("integralData");
+          _this.$router.push("/integral/record/" + _this.busId);
         }
       });
     }
@@ -162,6 +205,14 @@ export default {
   }
   .shop-gray {
     color: #c3c3c3;
+  }
+}
+.rose_div {
+  .address-add-button {
+    background: #f63855 !important;
+  }
+  .shop-font {
+    color: #f63855 !important;
   }
 }
 </style>
