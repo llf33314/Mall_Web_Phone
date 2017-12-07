@@ -113,13 +113,24 @@ var Rxports = {
 
 	/*-------------正则验证-----------------*/
 	/**
-	 * 检验电话
+	 * 检验手机号码
 	 * @param {Number} num
 	 * @returns {Boolean}
 	 */
 	validPhone: function (num) {
 		let phoneReg = /^((\+?86)|(\(\+86\)))?(13[0123456789][0-9]{8}|15[0123456789][0-9]{8}|17[0123456789][0-9]{8}|18[0123456789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;
 		return phoneReg.test(num);
+	},
+	//验证手机号码和固话
+	validAllPhone: function (num) {
+		let phoneReg = /^((\+?86)|(\(\+86\)))?(13[0123456789][0-9]{8}|15[0123456789][0-9]{8}|17[0123456789][0-9]{8}|18[0123456789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;
+		let isfixed = /^([0-9]{3,4})?[0-9]{7,8}$/;
+		return phoneReg.test(num) || isfixed.test(num);
+	},
+	//验证固话
+	validAllPhone: function (num) {
+		let isfixed = /^([0-9]{3,4})?[0-9]{7,8}$/;
+		return isfixed.test(num);
 	},
 	/**
 	 * 验证物流号

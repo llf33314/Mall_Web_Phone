@@ -1,20 +1,26 @@
 <template>
-   <div class="img-upload">
+  <div>
+    <div class="img-upload" v-if="styleType == 1">
         <i class="iconfont icon-xiangji"></i>
         <p class="fs36">
                 上传凭证(最多{{maxNum}}张)
         </p>
         <input type="file" @change="readFile($event)" @click="imageValidate" multiple="true"  accept="image/*" />
     </div>
+    <div class="update-div iconfont icon-jiaimg" v-if="styleType == 2">
+      <input type="file" @change="readFile($event)" @click="imageValidate" accept="image/*" />
+    </div>
+  </div>
 </template>
 <script>
 import axios from "axios";
 export default {
-  props: ["maxNums", "imgURL"],
+  props: ["maxNums", "imgURL", "styles", "index"],
   data: function() {
     return {
       imgData: [],
-      maxNum: 3 //最多上传图片的数量
+      maxNum: 3, //最多上传图片的数量
+      styleType: 1
     };
   },
   mounted() {
@@ -22,25 +28,34 @@ export default {
       this.maxNum = this.maxNums;
     }
     this.imgData = this.imgURL;
+    if (this.styles != null) {
+      this.styleType = this.styles;
+    }
   },
   methods: {
     imageValidate() {
-      if (this.imgData.length >= this.maxNum) {
-        this.$parent.$parent.$refs.bubble.show_tips(
-          "图片最多上传" + this.maxNum + "张"
-        ); //调用气泡显示
-        return false;
+      if (this.imgData != null) {
+        if (this.imgData.length >= this.maxNum) {
+          this.$parent.$parent.$refs.bubble.show_tips(
+            "图片最多上传" + this.maxNum + "张"
+          ); //调用气泡显示
+          return false;
+        }
       }
     },
     readFile(e) {
       let file = e.target.files;
       let _this = this;
-      if (_this.imgData.length + file.length > _this.maxNum) {
-        _this.$parent.$parent.$refs.bubble.show_tips(
-          "图片最多上传" + this.maxNum + "张"
-        ); //调用气泡显示
-        return;
+
+      if (this.imgData != null) {
+        if (_this.imgData.length + file.length > _this.maxNum) {
+          _this.$parent.$parent.$refs.bubble.show_tips(
+            "图片最多上传" + this.maxNum + "张"
+          ); //调用气泡显示
+          return;
+        }
       }
+      this.$parent.$parent.$refs.loading.show(true);
       //创建form对象
       let formData = new FormData();
       formData.append("busId", _this.$store.state.busId); //添加form表单中其他数据
@@ -57,6 +72,7 @@ export default {
       let url = window.h5App.api + h5App.activeAPI.upload_image_post;
       // 添加请求头
       axios.post(url, formData, config).then(response => {
+        _this.$parent.$parent.$refs.loading.show(false);
         let data = response.data;
         if (data.code == 1001) {
           location.href = data.url;
@@ -69,8 +85,11 @@ export default {
         let _imageUrl = data.data;
 
         _this.imgData = _imageUrl.split(",");
-
-        _this.$emit("returnUrl", _this.imgData);
+        let returndata = [_this.imgData];
+        if (_this.index != null) {
+          returndata[returndata.length] = _this.index;
+        }
+        _this.$emit("returnUrl", returndata);
       });
     }
   }
@@ -100,14 +119,17 @@ export default {
   p {
     width: 75%;
   }
-  input {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: block;
-    top: 0;
-    left: 0;
-    opacity: 0;
-  }
+}
+input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: block;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+.update-div {
+  position: relative;
 }
 </style>

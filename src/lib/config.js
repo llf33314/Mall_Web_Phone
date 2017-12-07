@@ -215,6 +215,22 @@
     seller_add_withdraw_post: '/phoneSellers/L6tgXlBFeK/addWithdrawal',
     //佣金明细
     seller_commion_detail_post: '/phoneSellers/L6tgXlBFeK/withdrawalDetail',
+    //查询商城设置页面信息
+    seller_to_mall_set_post: '/phoneSellers/L6tgXlBFeK/mallSetInfo',
+    //查询自选商品信息
+    seller_find_product_post: '/phoneSellers/L6tgXlBFeK/findProduct',
+    //查询自选商品列表
+    seller_selected_product_post: '/phoneSellers/L6tgXlBFeK/selectedProducts',
+    //删除已添加商品
+    seller_delete_mall_post: '/phoneSellers/L6tgXlBFeK/deleteMallPro',
+    //8.	保存商城设置
+    seller_add_mall_set_post: '/phoneSellers/L6tgXlBFeK/addMallSet',
+    //是否开启自选事件
+    seller_open_optional_post: '/phoneSellers/L6tgXlBFeK/openOptional',
+    //6.	获取自选商品列表
+    seller_find_product_post: '/phoneSellers/L6tgXlBFeK/findProduct',
+    //获取销售员说航程首页信息
+    seller_mall_index_post: '/phoneSellers/L6tgXlBFeK/mallIndex',
     /**********************以下接口是团购相关接口*****************************/
     goupbuy_detail_post: '/phoneGroupBuy/L6tgXlBFeK/groupBuyDetail',
     /**********************以下接口是拍卖相关接口*****************************/

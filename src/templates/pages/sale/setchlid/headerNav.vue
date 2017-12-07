@@ -14,16 +14,28 @@
 </template>
 <script>
 export default {
-  props: ["headers", "status", "selectId"],
+  props: ["headers", "status", "selectId", "isCanSelect"],
   data: function() {
     return {
       selectNav: ""
     };
   },
-  mounted() {},
+  mounted() {
+    this.selectNav = this.$route.params.type || 0;
+  },
+  watch: {
+    $route() {
+      this.selectNav = this.$route.params.type || 0;
+      this.onValue(this.selectNav);
+    }
+  },
   methods: {
     selects(e) {
       if (e == -1) {
+        return;
+      }
+      if (!this.isCanSelect) {
+        this.$emit("isCanSelect", e);
         return;
       }
       this.selectNav = e;

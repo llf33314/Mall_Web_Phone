@@ -122,7 +122,14 @@ const myWithdraw = resolve => require(['pages/sale/myWithdraw.vue'], resolve);
 //myWithdraw => 我的提现
 const commissionDetail = resolve => require(['pages/sale/commissionDetail.vue'], resolve);
 //commissionDetail => 佣金明细
-
+const mallSet = resolve => require(['pages/sale/mallSet.vue'], resolve);
+//mallSet => 商城设置
+const findProduct = resolve => require(['pages/sale/findProduct.vue'], resolve);
+//findProduct => 自选商品
+const mallIndex = resolve => require(['pages/sale/mallIndex.vue'], resolve);
+//mallIndex => 超级销售员首页
+const sellerShare = resolve => require(['pages/sale/productShare.vue'], resolve);
+//sellerShare => 超级销售员分享
 
 
 const myAddress = resolve => require(['pages/my/myAddress'], resolve);
@@ -211,6 +218,13 @@ export default new Router({
         component: Goods_Comment
       }
       ]
+    }, {
+      path: '/goods/details/:shopId/:busId/:type/:goodsId/:activityId/:saleMemberId/:toshop',
+      name: 'goods',
+      component: Goods,
+      meta: {
+        title: '商品详情'
+      },
     }, {
       path: '/wholesale/apply/:busId',
       name: 'Wholesale_Apply',
@@ -520,8 +534,36 @@ export default new Router({
       meta: {
         title: '佣金明细'
       }
+    }, {
+      path: '/seller/mallset/:busId/:type/:findIds',
+      name: 'mallSet',
+      component: mallSet,
+      meta: {
+        title: '商城设置'
+      }
+    }, {
+      path: '/seller/findproduct/:busId/:ids',
+      name: 'findProduct',
+      component: findProduct,
+      meta: {
+        title: '自选商品'
+      }
+    }, {
+      path: '/seller/mallindex/:busId/:saleMemberId',
+      name: 'mallIndex',
+      component: mallIndex,
+      meta: {
+        title: '超级销售员商城首页'
+      }
+    }, {
+      path: '/seller/share/:busId/:shopId/:proId',
+      name: 'sellerShare',
+      component: sellerShare,
+      meta: {
+        title: '超级销售员商城首页'
+      }
     }
-    
+
     
 
   ]

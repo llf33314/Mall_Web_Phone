@@ -1,61 +1,61 @@
 
 <template>
     <div class="shop-wrapper sale-wrapper" >
-       <div class="seller-top">
+        <div class="seller-top">
             <div class="seller-nav">
-                <i class="iconfont icon-jiantou-copy1" @click="back"></i>销售员排行榜
+                <i class="iconfont icon-jiantou-copy1" @click="back"></i>客户订单
             </div>
             <div class="seller-nav2 border">
                 <header-nav :headers="headerArr" :selectId="type" :type.sync="type"></header-nav>
             </div>
        </div>
-        <div class="seller-content" v-if="rankArr != null">
-            <div class="seller-item" v-for="(rank,index) in rankArr" :key="index">
-                <div class="item-left">
-                    <div class="blue-color index-div">{{index+1}}</div>
-                    <div class="img-div">
-                        <default-img :background="rank.headimgurl"
-                            :isHeadPortrait="1"></default-img>
-                    </div>
-                    <div class="text-overflow">{{rank.user_name || rank.nickname}}</div>
-                </div>
-                <div class="item-right shop-font">{{rank.sale_money}}</div>
-            </div>
-            <more :is-more="isMore"></more>
-        </div>
+       <div class="seller-content" v-if="orderArr != null">
+           <div class="seller-item" v-for="(order,index) in orderArr" :key="index">
+              <div class="border ">
+                   <div class="title-div">{{order.proName}}</div>
+                   <div class="contet-div">买家:{{order.nickname}}</div>
+                   <div class="contet-div">下单时间:{{order.create_time | format}}</div>
+                   <div class="contet-div">支付状态:{{order.statusName}}</div>
+              </div>
+              <div class="contet-div">金额: ￥{{order.order_money}}</div>
+           </div>
+       </div>
+       <content-no :statu="4" v-if="isShowNullContent"></content-no>
     </div>
 </template>
 
 <script>
 import defaultImg from "components/defaultImg";
+import contentNo from "components/contentNo";
 import headerNav from "./setchlid/headerNav";
 import more from "components/more";
+import filter from "@/lib/filters";
 export default {
   data() {
     return {
       busId: this.$route.params.busId || sessionStorage.getItem("busId"),
-      rankArr: null,
-      type: 1, //类型 1 周榜 2月榜 3年榜 4总榜
+      orderArr: null,
       curPage: 1, //页数
       pageCount: 1, //总页数
+      type: 0,
       headerArr: [
-        { id: 1, name: "周榜" },
-        { id: 2, name: "月榜" },
-        { id: 3, name: "年榜" },
-        { id: 4, name: "总榜" }
+        { id: 0, name: "所有订单" },
+        { id: 1, name: "待付款" },
+        { id: 2, name: "已付款" },
+        { id: 4, name: "已完成" }
       ],
-      isMore: -1
+      isShowNullContent: false
     };
   },
   components: {
     defaultImg,
     headerNav,
-    more
+    contentNo
   },
   watch: {
     type() {
-      //   console.log(this.type,"type");
-      this.rankArr = null;
+      console.log(this.type, "type");
+      this.orderArr = null;
       this.isMore = 2;
       this.curPage = 1;
       this.loadDatas({
@@ -65,7 +65,7 @@ export default {
   },
   //已成功挂载，相当ready()
   mounted() {
-    this.commonFn.setTitle("销售员排行榜");
+    this.commonFn.setTitle("客户订单");
     this.$store.commit("show_footer", false); //隐藏底部导航栏
 
     this.loadDatas({
@@ -113,27 +113,29 @@ export default {
       let _data = {
         busId: _this.busId, //商家id
         url: location.href, //当前页面的地址
+        status: _this.type,
         browerType: _this.$store.state.browerType, //浏览器类型
-        type: this.type,
         curPage: data.curPage > 0 ? data.curPage : 1
       };
       _this.ajaxRequest({
-        url: h5App.activeAPI.seller_rank_post,
+        url: h5App.activeAPI.seller_client_order_post,
         data: _data,
         success: function(data) {
           let myData = data.data;
           _this.imgUrl = data.imgUrl;
           let page = myData.page;
           let list = page.subList;
+          if (list == null || list.length == 0) {
+            _this.isShowNullContent = true;
+          }
           _this.curPage = page.curPage;
           _this.pageCount = page.pageCount;
           if (_this.curPage === 1) {
             //第一页数据
-            _this.rankArr = list;
+            _this.orderArr = list;
           } else {
-            _this.rankArr = _this.rankArr.concat(list) || []; //拼接多页数据
+            _this.orderArr = _this.orderArr.concat(list) || []; //拼接多页数据
           }
-          //   _this.isShowNullContent = false;
           _this.isMore = 1;
           if (_this.curPage >= _this.pageCount) {
             _this.isMore = 3; //没有更多
@@ -156,44 +158,27 @@ export default {
 
 .sale-wrapper {
   .seller-content {
-    background: #fff;
+    width: 100%;
+    padding: 22/@dev-Width *1rem;
+    padding-bottom: 0;
     margin-top: 270/@dev-Width *1rem;
-    z-index: 1;
-    .border;
     .seller-item {
-      height: 152/@dev-Width *1rem;
-      padding: 0 100/@dev-Width *1rem 0 70/@dev-Width *1rem;
-      .shop-box-center;
-      .item-left {
-        width: 90%;
-        .shop-box-center;
-        .index-div {
-          width: 5%;
-        }
-        div {
-          .fs40;
-        }
-        .img-div {
-          width: 120/@dev-Width *1rem;
-          height: 120/@dev-Width *1rem;
-          background-position: center;
-          background-size: cover;
-          .border-radius(100%);
-          overflow: hidden;
-          margin: 0 90/@dev-Width *1rem 0 70/@dev-Width *1rem;
-        }
-        .text-overflow {
-          width: 60%;
-        }
+      background: #fff;
+      border: 2px solid #ececec;
+      margin-bottom: 22/@dev-Width *1rem;
+      .border-radius(2%);
+      padding: 25/@dev-Width *1rem 0 0 43/@dev-Width *1rem;
+      .title-div {
+        .fs45;
+        color: #5fa642;
+        margin-bottom: 20/@dev-Width *1rem;
       }
-      .item-right {
-        width: 10%;
-        .fs40;
+      .contet-div {
+        .fs42;
+        color: #666666;
+        margin-bottom: 20/@dev-Width *1rem;
       }
     }
-  }
-  .blue-color {
-    color: #4e95ef;
   }
 }
 </style>

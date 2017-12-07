@@ -41,7 +41,7 @@
         <div class="shop-bg fs50" @click="allDelete">删除</div>
       </section>
       <content-no :statu="statu" v-if="isShowNo"></content-no>
-      <more :isMore="3" v-if="isShowMore"></more>
+      <more :is-more="3" v-if="isShowMore"></more>
     </div>
 </template>
 

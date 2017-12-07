@@ -20,7 +20,7 @@
       </div>
     </div>
      <content-no :statu="statu" v-if="isShowNo"></content-no>
-      <more :isMore="3" v-if="isShowMore"></more>
+      <more :is-more="3" v-if="isShowMore"></more>
   </div>
 </template>
 

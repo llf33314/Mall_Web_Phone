@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="index-nav clearfix">
-                <div class="nav-item">
+                <div class="nav-item" @click="myMall">
                     <div class="nav-icon">
                         <i class="iconfont icon-shangdian"></i>
                     </div>
@@ -169,8 +169,24 @@ export default {
       location.href = url;
     },
     //我的提现
-    withdraw(){
-        this.$router.push("/seller/withdraw/" + this.busId);
+    withdraw() {
+      this.$router.push("/seller/withdraw/" + this.busId);
+    },
+    myMall() {
+      let url = "";
+      let sellerObj = this.sellerObj;
+      if (sellerObj.isMallSet == 1) {
+        //进入商城首页
+        url =
+          "/seller/mallindex/" + this.busId + "/" + sellerObj.seller.memberId;
+      } else {
+        //进入商城设置页面
+        url = "/seller/mallset/" + this.busId + "/1/-";
+      }
+      // url = "/seller/mallset/" + this.busId + "/1/-";
+
+      sessionStorage.setItem("returnUrl", location.href);
+      this.$router.push(url);
     }
   }
 };

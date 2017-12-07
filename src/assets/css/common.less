@@ -311,35 +311,56 @@ body{
     }
 }
 //字体设计稿上大小
-.fs40{
-    font-size: 40/@dev-Width *1rem; 
-}
-.fs52{
-    font-size: 52/@dev-Width *1rem; 
-}
-.fs50{
-    font-size: 50/@dev-Width *1rem; 
-}
-.fs44{
-    font-size: 44/@dev-Width *1rem; 
-}
-.fs46{
-    font-size: 46/@dev-Width *1rem; 
-}
-.fs45{
-    font-size: 45/@dev-Width *1rem; 
-}
-.fs42{
-    font-size: 42/@dev-Width *1rem; 
-}
-.fs32{
-    font-size: 32/@dev-Width *1rem; 
+.fs0 {
+    font-size: 0;
 }
 .fs26{
     font-size: 26/@dev-Width *1rem; 
 }
+.fs28 {
+    font-size: 28/@dev-Width *1rem !important;
+}
+.fs30 {
+    font-size: 30/@dev-Width *1rem !important;
+}
+.fs32 {
+    font-size: 32/@dev-Width *1rem !important;
+}
+.fs34 {
+    font-size: 34/@dev-Width *1rem !important;
+}
 .fs36{
     font-size: 36 /@dev-Width *1rem; 
+}
+.fs40{
+    font-size: 40/@dev-Width *1rem; 
+}
+.fs42{
+    font-size: 42/@dev-Width *1rem; 
+}
+.fs44{
+    font-size: 44/@dev-Width *1rem; 
+}
+.fs45{
+    font-size: 45/@dev-Width *1rem; 
+}
+.fs46{
+    font-size: 46/@dev-Width *1rem; 
+}
+.fs48 {
+    font-size: 48/@dev-Width *1rem !important;
+}
+.fs50{
+    font-size: 50/@dev-Width *1rem; 
+}
+.fs52{
+    font-size: 52/@dev-Width *1rem; 
+}
+.fs54{
+    font-size: 54 /@dev-Width *1rem; 
+}
+.fs56{
+    font-size: 56 /@dev-Width *1rem; 
 }
 .fs66{
     font-size: 66 /@dev-Width *1rem; 
@@ -347,20 +368,14 @@ body{
 .fs60{
     font-size: 60 /@dev-Width *1rem; 
 }
+.fs76{
+    font-size: 76/@dev-Width *1rem;
+}
 .fs70{
     font-size: 70 /@dev-Width *1rem; 
 }
-.fs56{
-    font-size: 56 /@dev-Width *1rem; 
-}
-.fs54{
-    font-size: 54 /@dev-Width *1rem; 
-}
 .fs100{
     font-size: 100/@dev-Width *1rem;
-}
-.fs76{
-    font-size: 76/@dev-Width *1rem;
 }
 //颜色class
 .shop-bg{
@@ -488,6 +503,88 @@ body{
         bottom: 0%;
     }
 }
+
+//以下样式是滑块的样式
+.switch {
+    display: inline-block;
+    text-align: start;
+    text-indent: 0;
+    text-transform: none;
+    text-shadow: none;
+    word-spacing: normal;
+    letter-spacing: normal;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-rtl-ordering: logical;
+    -webkit-user-select: text;
+    text-rendering: auto;
+    -webkit-writing-mode: horizontal-tb;
+    position: relative;
+    box-sizing: border-box;
+    outline: 0;
+    border: 1px solid #d2d2d2;
+    background-color: #d2d2d2;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    vertical-align: middle;
+}
+
+.small-switch {
+    width: 45px;
+    height: 24px;
+    border-radius: 14px;
+}
+
+.switch:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #d2d2d2;
+    text-align: right;
+    -webkit-transition: -webkit-transform 0.3s;
+    transition: -webkit-transform 0.3s;
+    transition: transform 0.3s;
+    transition: transform 0.3s, -webkit-transform 0.3s;
+}
+
+.small-switch:before {
+    width: 21px;
+    height: 21px;
+    border-radius: 15px;
+    line-height: 27px;
+    padding-right: 10px;
+}
+
+.switch:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    content: "";
+    -webkit-transition: -webkit-transform 0.3s;
+    transition: -webkit-transform 0.3s;
+    transition: transform 0.3s;
+    transition: transform 0.3s, -webkit-transform 0.3s;
+}
+
+.small-switch:after {
+    width: 21px;
+    height: 21px;
+    border-radius: 15px;
+    line-height: 22px;
+    padding-right: 10px;
+}
+
+.small-switch:checked:after {
+    width: 21px;
+    height: 21px;
+    border-radius: 20px;
+    -webkit-transform: translateX(21px);
+    transform: translateX(21px);
+}
+//滑块样式end
 
 
 
