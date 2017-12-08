@@ -54,6 +54,7 @@ Vue.mixin({
                         // }
                         //需要登陆（需要跳转）
                         if(res.data.code == 1001){
+                            location.href = res.data.url;
                             return
                         }
                         //需要刷新本页面
