@@ -85,19 +85,31 @@ export default {
      // return shopId;
     },
     //获取首页id
-    getPageId(busId,shopId){
+    getPageId(busId,shopId,isReturn){
       let _this = this;
+      busId =  busId ||  this.$route.params.busId || sessionStorage.getItem("busId");
+      let saleMemberId = this.getSaleMemberId();
+      if(this.commonFn.isNotNull(saleMemberId) && saleMemberId > 0){
+        this.$router.push("/seller/mallindex/"+busId+"/"+saleMemberId);
+        return;
+      }
       _this.ajaxRequest({
           'url': h5App.activeAPI.get_home_page_id_post,
           'data':{
               busId : busId,
-              shopId : shopId
+              shopId : shopId ||  this.$route.params.shopId || sessionStorage.getItem("shopId")
           },
           'success':function(data){
+            let datas = data.data;
               let pageId = data.data.pageId;
+              debugger
               if(pageId != null && pageId != "" && typeof(pageId) != "undefined"){
                 sessionStorage.setItem("pageId",pageId);
                 _this.$store.commit('mutationData' , {pageId:pageId});
+                if(isReturn ){
+                  //跳转首页
+                }
+                return;
               }
           }
       });
@@ -122,6 +134,31 @@ export default {
       }else if(shopId > 0 && busId > 0){
         this.getPageId(busId,shopId);
       }
+    },
+    getSaleMemberId(){
+      let saleMemberId = this.$route.params.saleMemberId;
+      let _isNotNull = this.commonFn.isNotNull;
+      if(_isNotNull(saleMemberId)){
+        sessionStorage.setItem("saleMemberId",saleMemberId);
+        return saleMemberId;
+      }
+      let desc = this.$route.params.desc;
+      if(_isNotNull(desc) && desc != "-"){
+        desc = desc.split("-");
+        if(desc != null && desc.length > 0){
+          if(_isNotNull(desc[0])){
+            sessionStorage.setItem("saleMemberId",saleMemberId);
+            return desc[0];
+          }
+        }
+      }
+      saleMemberId = sessionStorage.getItem("saleMemberId");
+      if(_isNotNull(saleMemberId) && saleMemberId > 0){
+        return saleMemberId;
+      }
+      return 0;
+    },setSaleMemberId(saleMemberId){
+      sessionStorage.setItem("saleMemberId",saleMemberId);
     }
   
   }

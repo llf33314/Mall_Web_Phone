@@ -69,7 +69,7 @@
                     </p>
                 </div>
                 <div class="order-item-box" v-for=" detail in orderDetailList">
-                    <div class="order-item-content" @click="toProductDetail(detail.productId,detail.shopId,order.busId)">
+                    <div class="order-item-content" @click="toProductDetail(detail,order)">
                         <div class="order-item-img">
                             <default-img :background="imgUrl+detail.productImageUrl"
                                     :isHeadPortrait="1">
@@ -207,7 +207,7 @@ export default {
     //把路由带来的参数保存到页面
     _this.loadOrderDetail(); //初始化订单详情数据
     _this.$store.commit("show_footer", false); //隐藏底部导航栏
-     this.commonFn.setTitle("订单详情");
+    this.commonFn.setTitle("订单详情");
   },
   beforeDestroy() {
     //离开后的操作
@@ -289,20 +289,26 @@ export default {
       //跳入去评价的页面
       this.$router.push("/comment/" + busId + "/" + orderDetailId);
     },
-    toProductDetail(productId, shopId, busId) {
-      //跳转至商品详情页面
-      this.$router.push(
+    toProductDetail(detail, order) {
+      let productId = detail.productId;
+      let shopId = detail.shopId;
+      let busId = order.busId;
+      let url =
         "/goods/details/" +
-          shopId +
-          "/" +
-          busId +
-          "/" +
-          this.orderType +
-          "/" +
-          productId +
-          "/" +
-          this.activityId
-      );
+        shopId +
+        "/" +
+        busId +
+        "/" +
+        this.orderType +
+        "/" +
+        productId +
+        "/" +
+        this.activityId;
+      if (this.commonFn.isNotNull(detail.saleMemberId)) {
+        url += "/" + detail.saleMemberId + "/0";
+      }
+      //跳转至商品详情页面
+      this.$router.push(url);
     },
     groupBuyDetail(groupBuyId, joinId, memberId) {
       //查看团购详情
@@ -482,8 +488,8 @@ export default {
   & > p:first-child {
     margin-bottom: 30/@dev-Width *1rem;
   }
-  .p-msg{
-    width: 50%
+  .p-msg {
+    width: 50%;
   }
 }
 .deltails-padding0 {

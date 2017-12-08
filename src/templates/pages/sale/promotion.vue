@@ -99,7 +99,7 @@ export default {
     position: relative;
     // height: 100%;
     width: 100%;
-    background: url("../../../assets/img/tg-code.jpg");
+    background: url("../../../assets/img/seller/tg-code.jpg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: top;

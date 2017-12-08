@@ -134,6 +134,7 @@ export default {
             classGoods:{},//分类子集
             footershow: 'classify',
             isGoods: false,//分类子集商品显示
+            saleMemberId:0,//销售员id
         }
     },
     watch: {
@@ -178,7 +179,12 @@ export default {
             let shopId = this.$route.params.shopId || this.$store.state.shopId;
             let busId = this.$route.params.busId || this.$store.state.shopId;
             let keyWord = this.keyWord || this.$store.state.keywords ||this.$route.params.keywords
-            this.$router.push('/search/'+type+'/'+keyWord)
+            let url = '/search/'+busId+'/'+type+'/'+keyWord;
+            let desc = this.$route.params.desc;
+            if(this.commonFn.isNotNull(desc)){
+                url += "/"+desc;
+            }
+            this.$router.push(url)
         },
         /** 
          * 显示侧导航
@@ -211,6 +217,10 @@ export default {
                 'searchContent':	data.searchContent||'',//搜索内容	可不传
                 'type':    data.type|| 0,  //	类型，1.团购 3.秒杀 4.拍卖 5 粉币 6预售 7批发	可不传
                 'curPage': data.curPage ||''//	当前页	可不传
+            }
+            if(this.commonFn.isNotNull( this.saleMemberId) &&  this.saleMemberId > 0){
+                _data.saleMemberId =  this.saleMemberId;
+                this.$parent.setSaleMemberId(this.saleMemberId);
             }
             this.ajaxRequest({
                 'status':false,
@@ -357,7 +367,11 @@ export default {
                 busId: busId,
                 type : type,
             });
-            this.$router.push('/goods/details/'+shopId+'/'+busId+'/'+type+'/'+e.id+'/'+e.activityId);
+            let url = '/goods/details/'+shopId+'/'+busId+'/'+type+'/'+e.id+'/'+e.activityId;
+            if(this.commonFn.isNotNull(this.saleMemberId) && this.saleMemberId > 0){
+                url += "/"+this.saleMemberId+"/0";
+            }
+            this.$router.push(url);
         },
         /** 
          *关闭分类
@@ -368,11 +382,19 @@ export default {
     },
     mounted () {
         let _this = this;
-        _this.type = _this.$route.params.type;
-        _this.$store.commit('mutationData',{type:_this.type});
+        // _this.type = _this.$route.params.type;
         let _keyword = this.$store.state.keywords || this.$route.params.keywords;
         _keyword === 'k=k'?_this.keyWord = '':_this.keyWord = _keyword || '';
         _this.curPage = 1;
+        let desc = this.$route.params.desc;
+        desc = desc == '-' ? null : desc;
+        if(this.commonFn.isNotNull(desc)){
+            let arr = desc.split("-");
+            if( arr[0] != null &&  arr[0] != 0){
+                this.saleMemberId = arr[0];
+                this.$parent.setSaleMemberId(this.saleMemberId);
+            }
+        }
         _this.setTitle();
 
         _this.classAllAjax();

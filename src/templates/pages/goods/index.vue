@@ -26,6 +26,13 @@
                     :num="spec_num">
             </limit>
         </section>
+        <section class="goods-selected" @click="sellerShare">
+          <div class="goods-selected-main">
+            <div class="fs40">我要分享</div> 
+            <i class="iconfont icon-jiantou-copy shopGray"></i>
+          </div>
+        </section>
+
         <!--地址显示--选择-->
         <address-freight :row="goodsData">
         </address-freight>
@@ -203,6 +210,7 @@
                         <span class="fs32">¥</span>{{dialogData.groupPrice | moneySplit1}}<span class="fs32">.{{dialogData.groupPrice | moneySplit2}}</span>
                         </span>
                         <span class="fs36 " v-if="dialogData.hyPrice"> 会员价 :{{dialogData.hyPrice}}</span>
+                        <span class="fs36 " v-if="goodsData.isShowCommission == 1 && goodsData.commissionMoney > 0 && dialogData.commissionMoney > 0"> 佣金 :{{dialogData.commissionMoney}}</span>
                     </p>
                     <p class="fs36 shopGray" >库存：{{dialogData.inv_num}}</p>
                     <p class="fs36 shopGray" v-if="dialogData.inv_code">商品编号：{{dialogData.inv_code}}</p>
@@ -564,6 +572,7 @@ export default {
       arrDialog: "",
       isShowButtom:false,//是否显示底部菜单
       chujiaMoney : 0,//出价金额
+      saleMemberId:0,//销售员id
     };
   },
   watch: {
@@ -639,16 +648,13 @@ export default {
       // console.log(this.isShow )
     },
     /** 
-         * 查询商品接口
-        */
+     * 查询商品接口
+    */
     phoneProductAjax() {
       let _this = this;
       let activityId = _this.$route.params.activityId;
       activityId == "undefined" ? (activityId = 0) : activityId;
-      this.ajaxRequest({
-        status: false,
-        url: h5App.activeAPI.phoneProduct_getProduct_post,
-        data: {
+      let _data = {
           url: _this.$store.state.loginDTO_URL,
           browerType: _this.$store.state.browerType,
           shopId: _this.$store.state.shopId,
@@ -656,7 +662,14 @@ export default {
           productId: _this.$route.params.goodsId,
           type: _this.$route.params.type,
           activityId: activityId
-        },
+        };
+      if(this.saleMemberId != null && this.saleMemberId > 0){
+        _data.saleMemberId = this.saleMemberId;
+      }
+      this.ajaxRequest({
+        status: false,
+        url: h5App.activeAPI.phoneProduct_getProduct_post,
+        data: _data,
         success: function(data) {
           console.log(data, "data");
 
@@ -1196,14 +1209,23 @@ export default {
         ajaxdata.productNum = _this.pifaAmount;
         ajaxdata.price = _this.goodsData.pfPrice;
       }
-
+     if(_this.saleMemberId != null){//销售员id
+				ajaxdata.saleMemberId = _this.saleMemberId;
+			}
+			if(_this.dialogData.commissionMoney != null){//佣金
+				ajaxdata.commission = _this.dialogData.commissionMoney;
+      }
+      if (_this.dialogData.xsid != null) {
+        ajaxdata.productSpecificas = _this.dialogData.xsid;
+        ajaxdata.invId = _this.dialogData.id;
+      }
       _this.ajaxRequest({
         url: h5App.activeAPI.phoneShopCart_addShopCart_post,
         data: ajaxdata,
         success: function(data) {
           let msg = {
             type: "success",
-            msg: res.data.msg
+            msg: "加入购物车成功"
           };
           _this.$parent.$refs.bubble.show_tips(msg);
         }
@@ -1239,6 +1261,12 @@ export default {
       let shopId = this.$route.params.shopId;
       let busId = this.$route.params.busId;
       this.$router.push("/cart/" + shopId + "/" + busId + "/0");
+    },
+    //跳转到我要分享的页面
+    sellerShare(){
+      let busId = this.$route.params.busId;
+      let proId =  this.$route.params.goodsId;
+      this.$router.push("/seller/share/"+busId+"/"+proId+"/"+this.saleMemberId);
     }
     
   },
@@ -1246,6 +1274,11 @@ export default {
     this.$store.commit("show_footer", true);
   },
   mounted() {
+    let saleMemberId = this.$route.params.saleMemberId;
+    if(this.commonFn.isNotNull(saleMemberId) && saleMemberId > 0){
+      this.saleMemberId = saleMemberId;
+      this.$parent.setSaleMemberId(saleMemberId);
+    }
     this.$store.commit("show_footer", false);
 
     this.commonFn.setTitle("商品详情");

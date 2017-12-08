@@ -157,6 +157,12 @@ Vue.mixin({
 			if (_this.$route.params.joinActivityId != null) {
 				_data.joinActivityId = _this.$route.params.joinActivityId;
 			}
+			if(_this.saleMemberId != null){
+				_data.saleMemberId = _this.saleMemberId;
+			}
+			if(_this.dialogData.commissionMoney != null){
+				_data.commission = _this.dialogData.commissionMoney;
+			}
 			if (type == 1 || type == 2) {
 				//获取批发规格
 				//批发购买

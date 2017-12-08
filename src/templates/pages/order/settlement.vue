@@ -58,13 +58,13 @@
                     <!-- 商品循环 -->
                     <div class="order-item-box border" v-for="product in shop.productResultList">
                         <div class="order-item-content">
-                            <div class="order-item-img" @click="toProductDetail(product.productId,product.shopId,bus.busId)">
+                            <div class="order-item-img" @click="toProductDetail(product,bus.busId)">
                                 <default-img :background="imgUrl+product.productImageUrl"
                                             :isHeadPortrait="0">
                                 </default-img>
                             </div>
                             <div class="order-item-txt">
-                                <p class="fs42 text-overflow"  @click="toProductDetail(product.productId,product.shopId,bus.busId)">{{product.productName}}</p>
+                                <p class="fs42 text-overflow"  @click="toProductDetail(product,bus.busId)">{{product.productName}}</p>
                                 <p class="fs36 shopGray" v-if="product.productSpecificaValue != null">{{product.productSpecificaValue}}</p>
                                 <div class="fs42 shop-font orderTotal-money">
                                     <div>
@@ -852,22 +852,27 @@ export default {
       sessionStorage.setItem("addressBeforeUrl", location.href);
       this.$router.push("/address/" + this.busId);
     },
-    toProductDetail(productId, shopId, busId) {
+    toProductDetail(product, busId) {
+      let productId = product.productId;
+      let shopId = product.shopId;
       let type = this.orderData.type || 0;
       let activityId = this.orderData.activityId;
-      //进入商品详情页面
-      this.$router.push(
+      let url =
         "/goods/details/" +
-          shopId +
-          "/" +
-          busId +
-          "/" +
-          type +
-          "/" +
-          productId +
-          "/" +
-          activityId
-      );
+        shopId +
+        "/" +
+        busId +
+        "/" +
+        type +
+        "/" +
+        productId +
+        "/" +
+        activityId;
+      if (this.commonFn.isNotNull(product.saleMemberId) && product.saleMemberId > 0) {
+        url += "/" + product.saleMemberId + "/0";
+      }
+      //进入商品详情页面
+      this.$router.push(url);
     },
     /**
      * 显示流量充值弹出框

@@ -21,6 +21,10 @@
                     </span>
                     <span v-if="type== 7">批发价：￥{{goodsData.pfPrice}}</span>
                     <span class="shopGray" v-if="goodsData.auctionResult >= 0 ">抢拍{{goodsData.auctionResult.auctionNumber}}次</span>
+                    <span v-if="goodsData.isShowCommission == 1 && goodsData.commissionMoney > 0">
+                        <span >佣金：</span>
+                        ￥<span class="fs50">{{goodsData.commissionMoney | moneySplit1 }}</span>.{{goodsData.commissionMoney | moneySplit2}}
+                    </span>
                 </div>
                 <span class="fs50 shop-font" v-else>{{goodsData.productPrice | moneySplit1}}.{{goodsData.productPrice | moneySplit2}} 粉币</span>
                 <count-down :times="goodsData.activityTimes" ></count-down>

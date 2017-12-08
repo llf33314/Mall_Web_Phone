@@ -72,6 +72,7 @@ export default {
     }
   },
   methods: {
+    //点亮底部菜单
     isSelect() {
       let url = window.location.hash.split("/");
       if (url != null && url.length > 0) {
@@ -96,6 +97,14 @@ export default {
           }
         }
       }
+    },
+    //清空点亮
+    clearSelect(){
+       for (let i = 0; i < this.footerData.length; i++) {
+          let obj = this.footerData[i];
+          obj.isSelect = false;
+         this.$set(this.footerData, i, obj);
+       }
     },
     /** 
          * 获取底部菜单
@@ -134,6 +143,7 @@ export default {
       console.log(name, shopId, busId);
       if (name == "home") {
         //this.$router.push('/home/'+shopId+'/'+busId);
+        this.$parent.getPageId(busId,shopId,true);
       } else if (name == "classify") {
         this.$router.push("/classify/" + shopId + "/" + busId + "/" + "0/k=k");
       } else if (name == "cart") {
@@ -141,6 +151,8 @@ export default {
       } else if (name == "my") {
         this.$router.push("/my/center/" + busId);
       }
+      this.clearSelect();
+      this.isSelect();
     }
   }
 };

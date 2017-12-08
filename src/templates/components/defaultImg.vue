@@ -3,10 +3,10 @@
         <div class="user-head-portrait" 
             :style="{backgroundImage: 'url(' + background + ')'}">
         </div>
-        <img src="../../assets/img/default.png" 
+        <img src="../../assets/img/default.png"
              class="default-img"
              v-if="isHeadPortrait==1 && background == undefined"></img>
-        <img src="../../assets/img/kuaidiyuan.png" 
+        <img src="../../assets/img/kuaidiyuan.png"
              class="default-img"
              v-if="isHeadPortrait==0 && background == undefined"></img>
     </div>

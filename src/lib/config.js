@@ -231,6 +231,8 @@
     seller_find_product_post: '/phoneSellers/L6tgXlBFeK/findProduct',
     //获取销售员说航程首页信息
     seller_mall_index_post: '/phoneSellers/L6tgXlBFeK/mallIndex',
+    //获取销售员说航程首页信息
+    seller_share_product_post: '/phoneSellers/L6tgXlBFeK/shareSeller',
     /**********************以下接口是团购相关接口*****************************/
     goupbuy_detail_post: '/phoneGroupBuy/L6tgXlBFeK/groupBuyDetail',
     /**********************以下接口是拍卖相关接口*****************************/

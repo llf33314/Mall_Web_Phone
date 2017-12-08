@@ -161,14 +161,21 @@ export default new Router({
         title: '导航,上线后删除'
       },
     }, {
-      path: '/stores',
+      path: '/stores/:busId',
       name: 'Stores',
       component: Stores,
       meta: {
         title: '选择门店'
       },
     }, {
-      path: '/search/:type/:keywords',
+      path: '/search/:busId/:type/:keywords',
+      name: 'search',
+      component: Search,
+      meta: {
+        title: '搜索'
+      }
+    }, {
+      path: '/search/:busId/:type/:keywords/:desc',
       name: 'search',
       component: Search,
       meta: {
@@ -182,26 +189,12 @@ export default new Router({
         title: '分类'
       },
     }, {
-      path: '/comment/:busId/:orderDetailId',
-      name: 'comment',
-      component: Comment,
+      path: '/classify/:shopId/:busId/:type/:keywords/:desc',
+      name: 'classify',
+      component: Classify,
       meta: {
-        title: '评论'
-      }
-    }, {
-      path: '/comment/success/:busId/:id',
-      name: 'Comment_success',
-      component: Comment_success,
-      meta: {
-        title: '评论成功'
-      }
-    }, {
-      path: '/comment/share/:busId/:id',
-      name: 'share',
-      component: Comment_Share,
-      meta: {
-        title: '评论分享成功'
-      }
+        title: '分类'
+      },
     }, {
       path: '/goods/details/:shopId/:busId/:type/:goodsId/:activityId',
       name: 'goods',
@@ -225,6 +218,27 @@ export default new Router({
       meta: {
         title: '商品详情'
       },
+    }, {
+      path: '/comment/:busId/:orderDetailId',
+      name: 'comment',
+      component: Comment,
+      meta: {
+        title: '评论'
+      }
+    }, {
+      path: '/comment/success/:busId/:id',
+      name: 'Comment_success',
+      component: Comment_success,
+      meta: {
+        title: '评论成功'
+      }
+    }, {
+      path: '/comment/share/:busId/:id',
+      name: 'share',
+      component: Comment_Share,
+      meta: {
+        title: '评论分享成功'
+      }
     }, {
       path: '/wholesale/apply/:busId',
       name: 'Wholesale_Apply',
@@ -556,7 +570,7 @@ export default new Router({
         title: '超级销售员商城首页'
       }
     }, {
-      path: '/seller/share/:busId/:shopId/:proId',
+      path: '/seller/share/:busId/:proId/:saleMemberId',
       name: 'sellerShare',
       component: sellerShare,
       meta: {
@@ -564,7 +578,7 @@ export default new Router({
       }
     }
 
-    
+
 
   ]
 })

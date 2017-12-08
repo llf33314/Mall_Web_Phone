@@ -96,14 +96,18 @@ export default {
      * 确定
      */
     submit(data){
-        let type = this.$store.state.type || 0;//活动类型
+        let type = this.$route.params.type || 0;//活动类型
         let shopId = this.$store.state.shopId || 'shopId';//店铺id
         let busId = this.$store.state.busId || 'busId';//店铺id
         let keyword =  data || this.keyWord || 'k=k';//搜索关键词
 
         this.$store.commit('mutationData',{keywords:keyword});
-
-        this.$router.push('/classify/'+shopId+'/'+busId+'/'+type+'/'+keyword)
+        let url = '/classify/'+shopId+'/'+busId+'/'+type+'/'+keyword;
+        let desc = this.$route.params.desc;
+        if(this.commonFn.isNotNull(desc)){
+            url += "/"+desc;
+        }
+        this.$router.push(url)
     },
     /** 
      * 取消
@@ -151,9 +155,10 @@ export default {
   mounted(){
     this.commonFn.setTitle('搜索');
     this.searchAjax();
-    
+
     let _keyword = this.$store.state.keywords || this.$route.params.keywords;
     _keyword === 'k=k'?this.keyWord = '':this.keyWord = _keyword || '';
+    this.$parent.getSaleMemberId();
     
     $('#input').focus();
   },

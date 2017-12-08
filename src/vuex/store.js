@@ -14,7 +14,6 @@ const state = {
     shopId: '',
     busId: '',
     keywords: '',
-    type:'',
     loginDTO_URL:'',//浏览器地址
     browerType:'',//浏览器类型 1 微信 ， 99 浏览器	必传
     showTop:1,//置顶按钮显示
