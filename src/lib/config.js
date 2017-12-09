@@ -51,6 +51,7 @@
   const h5App = {};
 
 
+  //打包时切换
   h5App.api = "/api";
   // h5App.api ="";
 
@@ -72,6 +73,8 @@
     my_collect_post: '/phoneMember/L6tgXlBFeK/collectList',
     /*删除收藏 */
     delete_collect_post: '/phoneMember/L6tgXlBFeK/deleteCollect',
+    /*是否需要登陆 */
+    is_login_post: '/phoneMember/L6tgXlBFeK/isLogin',
     /***********************   以下接口都是 商品分类页面相关接口 ***********************/
     //商品详情
     /*商品搜索接口*/

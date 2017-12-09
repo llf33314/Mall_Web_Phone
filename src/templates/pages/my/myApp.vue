@@ -1,7 +1,7 @@
 <template>
   <div class="shop-wrapper ">
      <section class="shop-main fs40 my-index">
-        <div class="my-header shop-bg">
+        <div class="my-header shop-bg" @click="toLogin">
             <div class="my-indexUser">
                <default-img :background="background"
                             :isHeadPortrait="1">
@@ -171,8 +171,8 @@ export default {
       memberName: Language.unknown_user_msg, //用户名
       isOpenPf: false, //是否开启批发 true 开启
       isOpenSeller: false, //是否开启销售员
-      background:
-        "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1501765343077&di=5d3652848769c1abd7eb25dea007bb1d&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D450%252C600%2Fsign%3Dcf8442791bd8bc3ec65d0eceb7bb8a28%2Fb3119313b07eca80c63dcea4932397dda14483bd.jpg"
+      background: null,
+      isLogin: 0
     };
   },
   components: {
@@ -185,6 +185,11 @@ export default {
     this.loads();
   },
   methods: {
+    toLogin() {
+      if (this.isLogin == 0) {
+        this.$parent.isLogin(this.busId);
+      }
+    },
     loads() {
       let _this = this;
       _this.$store.state.busId = _this.busId;
@@ -199,8 +204,12 @@ export default {
         success: function(data) {
           let _returnData = data.data;
           _this.myData = _returnData;
-          _this.memberName = _returnData.memberName; //用户名称
-          _this.background = _returnData.memberImageUrl; //用户头像
+          if (_returnData.memberName != null) {
+            _this.memberName = _returnData.memberName; //用户名称
+          }
+          if (_returnData.memberImageUrl != null) {
+            _this.background = _returnData.memberImageUrl; //用户头像
+          }
 
           if (_returnData.isOpenPf == 1) {
             _this.isOpenPf = true;
@@ -208,6 +217,7 @@ export default {
           if (_returnData.isOpenSeller == 1) {
             _this.isOpenSeller = true;
           }
+          _this.isLogin = _returnData.isLogin;
         }
       });
     },

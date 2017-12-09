@@ -42,8 +42,7 @@ export default {
   data() {
     return {
       isShow: false,
-      background:
-        "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1501765343077&di=5d3652848769c1abd7eb25dea007bb1d&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D450%252C600%2Fsign%3Dcf8442791bd8bc3ec65d0eceb7bb8a28%2Fb3119313b07eca80c63dcea4932397dda14483bd.jpg",
+      background: null,
       busId: this.$route.params.busId || sessionStorage.getItem("busId"),
       id: this.$route.params.id,
       imgUrl: "", //图片域名
