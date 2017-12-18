@@ -92,8 +92,11 @@
     /*上传图片的接口 */
     upload_image_post: '/phonePage/L6tgXlBFeK/uploadImage',
     /*店铺列表相关接口 */
+    phonePage_shopList_post: '/phoneStore/L6tgXlBFeK/shopList',
+    /*店铺列表相关接口 */
+    queryFenbiShopByBusId_post: '/phoneStore/L6tgXlBFeK/queryFenbiShopByBusId',
+    /*粉币商城店铺列表 */ 
     /***********************   以下接口都是 商品详情页面相关接口 ***********************/
-    phonePage_shopList_post: '/phonePage/L6tgXlBFeK/shopList',
     /*查询商品接口*/
     phoneProduct_getProduct_post: '/phoneProduct/L6tgXlBFeK/getProduct',
     /*查询商品规格接口(规格弹出框调用)*/

@@ -1,6 +1,6 @@
 <template>
   <div class="stores-wrapper">
-    <div class="stores-item" v-for="item in shopData">
+    <div class="stores-item" v-for="(item,index) in shopData" :key="index">
       <div class="item-center">
         <div class="fs46">{{item.sto_name}}</div>
         <p class="fs42"><i class="icon-dianhua1 iconfont"></i> 0752-134567</p>

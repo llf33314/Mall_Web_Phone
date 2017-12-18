@@ -9,6 +9,8 @@ const Nav = resolve => require(['pages/nav/nav.vue'], resolve);
 // //nav => 首页
 const Stores = resolve => require(['pages/home/stores'], resolve);
 //Search => 选择门店
+const fenbi_store_list = resolve => require(['pages/home/fenbi_store_list'], resolve);
+//粉币店铺列表
 const Search = resolve => require(['pages/home/search'], resolve);
 //Search => 搜索页
 const Classify = resolve => require(['pages/home/classify'], resolve);
@@ -167,7 +169,14 @@ export default new Router({
       meta: {
         title: '选择门店'
       },
-    }, {
+    },  {
+      path: '/stores/fenbi/:busId',
+      name: 'fenbi_store_list',
+      component: fenbi_store_list,
+      meta: {
+        title: '选择门店（粉币商城）'
+      },
+    },{
       path: '/search/:busId/:type/:keywords',
       name: 'search',
       component: Search,
@@ -435,13 +444,6 @@ export default new Router({
       component: myCollect,
       meta: {
         title: '我的收藏'
-      }
-    }, {
-      path: '/integral/index/:busId',
-      name: 'integral_index',
-      component: integral_index,
-      meta: {
-        title: '积分商城首页'
       }
     }, {
       path: '/integral/index/:busId',
