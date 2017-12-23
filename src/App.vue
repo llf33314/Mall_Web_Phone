@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <!-- <div v-html="style"></div> 主题切换渲染style-->
+    <div v-html="style"></div> <!--主题切换渲染style-->
     <router-view ref="main"/>
     <bubble-hint ref="bubble"></bubble-hint>
     <shop-dialog ref="dialog"></shop-dialog>
@@ -51,7 +51,7 @@ export default {
     this.$store.commit("mutationData", _data);
   },
   mounted() {
-    // this.style = "<style>.aaa{color:red}</style>"
+    this.getShopStyle();
     this.commonFn.setFontSize();
     //this.$store.commit('mutationData',{showfooter:true});
   },
@@ -62,6 +62,35 @@ export default {
     browser_type() {
       let browser = this.commonFn.checkPlatform();
       browser === "Messenger" ? (this.Messenger = 1) : (this.Messenger = 99);
+    }, 
+    //获取页面样式
+    getShopStyle() {
+      let busId = this.$route.params.busId || sessionStorage.getItem("busId");
+      let _this = this;
+      _this.ajaxRequest({
+        url: h5App.activeAPI.getShopStyle_post,
+        data: {
+          busId: busId
+        },
+        success: function(data) {
+          let myData = data.data;
+          if (myData != null && myData.length > 0) {
+            _this.style = "<style>";
+            _this.style += ".style-main-bg{ background: "+myData[0]+";color: #fff;}";
+            _this.style += ".style-main-font{color:"+myData[0]+";}";
+            if(myData.length > 1){
+              _this.style += ".style-middle-bg{ background: "+myData[1]+";color: #fff;}";
+              _this.style += ".style-middle-font{color: "+myData[1]+";}";
+            }
+            if(myData.length > 2){
+              _this.style += ".style-right-bg{ background: "+myData[2]+";color: #000;}";
+              _this.style += ".style-right-font{color: "+myData[2]+";}";
+            }
+            _this.style += "</style>";
+            console.log( _this.style," _this.style")
+          }
+        }
+      });
     },
     //获取店铺id
     getShopId(busId) {

@@ -277,7 +277,7 @@ export default {
           // _this.commonFn.allowScroll();
           sessionStorage.setItem("payUrl", location.href);
           //跳转到提交订单的页面
-          _this.$router.push("/order/settlement/" + _this.busId + "/0");
+          _this.$router.push("/order/settlement/" + _this.busId + "/2");
         }
       });
     },

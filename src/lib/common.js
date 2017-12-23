@@ -163,40 +163,54 @@ var Rxports = {
 		return true;
 	},//加    
 	floatAdd(arg1, arg2) {
-		var r1, r2, m;
-		try { r1 = arg1.toString().split(".")[1].length } catch (e) { r1 = 0 }
-		try { r2 = arg2.toString().split(".")[1].length } catch (e) { r2 = 0 }
-		m = Math.pow(10, Math.max(r1, r2));
-		return (arg1 * m + arg2 * m) / m;
+		// var r1, r2, m;
+		// try { r1 = arg1.toString().split(".")[1].length } catch (e) { r1 = 0 }
+		// try { r2 = arg2.toString().split(".")[1].length } catch (e) { r2 = 0 }
+		// m = Math.pow(10, Math.max(r1, r2));
+		// return (arg1 * m + arg2 * m) / m;
+		return arg1 + arg2;
 	},
 	//减    
 	floatSub(arg1, arg2) {
-		var r1, r2, m, n;
-		try { r1 = arg1.toString().split(".")[1].length } catch (e) { r1 = 0 }
-		try { r2 = arg2.toString().split(".")[1].length } catch (e) { r2 = 0 }
-		m = Math.pow(10, Math.max(r1, r2));
-		//动态控制精度长度    
-		n = (r1 >= r2) ? r1 : r2;
-		let num = ((arg1 * m - arg2 * m) / m).toFixed(n);
-		return parseFloat(num);
+		// var r1, r2, m, n;
+		// try { r1 = arg1.toString().split(".")[1].length } catch (e) { r1 = 0 }
+		// try { r2 = arg2.toString().split(".")[1].length } catch (e) { r2 = 0 }
+		// m = Math.pow(10, Math.max(r1, r2));
+		// //动态控制精度长度    
+		// n = (r1 >= r2) ? r1 : r2;
+		// let num = ((arg1 * m - arg2 * m) / m).toFixed(n);
+		// return parseFloat(num);
+		return arg1 - arg2;
 	},
 	//乘    
 	floatMul(arg1, arg2) {
-		var m = 0, s1 = arg1.toString(), s2 = arg2.toString();
-		try { m += s1.split(".")[1].length } catch (e) { }
-		try { m += s2.split(".")[1].length } catch (e) { }
-		return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
+		// var m = 0, s1 = arg1.toString(), s2 = arg2.toString();
+		// try { m += s1.split(".")[1].length } catch (e) { }
+		// try { m += s2.split(".")[1].length } catch (e) { }
+		// return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
+		return arg1 * arg2;
 	},
 	//除   
 	floatDiv(arg1, arg2) {
-		var t1 = 0, t2 = 0, r1, r2;
-		try { t1 = arg1.toString().split(".")[1].length } catch (e) { }
-		try { t2 = arg2.toString().split(".")[1].length } catch (e) { }
+		// var t1 = 0, t2 = 0, r1, r2;
+		// try { t1 = arg1.toString().split(".")[1].length } catch (e) { }
+		// try { t2 = arg2.toString().split(".")[1].length } catch (e) { }
 
-		r1 = Number(arg1.toString().replace(".", ""));
+		// r1 = Number(arg1.toString().replace(".", ""));
 
-		r2 = Number(arg2.toString().replace(".", ""));
-		return (r1 / r2) * Math.pow(10, t2 - t1);
+		// r2 = Number(arg2.toString().replace(".", ""));
+		// return (r1 / r2) * Math.pow(10, t2 - t1);
+		return arg1 / arg2;
+	},
+	floatNumber(num, len) {
+		len = len || 2;
+		var bb = num + "";
+		len = len + 1;
+		if (bb.indexOf('.') > 0) {
+			var dian2 = bb.indexOf('.') + len;
+			num = bb.substring(0, dian2) * 1;
+		}
+		return num;
 	},
 	/**
 	 * 判断对象是否为空

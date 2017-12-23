@@ -67,7 +67,7 @@
                 <div class="order-item-button fs42"  v-if="busItem.isShowGoPayButton == 1 || busItem.isShowReceiveGoodButton == 1 || busItem.isShowDaifuButton == 1">
                     <div class="order-button shop-bg" 
                         v-if="busItem.isShowGoPayButton == 1"
-                        @click="returnToPay(busItem.orderId,busItem.busId)">
+                        @click="returnToPay(busItem)">
                         去支付
                     </div>
                     <div class="order-button shop-bg"
@@ -266,10 +266,13 @@ export default {
       //跳转至去评价页面
       this.$router.push("/comment/" + busId + "/" + orderDetailId);
     },
-    returnToPay(orderId, busId) {
+    returnToPay(busItem) {
+      let orderPayWay = busItem.orderPayWay;//支付方式
+      let orderId = busItem.orderId
+      let busId = busItem.busId;
       // 去支付 跳转至提交订单页面
       sessionStorage.setItem("payUrl", location.href);
-      this.$router.push("/order/settlement/" + busId + "/2/" + orderId);
+      this.$router.push("/order/settlement/" + busId + "/3/" + orderId);
     },
     returnDaifu(orderId, busId) {
       //跳转至代付详情页面

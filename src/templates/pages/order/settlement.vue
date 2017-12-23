@@ -357,7 +357,7 @@ export default {
       background:
         null,
       busId: this.$route.params.busId || sessionStorage.getItem("busId"),
-      from: 0, //来源 1 购物车结算进入 0 立即购买进入 2 去支付，必传
+      from: 0, //来源 1 购物车结算进入 2 立即购买进入 3 去支付，必传
       cartIds: "", //购物车id
       memberAddresss: {}, //粉丝收货地址
       payWayList: [], //支付集合
@@ -562,7 +562,7 @@ export default {
       };
       if (_this.from == 1) {
         _data.cartIds = _this.$route.params.ids;
-      } else if (_this.from == 2) {
+      } else if (_this.from == 3) {
         _data.orderId = _this.$route.params.ids;
       }
       _this.ajaxRequest({

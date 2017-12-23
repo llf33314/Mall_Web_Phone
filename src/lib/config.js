@@ -75,6 +75,8 @@
     delete_collect_post: '/phoneMember/L6tgXlBFeK/deleteCollect',
     /*是否需要登陆 */
     is_login_post: '/phoneMember/L6tgXlBFeK/isLogin',
+    /*获取店铺风格接口 */
+    getShopStyle_post: '/phonePage/L6tgXlBFeK/getShopStyle',
     /***********************   以下接口都是 商品分类页面相关接口 ***********************/
     //商品详情
     /*商品搜索接口*/

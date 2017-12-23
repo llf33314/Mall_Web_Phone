@@ -209,7 +209,7 @@ Vue.mixin({
 					sessionStorage.setItem("payUrl", location.href);
 					//跳转到提交订单的页面
 					_this.$router.push(
-						"/order/settlement/" + _this.$route.params.busId + "/0"
+						"/order/settlement/" + _this.$route.params.busId + "/2"
 					);
 				}
 			});
