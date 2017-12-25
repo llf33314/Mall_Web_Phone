@@ -16,8 +16,8 @@ var Rxports = {
 		var width = document.documentElement.clientWidth;
 		var height = document.documentElement.clientHeight;
 		var devWidth = height > width ? width : height;
-		if (devWidth > 750) devWidth = 750; //取短后是否会大于750
-		document.documentElement.style.fontSize = Math.floor(devWidth / (750 / 100)) + 'px';
+		if (devWidth > 1242) devWidth = 1242; //取短后是否会大于1242
+		document.documentElement.style.fontSize = Math.floor(devWidth / (1242 / 150)) + 'px';
 		//$('html').css('font-size', Math.floor(devWidth / 31));
 	},
 	//进入焦点事件不显示横竖屏

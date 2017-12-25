@@ -141,7 +141,8 @@ export default {
             _this.$store.commit("mutationData", { pageId: pageId });
             if (isReturn) {
               //跳转首页
-              _this.$refs.bubble.show_tips("开发中敬请期待");
+              // _this.$refs.bubble.show_tips("开发中敬请期待");
+              _this.$router.push("/"+pageId);
             }
             return;
           }

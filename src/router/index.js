@@ -151,7 +151,7 @@ export default new Router({
   // mode: 'history',
   routes: [
     {
-      path: '/index',
+      path: '/:pageId',
       name: 'index',
       component: Index
     },
