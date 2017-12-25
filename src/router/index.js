@@ -5,7 +5,7 @@ import Router from 'vue-router'
 /***懒加载**************************************************************************/
 const Nav = resolve => require(['pages/nav/nav.vue'], resolve);
 //nav => 导航
-// const Index = resolve => require(['pages/home/index'], resolve);
+const Index = resolve => require(['pages/home/index/index'], resolve);
 // //nav => 首页
 const Stores = resolve => require(['pages/home/stores'], resolve);
 //Search => 选择门店
@@ -150,11 +150,11 @@ Vue.use(Router)
 export default new Router({
   // mode: 'history',
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'index',
-    //   component: Index
-    // },
+    {
+      path: '/index',
+      name: 'index',
+      component: Index
+    },
     {
       path: '/nav',
       name: 'nav',

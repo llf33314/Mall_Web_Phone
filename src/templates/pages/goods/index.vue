@@ -2,7 +2,7 @@
 <div class="goods-wrapper">
     <div class="goods-main">
         <!--banner-->
-        <banner :banner="goodsData.imageList" :imgUrl="imgUrl"  v-if="goodsData.imageList != null">
+        <banner :banner="goodsData.imageList" :imgUrl="imgUrl"  v-if="goodsData.imageList != null" :colorStyle="'style-main-bg'">
         </banner>
         <!--商品信息-->
         <goods-info :row="goodsData">
@@ -26,7 +26,7 @@
                     :num="spec_num">
             </limit>
         </section>
-        <section class="goods-selected" @click="sellerShare">
+        <section class="goods-selected" @click="sellerShare" v-if="saleMemberId != null && saleMemberId > 0">
           <div class="goods-selected-main">
             <div class="fs40">我要分享</div> 
             <i class="iconfont icon-jiantou-copy shopGray"></i>
@@ -55,12 +55,12 @@
             <div class="goods-content-nav shop-header">
                 <div class="header-nav">
                     <div class="header-itme"
-                        :class="{'shop-font':nav.name == isDetails}"
+                        :class="{'shop-font style-main-font':nav.name == isDetails}"
                         v-for="(nav,index) in min_nav"
                         :key="nav[index]"
                         @click="nav_change(nav.name)">
                         <p class="fs42">{{nav.title}}</p>
-                        <em :class="{'shop-bg':nav.name == isDetails}"></em>
+                        <em :class="{'shop-bg style-main-bg':nav.name == isDetails}"></em>
                     </div>
                 </div>
             </div>
@@ -74,28 +74,28 @@
             <!--评论-->
             <comment v-if="isDetails == 'comment'"></comment>
             <!--商品详情底部-->
-            <goods-footer></goods-footer>
+            <goods-footer :qrcodeUrl="goodsData.qrcodeUrl"></goods-footer>
         </section>
         <!--底部按钮-->
         <section class="goods-footer" style="background:0;z-index:3;" v-if="type == 4 && goodsData.auctionResult != null" >
             <!---拍卖保证金-->
-            <div class="goods-footer-botton  fs50 shop-bg" v-if="type == 4 &&  goodsData.auctionResult.isShowDeposit == 1 " 
+            <div class="goods-footer-botton  fs50 style-main-bg" v-if="type == 4 &&  goodsData.auctionResult.isShowDeposit == 1 " 
                 @click="marginDeposit">
                 交保证金报名
             </div>
             <!---拍卖转订单-->
-            <div class="goods-footer-botton  fs50 shop-bg" v-if="type == 4 && goodsData.auctionResult.isReturnOrder == 1 " 
+            <div class="goods-footer-botton  fs50 style-main-bg" v-if="type == 4 && goodsData.auctionResult.isReturnOrder == 1 " 
                 @click="lijiBuy(0)">
                 转订单
             </div>
              <!---拍卖失败显示按钮-->
-            <div class="goods-footer-botton  fs50 shop-bg" 
+            <div class="goods-footer-botton  fs50 style-main-bg" 
                 v-if="type == 4 && goodsData.auctionResult.activityStatus == -1 && goodsData.auctionResult.isWin != 1" >
                 查看更多商品
             </div>
             <!---立即拍下-->
             <div class="goods-auction-choice" v-if="type == 4 &&  goodsData.auctionResult.isLijiPai == 1 " >
-                <div class="goods-auction-paixia-button shop-bg fs52" @click="lijiBuy(0)">立即拍下</div>
+                <div class="goods-auction-paixia-button style-main-bg fs52" @click="lijiBuy(0)">立即拍下</div>
             </div>
              <!---立即出价-->
             <div class="goods-auction-choice" v-if="type == 4 &&  goodsData.auctionResult.isChujia == 1 " >
@@ -106,7 +106,7 @@
                     </div>
                     <em @click="auctionAdd"><i class="icon-jiaimg iconfont"></i></em>
                 </div>
-                <div class="goods-auction-bottom shop-bg fs52" @click="addOffer">立即出价</div>
+                <div class="goods-auction-bottom style-main-bg fs52" @click="addOffer">立即出价</div>
             </div>
         </section>
         <!---底部菜单---->
@@ -118,17 +118,17 @@
             <!---底部菜单---->
             <div class="goods-footer-content">
                 <div class="goods-footer-botton ui-col-1 fs32">
-                    <i class="iconfont icon-xiaoxi shop-font"></i>
+                    <i class="iconfont icon-xiaoxi style-main-font"></i>
                     客服
                 </div >
                 <div class="goods-footer-botton ui-col-1 fs32 border-left" @click="shoppingCart">
                     <i class="iconfont icon-yinhang"></i>
                     购物车
-                    <em class="goods-footer-num shop-bg" v-if="goodsData.shopCartNum">{{goodsData.shopCartNum }}
+                    <em class="goods-footer-num style-main-bg" v-if="goodsData.shopCartNum">{{goodsData.shopCartNum }}
                     </em>
                 </div>
                 <!--团购-->
-                <div class="goods-footer-botton ui-col-2 fs50 shop-yellow"
+                <div class="goods-footer-botton ui-col-2 fs50 style-middle-bg"
                     :class="{'shopFff':isSoldOut}"
                     v-if=" goodsData.isShowAddShopButton == 1 && type == 1"
                     style="color:#fff"
@@ -136,7 +136,7 @@
                     <p class="fs40">￥{{goodsData.hyPrice > 0 ? goodsData.hyPrice : goodsData.productPrice}}</p>
                     <p class="fs32">单独购买</p>
                 </div>
-                <div class="goods-footer-botton ui-col-2 fs50 shop-bg"
+                <div class="goods-footer-botton ui-col-2 fs50 style-main-bg"
                     :class="{'shopFff':isSoldOut}"
                     v-if=" goodsData.isShowLiJiBuyButton == 1 && type == 1"
                     style="color:#fff"
@@ -145,21 +145,21 @@
                     <p class="fs32">{{goodsData.groupPeopleNum}}人拼团</p>
                 </div>
                 <!--预售 -->
-                <div class="goods-footer-botton ui-col-2 fs50 shop-bg"
+                <div class="goods-footer-botton ui-col-2 fs50 style-main-bg"
                     style="color:#fff"
                     :class="{'shopFff':isSoldOut}"
                     v-if="type == 6 && goodsData.presaleResult != null && goodsData.presaleResult.isShowPresaleButton == 1"
                      @click="dialogShow">
                     立即预定
                 </div>
-                <div class="goods-footer-botton ui-col-2 fs50 shop-bg"
+                <div class="goods-footer-botton ui-col-2 fs50 style-main-bg"
                     style="color:#fff"
                     :class="{'shopFff':isSoldOut}"
                     v-if="type == 6 && goodsData.presaleResult != null && goodsData.presaleResult.isShowWeiMoneyButton == 1"
                     @click="lijiBuy(3)">
                     支付尾款
                 </div>
-                <div class="goods-footer-botton ui-col-2 fs50 shop-bg"
+                <div class="goods-footer-botton ui-col-2 fs50 style-main-bg"
                     style="color:#fff;background-color:#999999"
                     :class="{'shopFff':isSoldOut}"
                     v-if="type == 6 && goodsData.presaleResult != null && goodsData.presaleResult.isShowStartButton == 1"
@@ -167,14 +167,14 @@
                     即将开售
                 </div>
                 <!--普通购买-->
-                <div class="goods-footer-botton ui-col-2 fs50 shop-yellow"
+                <div class="goods-footer-botton ui-col-2 fs50 style-middle-bg"
                     :class="{'shopFff':isSoldOut}"
                     style="color:#fff"
                     v-if=" goodsData.isShowAddShopButton == 1 && type != 1"
                     @click="dialogShow">
                     加入购物车
                 </div>
-                <div class="goods-footer-botton ui-col-2 fs50 shop-bg"
+                <div class="goods-footer-botton ui-col-2 fs50 style-main-bg"
                     style="color:#fff"
                     :class="{'shopFff':isSoldOut}"
                     v-if=" goodsData.isShowLiJiBuyButton == 1 && type != 1"
@@ -195,13 +195,13 @@
                 @click.self="isShow =false"></i>
             </div>
             <div class="goods-dialog-detl border clearfix">
-                <div class="goods-dialog-img">
+                <div class="goods-dialog-img" @click="showImage(imgUrl+dialogData.specifica_img_url)">
                     <default-img :background="imgUrl+dialogData.specifica_img_url"
                         :isHeadPortrait="1">
                     </default-img>
                 </div>
                 <div class="goods-dialog-txt">
-                    <p class="fs42 shop-font">
+                    <p class="fs42 style-main-font">
                         <span  v-if="type != 1">
                         <span class="fs32">¥</span>{{dialogData.inv_price | moneySplit1}}<span class="fs32">.{{dialogData.inv_price | moneySplit2}}</span>
                         </span>
@@ -226,7 +226,7 @@
                         <div v-for="(spec,index) in dialogData.specifica_ids" v-if="index == key" :key="index">
                             <em class="fs40 em-choice " v-for=" (specValue,i) in item.specValues" :key="i"
                                 @click="choice_product($event)" 
-                                :class="{'shop-bg':dialogData.specifica_ids[index]== specValue.id }"
+                                :class="{'shop-bg style-main-bg':dialogData.specifica_ids[index]== specValue.id }"
                                 :value="specValue.id">
                                 {{specValue.specValue}}
                             </em>
@@ -245,16 +245,16 @@
             </div>
             <div class="goods-dialog-footer">
                 <!--普通购买-->
-                <div class="goods-dialog-button fs52 shop-yellow" @click="addCard(1)"
+                <div class="goods-dialog-button fs52 style-middle-bg" @click="addCard(1)"
                     v-if=" goodsData.isShowAddShopButton == 1 && type != 1">
                     加入购物车
                 </div>
-                <div class="goods-dialog-button fs52  shop-bg" @click="lijiBuy(0)"
+                <div class="goods-dialog-button fs52  style-main-bg" @click="lijiBuy(0)"
                    v-if=" goodsData.isShowLiJiBuyButton == 1 && type != 1">
                     立即购买
                 </div> 
                 <!-- 预售 -->
-                <div class="goods-dialog-button fs52  shop-bg"
+                <div class="goods-dialog-button fs52  style-main-bg"
                     style="color:#fff"
                     :class="{'shopFff':isSoldOut}"
                     v-if="type == 6 && goodsData.presaleResult != null && goodsData.presaleResult.isShowPresaleButton == 1"
@@ -262,12 +262,12 @@
                     立即预定
                 </div>
                  <!--团购-->
-                <div class="goods-dialog-button fs52 shop-yellow"  @click="lijiBuy(0,0)"
+                <div class="goods-dialog-button fs52 style-middle-bg"  @click="lijiBuy(0,0)"
                     v-if=" goodsData.isShowAddShopButton == 1 && type == 1">
                     <p class="fs40">￥{{dialogData.hyPrice > 0 ? dialogData.hyPrice : dialogData.inv_price}}</p>
                     <p class="fs32">单独购买</p>
                 </div>
-                <div class="goods-dialog-button fs52  shop-bg" @click="lijiBuy(0,1)"
+                <div class="goods-dialog-button fs52  style-main-bg" @click="lijiBuy(0,1)"
                    v-if=" goodsData.isShowLiJiBuyButton == 1 && type == 1">
                     <p class="fs40">￥{{dialogData.groupPrice}}</p>
                     <p class="fs32">{{goodsData.groupPeopleNum}}人拼团价</p>
@@ -292,10 +292,10 @@
                     </default-img>
                 </div>
                 <div class="goods-dialog-txt">
-                    <p class="fs40 shop-font">批发价:¥ {{goodsData.pfPrice}}</span>
-                    <p class="fs36 shop-font" v-if="w_dialogData.inv_num">库存{{w_dialogData.inv_num}}件</p>
-                    <p class="fs36 shop-font" v-else>库存 0 件</p>
-                    <p class="fs36 shop-font" v-if="w_dialogData.inv_code">商品编号: {{w_dialogData.inv_code}}</p>
+                    <p class="fs40 style-main-font">批发价:¥ {{goodsData.pfPrice}}</span>
+                    <p class="fs36 style-main-font" v-if="w_dialogData.inv_num">库存{{w_dialogData.inv_num}}件</p>
+                    <p class="fs36 style-main-font" v-else>库存 0 件</p>
+                    <p class="fs36 style-main-font" v-if="w_dialogData.inv_code">商品编号: {{w_dialogData.inv_code}}</p>
                     <p class="fs36 shopGray"  v-if="w_dialogData.hpMoney">本商品{{dialogw_dialogDataData.hpMoney}}手起批</p>
                 </div>
             </div>
@@ -335,7 +335,7 @@
                                 <div v-for="(spec,index) in w_dialogData.specifica_ids" v-if="index == i" :key = "index">
                                     <em class="fs40 em-choice " v-for=" (specValue,j) in item.specValues"
                                         @click="choice_product($event,specValue.id)" 
-                                        :class="{'shop-bg': wholesaleId == specValue.id}"
+                                        :class="{'shop-bg style-main-bg': wholesaleId == specValue.id}"
                                         :value="specValue.id"
                                         :key = "j">
                                         {{specValue.specValue}}
@@ -352,14 +352,14 @@
                     <div class="goods-choice-option1 border">
                         <div class="goods-choice-li shop-box-justify" style="margin-bottom:5px">
                             <!--多个标题-->
-                            <div class="fs36" 
+                            <div class="fs36 spec_div" 
                                 v-for="(item,i) in w_specificaList" 
                                 v-if=" i > 0 && w_specificaList.length > 1" 
                                 :key="i">{{item.specName}}
                                 <em v-if="item.specName"></em>
                             </div>
                             <!--单个标题-->
-                            <div class="fs36" v-if=" w_specificaList.length <= 1">{{w_specificaList[0].specName}}
+                            <div class="fs36 spec_div" v-if=" w_specificaList.length <= 1">{{w_specificaList[0].specName}}
                             </div>
                             <div class="fs36">库存</div>
                             <div class="fs36">价格</div>
@@ -371,7 +371,7 @@
                             v-for=" (test,index) in w_guigePrice " 
                             v-if=" w_specificaList.length <= 1"
                             :key="index">
-                           <div class="fs36" >{{test.values[0]}}</div>
+                           <div class="fs36 spec_div" >{{test.values[0]}}</div>
                             <div class="fs36" v-if="test.inv_num">{{test.inv_num}}</div>
                             <div class="fs36" v-else>0</div>
                             <div class="fs36">{{test.inv_price}}</div>
@@ -390,8 +390,8 @@
                             v-if=" test.specifica_ids[0] == wholesaleId && w_specificaList.length > 1"
                             v-for=" (test,index) in w_guigePrice" 
                             :key="index">
-                            <div class="fs36" v-if="test.values[1]">{{test.values[1]}}</div>
-                            <div class="fs36" v-if="test.values[2]">{{test.values[2]}}</div>
+                            <div class="fs36 spec_div" v-if="test.values[1]">{{test.values[1]}}</div>
+                            <div class="fs36 spec_div" v-if="test.values[2]">{{test.values[2]}}</div>
                             <div class="fs36" v-if="test.inv_num">{{test.inv_num}}</div>
                             <div class="fs36" v-else>0</div>
                             <div class="fs36">{{test.inv_price}}</div>
@@ -413,8 +413,8 @@
                     <span v-if="pifaResult.pfSetObj.isSpHand == 1 && pifaResult.pfSetObj.spHand != '' && w_specNum >= pifaResult.pfSetObj.spHand">满{{pifaResult.pfSetObj.spHand}}手</span>
                     <span v-if="pifaResult.pfSetObj.isSpHand == 0 ">满1手</span>
                     <span v-if="w_specNum  < pifaResult.pfSetObj.spHand">还差{{pifaResult.pfSetObj.spHand-w_specNum }}手达到批发条件</span>
-                    <span class="fs46 shop-font">￥{{pifaTotal | currency}}</span>
-                    <span class="shop-font">.00 </span>共{{pifaAmount}}件
+                    <span class="fs46 style-main-font">￥{{pifaTotal | currency}}</span>
+                    <span class="style-main-font">.00 </span>共{{pifaAmount}}件
                 </div>
                 <div class="fs40 goods-choice-Total fs36 shop-textr" v-else>
                     <!--混批-->
@@ -429,18 +429,18 @@
                         <span v-if="pifaResult.pfSetObj.isHpMoney == 1 && pifaResult.pfSetObj.hpMoney != ''">{{pifaResult.pfSetObj.hpMoney}} 元</span>
                         <span v-if="pifaResult.pfSetObj.isHpNum ==0 && pifaResult.pfSetObj.isHpMoney == 0">1件</span>起批
                     </div>
-                    <span class="fs46 shop-font">￥{{pifaTotal | currency}}</span>
-                    <span class="shop-font">元</span> 共{{pifaAmount}}件
+                    <span class="fs46 style-main-font">￥{{pifaTotal | currency}}</span>
+                    <span class="style-main-font">元</span> 共{{pifaAmount}}件
                 </div>
             </div>
             <div class="goods-dialog-footer" v-if="pifaResult.pfType == 1" >
-                <div class="goods-dialog-button fs52 shop-yellow" 
+                <div class="goods-dialog-button fs52 style-middle-bg" 
                     :class="[w_specNum-pifaResult.pfSetObj.spHand<0?'shopRgba':'']"
                     v-if=" goodsData.isShowAddShopButton == 1"
                     @click="addCard(2,$event)">
                     加入购物车 
                 </div>
-                <div class="goods-dialog-button fs52  shop-bg " 
+                <div class="goods-dialog-button fs52  style-main-bg " 
                    :class="[w_specNum-pifaResult.pfSetObj.spHand<0?'shopRgba':'']"
                    v-if=" goodsData.isShowLiJiBuyButton == 1"
                    @click="lijiBuy(pifaResult.pfType)">
@@ -448,13 +448,13 @@
                 </div> 
             </div>
             <div class="goods-dialog-footer" v-if="pifaResult.pfType == 2" >
-                <div class="goods-dialog-button fs52 shop-yellow " 
+                <div class="goods-dialog-button fs52 style-middle-bg " 
                     :class="[(pifaResult.pfSetObj.hpMoney-pifaTotal > 0 || pifaAmount - pifaResult.pfSetObj.hpNum < 0) ?'shopRgba':'']"
                     v-if=" goodsData.isShowAddShopButton == 1"
                     @click="addCard(2,$event)">
                     加入购物车 
                 </div>
-                <div class="goods-dialog-button fs52  shop-bg "
+                <div class="goods-dialog-button fs52  style-main-bg "
                     :class="[(pifaResult.pfSetObj.hpMoney-pifaTotal > 0 || pifaAmount - pifaResult.pfSetObj.hpNum < 0) ?'shopRgba':'']"
                     v-if=" goodsData.isShowLiJiBuyButton == 1"
                     @click="lijiBuy(pifaResult.pfType)">
@@ -463,6 +463,7 @@
             </div>
         </div>
     </div>
+    <!-- 卡券包弹出框 -->
     <sp-dialog 
         :title="'卡卷包'"
         :visible.sync="isCardRecevie">
@@ -476,6 +477,7 @@
             </div>
         </div>
     </sp-dialog>
+    <shop-photo-dan :photo="dialogImageUrl" :isPhoto.sync="isPhoto" v-if="isPhoto"></shop-photo-dan>
 </div>
 </template>
 <script>
@@ -498,6 +500,8 @@ import filter from "../../../lib/filters"; // 过滤器
 import spDialog from "components/spDialog"; //卡卷包
 import activity from "./js/activity.js"; //卡卷包
 
+import shopPhotoDan from "components/shopPhotoDan"; //显示图片
+
 export default {
   components: {
     defaultImg,
@@ -515,7 +519,8 @@ export default {
     shopCollection,
     groupMethod,
     auctionMethod,
-    goodsFooter
+    goodsFooter,
+    shopPhotoDan
   },
   data() {
     return {
@@ -573,6 +578,8 @@ export default {
       isShowButtom:false,//是否显示底部菜单
       chujiaMoney : 0,//出价金额
       saleMemberId:0,//销售员id
+      isPhoto:"",
+      dialogImageUrl:""//弹出框图片地址
     };
   },
   watch: {
@@ -1267,6 +1274,11 @@ export default {
       let busId = this.$route.params.busId;
       let proId =  this.$route.params.goodsId;
       this.$router.push("/seller/share/"+busId+"/"+proId+"/"+this.saleMemberId);
+    },
+    showImage(image){
+      // this.$refs.goodsFooter.showDialog();
+      this.dialogImageUrl = image;
+      this.isPhoto = true;
     }
     
   },
@@ -1295,7 +1307,8 @@ export default {
 };
 </script>
 
-<style lang="less" >
+<style lang="less">
+
 @import "../../../assets/css/mixins.less";
 @import "../../../assets/css/base.less";
 @import "../../../assets/css/common.less";
@@ -1646,6 +1659,9 @@ export default {
             .ik-box-pack(end);
             width: 30%;
           }
+          .spec_div{
+            max-width: 25%;
+          }
         }
       }
       .goods-choice-option2 {
@@ -1726,6 +1742,7 @@ export default {
           width: 88%;
           em {
             position: relative;
+            margin-bottom: 10/ @dev-Width *1rem;
           }
           i {
             text-align: center;

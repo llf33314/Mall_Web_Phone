@@ -21,6 +21,12 @@ import storeConfig from './vuex/store'
 
 import jq from './lib/jquery-2.2.2.min';
 
+import vueFilter from './lib/vueDirective';
+
+
+import MintUi from 'mint-ui'
+Vue.use(MintUi);
+
 
 //消除移动端300ms延迟
 import FastClick from 'fastclick'

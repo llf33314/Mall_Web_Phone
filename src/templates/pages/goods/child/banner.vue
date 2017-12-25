@@ -18,7 +18,7 @@
         <p class="goods-origin-box">
             <i class="goods-origin " 
             v-for="(img,index) in banner"
-            :class="[index == imgSelecte?'img-selecte':'']"
+            :class="[index == imgSelecte ?style:'']"
             :key="index"></i>
         </p> 
     </div>
@@ -31,7 +31,7 @@ export default {
     Swipe,
     SwipeItem
   },
-  props: ["banner", "imgUrl", "height", "imgCla"],
+  props: ["banner", "imgUrl", "height", "imgCla","colorStyle"],
   data() {
     return {
       imgSelecte: 0,
@@ -43,7 +43,8 @@ export default {
         showIndicators: false, //	指标的可见度
         prevent: false, //如果preventDefault执行touchstart。适用于某些较低版本的Android浏览器（4.2等）
         stopPropagation: false //如果stopPropagation执行touchstart。
-      }
+      },
+      style : "img-selecte"
     };
   },
   methods: {
@@ -61,6 +62,7 @@ export default {
     $("#banner").css({
       height: _height
     });
+    this.style = this.colorStyle || "img-selecte";
   }
 };
 </script>
@@ -115,6 +117,10 @@ export default {
     .img-selecte {
       background: #e4393c;
       width: 14px;
+      .border-radius(20px);
+    }
+    .style-main-bg{
+       width: 14px;
       .border-radius(20px);
     }
   }

@@ -34,7 +34,8 @@ export default {
   components: {},
   methods: {
     returnHomePage() {
-      //跳转到首页 todo
+      //跳转到首页
+      this.$parent.getMemberCenter(this.busId,1);
     }
   }
 };

@@ -176,7 +176,7 @@ export default {
       let url = "";
       let sellerObj = this.sellerObj;
       if (sellerObj.isMallSet == 1) {
-        //进入商城首页
+        //进入销售员首页
         url =
           "/seller/mallindex/" + this.busId + "/" + sellerObj.seller.memberId;
       } else {

@@ -45,7 +45,7 @@
                 </ul>
             </div>
             <div class="my-path">
-                <div class="my-list border">
+                <div class="my-list border" @click="memberCenter(1)">
                     <div>
                         <i class="iconfont icon-8"></i>
                         我的会员
@@ -54,7 +54,7 @@
                         <i class="iconfont icon-jiantou-copy"></i>
                     </div>
                 </div>
-                <div class="my-list border">
+                <div class="my-list border" @click="memberCenter(2)">
                     <div>
                         <i class="iconfont icon-youhuiquan"></i>
                         我的优惠券
@@ -81,7 +81,7 @@
                         <i class="iconfont icon-jiantou-copy"></i>
                     </div>
                 </div>
-                <div class="my-list border">
+                <!-- <div class="my-list border">
                     <div>
                         <i class="iconfont icon-daifahuo"></i>
                         快递查询
@@ -89,7 +89,7 @@
                     <div class="my-right fs32">
                         <i class="iconfont icon-jiantou-copy"></i>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="my-path">
                 <div class="my-list border" @click="toAuction">
@@ -321,7 +321,7 @@ export default {
         return;
       }
       //跳转至批发商品页面
-      this.$router.push("/classify/" + shopId + "/" + busId + "/0/k=k");
+      this.$router.push("/classify/" + shopId + "/" + busId + "/7/k=k");
     },
     //我的订单
     returnMyOrder(type) {
@@ -369,6 +369,11 @@ export default {
         }
       });
       // return shopId;
+    },
+    //跳转到会员中心的页面
+    memberCenter(type) {
+      let busId = this.busId;
+      this.$parent.getMemberCenter(busId,type);
     }
   }
 };

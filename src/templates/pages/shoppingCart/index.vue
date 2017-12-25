@@ -1,6 +1,6 @@
 <template>
 <div id='app' class="shop-wrapper order-wrapper">
-    <header-nav :headers= "homeNav" :status="'cart'" style="z-index:3"></header-nav>
+    <header-nav :headers= "homeNav" :status="'cart'" style="z-index:3" :selectColor="'style-main-font'" :selectbg="'style-main-bg'" ></header-nav>
     <section class="shop-main-no fs40 my-bond" v-if="shopCartList == 1">
         <content-no :statu='bondStatu'></content-no>
     </section>
@@ -10,7 +10,7 @@
                 :key = "i">
                 <div class="order-item-title fs40" @click.self="jupm_cart(cart)">
                     <i  class="iconfont icon-dui"
-                        :class="{'js-font': cart.show}"
+                        :class="{'style-main-bg': cart.show}"
                         @click="select_Goods(cart)"></i>
                     <div class="order-title-img" @click="jupm_cart(cart)">
                       <default-img :background="cart.userImageUrl"
@@ -24,7 +24,7 @@
                     :key="j">
                     <div class="order-shop border">
                         <p class="order-shop-name"  @click.self="jupm_shop(shop)"> 
-                            <i class="iconfont icon-dui" :class="{'js-font':shop.show}"
+                            <i class="iconfont icon-dui" :class="{'style-main-bg':shop.show}"
                             @click="select_Goods(shop)"></i>
                             <i class="iconfont icon-dianpu" @click.self="jupm_shop(shop)"></i>
                             <span class="fs36"  @click.self="jupm_shop(shop)">{{shop.shopName}}</span>
@@ -41,6 +41,7 @@
                             :key="index">
                             <delete-slide class="order-item-content" 
                                 @delete="delete_dialog(1,goods)"
+                                :deletebg="'style-main-bg'"
                                 :scope="index">
                                 <div class="shoopCart-content" :class="{'border': type == 1}">
                                     <div class="order-item-img" >
@@ -49,7 +50,7 @@
                                                     :isHeadPortrait="0">
                                         </default-img>
                                         </a>
-                                        <i class="iconfont icon-dui" :class="{'js-font':goods.show}"
+                                        <i class="iconfont icon-dui" :class="{'style-main-bg':goods.show}"
                                             @click="select_Goods(goods)"></i>
                                     </div>
                                     <div class="order-item-txt">
@@ -57,14 +58,14 @@
                                             @click="jupm_goods(goods)">{{goods.productName}}</p>
                                         <!----------------购物车 未编辑时↓------------------>
                                         <p v-if="!shop.edit && goods.pfType == 1" 
-                                        class="fs42 " :class="[ goods.productHyPrice >0 ?'shopGray':'shop-font']"><span class="fs32">¥</span>{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
+                                        class="fs42 " :class="[ goods.productHyPrice >0 ?'shopGray':'style-main-font']"><span class="fs32">¥</span>{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
                                         <div v-if="!shop.edit && goods.pfType == 0">
                                             <p class="fs36 shopGray">
                                                 <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
                                                 <span>{{goods.productNum}}份</span>
                                             </p>
-                                            <p class="fs42 " :class="[ goods.productHyPrice >0 ?'shopGray':'shop-font']"><span class="fs32">¥</span>{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
-                                            <p class="fs42 shop-font" v-if="goods.productHyPrice>0"><span class="fs32">会员价:¥</span>{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
+                                            <p class="fs42 " :class="[ goods.productHyPrice >0 ?'shopGray':'style-main-font']"><span class="fs32">¥</span>{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
+                                            <p class="fs42 style-main-font" v-if="goods.productHyPrice>0"><span class="fs32">会员价:¥</span>{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
                                         </div>
                                         <!----------------购物车 编辑时↓------------------>
                                         <div class="goods-choice-box2" v-else-if="shop.edit && goods.pfType == 0">
@@ -80,9 +81,9 @@
                                         <!----------------批发购物车 手批↓------------------>
                                         <div v-if=" goods.pfType == 1 && shop.edit">
                                         <p class="fs42 pf1-buttom-box">
-                                            <span  class="shop-font pf1-buttom pf1-buttom-b"
+                                            <span  class="style-main-font pf1-buttom pf1-buttom-b"
                                             @click="addpf1('-',goods)">减一手</span>
-                                            <span class="shop-bg pf1-buttom"
+                                            <span class="style-main-bg pf1-buttom"
                                             @click="addpf1('+',goods)">加一手</span>
                                         </p>
                                         </div>
@@ -102,11 +103,11 @@
                                 <div class="pf2-list border" 
                                     v-for=" (pifa,index) in goods.pifaSpecificaList"
                                     :key="index">
-                                    <i class="iconfont icon-dui" :class="{'js-font':pifa.show}"
+                                    <i class="iconfont icon-dui" :class="{'style-main-bg':pifa.show}"
                                     @click="select_Goods(pifa)"></i>
                                     <p class="pf2-list-spec">
                                         <span class="fs42" style="color:#000">规格 :{{pifa.specificaValues+' X'+pifa.productNum}} </span>
-                                        <span class="shop-font fs36" >¥<i class="fs50">{{pifa.specificaPrice | moneySplit1}}</i>.{{pifa.specificaPrice | moneySplit2}}</span>
+                                        <span class="style-main-font fs36" >¥<i class="fs50">{{pifa.specificaPrice | moneySplit1}}</i>.{{pifa.specificaPrice | moneySplit2}}</span>
                                     </p>
                                     <div class="goods-choice-box2" v-if=" goods.pfType == 2 && shop.edit">
                                         <em class="em-choice" 
@@ -125,12 +126,12 @@
                     </div>
                     <!----店铺小计---->
                     <p class="fs36 pf-min-pifaTotal" v-if="type == 1">
-                        {{shop.num}}件，小计:<span class="shop-font">￥<span class="fs42">{{shop.money | moneySplit1 }}</span>.{{shop.money | moneySplit2 }}</span>
+                        {{shop.num}}件，小计:<span class="style-main-font">￥<span class="fs42">{{shop.money | moneySplit1 }}</span>.{{shop.money | moneySplit2 }}</span>
                     </p>
                 </div>
                 <!----商家小计---->
                 <p class="fs36 cart-min-pifaTotal" v-if="type == 1">
-                       {{cart.num}}件，小计:<span class="shop-font">￥<span class="fs42">{{cart.money|currency | moneySplit1 }}</span>.{{cart.money |currency| moneySplit2 }}</span>
+                       {{cart.num}}件，小计:<span class="style-main-font">￥<span class="fs42">{{cart.money|currency | moneySplit1 }}</span>.{{cart.money |currency| moneySplit2 }}</span>
                 </p>
             </div>
         </div>
@@ -176,12 +177,12 @@
                                             <span v-if="goods.productSpecifica>0">{{goods.productSpecifica}}/</span>
                                             <span>{{goods.productNum}}份</span>
                                         </p>
-                                        <p class="fs42 " :class="[ goods.productHyPrice >0 ?'shopGray':'shop-font']"><span class="fs32">¥</span>{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
-                                        <p class="fs42 shop-font" v-if="goods.productHyPrice>0"><span class="fs32">会员价:¥</span>{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
+                                        <p class="fs42 " :class="[ goods.productHyPrice >0 ?'shopGray':'style-main-font']"><span class="fs32">¥</span>{{goods.productPrice | moneySplit1}}<span class="fs32">.{{goods.productPrice | moneySplit2}}</span></p>
+                                        <p class="fs42 style-main-font" v-if="goods.productHyPrice>0"><span class="fs32">会员价:¥</span>{{goods.productHyPrice|moneySplit1}}<span class="fs32">.{{goods.productHyPrice|moneySplit2}}</span></p>
                                     </div>
                                     <div v-if="type == 1" class="pf-box">
-                                        <p class="fs40 shop-font">{{goods.errorMsg}}</p>
-                                        <p class="fs36 shop-font shop-textr pf1-buttom-box">￥<span class="fs50">{{goods.productPrice|moneySplit1}}</span>.{{goods.productPrice|moneySplit2}}
+                                        <p class="fs40 style-main-font">{{goods.errorMsg}}</p>
+                                        <p class="fs36 style-main-font shop-textr pf1-buttom-box">￥<span class="fs50">{{goods.productPrice|moneySplit1}}</span>.{{goods.productPrice|moneySplit2}}
                                             <span class="fs50">X{{goods.productNum}}</span>
                                         </p>
                                     </div>
@@ -197,7 +198,7 @@
                     </div>
                 </div>
             </div>
-            <div class="fs42 sxorder-button" 
+            <div class="fs42 sxorder-button style-main-border" 
                 @click="delete_dialog(2)">清空失效商品
             </div>
         </div>
@@ -221,16 +222,16 @@
             </div>
             <div class="shopping-footer-l fs40">
                 <i class="iconfont icon-dui"
-                :class="{'js-font':isPifaAmount}"
+                :class="{'style-main-bg':isPifaAmount}"
                 @click="select_PifaAmount()"
                 ></i>
-                合计：<span class="shop-font">￥{{pifaTotal | currency}}</span>
+                合计：<span class="style-main-font">￥{{pifaTotal | currency}}</span>
             </div>
             <div class="shopping-footer-r">
-                <div class="shopping-buttom fs50 shop-yellow" @click="choose()">
+                <div class="shopping-buttom fs50 style-middle-bg" @click="choose()">
                     继续选购
                 </div>
-                <div class="shopping-buttom fs50 shop-bg" @click="settlementAjax(1)">
+                <div class="shopping-buttom fs50 style-main-bg" @click="settlementAjax(1)">
                     去结算({{pifaAmount}})
                 </div>
             </div>
@@ -1018,6 +1019,7 @@ export default {
 <style lang="less" scoped>
 @import '../../../assets/css/mixins.less';
 @import '../../../assets/css/base.less';
+@import '../../../assets/css/common.less';
 .order-main{
     padding-top: 148/@dev-Width *1rem;
     padding-bottom: 360/@dev-Width *1rem;;
@@ -1128,9 +1130,6 @@ export default {
         margin-right: 20/@dev-Width *1rem;
         padding: 3px;
         z-index: 1;
-    }
-    .js-font{
-        background: #e4393c!important;
     }
     .order-box{
         width: 100%;

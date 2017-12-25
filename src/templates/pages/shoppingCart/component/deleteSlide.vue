@@ -12,6 +12,7 @@
           </div>
           <div class="remove" 
                 ref='remove' 
+                :class="[deletebg != '' ? deletebg : '']"
                 @click.self="deleteData">
                 删除
           </div>
@@ -31,6 +32,10 @@
         titles:{
             type:String,
             default:'商品'
+        },
+        deletebg:{
+            type : String,
+            default: ''
         }
     },
     data() {
@@ -128,6 +133,7 @@
     }
    }
 </script>
+
 
 <style scoped lang="less" scoped>
 @import "../../../../assets/css/mixins.less";

@@ -57,7 +57,7 @@ Vue.mixin({
                             return
                         }
                         //需要刷新本页面
-                        if(res.data.code == 1002 || res.data.code == 1005){
+                        if(res.data.code == 1005){
                             window.location.reload(); 
                             return
                         }
@@ -96,7 +96,7 @@ Vue.mixin({
                 }
     
             }).catch(function (error) {
-                console.log(error);
+                console.log(error,"------",opts.url);
                 if (opts.error) {
                     opts.error(error);
                 } else {

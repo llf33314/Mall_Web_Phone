@@ -44,16 +44,8 @@ export default {
   methods: {
     //逛商城
     lockMall() {
-      let _this = this;
-      _this.ajaxRequest({
-        url: h5App.activeAPI.mall_index_post,
-        data: { busId: _this.$route.params.busId, shopId: 0 },
-        success: function(data) {
-          if (data.pageId > 0) {
-            //todo跳转至首页
-          }
-        }
-      });
+      let busId = this.$route.params.busId;
+      this.$parent.getMemberCenter(busId,type);
     }
   }
 };

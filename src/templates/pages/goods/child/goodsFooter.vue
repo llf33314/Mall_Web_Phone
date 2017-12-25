@@ -1,10 +1,10 @@
 <template>
   <div class="goods-content-nav">
     <p class="goods-nav border">
-        <span class="fs40">店铺主页</span>
+        <span class="fs40" @click="home">店铺主页</span>
         <span class="fs40" @click="myCenter">会员中心</span>
-        <span class="fs40">关注我们</span>
-        <span class="fs40">线下门店</span>
+        <span class="fs40" v-if="qrcodeUrl != ''" @click="showDialog">关注我们</span>
+        <span class="fs40" @click="toShop">线下门店</span>
     </p>
     <!---技术认证---->
     <technical-support v-if="$store.state.isAdvert == 1"></technical-support>
@@ -15,7 +15,7 @@
 import technicalSupport from "components/technicalSupport"; //技术支持
 
 export default {
-  props: ["row"],
+  props: ["row", "qrcodeUrl"],
   components: {
     technicalSupport
   },
@@ -32,7 +32,20 @@ export default {
   },
   methods: {
     myCenter() {
-      this.$router.push("/my/center/" + this.$route.params.busId);
+      let busId = this.$route.params.busId;
+      this.$parent.$parent.getMemberCenter(busId, 1);
+    },
+    home() {
+      let busId = this.$route.params.busId;
+      let shopId = this.$route.params.shopId;
+      this.$parent.$parent.getPageId(busId, shopId, true);
+    },
+    toShop() {
+      let busId = this.$route.params.busId;
+      this.$router.push("/stores/" + busId);
+    },
+    showDialog() {
+      this.$parent.showImage(this.qrcodeUrl);
     }
   },
   mounted() {}

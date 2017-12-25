@@ -66,7 +66,7 @@
                             <div class="order-item-txt">
                                 <p class="fs42 text-overflow"  @click="toProductDetail(product,bus.busId)">{{product.productName}}</p>
                                 <p class="fs36 shopGray" v-if="product.productSpecificaValue != null">{{product.productSpecificaValue}}</p>
-                                <div class="fs42 shop-font orderTotal-money">
+                                <div class="fs42 style-main-font orderTotal-money">
                                     <div>
                                       <p  v-if="product.productOldPrice > product.productPrice && orderData.type > 0" style="margin-bottom:0" >
                                         <span class="span-block">原价：</span>
@@ -86,7 +86,7 @@
                         <div class="border orderTotal-list-box" v-if="product.pfSpecResultList != null && product.pfSpecResultList.length > 0">
                           <div class=" clearfix pf-div" v-for="pfSpec in product.pfSpecResultList">
                             <p class="fs40 shop-fl pf-spec-left">规格：{{pfSpec.specificaValues}} X {{pfSpec.totalNum}}</p>
-                            <div class="fs40 shop-fr text-overflow pf-spec-right shop-font" >批发价：{{pfSpec.pfPrice}}元</div>
+                            <div class="fs40 shop-fr text-overflow pf-spec-right style-main-font" >批发价：{{pfSpec.pfPrice}}元</div>
                           </div>
                         </div>
                     </div>
@@ -152,7 +152,7 @@
                         <div class="orderTotal-list border" v-if="bus.isCanUseUnionDiscount == 1 && bus.unionStatus == 1"  >
                               <p class="fs40">联盟折扣</p>
                               <p class="fs40">
-                                  <input class="switch small-switch shop-switch" type="checkbox" value="1"
+                                  <input class="switch small-switch  style-witch" type="checkbox" value="1"
                                     v-model="bus.isSelectUnion" 
                                     @change="caculationOrder(1)"/>
                               </p>
@@ -160,20 +160,20 @@
                           <div class="orderTotal-list border" v-if="bus.isCanUseMemberDiscount == 1">
                               <p class="fs40">会员折扣</p>
                               <p class="fs40">
-                                  <input class="switch small-switch shop-switch" type="checkbox" value="1"
+                                  <input class="switch small-switch  style-witch" type="checkbox" value="1"
                                     v-model="bus.isSelectDiscount" 
                                     @change="caculationOrder(2)"/>
                               </p>
                           </div>
                           <div class="orderTotal-list border" v-if="bus.isCanUseFenbiDiscount == 1">
                               <p class="fs40"> 粉币抵扣
-                                <em class="shop-font" v-if="bus.fenbiMoney > 0 && bus.fenbiNum > 0 && bus.fenbiDisabled == 0">
+                                <em class="style-main-font" v-if="bus.fenbiMoney > 0 && bus.fenbiNum > 0 && bus.fenbiDisabled == 0">
                                   有{{bus.fenbiNum}}粉币，可抵扣¥{{bus.fenbiMoney}}
                                 </em>
-                                <em class="shop-font" v-else>不可用</em>
+                                <em class="style-main-font" v-else>不可用</em>
                               </p>
                               <p class="fs40">
-                                  <input class="switch small-switch shop-switch" type="checkbox" value="1"
+                                  <input class="switch small-switch style-witch" type="checkbox" value="1"
                                     :disabled = "bus.fenbiDisabled == 1 ? true : false"
                                     v-model="bus.isSelectFenbi"
                                     @change="caculationOrder(3)"/>
@@ -181,13 +181,13 @@
                           </div>
                           <div class="orderTotal-list border" v-if="bus.isCanUseJifenDiscount == 1">
                               <p class="fs40">积分抵扣
-                                <em class="shop-font" v-if="bus.jifenMoney > 0 && bus.jifenNum > 0 && bus.jifenDisabled == 0">
+                                <em class="style-main-font" v-if="bus.jifenMoney > 0 && bus.jifenNum > 0 && bus.jifenDisabled == 0">
                                   有{{bus.jifenNum}}积分，可抵扣¥{{bus.jifenMoney}}
                                 </em>
-                                <em class="shop-font" v-else>不可用</em>
+                                <em class="style-main-font" v-else>不可用</em>
                               </p>
                               <p class="fs40">
-                                  <input class="switch small-switch shop-switch" type="checkbox" value="1"
+                                  <input class="switch small-switch style-witch" type="checkbox" value="1"
                                   :disabled = "bus.jifenDisabled == 1 ? true : false"
                                     v-model="bus.isSelectJifen" 
                                     @change="caculationOrder(4)"/>
@@ -208,36 +208,36 @@
                 <div class="deltails-del border" style="padding-top: 0.2rem;">
                     <p class="fs40">
                         <span>商品金额</span>
-                        <span class="shop-font">￥{{bus.productTotalMoney}}</span>
+                        <span class="style-main-font">￥{{bus.productTotalMoney}}</span>
                     </p>
                     <p class="fs40" v-if="bus.productFreightMoney != null && bus.productFreightMoney > 0">
                         <span>运费</span>
-                        <span class="shop-font">+￥{{bus.productFreightMoneyOld }}</span>
+                        <span class="style-main-font">+￥{{bus.productFreightMoneyOld }}</span>
                     </p>
                     <p class="fs40" v-if="bus.isCanUseUnionDiscount == 1 && bus.unionYouhuiMoney > 0">
                         <span>联盟折扣</span>
-                        <span class="shop-font">-￥{{bus.unionYouhuiMoney > 0 ? bus.unionYouhuiMoney : 0}}</span>
+                        <span class="style-main-font">-￥{{bus.unionYouhuiMoney > 0 ? bus.unionYouhuiMoney : 0}}</span>
                     </p>
                     <p class="fs40" v-if="bus.isCanUseMemberDiscount == 1 && bus.memberYouhuiMoney  > 0">
                         <span>会员折扣</span>
-                        <span class="shop-font">-￥{{bus.memberYouhuiMoney  > 0 ? bus.memberYouhuiMoney : 0 }}</span>
+                        <span class="style-main-font">-￥{{bus.memberYouhuiMoney  > 0 ? bus.memberYouhuiMoney : 0 }}</span>
                     </p>
                     <p class="fs40" v-if="bus.isCanUseYhqDiscount == 1 && bus.couponYouhuiMoney > 0">
                         <span>优惠券抵扣</span>
-                        <span class="shop-font">-￥{{bus.couponYouhuiMoney > 0 ? bus.couponYouhuiMoney : 0}}</span>
+                        <span class="style-main-font">-￥{{bus.couponYouhuiMoney > 0 ? bus.couponYouhuiMoney : 0}}</span>
                     </p>
                     <p class="fs40" v-if="bus.isCanUseFenbiDiscount == 1 && bus.fenbiYouhuiMoney && bus.fenbiDisabled == 0">
                         <span>粉币抵扣</span>
-                        <span class="shop-font">-￥{{bus.fenbiYouhuiMoney > 0 ? bus.fenbiYouhuiMoney : 0}}</span>
+                        <span class="style-main-font">-￥{{bus.fenbiYouhuiMoney > 0 ? bus.fenbiYouhuiMoney : 0}}</span>
                     </p>
                     <p class="fs40" v-if="bus.isCanUseJifenDiscount == 1 && bus.jifenYouhuiMoney > 0 && bus.jifenDisabled == 0">
                         <span>积分抵扣</span>
-                        <span class="shop-font">-￥{{bus.jifenYouhuiMoney > 0 ? bus.jifenYouhuiMoney : 0}}</span>
+                        <span class="style-main-font">-￥{{bus.jifenYouhuiMoney > 0 ? bus.jifenYouhuiMoney : 0}}</span>
                     </p>
                 </div>
                 <div class="deltails-money fs40">
                     共计{{bus.totalNum}}件商品 小计：
-                    <span class="shop-font">￥<i class="fs52">{{bus.totalMoney | moneySplit1}}</i>.{{bus.totalMoney | moneySplit2}}</span>
+                    <span class="style-main-font">￥<i class="fs52">{{bus.totalMoney | moneySplit1}}</i>.{{bus.totalMoney | moneySplit2}}</span>
                 </div>
             </div>
 
@@ -259,12 +259,12 @@
     <section class="orderTotal-footer clearfix" v-if="orderList != null && orderList.length > 0">
         <div class="orderTotal-fr fs40 ">
             <!-- 实际支付的价格 -->
-            <p>合计：<span class="shop-font">￥{{orderData.totalPayMoney | moneySplit1}}</i>.{{orderData.totalPayMoney | moneySplit2}}</span></p>
+            <p>合计：<span class="style-main-font">￥{{orderData.totalPayMoney | moneySplit1}}</i>.{{orderData.totalPayMoney | moneySplit2}}</span></p>
             <!-- 优惠前的价格 -->
             <span>总额:￥{{orderData.totalMoney | moneySplit1}}</i>.{{orderData.totalMoney | moneySplit2}}</span>
             <span>总优惠:￥{{orderData.totalYouHuiMoney | moneySplit1}}</i>.{{orderData.totalYouHuiMoney | moneySplit2}}</span>
         </div>
-        <div class="orderTotal-button fs40 shop-bg" @click="submitOrder">
+        <div class="orderTotal-button fs40 style-main-bg" @click="submitOrder">
             提交订单
         </div>
     </section>
@@ -317,7 +317,7 @@
                 </div> -->
             </div>
            <div class="dialog-bottom">
-                <span class="fs50 dialog-button2" 
+                <span class="fs50 dialog-button2 style-main-bg" 
                     @click="confirmPhone()"
                     >提交订单
                 </span>

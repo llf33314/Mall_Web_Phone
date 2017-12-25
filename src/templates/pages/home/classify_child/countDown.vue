@@ -2,18 +2,18 @@
     <div v-if="isShow">
       <div class="fs36 classify-time shopGray" v-if="type == 1" >
               距结束<span>{{time.DD}}天</span>
-              <em v-text="time.HH"></em> :
-              <em v-text="time.mm"></em> :
-              <em v-text="time.ss"></em>
+              <em v-text="time.HH" :class="[countBg != '' ? countBg : '']"></em> :
+              <em v-text="time.mm" :class="[countBg != '' ? countBg : '']"></em> :
+              <em v-text="time.ss" :class="[countBg != '' ? countBg : '']"></em>
       </div>
       <!-- 团购详情页面引用 地址：groupbuy/groupbuydetail.vue -->
         <div class="group-goods-time"  v-if="type == 2">
           <span class="fs36">距离结束</span>
           <span class="fs36">
-          <em v-text="time.DD"></em> 天
-          <em v-text="time.HH"></em>时
-          <em v-text="time.mm"></em>分
-          <em v-text="time.ss"></em>秒
+          <em v-text="time.DD" :class="[countBg != '' ? countBg : '']"></em> 天
+          <em v-text="time.HH" :class="[countBg != '' ? countBg : '']"></em>时
+          <em v-text="time.mm" :class="[countBg != '' ? countBg : '']"></em>分
+          <em v-text="time.ss" :class="[countBg != '' ? countBg : '']"></em>秒
           </span>
       </div>
       <!-- 团购详情页面引用 地址：groupbuy/groupbuydetail.vue -->
@@ -41,6 +41,10 @@ export default {
       type: Number,
       default: 1,
       required: false
+    },
+    countBg:{
+      type:String,
+      default: ""
     }
   },
   data() {

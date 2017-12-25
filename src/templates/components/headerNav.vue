@@ -4,24 +4,27 @@
             <div class="header-itme"  
                 v-for="header in headers"
                 @click="selects(header.id)"
-                :class="{'shop-font':header.id == selectNav}"
+                :class="[header.id == selectNav ? selectFontColor : '']"
                 :key = "header.id">
                 <p v-text="header.name"></p>
-                <em class="shop-bg"></em>
+                <em :class="[selectbg ? selectbg : 'shop-bg']"></em>
             </div>
         </div>
     </div> 
 </template>
 <script>
 export default {
-  props: ["headers", "status"],
+  props: ["headers", "status", "selectColor","selectbg"],
   data: function() {
     return {
-      selectNav: ""
+      selectNav: "",
+      selectFontColor: "shop-font"
     };
   },
   mounted() {
     this.selectNav = this.$route.params.type || 0;
+    this.selectFontColor = this.selectColor || "shop-font";
+    console.log(this.selectFontColor,"selectFontColor",this.selectNav)
   },
   watch: {
     $route() {
@@ -92,6 +95,11 @@ export default {
       display: block;
       text-align: center;
     }
+  }
+}
+.style-main-font{
+  em{
+    display: block!important;
   }
 }
 </style>

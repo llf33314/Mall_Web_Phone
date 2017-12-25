@@ -55,7 +55,7 @@ export default {
         status: false,
         url: h5App.activeAPI.phonePage_getCustomer_post,
         data: {
-          shopId: _shopId //todo 参数没有
+          shopId: _shopId 
         },
         success: function(data) {
           if (data.code != 0) {

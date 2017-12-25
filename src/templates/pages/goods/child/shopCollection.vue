@@ -18,15 +18,15 @@
             </div>
         </div>
         <div class="goods-shop-rigtn">
-            <div class="shopborder goods-shop-buttom fs42" 
+            <div class="style-main-border goods-shop-buttom fs42" 
                 v-if="!data.isCollect"
                 @click="collectProductAjax()">收藏商品
             </div>
-            <div class="shopborder goods-shop-buttom fs42"
+            <div class="style-main-border goods-shop-buttom fs42"
                 @click="collectProductAjax()"
                 v-else>已收藏
             </div>
-            <div class="shopborder goods-shop-buttom fs42" 
+            <div class="style-main-border goods-shop-buttom fs42" 
             @click="shop()">进店逛逛td
                 <!-- (跳首页) -->
             </div>

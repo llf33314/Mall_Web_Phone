@@ -75,6 +75,8 @@
     delete_collect_post: '/phoneMember/L6tgXlBFeK/deleteCollect',
     /*是否需要登陆 */
     is_login_post: '/phoneMember/L6tgXlBFeK/isLogin',
+    /*获取会员中心的地址 */ 
+    get_member_post: '/phoneMember/L6tgXlBFeK/memberCenter',
     /*获取店铺风格接口 */
     getShopStyle_post: '/phonePage/L6tgXlBFeK/getShopStyle',
     /***********************   以下接口都是 商品分类页面相关接口 ***********************/
@@ -122,8 +124,6 @@
     phoneShopCart_removeShopCart_post: '/phoneShopCart/L6tgXlBFeK/removeShopCart',
     /*去结算接口 */
     phoneShopCart_shopCartOrder_post: '/phoneShopCart/L6tgXlBFeK/shopCartOrder',
-    /*获取商城首页数据 */
-    mall_index_post: '/phonePage/L6tgXlBFeK/getHomePageId',
     /***********************   以下接口都是 订单相关的接口 ***********************/
     /*获取我的订单数据 */
     order_list_post: '/phoneOrder/L6tgXlBFeK/orderList',

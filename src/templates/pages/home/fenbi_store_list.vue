@@ -3,12 +3,12 @@
     <div class="head-div">
        <i class="iconfont icon-jiantou-copy1" @click="back"></i>
        <div>
-         <p>粉币商城</p>
-         <p>首页</p>
+         <p class="title_p">粉币商城</p>
+         <!-- <p class="title_index">首页</p> -->
        </div>
     </div>
     <div class="store-div">
-      <div class="stores-item" v-for="(item,index) in shopData" :key="index" @click="detail(item)">
+      <div class="stores-item" v-for="(item,index) in shopData" :key="index"  @click="toPage(item)">
         <div class="item-center">
           <div class="fs50 first-div">{{item.shopName}}</div>
           <p class="fs44 add_p">{{item.address}}</p>
@@ -66,10 +66,11 @@ export default {
       window.history.go(-1);
     },
     //进入粉币商品列表
-    detail(item) {
-      let id = item.id;
+    toPage(item) {
+      let shopId = item.id;
       let busId = this.$route.params.busId;
-      this.$router.push("/classify/" + id + "/" + busId + "/5/k=k");
+      this.$parent.getPageId(busId, shopId, true);
+      // this.$router.push("/classify/" + id + "/" + busId + "/5/k=k");
     }
   },
   beforeDestroy() {
@@ -78,17 +79,20 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import "../../../assets/css/mixins.less";
 @import "../../../assets/css/base.less";
 @import "../../../assets/css/common.less";
 .stores-wrapper {
   height: 100%;
+  background: url("../../../assets/img/fenbi_store_bg.jpg") no-repeat;
+  background-size: cover;
   .head-div {
     height: 140/@dev-Width *1rem;
     .ik-box;
     .ik-box-pack(center);
     .ik-box-align(center);
+    color: #fff;
     div {
       .fs50;
       width: 18%;
@@ -100,12 +104,12 @@ export default {
       .ik-box;
       .ik-box-pack(justify);
       .ik-box-align(center);
-      p:first-child {
+      p.title_p {
         width: 40%;
         text-align: left;
 
       }
-      p:last-child{
+      p.title_index{
         width: 20%;
         text-align: right;
       }

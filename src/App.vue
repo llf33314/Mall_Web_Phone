@@ -62,7 +62,7 @@ export default {
     browser_type() {
       let browser = this.commonFn.checkPlatform();
       browser === "Messenger" ? (this.Messenger = 1) : (this.Messenger = 99);
-    }, 
+    },
     //获取页面样式
     getShopStyle() {
       let busId = this.$route.params.busId || sessionStorage.getItem("busId");
@@ -76,18 +76,19 @@ export default {
           let myData = data.data;
           if (myData != null && myData.length > 0) {
             _this.style = "<style>";
-            _this.style += ".style-main-bg{ background: "+myData[0]+";color: #fff;}";
-            _this.style += ".style-main-font{color:"+myData[0]+";}";
-            if(myData.length > 1){
-              _this.style += ".style-middle-bg{ background: "+myData[1]+";color: #fff;}";
-              _this.style += ".style-middle-font{color: "+myData[1]+";}";
+            _this.style +=  ".style-main-bg{ background: " +  myData[0] + "!important;color: #fff;}";
+            _this.style += ".style-main-font{color:" + myData[0] + "!important;}";
+            _this.style += ".style-witch:checked{border-color:" +  myData[0] +  "!important;background-color:" +  myData[0] +  "!important;}";
+            _this.style += ".style-main-border{color:" + myData[0] + "!important;border:1px solid " +  myData[0] + "!important;}";
+            if (myData.length > 1) {
+              _this.style += ".style-middle-bg{ background: " +  myData[1] + "!important;color: #fff;}";
+              _this.style += ".style-middle-font{color: " + myData[1] + "!important;}";
             }
-            if(myData.length > 2){
-              _this.style += ".style-right-bg{ background: "+myData[2]+";color: #000;}";
-              _this.style += ".style-right-font{color: "+myData[2]+";}";
+            if (myData.length > 2) {
+              _this.style +=  ".style-right-bg{ background: " + myData[2] +  "!important;color: #000;}";
+              _this.style += ".style-right-font{color: " + myData[2] + "!important;}";
             }
             _this.style += "</style>";
-            console.log( _this.style," _this.style")
           }
         }
       });
@@ -118,6 +119,8 @@ export default {
       let _this = this;
       busId =
         busId || this.$route.params.busId || sessionStorage.getItem("busId");
+      shopId =
+        shopId || this.$route.params.shopId || sessionStorage.getItem("shopId");
       let saleMemberId = this.getSaleMemberId();
       if (this.commonFn.isNotNull(saleMemberId) && saleMemberId > 0) {
         this.$router.push("/seller/mallindex/" + busId + "/" + saleMemberId);
@@ -127,25 +130,49 @@ export default {
         url: h5App.activeAPI.get_home_page_id_post,
         data: {
           busId: busId,
-          shopId:
-            shopId ||
-            this.$route.params.shopId ||
-            sessionStorage.getItem("shopId")
+          shopId: shopId
         },
         success: function(data) {
           let datas = data.data;
           let pageId = data.data.pageId;
           if (pageId != null && pageId != "" && typeof pageId != "undefined") {
             sessionStorage.setItem("pageId", pageId);
+            sessionStorage.setItem("shopId", shopId);
             _this.$store.commit("mutationData", { pageId: pageId });
             if (isReturn) {
               //跳转首页
+              _this.$refs.bubble.show_tips("开发中敬请期待");
             }
             return;
           }
         }
       });
       //return pageId;
+    },
+    //跳转会员中心地址
+    getMemberCenter(busId, type) {
+      let _this = this;
+      let _commonFn = this.commonFn.isNotNull;
+      busId =
+        busId || this.$route.params.busId || sessionStorage.getItem("busId");
+      _this.ajaxRequest({
+        url: h5App.activeAPI.get_member_post,
+        data: {
+          busId: busId
+        },
+        success: function(data) {
+          let myData = data.data;
+          if (type == 1 && _commonFn(myData.memberCenterUrl)) {
+            //跳转到会员中心
+            location.href = myData.memberCenterUrl;
+            return;
+          } else if (type == 2 && _commonFn(myData.memberCouponUrl)) {
+            //我的优惠券
+            location.href = myData.memberCouponUrl;
+            return;
+          }
+        }
+      });
     },
     loadData() {
       let busId = this.$route.params.busId || sessionStorage.getItem("busId");
