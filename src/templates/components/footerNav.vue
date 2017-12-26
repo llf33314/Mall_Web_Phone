@@ -50,7 +50,7 @@ export default {
           statu: "my",
           title: "my",
           isSelect: false,
-          selectArr: ["my"]
+          selectArr: ["my","order/list"]
         }
       ],
       isShow: "",
