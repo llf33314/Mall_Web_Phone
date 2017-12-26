@@ -66,6 +66,9 @@ export default {
     //获取页面样式
     getShopStyle() {
       let busId = this.$route.params.busId || sessionStorage.getItem("busId");
+      if(busId == 0){
+        return;
+      }
       let _this = this;
       _this.ajaxRequest({
         url: h5App.activeAPI.getShopStyle_post,
@@ -95,6 +98,9 @@ export default {
     },
     //获取店铺id
     getShopId(busId) {
+      if(busId == 0 ){
+        return null;
+      }
       let _this = this;
       _this.ajaxRequest({
         url: h5App.activeAPI.get_shop_id_post,
@@ -121,6 +127,9 @@ export default {
         busId || this.$route.params.busId || sessionStorage.getItem("busId");
       shopId =
         shopId || this.$route.params.shopId || sessionStorage.getItem("shopId");
+      if(busId == 0){
+        return;
+      }
       let saleMemberId = this.getSaleMemberId();
       if (this.commonFn.isNotNull(saleMemberId) && saleMemberId > 0) {
         this.$router.push("/seller/mallindex/" + busId + "/" + saleMemberId);
@@ -142,7 +151,7 @@ export default {
             if (isReturn) {
               //跳转首页
               // _this.$refs.bubble.show_tips("开发中敬请期待");
-              _this.$router.push("/"+pageId);
+              _this.$router.push("/index/"+pageId);
             }
             return;
           }
@@ -156,6 +165,9 @@ export default {
       let _commonFn = this.commonFn.isNotNull;
       busId =
         busId || this.$route.params.busId || sessionStorage.getItem("busId");
+      if(busId == 0){
+        return 0;
+      }
       _this.ajaxRequest({
         url: h5App.activeAPI.get_member_post,
         data: {

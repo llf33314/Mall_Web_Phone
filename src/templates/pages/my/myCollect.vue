@@ -73,7 +73,6 @@ export default {
     };
   },
   mounted() {
-    console.log("1111111111");
     this.commonFn.setTitle("我的收藏");
     this.$store.commit("show_footer", false); //隐藏底部导航栏
     this.load();

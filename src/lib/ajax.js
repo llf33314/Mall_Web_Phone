@@ -56,14 +56,18 @@ Vue.mixin({
                             location.href = res.data.url;
                             return
                         }
-                        //需要刷新本页面
-                        if(res.data.code == 1005){
-                            window.location.reload(); 
+                        //商家已过期（需要跳转）
+                        if(res.data.code == 1004 || res.data.code == 1007){
+                            let busId = vm.$route.params.busId || sessionStorage.getItem("busId") || 0;
+                            vm.$router.push({path:"/error/404/"+busId});
                             return
                         }
-                        //商家已过期（需要跳转）
-                        if(res.data.code == 1004){
-                            return
+                        //链接已过期/模块已删除
+                        if(res.data.code == 1025){
+                            console.log(vm.$router)
+                            let busId = vm.$route.params.busId || sessionStorage.getItem("busId") || 0;
+                            vm.$router.push({path:"/error/url/"+busId});
+                            return;
                         }
                         //请求失败 1 请求数据为空1000  参数传值不完整1003
                         //商品已被删除或未上架1006  店铺已被删除1007 活动被删除1011

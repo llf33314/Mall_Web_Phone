@@ -3,12 +3,18 @@
         <div class="user-head-portrait" 
             :style="{backgroundImage: 'url(' + background + ')'}">
         </div>
-        <img src="../../assets/img/default.png"
+        <!-- <img src="../../assets/img/default.png"
              class="default-img"
              v-if="isHeadPortrait==1 && background == undefined"></img>
         <img src="../../assets/img/kuaidiyuan.png"
              class="default-img"
-             v-if="isHeadPortrait==0 && background == undefined"></img>
+             v-if="isHeadPortrait==0 && background == undefined"></img> -->
+            <div v-if="isHeadPortrait==0 && background == undefined" class="default-img">
+                 <i class="iconfont icon-tupianjiazaizhong-" style="color:#d6d6d6;"></i>
+            </div>
+            <div v-if="isHeadPortrait==1 && background == undefined" class="default-img">
+                 <i class="iconfont icon-ren1"></i>
+            </div>
     </div>
 </template>
 <script>
@@ -49,5 +55,14 @@ export default {
     top: 0;
     left: 0;
     z-index: 0;
+    line-height: 1;
+    .ik-box;
+    .ik-box-pack(center);
+    .ik-box-align(center);
+    .iconfont{
+        font-size: 200/@dev-Width *1rem;
+        // color: #d6d6d6;
+        color: #fff;
+    }
 }
 </style>

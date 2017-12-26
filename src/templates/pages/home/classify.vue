@@ -473,6 +473,9 @@ export default {
             }
         }
     }
+    .classify-content1,.classify-conten2{
+        -webkit-overflow-scrolling: touch;
+    }
     .classify-content1{
         width: 100%;
         position: relative;

@@ -11,7 +11,10 @@
             <!-- 这部分放你要渲染的那些内容 --> 
             <swipe-item  v-for="(item,index) in banner"  :key="item[index]">
                 <div class="goods-img">
-                    <img :src="imgUrl+item.imageUrl" :class="[imgCla == 'cla-img'?'cla-img':'img']">
+                    <img :src="imgUrl+item.imageUrl" :class="[imgCla == 'cla-img'?'cla-img':'img']" v-if="item.imageUrl != ''">
+                    <div v-else >
+                      <i class="iconfont icon-tupianjiazaizhong-"></i>
+                    </div>
                 </div>
             </swipe-item> 
        </swipe>
@@ -97,6 +100,10 @@ export default {
       left: 50%;
       -webkit-transform: translate(-50%, -50%) !important;
       transform: translate(-50%, -50%) !important;
+    }
+    .icon-tupianjiazaizhong-{
+      font-size: 300 /@dev-Width *1rem;
+      color: #d6d6d6;
     }
   }
   .goods-origin-box {

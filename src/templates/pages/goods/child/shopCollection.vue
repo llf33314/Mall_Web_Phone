@@ -27,7 +27,7 @@
                 v-else>已收藏
             </div>
             <div class="style-main-border goods-shop-buttom fs42" 
-            @click="shop()">进店逛逛td
+            @click="toShop()">进店逛逛td
                 <!-- (跳首页) -->
             </div>
         </div>
@@ -78,8 +78,11 @@ export default {
         /**
         进店逛逛
          */
-        shop(){
-            
+        toShop(){
+            let busId = this.$route.params.busId;
+            let shopId = this.$route.params.shopId;
+            // console.log(this.$parent)
+            this.$parent.$parent.getPageId(busId,shopId);
         }
     },
     mounted () {

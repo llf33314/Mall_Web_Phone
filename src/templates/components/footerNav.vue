@@ -22,10 +22,10 @@ export default {
         {
           name: "首页",
           icon: "icon-shouye",
-          statu: "home",
-          title: "home",
+          statu: "index",
+          title: "index",
           isSelect: false,
-          selectArr: ["home", "seller/mallindex"]
+          selectArr: ["index", "seller/mallindex"]
         },
         {
           name: "分类",
@@ -65,7 +65,7 @@ export default {
     this.isSelect();
   },
   watch: {
-    router() {
+    $route(a, b) {
       //   let _nav = window.location.hash.split("/")[1];
       //   this.isShow = _nav;
       this.isSelect();
@@ -82,29 +82,29 @@ export default {
         for (let i = 0; i < this.footerData.length; i++) {
           let obj = this.footerData[i];
           let selectArr = obj.selectArr;
-          let isBreak = false;
-          //点亮的链接
-          for (let j = 0; j < selectArr.length; j++) {
-            if (url1 == selectArr[j] || url2 == selectArr[j]) {
-              obj.isSelect = true;
-              this.$set(this.footerData, i, obj);
-              isBreak = true;
-              break;
+          let isSelect = false;
+          obj.isSelect = false;
+          if (!isSelect) {
+            //点亮的链接
+            for (let j = 0; j < selectArr.length; j++) {
+              if (url1 == selectArr[j] || url2 == selectArr[j]) {
+                obj.isSelect = true;
+                isSelect = true;
+                break;
+              }
             }
           }
-          if (isBreak) {
-            break;
-          }
+          this.$set(this.footerData, i, obj);
         }
       }
     },
     //清空点亮
-    clearSelect(){
-       for (let i = 0; i < this.footerData.length; i++) {
-          let obj = this.footerData[i];
-          obj.isSelect = false;
-         this.$set(this.footerData, i, obj);
-       }
+    clearSelect() {
+      for (let i = 0; i < this.footerData.length; i++) {
+        let obj = this.footerData[i];
+        obj.isSelect = false;
+        this.$set(this.footerData, i, obj);
+      }
     },
     /** 
          * 获取底部菜单
@@ -140,10 +140,10 @@ export default {
       this.isShow = name;
       let busId = this.$route.params.busId || this.$store.state.busId;
       let shopId = this.$route.params.shopId || this.$store.state.shopId;
-      console.log(name, shopId, busId);
-      if (name == "home") {
-        //this.$router.push('/home/'+shopId+'/'+busId);
-        this.$parent.getPageId(busId,shopId,true);
+      // console.log(name, shopId, busId);
+      if (name == "index") {
+        // this.$router.push('/index/'+shopId+'/'+busId);
+        this.$parent.getPageId(busId, shopId, true);
       } else if (name == "classify") {
         this.$router.push("/classify/" + shopId + "/" + busId + "/" + "0/k=k");
       } else if (name == "cart") {

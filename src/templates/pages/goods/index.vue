@@ -534,7 +534,8 @@ export default {
       webPath: "",
       goodsData: {
         auctionResult: null,
-        productPrice: ["", ""]
+        productPrice: ["", ""],
+        imageList:[{ imageUrl : ""}]
       },
       pifaResult: {
         pfSetObj: {}

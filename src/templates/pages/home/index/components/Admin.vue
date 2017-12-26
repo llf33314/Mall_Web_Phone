@@ -105,8 +105,10 @@ export default {
       },
       success: function(res) {
         console.log(res);
-        self.dataJson = JSON.parse(res.data.dataJson);
-        self.picJson = JSON.parse(res.data.picJson);
+        let mydata = res.data;
+        self.dataJson = JSON.parse(mydata.dataJson);
+        self.picJson = JSON.parse(mydata.picJson);
+        sessionStorage.setItem("busId",mydata.busId);
       }
     });
   },

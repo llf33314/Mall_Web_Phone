@@ -4,7 +4,7 @@
     <content-no :statu="statu" :errorMsg="errorMsg" v-if="isShowNullContent"></content-no>
     <section class="shop-main order-main" v-if="!isShowNullContent && orderList != null">
         <div class="order-box">
-            <div class="order-item" v-for="(busItem,index) in orderList">
+            <div class="order-item" v-for="(busItem,index) in orderList" :key="index">
                 <div class="order-item-title fs40">
                     <div class="order-title-img">
                         <default-img :background="busItem.busImageUrl"
@@ -23,7 +23,7 @@
                         {{busItem.orderStatusName}}
                     </p>
                 </div>
-                <div class="order-item-box " v-for="detail in busItem.detailResultList">
+                <div class="order-item-box " v-for="(detail,index2) in busItem.detailResultList" :key="index2"  v-if="busItem.orderPayWay != 5">
                     <div class="order-item-content  border" @click="returnOrderDetail(busItem.orderId)">
                         <div class="order-item-img">
                             <default-img  
@@ -52,6 +52,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="order-item-box"  v-if="busItem.orderPayWay == 5">
+                  <div class="order-item-content  border" style="padding:0.5rem;">
+                  <span class="fs42">扫码支付</span>
+                  <span class="fs42" style="margin-left:0.5rem;">订单金额：{{busItem.orderMoney[0]}}.{{busItem.orderMoney[1]}}</span>
+                  </div>
+
+                </div>
+
                 
                 <div class="order-number-time border">
                     <div class="order-number fs42">
@@ -399,6 +407,10 @@ export default {
     span {
       margin: 30/@dev-Width *1rem;
     }
+  }
+  .order-item-content{
+    line-height:1;
+    font-size:0;
   }
   .order-item-content,
   .order-number-time {

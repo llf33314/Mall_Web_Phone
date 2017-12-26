@@ -145,13 +145,19 @@ const myCollect = resolve => require(['pages/my/myCollect'], resolve);
 //groupbuydetail 我的收藏 
 
 
+/******************************    错误页面   ***********************************/ 
+const error_404 = resolve => require(['pages/error/404'], resolve);
+//404 页面
+const error_url = resolve => require(['pages/error/url'], resolve);
+//链接失效 页面
+
 Vue.use(Router)
 
 export default new Router({
   // mode: 'history',
   routes: [
     {
-      path: '/:pageId',
+      path: '/index/:pageId',
       name: 'index',
       component: Index
     },
@@ -577,6 +583,27 @@ export default new Router({
       component: sellerShare,
       meta: {
         title: '超级销售员商城首页'
+      }
+    }, {
+      path: '/seller/share/:busId/:proId/:saleMemberId',
+      name: 'sellerShare',
+      component: sellerShare,
+      meta: {
+        title: '超级销售员商城首页'
+      }
+    }, {
+      path: '/error/404/:busId',
+      name: 'error_404',
+      component: error_404,
+      meta: {
+        title: '404页面'
+      }
+    }, {
+      path: '/error/url/:busId',
+      name: 'error_url',
+      component: error_url,
+      meta: {
+        title: '链接错误页面'
       }
     }
 
