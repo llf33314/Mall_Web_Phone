@@ -101,7 +101,8 @@ export default {
     this.ajaxRequest({
       url: "/phonePage/L6tgXlBFeK/pageIndex",
       data: {
-        pageId : 82
+        pageId : this.$route.params.pageId,
+        url:location.href
       },
       success: function(res) {
         console.log(res);
