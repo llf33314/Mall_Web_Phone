@@ -36,13 +36,13 @@
                 </div>
             </section>
             <section class="refund-money">
-                <div class="refund-list border" v-if="returnData.returnMoneys != null">
+                <div class="refund-list border" v-if="returnData.returnPrice != null">
                     <p class="fs46">
-                      退款金额：<span class="shop-font">￥{{returnData.returnMoneys[0]}}.<span class="fs32">{{returnData.returnMoneys[1]}}</span></span>
+                      退款金额：<span class="shop-font">￥{{returnData.returnPrice | moneySplit1}}.<span class="fs32">{{returnData.returnPrice | moneySplit2}}</span></span>
                     </p>
                 </div>
                 <div class="refund-list" v-if="isShowFreightMoney">
-                    <p class="fs40">最多可退￥{{returnData.returnPrice[0]}}.{{returnData.returnPrice[1]}}
+                    <p class="fs40">最多可退￥{{returnData.returnPrice| moneySplit1}}.{{returnData.returnPrice | moneySplit2}}
                      <span v-if="returnData.productFreight > 0">含，发货运费￥{{returnData.productFreight}}</span>
                     </p>
                 </div>
@@ -99,11 +99,11 @@
 </template>
 
 <script>
-import axios from "axios";
 import defaultImg from "components/defaultImg";
 import imgUpload from "components/imgUpload";
 import dialogShow from "./component/selectDialog";
 import technicalSupport from "components/technicalSupport"; //技术支持
+import filters2 from "../../../lib/filters"; //过滤器
 export default {
   data() {
     return {
@@ -177,7 +177,7 @@ export default {
           if (myData.returnPrice > 0) {
             _this.isShowFreightMoney = true;
           }
-          myData.returnMoneys = _this.commonFn.moneySplit(myData.returnPrice);
+          // myData.returnMoneys = _this.commonFn.moneySplit(myData.returnPrice);
           if (myData.cargoStatusList != null) {
             _this.cargoStatusList = myData.cargoStatusList; //货物状态集合
           }

@@ -81,8 +81,7 @@ export default {
         toShop(){
             let busId = this.$route.params.busId;
             let shopId = this.$route.params.shopId;
-            // console.log(this.$parent)
-            this.$parent.$parent.getPageId(busId,shopId);
+            this.$parent.$parent.getPageId(busId,shopId,true);
         }
     },
     mounted () {
