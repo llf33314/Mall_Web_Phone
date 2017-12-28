@@ -21,8 +21,8 @@ export default {
   },
   data: function() {
     return {
-      shareObj: null,
-      wxObj: null
+      shareObj: null,//分享内容
+      wxObj: null//微信分享必要的参数
     };
   },
   watch: {
