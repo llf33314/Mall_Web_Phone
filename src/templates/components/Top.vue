@@ -3,17 +3,25 @@
         <i class="iconfont icon-zhiding" v-if=" scroll >= 300"
             @click="top()"></i>
         <em class="icon-kefu"
-            @click="qqUrl()"></em>
+            @click="qqUrl()" v-if="QQ != null"></em>
     </section>
 </template>
 <script>
 export default {
+  props: ["shopId"],
   data: function() {
     return {
       scroll: "",
-      QQ: "",
+      QQ: null,
       isShow: true
     };
+  },
+  watch: {
+    shopId(a,b){
+      if(a != b){
+        this.qqAjax(a);
+      }
+    }
   },
   mounted() {
     let _this = this;
@@ -22,7 +30,6 @@ export default {
       _this.scroll = $(window).scrollTop();
       //}
     });
-    this.qqAjax();
   },
   methods: {
     top() {
@@ -48,9 +55,9 @@ export default {
     /**
          * 客服QQ
          */
-    qqAjax() {
+    qqAjax(_shopId) {
       let _this = this;
-      let _shopId = _this.$store.state.shopId;
+      // let _shopId = _this.$store.state.shopId;
       _this.ajaxRequest({
         status: false,
         url: h5App.activeAPI.phonePage_getCustomer_post,
@@ -61,7 +68,10 @@ export default {
           if (data.code != 0) {
             _this.isShow = false;
           }
-          _this.QQ = data.data.qq;
+          if(data.data.qq != null){
+            _this.QQ = data.data.qq;
+            _this.$store.commit("QQ", data.data.qq);
+          }
           _this.$store.commit("is_Advert", data.data.isAdvert);
         }
       });

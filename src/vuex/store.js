@@ -21,7 +21,8 @@ const state = {
     isAdvert:'',//是否显示技术支持
     pageId:'',//首页id
     orderData:null,
-    imgUrl:""
+    imgUrl:"",
+    QQ: null,//QQ客服
 }
 const actions ={
     
@@ -41,6 +42,7 @@ const mutations = {
         state.keywords =  data.keywords || state.keywords;
         state.loginDTO_URL =  data.loginDTO_URL || state.loginDTO_URL;
         state.pageId = data.pageId || state.pageId;
+        state.QQ = data.QQ || state.QQ;
     },
     show_top:(state,Booleans)=>state.showTop =  Booleans,
     show_footer:(state,Booleans)=>state.showfooter =  Booleans,

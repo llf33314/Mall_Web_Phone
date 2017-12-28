@@ -151,6 +151,9 @@ const error_404 = resolve => require(['pages/error/404'], resolve);
 const error_url = resolve => require(['pages/error/url'], resolve);
 //链接失效 页面
 
+
+
+
 Vue.use(Router)
 
 export default new Router({

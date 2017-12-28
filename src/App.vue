@@ -4,9 +4,11 @@
     <router-view ref="main"/>
     <bubble-hint ref="bubble"></bubble-hint>
     <shop-dialog ref="dialog"></shop-dialog>
-    <top ref="top" v-if="$store.state.showTop"></top>
+    <top ref="top" v-if="$store.state.showTop" :shopId="$store.state.shopId"></top>
     <loading ref="loading"></loading>
     <footer-nav ref="footer_nav" v-if="$store.state.showfooter"></footer-nav>
+
+    <wx-share :wxData="wxObj" :shareData="shareObj" v-show="wxObj != null"></wx-share>
     <!-- <iframe ref="footer_nav" src="https://deeptel.com.cn/mallPage/82/79B4DE7C/pageIndex.do" class="material"></iframe> -->
   </div>
 </template>
@@ -18,6 +20,7 @@ import shopDialog from "components/shopDialog.vue"; //弹窗
 import Top from "components/Top"; //置顶
 import footerNav from "components/footerNav"; //置顶
 import ajax from "@/lib/ajax.js";
+import wxShare from "components/wxShare"; //微信分享
 
 export default {
   components: {
@@ -25,7 +28,13 @@ export default {
     loading,
     shopDialog,
     Top,
-    footerNav
+    footerNav,
+    wxShare
+  },
+  computed: {
+    listenshowpage1() {
+      return this.$store.state.busId;
+    }
   },
   watch: {
     $route() {
@@ -33,27 +42,26 @@ export default {
         loginDTO_URL: window.location.href
       });
       this.loadData();
+    },
+    listenshowpage1(a, b) {
+      if (a != b) {
+        this.getShopStyle(a);
+      }
     }
   },
   data() {
     return {
       style: "",
-      Messenger: ""
+      Messenger: "",
+      wxObj: null, //微信分享的配置
+      shareObj: null //分享内容
     };
   },
   created() {
     this.browser_type();
-    let _data = {
-      shopId: 29,
-      busId: 42,
-      browerType: this.Messenger
-    };
-    this.$store.commit("mutationData", _data);
   },
   mounted() {
-    this.getShopStyle();
     this.commonFn.setFontSize();
-    //this.$store.commit('mutationData',{showfooter:true});
   },
   methods: {
     /** 
@@ -62,11 +70,12 @@ export default {
     browser_type() {
       let browser = this.commonFn.checkPlatform();
       browser === "Messenger" ? (this.Messenger = 1) : (this.Messenger = 99);
+      this.$store.commit("mutationData", { browerType: this.Messenger });
     },
     //获取页面样式
-    getShopStyle() {
-      let busId = this.$route.params.busId || sessionStorage.getItem("busId");
-      if(busId == 0){
+    getShopStyle(busId) {
+      busId = busId || sessionStorage.getItem("busId");
+      if (busId == 0) {
         return;
       }
       let _this = this;
@@ -81,14 +90,14 @@ export default {
             _this.style = "<style>";
             _this.style +=  ".style-main-bg{ background: " +  myData[0] + "!important;color: #fff;}";
             _this.style += ".style-main-font{color:" + myData[0] + "!important;}";
-            _this.style += ".style-witch:checked{border-color:" +  myData[0] +  "!important;background-color:" +  myData[0] +  "!important;}";
-            _this.style += ".style-main-border{color:" + myData[0] + "!important;border:1px solid " +  myData[0] + "!important;}";
+            _this.style += ".style-witch:checked{border-color:" + myData[0] + "!important;background-color:" +  myData[0] + "!important;}";
+            _this.style += ".style-main-border{color:" +  myData[0] + "!important;border:1px solid " + myData[0] + "!important;}";
             if (myData.length > 1) {
               _this.style += ".style-middle-bg{ background: " +  myData[1] + "!important;color: #fff;}";
               _this.style += ".style-middle-font{color: " + myData[1] + "!important;}";
             }
             if (myData.length > 2) {
-              _this.style +=  ".style-right-bg{ background: " + myData[2] +  "!important;color: #000;}";
+              _this.style += ".style-right-bg{ background: " + myData[2] + "!important;color: #000;}";
               _this.style += ".style-right-font{color: " + myData[2] + "!important;}";
             }
             _this.style += "</style>";
@@ -98,7 +107,7 @@ export default {
     },
     //获取店铺id
     getShopId(busId) {
-      if(busId == 0 ){
+      if (busId == 0) {
         return null;
       }
       let _this = this;
@@ -127,7 +136,7 @@ export default {
         busId || this.$route.params.busId || sessionStorage.getItem("busId");
       shopId =
         shopId || this.$route.params.shopId || sessionStorage.getItem("shopId");
-      if(busId == 0){
+      if (busId == 0) {
         return;
       }
       let saleMemberId = this.getSaleMemberId();
@@ -151,7 +160,7 @@ export default {
             if (isReturn) {
               //跳转首页
               // _this.$refs.bubble.show_tips("开发中敬请期待");
-              _this.$router.push("/index/"+pageId);
+              _this.$router.push("/index/" + pageId);
             }
             return;
           }
@@ -165,7 +174,7 @@ export default {
       let _commonFn = this.commonFn.isNotNull;
       busId =
         busId || this.$route.params.busId || sessionStorage.getItem("busId");
-      if(busId == 0){
+      if (busId == 0) {
         return 0;
       }
       _this.ajaxRequest({
@@ -207,7 +216,7 @@ export default {
         sessionStorage.setItem("pageId", pageId);
         this.$store.commit("mutationData", { pageId: pageId });
       } else if (shopId > 0 && busId > 0) {
-        this.getPageId(busId, shopId);
+        this.getPageId(busId, shopId, false);
       }
     },
     getSaleMemberId() {
@@ -248,6 +257,26 @@ export default {
           browerType: _this.$store.state.browerType //浏览器类型 1微信 99 其他浏览器
         },
         success: function(data) {}
+      });
+    },
+    //获取微信分享数据
+    getWxShare(_shareObj) {
+      let _this = this;
+      _this.shareObj = _shareObj || null;
+      //只有微信浏览器才有分享
+      if(_shareObj == null || _this.$store.state.browerType != 1){
+        return;
+      }
+      _this.ajaxRequest({
+        url: h5App.activeAPI.wx_share_get,
+        data: {
+          url: location.href
+        },
+        type: "get",
+        success: function(data) {
+          _this.wxObj = data.data;
+          // console.log(_this.wxObj, "_this.wxObj");
+        }
       });
     }
   }

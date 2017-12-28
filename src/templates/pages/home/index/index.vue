@@ -12,7 +12,7 @@ export default {
     };
   },
   components: {
-    Admin
+    Admin,
   },
 
   mounted() {},

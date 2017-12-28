@@ -238,8 +238,6 @@ export default {
           _this.orderType = order.orderType; //活动类型
           _this.activityId = order.activityId; //活动id
           _this.busId = order.busId;
-          sessionStorage.setItem("busId", order.busId);
-          this.$store.commit("mutationData", { busId: order.busId });
         }
       });
     },

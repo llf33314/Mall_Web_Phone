@@ -58,7 +58,6 @@ export default {
     };
   },
   mounted() {
-    this.footerMenuAjax();
     // let _nav = window.location.hash.split("/")[1];
     // console.log(_nav);
     // this.isShow = _nav;
@@ -69,6 +68,7 @@ export default {
       //   let _nav = window.location.hash.split("/")[1];
       //   this.isShow = _nav;
       this.isSelect();
+      this.footerMenuAjax();
     }
   },
   methods: {

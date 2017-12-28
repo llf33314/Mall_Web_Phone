@@ -117,7 +117,7 @@
             </div>
             <!---底部菜单---->
             <div class="goods-footer-content">
-                <div class="goods-footer-botton ui-col-1 fs32">
+                <div class="goods-footer-botton ui-col-1 fs32" @click="ToQQ" v-if="$store.state.QQ != null">
                     <i class="iconfont icon-xiaoxi style-main-font"></i>
                     客服
                 </div >
@@ -1280,6 +1280,13 @@ export default {
       // this.$refs.goodsFooter.showDialog();
       this.dialogImageUrl = image;
       this.isPhoto = true;
+    },
+    //进入QQ客服聊天页面
+    ToQQ(){
+     window.location.href =
+        "http://wpa.qq.com/msgrd?v=3&amp;uin=&amp;site=" +
+        this.$store.state.QQ +
+        "&amp;menu=yes";
     }
     
   },
@@ -1287,6 +1294,8 @@ export default {
     this.$store.commit("show_footer", true);
   },
   mounted() {
+    // this.$parent.getShopStyle(this.$route.params.busId);
+    // console.log(this.$route,'this.$route')
     let saleMemberId = this.$route.params.saleMemberId;
     if(this.commonFn.isNotNull(saleMemberId) && saleMemberId > 0){
       this.saleMemberId = saleMemberId;
@@ -1411,19 +1420,20 @@ export default {
       width: 100%;
       .goods-shop-info {
         float: left;
-        width: 60%;
+        width: 65%;
       }
       .goods-shop-rigtn {
         float: right;
-        width: 40%;
+        width: 35%;
         height: 158/@dev-Width *1rem;
         .ik-box;
         .ik-box-align(center);
-        .ik-box-pack(justify);
+        .ik-box-pack(right);
         .goods-shop-buttom {
           display: block;
           .border-radius(3px);
           padding: 5px 3px;
+          margin-left: 10/@dev-Width *1rem;
         }
       }
       .goods-shop-img {

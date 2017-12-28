@@ -27,8 +27,7 @@
                 v-else>已收藏
             </div>
             <div class="style-main-border goods-shop-buttom fs42" 
-            @click="toShop()">进店逛逛td
-                <!-- (跳首页) -->
+            @click="toShop()">进店逛逛
             </div>
         </div>
     </div>

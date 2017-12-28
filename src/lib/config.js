@@ -65,6 +65,10 @@
     /***********************   以下接口都是 公用接口 ***********************/
     /*获取首页id*/
     get_home_page_id_post: '/phonePage/L6tgXlBFeK/getHomePageId',
+    /*获取首页数据*/
+    page_index_get: '/phonePage/L6tgXlBFeK/pageIndex',
+    /*微信分享*/
+    wx_share_get: '/phonePage/L6tgXlBFeK/wxShare',
     /*获取店铺id*/
     get_shop_id_post: '/phonePage/L6tgXlBFeK/getShopId',
     /*获取我的页面数据*/
