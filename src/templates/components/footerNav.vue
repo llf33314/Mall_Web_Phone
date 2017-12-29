@@ -16,6 +16,7 @@
 </template>
 <script>
 export default {
+  props: ["busId"],
   data() {
     return {
       footerData: [
@@ -50,7 +51,7 @@ export default {
           statu: "my",
           title: "my",
           isSelect: false,
-          selectArr: ["my","order/list"]
+          selectArr: ["my", "order/list"]
         }
       ],
       isShow: "",
@@ -65,10 +66,12 @@ export default {
   },
   watch: {
     $route(a, b) {
-      //   let _nav = window.location.hash.split("/")[1];
-      //   this.isShow = _nav;
       this.isSelect();
-      this.footerMenuAjax();
+    },
+    busId(a, b) {
+      if (a != b) {
+        this.footerMenuAjax(a);
+      }
     }
   },
   methods: {
@@ -109,13 +112,17 @@ export default {
     /** 
          * 获取底部菜单
          */
-    footerMenuAjax() {
+    footerMenuAjax(_busId) {
       let _this = this;
+      _busId = _busId || _this.$store.state.busId || null;
+      if (_busId == null || _busId == "") {
+        return;
+      }
       _this.ajaxRequest({
         status: false,
         url: h5App.activeAPI.phonePage_footerMenu_post,
         data: {
-          busId: _this.$store.state.busId
+          busId: _busId
         },
         success: function(data) {
           // if(data.code != 0){

@@ -14,12 +14,14 @@ Vue.mixin({
       * @param {Function} error		    发送请求前
       * @param {Booleans} status		判断是否执行公用错误请求提示 false不使用 true使用  默认true使用
         @param {Booleans} loading		判断是否执行公用错误请求提示 false不使用 true使用  默认false不使用
+        @param {Object} vmParent		this.$parent  避免组件
 	  * @param return 
 	*/
 	ajaxRequest(opt) {
             let vm = this;
             let opts = opt || {};
             let status = opt.status || true;
+            let vmParent = opt.vmParent || vm.$parent;
             if(typeof(opt.status) != 'undefined'){
                 status = opt.status;
             }
@@ -28,8 +30,8 @@ Vue.mixin({
                 alert('请填写接口地址');
                 return false;
             }
-            if(typeof(vm.$parent.$refs.loading) != "undefined"){
-                vm.$parent.$refs.loading.show(loading);//开启loading*/
+            if(typeof(vmParent.$refs.loading) != "undefined"){
+                vmParent.$refs.loading.show(loading);//开启loading*/
             }
             //配置请求头
             axios({
@@ -48,8 +50,8 @@ Vue.mixin({
                 if (res.status == 200) {
     
                     if (opts.success) {
-                        // if(typeof(vm.$parent.$refs.loading) != "undefined"){
-                        //     vm.$parent.$refs.loading.show(false);//关闭loading*/
+                        // if(typeof(vmParent.$refs.loading) != "undefined"){
+                        //     vmParent.$refs.loading.show(false);//关闭loading*/
                         // }
                         //需要登陆（需要跳转）
                         if(res.data.code == 1001){
@@ -77,9 +79,9 @@ Vue.mixin({
                                     type :'error',
                                     msg :  res.data.msg
                                 }
-                                vm.$parent.$refs.bubble.show_tips(msg);
-                                if(typeof(vm.$parent.$refs.loading) != "undefined"){
-                                    vm.$parent.$refs.loading.show(false);//关闭loading*/
+                                vmParent.$refs.bubble.show_tips(msg);
+                                if(typeof(vmParent.$refs.loading) != "undefined"){
+                                    vmParent.$refs.loading.show(false);//关闭loading*/
                                 }
                                 return
                             }
@@ -88,8 +90,8 @@ Vue.mixin({
                     }
     
                 } else {
-                    if(typeof(vm.$parent.$refs.loading) != "undefined"){
-                        vm.$parent.$refs.loading.show(false);//关闭loading*/
+                    if(typeof(vmParent.$refs.loading) != "undefined"){
+                        vmParent.$refs.loading.show(false);//关闭loading*/
                     }
                     if (data.error) {
                         opts.error(error);
@@ -106,8 +108,8 @@ Vue.mixin({
                 } else {
                     console.log('catch');
                 }
-                if(typeof(vm.$parent.$refs.loading) != "undefined"){
-                    vm.$parent.$refs.loading.show(false);//关闭loading*/
+                if(typeof(vmParent.$refs.loading) != "undefined"){
+                    vmParent.$refs.loading.show(false);//关闭loading*/
                 }
             });
     

@@ -1,11 +1,11 @@
 <template>
 <div id='app' class="shop-wrapper order-wrapper">
     <header-nav :headers= "homeNav" :status="'cart'" style="z-index:3" :selectColor="'style-main-font'" :selectbg="'style-main-bg'" ></header-nav>
-    <section class="shop-main-no fs40 my-bond" v-if="shopCartList == 1">
+    <section class="shop-main-no fs40 my-bond" v-if="shopCartList == null">
         <content-no :statu='bondStatu'></content-no>
     </section>
     <section class="shop-main order-main shoopCart-main" v-else>
-        <div class="order-box" v-if="shopCartList != '' ">
+        <div class="order-box" v-if="shopCartList != null ">
             <div class="order-item" v-for=" (cart,i) in shopCartList"
                 :key = "i">
                 <div class="order-item-title fs40" @click.self="jupm_cart(cart)">
@@ -135,7 +135,7 @@
                 </p>
             </div>
         </div>
-        <div class="sxorder-box" v-if=" sxShopCartList != 1 ">
+        <div class="sxorder-box" v-if=" sxShopCartList != null ">
             <p class="sxorder-box-title fs42" >
                 以下商品无法购买
             </p>
@@ -263,8 +263,8 @@ export default {
         hpMoney:'', //混批最低金额
         hpNum:'',//混批最低数量
         spHand:'',//手批最低数量
-        shopCartList:'',//购物车集合
-        sxShopCartList: '',//失败购物车集合
+        shopCartList:null,//购物车集合
+        sxShopCartList: null,//失败购物车集合
         imgUrl: '',
         path: '',
         webPath: '',
@@ -443,7 +443,7 @@ export default {
                         msg :  data.msg
                     }
                     _this.$parent.$refs.bubble.show_tips(msg);
-                    _this.shopCartList =  1;//购物车集合
+                    _this.shopCartList =  null;//购物车集合
                     return
                 }
                 _this.imgUrl = data.imgUrl;
@@ -451,11 +451,15 @@ export default {
                 _this.webPath = data.webPath;
 
                 console.log(data,'购物车数据');
+                if(data.data == null){
+
+                    return;
+                }
                 _this.hpMoney=data.data.hpMoney;
                 _this.hpNum=data.data.hpNum;
                 _this.spHand=data.data.spHand;
-                _this.shopCartList=data.data.shopCartList || 1;//购物车集合
-                _this.sxShopCartList = data.data.sxShopCartList || 1//失败购物车集合
+                _this.shopCartList=data.data.shopCartList || null;//购物车集合
+                _this.sxShopCartList = data.data.sxShopCartList || null//失败购物车集合
 
                 let pifaTotal = 0;
                 //全选后的总价

@@ -12,10 +12,15 @@ export default {
     };
   },
   components: {
-    Admin,
+    Admin
+  },
+  beforeDestroy() {
   },
 
-  mounted() {},
+  mounted() {
+    this.$store.commit("show_footer", true);
+    console.log(this.$store.state.showfooter,"this.$store")
+  },
   methods: {}
 };
 </script>

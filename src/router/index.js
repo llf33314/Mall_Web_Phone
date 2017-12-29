@@ -150,6 +150,8 @@ const error_404 = resolve => require(['pages/error/404'], resolve);
 //404 页面
 const error_url = resolve => require(['pages/error/url'], resolve);
 //链接失效 页面
+const authorization = resolve => require(['pages/common/authorization'], resolve);
+//商家授权 
 
 
 
@@ -608,8 +610,15 @@ export default new Router({
       meta: {
         title: '链接错误页面'
       }
+    }, {
+      path: '/grant/:busId',
+      name: 'authorization',
+      component: authorization,
+      meta: {
+        title: '商家授权页面'
+      }
     }
-
+    
 
 
   ]

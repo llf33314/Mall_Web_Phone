@@ -280,8 +280,17 @@
     //25.	获取兑换记录列表
     integral_product_post: "/phoneIntegral/L6tgXlBFeK/integralProduct",
     //26.	获取积分商品信息
-    record_integral_post: "/phoneIntegral/L6tgXlBFeK/recordIntegral"
+    record_integral_post: "/phoneIntegral/L6tgXlBFeK/recordIntegral",
     //27.	兑换积分
+    busGrant_get : '/phoneBusMessageMember/L6tgXlBFeK/grant/',
+    /**商家是否授权  */ 
+    
+    /**********************公用发送短信接口*****************************/
+    validate_code_get : '/phoneMember/L6tgXlBFeK/getValCode' ,
+    //发送短信
+    bind_phone_post: '/phoneMember/L6tgXlBFeK/bingdingPhoneH5'
+    //绑定手机号码
+
   };
 
   window.h5App = h5App;

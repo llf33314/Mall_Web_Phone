@@ -19,8 +19,8 @@ Vue.mixin({
 			if (this.dialogData.id != null) {
 				invId = this.dialogData.id;
 			}
-			if (this.$route.params.activityId != null) {
-				aucId = this.$route.params.activityId; //活动id
+			if (this.activityId != null) {
+				aucId = this.activityId; //活动id
 			}
 			this.$router.push("/auction/bond/" + busId + "/" + proId + "/" + aucId + "/" + invId + "/0");
 		},
@@ -79,7 +79,7 @@ Vue.mixin({
 				url: location.href, //当前页面的地址
 				browerType: this.$store.state.browerType, //浏览器类型
 				proId: this.$route.params.goodsId,//商品id
-				aucId: this.$route.params.activityId,//拍卖id
+				aucId: this.activityId,//拍卖id
 				aucPrice: _chujiaMoney,//出价
 				proName: _goodsData.productName,//商品名称
 				proSpecificaIds: this.dialogData.xsid.toString(),//商品规格id
@@ -102,7 +102,7 @@ Vue.mixin({
 				}
 			});
 		}, marginNotice() {
-			let aucId = this.$route.params.activityId;
+			let aucId = this.activityId;
 			let busId = this.$route.params.busId || sessionStorage.getItem("busId"); //商家id
 			this.$router.push("/auction/notice/" + busId + "/" + aucId + "/1");
 		},
@@ -120,8 +120,8 @@ Vue.mixin({
 			if (this.dialogData.id != null) {
 				invId = this.dialogData.id;
 			}
-			if (this.$route.params.activityId != null) {
-				preId = this.$route.params.activityId; //活动id
+			if (this.activityId != null) {
+				preId = this.activityId; //活动id
 			}
 			let num = this.spec_num;
 			this.$router.push("/presale/deposit/" + busId + "/" + proId + "/" + preId + "/" + invId + "/" + num);
@@ -151,8 +151,8 @@ Vue.mixin({
 			if (_this.dialogData.id != null) {
 				_data.invId = _this.dialogData.id;
 			}
-			if (_this.type != null && _this.$route.params.activityId != null) {
-				_data.activityId = _this.$route.params.activityId; //活动id
+			if (_this.type != null && _this.activityId != null) {
+				_data.activityId = _this.activityId; //活动id
 			}
 			if (_this.$route.params.joinActivityId != null) {
 				_data.joinActivityId = _this.$route.params.joinActivityId;

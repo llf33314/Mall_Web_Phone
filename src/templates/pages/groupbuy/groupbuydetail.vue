@@ -20,7 +20,7 @@
           <em >{{times.ss}}</em>秒
       </div> -->
       <div class="group-middle" >
-        <div class="group-kaituan border shop-textc fs44 font-weight" v-if="groupObj.chaPeopleNum > 0">
+        <div class="group-kaituan border shop-textc fs44 font-weight" v-if="groupObj.chaPeopleNum > 0 && groupObj.status == 1">
           还差<em class="shop-font">{{groupObj.chaPeopleNum}}</em>人就要开团啦
         </div>
         <div class="group-items border shop-box-center" v-if="joinList != null && joinList.length > 0"
@@ -70,7 +70,7 @@
       </div>
     </div>
   </section>
-  <section class="shop-footer-fixed" v-if="groupObj != null && groupObj.isMember == 0">
+  <section class="shop-footer-fixed" v-if="groupObj != null && groupObj.isMember == 0 && groupObj.status == 1" >
       <div class="goods-footer-botton ui-col-2 fs50 shop-yellow"
           style="color:#fff" @click="moreGroupbuy">
           更多拼团
@@ -84,6 +84,12 @@
        <div class="goods-footer-botton2 ui-col-2 fs50 shop-yellow"
           style="color:#fff" @click="toOrderDetail">
           查看订单详情
+      </div>
+   </section>
+   <section class="shop-footer-fixed" v-else-if="groupObj != null && (groupObj.status == -1 || groupObj.status == -2)">
+       <div class="goods-footer-botton2 ui-col-2 fs50 shop-yellow"
+          style="color:#fff" >
+          {{groupObj.statusMsg}}
       </div>
    </section>
   <!-- 分享 -->
@@ -187,9 +193,26 @@ export default {
           _this.joinList = myData.joinList;
 
           _this.shopId = _this.groupProduct.shopId;
+          _this.getWxShare(myData);
           _this.productAjax();
         }
       });
+    },
+    //获取微信分享数据
+    getWxShare(myData) {
+      let _shareObj = {
+        title: myData.title,
+        desc: myData.describe,
+        url: location.href,
+        imgUrl: this.imgUrl + myData.productMap.imageUrl,
+        isOpenAllMenu: true, //显示所有功能按钮接口
+        jsApiList: [
+          "onMenuShareTimeline",
+          "onMenuShareAppMessage",
+          "showAllNonBaseMenuItem"
+        ]
+      };
+      this.$parent.getWxShare(_shareObj);
     },
     loadMore() {
       let pageCount = this.pageCount; //总页数

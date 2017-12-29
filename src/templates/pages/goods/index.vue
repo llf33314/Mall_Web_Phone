@@ -5,7 +5,7 @@
         <banner :banner="goodsData.imageList" :imgUrl="imgUrl"  v-if="goodsData.imageList != null" :colorStyle="'style-main-bg'">
         </banner>
         <!--商品信息-->
-        <goods-info :row="goodsData">
+        <goods-info :row="goodsData" :type="type">
         </goods-info>
         <!--查看所含优惠卷-->
         <div @click="isCardRecevie=true"
@@ -542,6 +542,7 @@ export default {
       }, //批发数据
       imgSelecte: 0,
       type: "",
+      activityId:  this.$route.params.activityId || 0,//活动id
       isProductCode: false, //商品编号,
       guigePrice: "", //规格集合分类
       specificaList: "", //规格集合
@@ -691,6 +692,13 @@ export default {
           _this.path = data.path;
           _this.imgUrl = data.imgUrl;
           _this.webPath = data.webPath;
+          if(_this.goodsData.type == 0){
+            _this.type = 0;
+          }
+          if(_this.goodsData.activityId == 0){
+            _this.activityId = 0;
+            activityId = 0;
+          }
 
           if (_this.type == 4) {
             //拍卖，分割价钱
@@ -704,9 +712,7 @@ export default {
             //批发状态
             let _pfStatus = data.data.pifaResult.pfStatus;
             _this.pifaResult = data.data.pifaResult;
-            _pfStatus < 0
-              ? (_this.w_pfStatus = false)
-              : (_this.w_pfStatus = true);
+            _pfStatus < 0 ? (_this.w_pfStatus = false) : (_this.w_pfStatus = true);
           }
           //商品详情请求
           _this.detailsAjax();
@@ -825,7 +831,7 @@ export default {
     productDetailAjax(data) {
       let _this = this;
       let _data = data;
-      let activityId = _this.$route.params.activityId;
+      let activityId = _this.activityId;
       this.ajaxRequest({
         url: h5App.activeAPI.phoneProduct_getSpecifica_post,
         data: _data,

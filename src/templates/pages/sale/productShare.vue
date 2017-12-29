@@ -95,8 +95,30 @@ export default {
           _this.productMap = myData.productMap;
           _this.mallSet = myData.mallSet;
           _this.imgUrl = data.imgUrl;
+          _this.getWxShare(myData);
         }
       });
+    },
+    //获取微信分享数据
+    getWxShare(myData) {
+      let title = this.mallSet.mallName || this.mallSeller.userName;
+      if(title.split("的商城").length == 1){
+        title += "的商城";
+      }
+      let desc = this.mallSet.mallIntroducation;
+      let _shareObj = {
+        title: title,
+        desc: desc,
+        url: location.href,
+        imgUrl: this.imgUrl + this.mallSet.mallHeadPath,
+        isOpenAllMenu: true, //显示所有功能按钮接口
+        jsApiList: [
+          "onMenuShareTimeline",
+          "onMenuShareAppMessage",
+          "showAllNonBaseMenuItem"
+        ]
+      };
+      this.$parent.getWxShare(_shareObj);
     },
     productDetail() {
       console.log(this.productMap);

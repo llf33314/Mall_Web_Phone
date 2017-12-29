@@ -107,7 +107,7 @@
 import countDown from '../../home/classify_child/countDown';//倒计时
 
 export default {
-    props:['row'],
+    props:['row',"type"],
 
     components: {
         countDown
@@ -132,7 +132,7 @@ export default {
 
     },
     mounted () {
-        this.type = this.$route.params.type;
+        // this.type = this.$route.params.type;
         console.log('goods-info-other',this.goodsData,this.row)
     }
 

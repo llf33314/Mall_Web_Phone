@@ -12,6 +12,7 @@ Vue.mixin({
 			let _this = this;
 			let busId = this.$route.params.busId || sessionStorage.getItem("busId");
 			let _commonFn = _this.commonFn;//公共js调用
+			_this.$parent.isLogin(busId);
 			if (!_this.validateSubmitOrderParams()) {
 				return;
 			}
@@ -63,7 +64,12 @@ Vue.mixin({
 			let orderList = _this.orderList;//商家集合
 			let _showTip = _this.$parent.$refs.bubble.show_tips;//冒泡提醒
 			let _isNull = _commonFn.isNull;//不为空定义
-			if (orderData.proTypeId == 4 && _isNull(orderData.flowPhone)) {
+			if (_isNull(_this.memberPhone) || !_commonFn.validPhone(_this.memberPhone)) {
+				_showTip("请先绑定手机号码");//请填写需要充值的手机号码
+				_this.isShowMemberPhone = true;
+				return;
+			}
+			if (orderData.proTypeId == 4 && (_isNull(orderData.flowPhone) || !_commonFn.validPhone(_this.memberPhone))) {
 				_showTip("请填写需要充值的手机号码");//请填写需要充值的手机号码
 				_this.showFlowPhone();
 				return;
@@ -228,7 +234,7 @@ Vue.mixin({
 						if (product.orderDetailId != null && product.orderDetailId > 0) {
 							productObj.orderDetailId = product.orderDetailId;
 						}
-						if(orderData.joinActivityId != null){
+						if (orderData.joinActivityId != null) {
 							productObj.groupJoinId = orderData.joinActivityId;
 						}
 						_this.$set(productResultList, productResultList.length, productObj);

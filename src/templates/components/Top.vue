@@ -67,6 +67,7 @@ export default {
         success: function(data) {
           if (data.code != 0) {
             _this.isShow = false;
+            return;
           }
           if(data.data.qq != null){
             _this.QQ = data.data.qq;

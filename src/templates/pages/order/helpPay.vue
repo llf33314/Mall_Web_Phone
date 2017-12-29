@@ -20,7 +20,7 @@
                 <div class="helppay-choice-buttom fs52 f23" v-if="orderObj.isShowWxPay == 1" @click="submitPay(1)">
                     微信安全支付
                 </div>
-                <div class="helppay-choice-buttom fs52 f23" @click="sendDaifu">
+                <div class="helppay-choice-buttom fs52 f23" v-if="orderObj.isShowDaifu == 1" @click="sendDaifu">
                     发起代付请求
                 </div>
                 <div class="helppay-choice-buttom fs52 ff8" @click="goBuy()">
@@ -35,7 +35,7 @@
         </section>
         <section class="helppay-inf" v-if="orderObj.productResultList != null"> 
             <p class="fs50 border">代付订单信息</p>
-            <div class="helppay-goods clearfix" v-for="product in orderObj.productResultList"
+            <div class="helppay-goods clearfix" v-for="(product,index) in orderObj.productResultList" :key="index"
                 @click="toReturnProduct(product.productId,product.shopId)">
                 <div class="helppay-img">
                     <default-img :background="imgUrl+product.productImageUrl"
@@ -101,8 +101,25 @@ export default {
           _this.imgUrl = data.imgUrl;
           _this.orderObj = myData;
           console.log(myData, "myData");
+          _this.getWxShare(myData);
         }
       });
+    },
+    //获取微信分享数据
+    getWxShare(myData) {
+      let _shareObj = {
+        title: "帮我付款才是真友谊",
+        desc: "你的一笔小开支，是我们关系的一大步，为我付款吧！",
+        url: location.href,
+        imgUrl: this.imgUrl + myData.productResultList[0].productImageUrl,
+        isOpenAllMenu: true, //显示所有功能按钮接口
+        jsApiList: [
+          "onMenuShareTimeline",
+          "onMenuShareAppMessage",
+          "showAllNonBaseMenuItem"
+        ]
+      };
+      this.$parent.getWxShare(_shareObj);
     },
     toReturnProduct(productId, shopId) {
       //跳转至订单详情页面

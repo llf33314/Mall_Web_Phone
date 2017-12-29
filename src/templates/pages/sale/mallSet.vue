@@ -116,10 +116,8 @@ export default {
         mallName: null, //商城名称
         contactNumber: null, //联系电话
         qq: null, //QQ
-        mallHeadPath:
-          "/image/3/gt123456/3/20170418/4C9B8EEBD6E5F243A36EF9740D22D3AE.jpg", //商城头像
-        bannerPath:
-          "/image/3/gt123456/3/20170418/4C9B8EEBD6E5F243A36EF9740D22D3AE.jpg", //banner地址
+        mallHeadPath: "", //商城头像
+        bannerPath: "", //banner地址
         mallIntroducation: null //简介
       }, //商城设置对象
       sellerProList: null, //自选商品集合
@@ -269,7 +267,6 @@ export default {
       let _isNull = this.commonFn.isNull;
       let _validPhone = this.commonFn.validPhone;
       let obj = this.mallSet;
-
       if (type == 0 || type == 1) {
         let val = obj.mallName;
         if (_isNull(val)) {
@@ -354,6 +351,12 @@ export default {
         mallSet: mallSet
       };
       if (this.type == 2 && mallSet.isOpenOptional == 0) {
+          _this.$router.push(
+            "/seller/mallindex/" +
+              _this.busId +
+              "/" +
+              _this.mallSet.saleMemberId
+          );
         return;
       }
       if (this.type == 2 && mallSet.isOpenOptional == 1) {
@@ -603,13 +606,13 @@ export default {
     }
   }
   .bottom-div {
-    background-color: #fff;
+    // background-color: #fff;
     width: 100%;
     height: 245/@dev-Width *1rem;
     padding: 0 60/@dev-Width *1rem 100/@dev-Width *1rem 60/@dev-Width *1rem;
     .shop-footer-fixed;
     .div-button {
-      width: 90%;
+      width: 100%;
       height: 143/@dev-Width *1rem;
       line-height: 143/@dev-Width *1rem;
       color: #fff;

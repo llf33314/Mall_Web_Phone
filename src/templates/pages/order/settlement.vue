@@ -311,10 +311,6 @@
                 <div class="dialog-input">
                     <input class="fs50" placeholder="请输入手机号码" v-model="orderData.flowPhone"/>
                 </div>
-                <!-- <div class="dialog-input dialog-code">
-                    <input class=" fs50" placeholder="请输入验证码"/>
-                    <span class="fs50 shopGreen">获取验证码</span>
-                </div> -->
             </div>
            <div class="dialog-bottom">
                 <span class="fs50 dialog-button2 style-main-bg" 
@@ -324,6 +320,10 @@
             </div>
         </div>
     </dialog-modular>
+    </section>
+    <section v-if="isShowMemberPhone">
+       <bind-phone @confirmPhones="confirmMemberPhone" :type="1"
+       :isShowMemberPhone.sync="isShowMemberPhone"></bind-phone>
     </section>
 </div>
 
@@ -337,6 +337,7 @@ import shopDialog from "components/shopDialog";
 import payWayDialog from "components/payWayDialog"; //支付方式
 import technicalSupport from "components/technicalSupport"; //技术支持
 import dialogModular from "components/dialogModular"; //流量弹出框
+import bindPhone from "components/bindPhone"; //绑定手机号码
 import couponDialog from "./componet/couponDialog"; //优惠券弹出框
 import timesDialog from "./componet/timeDialog"; //时间弹出框
 import takeAddressDialog from "./componet/takeAddressDialog"; //提货地址弹出框
@@ -354,8 +355,7 @@ export default {
       hasAddress: false,
       isShow: false,
       bondStatu: -1,
-      background:
-        null,
+      background: null,
       busId: this.$route.params.busId || sessionStorage.getItem("busId"),
       from: 0, //来源 1 购物车结算进入 2 立即购买进入 3 去支付，必传
       cartIds: "", //购物车id
@@ -374,7 +374,9 @@ export default {
       isSelectDaodianPay: false, //是否选择了到店支付
       ids: "", //当 from = 0 时 此值为购物车id;  如 from = 2 时 此值为订单id
       isShowFlowPhone: false, //是否显示流量充值
-      isShowAddress: true
+      isShowAddress: true,
+      memberPhone: null,//会员手机号码，如果为空，则需要先绑定手机号码
+      isShowMemberPhone : false,
     };
   },
   components: {
@@ -386,7 +388,8 @@ export default {
     couponDialog,
     timesDialog,
     takeAddressDialog,
-    dialogModular
+    dialogModular,
+    bindPhone
   },
   mounted() {
     this.commonFn.setTitle(Language.submit_order_title);
@@ -578,6 +581,7 @@ export default {
     },
     getorderResult(myData, _this) {
       _this.orderData = myData;
+      _this.memberPhone = myData.memberPhone;
       _this.memberAddresss = myData.memberAddressDTO; //选中的收货地址
       if (_this.memberAddresss != null) {
         _this.hasAddress = true;
@@ -868,7 +872,10 @@ export default {
         productId +
         "/" +
         activityId;
-      if (this.commonFn.isNotNull(product.saleMemberId) && product.saleMemberId > 0) {
+      if (
+        this.commonFn.isNotNull(product.saleMemberId) &&
+        product.saleMemberId > 0
+      ) {
         url += "/" + product.saleMemberId + "/0";
       }
       //进入商品详情页面
@@ -894,7 +901,12 @@ export default {
       }
       this.submitOrder();
     },
-    backBefore() {
+    //返回会员手机号码
+    confirmMemberPhone(data) {
+      this.memberPhone = data[0];
+      this.submitOrder();
+    },
+    backBefore(data) {
       //返回前页
       let url = sessionStorage.getItem("payUrl");
       if (this.commonFn.isNotNull(url)) {

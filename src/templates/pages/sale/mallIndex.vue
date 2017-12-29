@@ -95,8 +95,25 @@ export default {
           _this.productList = myData.productList;
           _this.mallSet = myData.mallSet;
           _this.imgUrl = data.imgUrl;
+          _this.getWxShare(myData);
         }
       });
+    },
+    //获取微信分享数据
+    getWxShare(myData) {
+      let _shareObj = {
+        title: this.mallSet.mallName,
+        desc:  this.mallSet.mallIntroducation || this.mallSet.mallName,
+        url: location.href,
+        imgUrl: this.imgUrl + this.mallSet.mallHeadPath,
+        isOpenAllMenu: true, //显示所有功能按钮接口
+        jsApiList: [
+          "onMenuShareTimeline",
+          "onMenuShareAppMessage",
+          "showAllNonBaseMenuItem"
+        ]
+      };
+      this.$parent.getWxShare(_shareObj);
     },
     //进入商城设置页面
     toSet() {
@@ -189,7 +206,7 @@ export default {
       }
     }
     .set-div {
-      width: 70/@dev-Width *1rem;
+      width: 8%;
       .shop-textc;
       .fs0;
       i {

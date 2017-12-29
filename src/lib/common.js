@@ -244,8 +244,9 @@ var Rxports = {
 	/**
 	 * 开启或关闭loading
 	 */
-	loading(_this, flag) {
-		_this.$parent.$refs.loading.show(flag);//关闭loading*/
+	loading(_this, flag,_parent) {
+		_parent = _parent || _this.$parent;
+		_parent.$refs.loading.show(flag);//关闭loading*/
 	}
 };
 

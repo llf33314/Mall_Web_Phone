@@ -26,7 +26,8 @@ export default {
     return {
       type: this.$route.params.type,
       busId: this.$route.params.busId || sessionStorage.getItem("busId"),
-      qrCodePath: null
+      qrCodePath: null,
+      imgUrl: null
     };
   },
   components: {
@@ -58,9 +59,32 @@ export default {
         data: _data,
         success: function(data) {
           let myData = data.data;
+          _this.imgUrl = data.imgUrl;
           _this.qrCodePath = myData.qrCodePath;
+          _this.getWxShare(myData);
         }
       });
+    },
+    //获取微信分享数据
+    getWxShare(myData) {
+       let title = myData.mallName || myData.userName;
+      if(title.split("的商城").length == 1){
+        title += "的商城";
+      }
+      let desc = myData.mallIntroducation;
+      let _shareObj = {
+        title: title,
+        desc: desc,
+        url: location.href,
+        imgUrl: this.imgUrl + myData.mallHeadPath,
+        isOpenAllMenu: true, //显示所有功能按钮接口
+        jsApiList: [
+          "onMenuShareTimeline",
+          "onMenuShareAppMessage",
+          "showAllNonBaseMenuItem"
+        ]
+      };
+      this.$parent.getWxShare(_shareObj);
     },
     back() {
       window.history.go(-1);
