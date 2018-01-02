@@ -590,13 +590,6 @@ export default new Router({
         title: '超级销售员商城首页'
       }
     }, {
-      path: '/seller/share/:busId/:proId/:saleMemberId',
-      name: 'sellerShare',
-      component: sellerShare,
-      meta: {
-        title: '超级销售员商城首页'
-      }
-    }, {
       path: '/error/404/:busId',
       name: 'error_404',
       component: error_404,

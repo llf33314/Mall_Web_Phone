@@ -55,7 +55,7 @@ export default {
         }
       ],
       isShow: "",
-      isFooter: false
+      isFooter: true
     };
   },
   mounted() {
@@ -125,10 +125,11 @@ export default {
           busId: _busId
         },
         success: function(data) {
-          // if(data.code != 0){
-          //     _this.isFooter = false;
-          // }
           let footerMenu = data.data;
+          if (footerMenu == null || footerMenu.length == 0) {
+            _this.isFooter = false;
+            return;
+          }
           for (var menu in footerMenu) {
             _this.footerData.forEach((itme, index) => {
               if (menu == _this.footerData[index].statu) {

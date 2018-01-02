@@ -23,11 +23,11 @@
                     v-for="(shop,j) in cart.shopResultList"
                     :key="j">
                     <div class="order-shop border">
-                        <p class="order-shop-name"  @click.self="jupm_shop(shop)"> 
+                        <p class="order-shop-name"  @click.self="jupm_shop(shop,cart.busId)"> 
                             <i class="iconfont icon-dui" :class="{'style-main-bg':shop.show}"
                             @click="select_Goods(shop)"></i>
-                            <i class="iconfont icon-dianpu" @click.self="jupm_shop(shop)"></i>
-                            <span class="fs36"  @click.self="jupm_shop(shop)">{{shop.shopName}}</span>
+                            <i class="iconfont icon-dianpu" @click.self="jupm_shop(shop,cart.busId)"></i>
+                            <span class="fs36"  @click.self="jupm_shop(shop,cart.busId)">{{shop.shopName}}</span>
                             <i class="iconfont icon-you" ></i>
                         </p>
                         <p class="fs42 shopGray" @click="edit(i,j,shop)">
@@ -142,7 +142,7 @@
             <div class="order-item" 
                 v-for=" (cart,i) in sxShopCartList" 
                 :key="i">
-                <div class="order-item-title fs40">
+                <div class="order-item-title fs40" @click="jupm_cart(cart)">
                     <div class="order-title-img">
                       <default-img :background="cart.userImageUrl"
                                   :isHeadPortrait="1">
@@ -153,7 +153,7 @@
                 <div class="shopping-box"
                     v-for="(shop,j) in cart.shopResultList"
                     :key="j">
-                    <div class="order-shop border">
+                    <div class="order-shop border" @click="jupm_shop(shop,cart.busId)">
                         <p class="order-shop-name">
                             <i class="iconfont icon-dianpu"></i>
                             <span class="fs36">{{shop.shopName}}</span>
@@ -164,7 +164,7 @@
                         <div class="order-item-content" :class="{'sx-content':type == 1}"
                             v-for="(goods,index) in shop.productResultList"
                             :key="index">
-                            <div class="shoopCart-content">
+                            <div class="shoopCart-content" >
                                 <div class="order-item-img">
                                   <default-img :background="imgUrl+goods.productImageUrl"
                                                 :isHeadPortrait="0">
@@ -959,13 +959,13 @@ export default {
      * 商家跳转
     */
     jupm_cart(e){
-        console.log(e,'商家跳转')
+        this.$router.push("/stores/"+e.busId);
     },
     /** 
      * 店铺跳转
     */
-    jupm_shop(e){
-        console.log(e,'店铺跳转')
+    jupm_shop(e,busId){
+        this.$parent.getPageId(busId,e.shopId,true);
     },
     /** 
      * 结算条件判断

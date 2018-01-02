@@ -1,8 +1,11 @@
 <template>
     <div class="shop-wrapper">
+      
+        <div class="title_div" v-if="isSuccess">授权成功</div>
+        <div class="title_div" v-else-if="isGrantError"></div>
         <div class="title_div" v-if="isError">请用微信浏览器扫描二维码</div>
-        <div class="title_div" v-if="isSuccess">您已授权成功</div>
-        <div class="error_url_image"><img src="../../../assets/img/error/error_url.png"/></div>
+        <div class="error_url_image" v-if="isError || isGrantError"><img src="../../../assets/img/error/error_url.png"/></div>
+        <div class="error_url_image" v-else><img src="../../../assets/img/error/success.png"/></div>
     </div>
 </template>
 
@@ -11,8 +14,9 @@ export default {
   data() {
     return {
       busId: this.$route.params.busId || sessionStorage.getItem("busId"),
-      isError: false,
-      isSuccess: false
+      isError: true,
+      isSuccess: false,
+      isGrantError: false
     };
   },
   mounted() {
@@ -45,6 +49,8 @@ export default {
             _this.isError = true;
           } else if (data.code == 0) {
             _this.isSuccess = true;
+          } else {
+            _this.isGrantError = false;
           }
         }
       });

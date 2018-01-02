@@ -47,7 +47,7 @@
     <section class="shop-main deltails-main">
         <div class="order-box">
             <div class="order-item">
-                <div class="order-item-title fs40 shop-box-justify">
+                <div class="order-item-title fs40 shop-box-justify" @click="jumpBus(order)">
                   <div class="shop-box-center">
                     <div class="order-title-img" style="">
                           <default-img :background="order.busImageUrl"
@@ -58,7 +58,7 @@
                   </div>
                   <div class="shop-font ">{{order.orderStatusName}}</div>
                 </div>
-                <div class="order-shop border">
+                <div class="order-shop border" @click="jumpShop(order)">
                     <p class="order-shop-name">
                         <i class="iconfont icon-dianpu"></i>
                         <span class="fs36">{{order.shopName}}</span>
@@ -290,17 +290,7 @@ export default {
       let productId = detail.productId;
       let shopId = detail.shopId;
       let busId = order.busId;
-      let url =
-        "/goods/details/" +
-        shopId +
-        "/" +
-        busId +
-        "/" +
-        this.orderType +
-        "/" +
-        productId +
-        "/" +
-        this.activityId;
+      let url = "/goods/details/" + shopId + "/" + busId + "/" + this.orderType + "/" + productId + "/" + this.activityId;
       if (this.commonFn.isNotNull(detail.saleMemberId)) {
         url += "/" + detail.saleMemberId + "/0";
       }
@@ -310,16 +300,15 @@ export default {
     groupBuyDetail(groupBuyId, joinId, memberId) {
       //查看团购详情
       let busId = this.busId;
-      this.$router.push(
-        "/groupbuy/detail/" +
-          busId +
-          "/" +
-          groupBuyId +
-          "/" +
-          joinId +
-          "/" +
-          memberId
-      );
+      this.$router.push( "/groupbuy/detail/" + busId + "/" + groupBuyId + "/" + joinId + "/" + memberId );
+    },
+    /**跳转到商家页面 */
+    jumpBus(e){
+      this.$router.push("/stores/"+e.busId);
+    },
+    /**跳转到店铺页面 */
+    jumpShop(e){
+      this.$parent.getPageId(e.busId,e.shopId,true);
     }
   }
 };

@@ -5,7 +5,7 @@
         <banner :banner="goodsData.imageList" :imgUrl="imgUrl"  v-if="goodsData.imageList != null" :colorStyle="'style-main-bg'">
         </banner>
         <!--商品信息-->
-        <goods-info :row="goodsData" :type="type">
+        <goods-info :row="goodsData" :types="type">
         </goods-info>
         <!--查看所含优惠卷-->
         <div @click="isCardRecevie=true"
@@ -541,7 +541,7 @@ export default {
         pfSetObj: {}
       }, //批发数据
       imgSelecte: 0,
-      type: "",
+      type: 0,
       activityId:  this.$route.params.activityId || 0,//活动id
       isProductCode: false, //商品编号,
       guigePrice: "", //规格集合分类
@@ -1315,6 +1315,7 @@ export default {
     this.phoneProductAjax();
     this.type = this.$route.params.type;
     this.isShowButtom = true;
+
 
     //清空提交订单的参数
     this.$store.commit("img_url", null);

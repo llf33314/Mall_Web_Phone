@@ -36,9 +36,9 @@
     </header> 
     <section class="shop-main deltails-main" v-if="orderList != null && orderList.length > 0">
         <div class="order-box">
-            <div class="order-item" v-for="bus in orderList">
+            <div class="order-item" v-for="(bus,bIndex) in orderList" :key="bIndex">
                 <!-- 商家头像和名称区域 -->
-                <div class="order-item-title fs40">
+                <div class="order-item-title fs40" @click="jumpBus(bus)">
                     <div class="order-title-img">
                         <default-img :background="bus.busImageUrl"
                                     :isHeadPortrait="0">
@@ -46,9 +46,9 @@
                     </div>
                     <span>{{bus.busName}}</span>
                 </div>
-                <div v-for="shop in bus.shopResultList">
+                <div v-for="(shop,sIndex) in bus.shopResultList" :key="sIndex">
                     <!-- 店铺名称区域 -->
-                    <div class="order-shop border">
+                    <div class="order-shop border" @click="jumpPageIndex(shop,bus.busId)">
                         <p class="order-shop-name">
                             <i class="iconfont icon-dianpu"></i>
                             <span class="fs36">{{shop.shopName}}</span>
@@ -56,7 +56,7 @@
                         </p>
                     </div>
                     <!-- 商品循环 -->
-                    <div class="order-item-box border" v-for="product in shop.productResultList">
+                    <div class="order-item-box border" v-for="(product,pIndex) in shop.productResultList" :key="pIndex">
                         <div class="order-item-content">
                             <div class="order-item-img" @click="toProductDetail(product,bus.busId)">
                                 <default-img :background="imgUrl+product.productImageUrl"
@@ -912,6 +912,14 @@ export default {
       if (this.commonFn.isNotNull(url)) {
         location.href = url;
       }
+    },
+    //跳转到店铺列表页面
+    jumpBus(e){
+       this.$router.push("/stores/"+e.busId);
+    },
+    //跳转到商城首页
+    jumpPageIndex(e,busId){
+       this.$parent.getPageId(busId,e.shopId,true);
     }
   }
 };

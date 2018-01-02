@@ -3,8 +3,8 @@
     <content-no :statu="statu" :errorMsg="errorMsg" v-if="isShowNullContent"></content-no>
     <section class="shop-main order-main" v-if="!isShowNullContent && orderList != null">
         <div class="order-box">
-            <div class="order-item" v-for="(busItem,index) in orderList">
-                <div class="order-item-title fs40">
+            <div class="order-item" v-for="(busItem,index) in orderList" :key="index">
+                <div class="order-item-title fs40" @click="jumpBus(busItem)">
                     <div class="order-title-img">
                         <default-img :background="busItem.busImageUrl"
                                         :isHeadPortrait="1">
@@ -12,7 +12,7 @@
                     </div>
                     <span>{{busItem.busName}}</span>
                 </div>
-                <div class="order-shop border">
+                <div class="order-shop border" @click="jumpBus(busItem)">
                     <p class="order-shop-name">
                         <i class="iconfont icon-dianpu"></i>
                         <span class="fs36">{{busItem.shopName}}</span>
@@ -22,7 +22,7 @@
                         {{busItem.returnStatusDesc}}
                     </p> -->
                 </div>
-                <div class="order-item-box " v-for="detail in busItem.detailResultList">
+                <div class="order-item-box " v-for="(detail,dIndex) in busItem.detailResultList" :key="dIndex">
                     <div class="order-item-content  border"  @click="toProductDetail(detail.productId,detail.shopId,busItem.busId,busItem.orderType,busItem.activityId)">
                         <div class="order-item-img">
                             <default-img  
@@ -277,6 +277,14 @@ export default {
       //跳转至协商详情页面
       this.isMore = -1;
       this.$router.push("/return/consult/" + this.busId + "/" + returnId);
+    },
+    /**跳转到商家页面 */
+    jumpBus(e){
+      this.$router.push("/stores/"+e.busId);
+    },
+    /**跳转到店铺页面 */
+    jumpShop(e){
+      this.$parent.getPageId(e.busId,e.shopId,true);
     }
   }
 };

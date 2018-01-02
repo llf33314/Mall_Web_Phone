@@ -104,39 +104,40 @@
 </template>
 
 <script>
-import countDown from '../../home/classify_child/countDown';//倒计时
+import countDown from "../../home/classify_child/countDown"; //倒计时
 
 export default {
-    props:['row',"type"],
+  props: ["row", "types"],
 
-    components: {
-        countDown
+  components: {
+    countDown
+  },
+  watch: {
+    row(a, b) {
+      this.goodsData = this.row;
+      console.log(a, b, "aabb");
     },
-    watch: {
-      'row'(a,b){
-          this.goodsData = this.row;
-          console.log(a,b,'aabb');
-      }  
-    },
-    data () {
-        return {
-            type: 0,
-            goodsData:{
-                auctionResult:{
-                   isWin: 0
-                }
-            }
-        }
-    },
-    methods:{
-
-    },
-    mounted () {
-        // this.type = this.$route.params.type;
-        console.log('goods-info-other',this.goodsData,this.row)
+    types(a, b) {
+      if (a != b) {
+        this.type = this.types;
+      }
     }
-
-}
+  },
+  data() {
+    return {
+      type: 0,
+      goodsData: {
+        auctionResult: {
+          isWin: 0
+        }
+      }
+    };
+  },
+  methods: {},
+  mounted() {
+    console.log("goods-info-other", this.goodsData, this.row);
+  }
+};
 </script>
 
 <style>
