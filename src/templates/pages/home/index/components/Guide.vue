@@ -1,18 +1,31 @@
 <template>
     <div>
-        <!--<router-view></router-view>-->
+      <div class="guideModule">
+        <div class="bor" :style="{'borderTopColor':data.color,'borderTopStyle':data.style==1?'dashed':'solid','margin': '0 ' + data.leftSide?'10px':'0'}"></div>
+      </div>
     </div>
 </template>
 
 <script>
 
-	// import Lib from '@/assets/js/Lib';
+	
 
 	export default {
     name: 'Guide',
 		data() {
 			return {}
 		},
+    props:{
+      data:{
+        type: [Object,Array]
+      },
+      _page:{
+        type: Number
+      },
+      picJson:{
+        type: [Object,Array]
+      }
+    },
 		components: {},
 		//实例初始化最之前，无法获取到data里的数据
 		beforeCreate() {
@@ -34,3 +47,4 @@
 	}
 
 </script>
+

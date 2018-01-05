@@ -52,8 +52,8 @@
 
 
   //打包时切换
-  h5App.api = "/api";
-  // h5App.api ="";
+  // h5App.api = "/api";
+  h5App.api ="";
 
   /**
    * 环境配置
@@ -288,8 +288,11 @@
     /**********************公用发送短信接口*****************************/
     validate_code_get : '/phoneMember/L6tgXlBFeK/getValCode' ,
     //发送短信
-    bind_phone_post: '/phoneMember/L6tgXlBFeK/bingdingPhoneH5'
+    bind_phone_post: '/phoneMember/L6tgXlBFeK/bingdingPhoneH5',
     //绑定手机号码
+
+    generate_qr_code_get : h5App.api + '/phonePage/L6tgXlBFeK/generateQRCode'
+    //生成二维码
 
   };
 

@@ -1,5 +1,4 @@
 <template>
-    <div></div>  
 </template>
 <script>
 //微信分享
@@ -7,10 +6,6 @@ import wx from "weixin-js-sdk";
 
 export default {
   props: {
-    //微信分享参数
-    wxData: {
-      default: null
-    },
     //分享内容，以及是否开启分享
     shareData: {
       default: {
@@ -21,54 +16,96 @@ export default {
   },
   data: function() {
     return {
-      shareObj: null,//分享内容
-      wxObj: null//微信分享必要的参数
+      wxObj: null ,//微信参数
+      shareObj : null,//分享参数
     };
   },
   watch: {
-    wxData(a, b) {
-      // console.log(a, "wxData");
-      if (a != null) {
-        this.wxObj = a;
-        this.load();
-      }
-    },
     shareData(a, b) {
       if (a != null) {
-        // console.log(a,"shareData")
         this.shareObj = a;
-        this.load();
+        this.wxShare();
       }
     }
   },
   beforeDestroy() {},
+  beforeMount() {
+    console.log(this.$store.state.browerType,"this.$store.state.browerType")
+    this.reloadUrl();
+  },
   mounted() {
-    // console.log(this.shareData, "this.shareData");
+    // alert(location.href+ "当前页面");
+    this.getShareConfigData();
+    // console.log(this.shareData);
   },
   methods: {
-    load() {
-      let _wxObj = this.wxObj;
-      let _shareObj = this.shareObj;
-      if (_shareObj == null || _wxObj == null) {
-        return;
+    reloadUrl(){
+      if(this.$store.state.firstUrl != location.href ){
+        location.reload();
       }
-      // alert(_shareObj.url);
-      // console.log(_wxObj, "_wxObj", _shareObj, "_shareObj");
-
-      wx.config({
-        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-        appId: _wxObj.appid, // 必填，公众号的唯一标识
-        timestamp: _wxObj.timestamp, // 必填，生成签名的时间戳
-        nonceStr: _wxObj.nonce_str, // 必填，生成签名的随机串
-        signature: _wxObj.signature, // 必填，签名，见附录1
-        jsApiList: _shareObj.jsApiList || [] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+    },   
+    //获取微信分享数据
+    getShareConfigData() {
+      let _this = this;
+      // let _shareObj = this.shareData;
+      // console.log(this.$store.state.browerType,"this.$store.state.browerType")
+      // alert(_shareObj == null || this.$store.state.browerType != 1);
+      // //只有微信浏览器才有分享
+      // if(_shareObj == null || this.$store.state.browerType != 1){
+      //   return;
+      // }
+      _this.ajaxRequest({
+        url: h5App.activeAPI.wx_share_get,
+        data: {
+          url: location.href
+        },
+        type: "get",
+        success: function(data) {
+          _this.wxObj = data.data;
+          console.log(_this.wxObj,"_this.wxObj")
+          // _this.wxShare();
+        }
       });
+    },
+    wxShare() {
+      let _shareObj = this.shareData;
+      let _wxObj = this.wxObj;
+      if(_shareObj == null || _wxObj == null){
+        return null;
+      }
+      console.log("---------", _shareObj,"------",_wxObj);
+      wx.config({
+        debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: _wxObj.appid || null, // 必填，公众号的唯一标识
+        timestamp: _wxObj.timestamp || null, // 必填，生成签名的时间戳
+        nonceStr: _wxObj.nonce_str || null, // 必填，生成签名的随机串
+        signature: _wxObj.signature || null, // 必填，签名，见附录1
+        jsApiList: _shareObj.jsApiList || [
+          "onMenuShareTimeline",
+          "onMenuShareAppMessage"
+        ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+      });
+      alert(this.$store.state.browerType+
+        " wx.config-------" +
+          JSON.stringify({
+            debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: _wxObj.appid || null, // 必填，公众号的唯一标识
+            timestamp: _wxObj.timestamp || null, // 必填，生成签名的时间戳
+            nonceStr: _wxObj.nonce_str || null, // 必填，生成签名的随机串
+            signature: _wxObj.signature || null, // 必填，签名，见附录1
+            //jsApiList: _shareObj.jsApiList || [  "onMenuShareTimeline",  "onMenuShareAppMessage" ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+             jsApiList: [
+              'onMenuShareTimeline',
+              'onMenuShareAppMessage'
+            ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+          })
+      );
 
       wx.ready(() => {
-        if (_shareObj.isOpenAllMenu) {
-          //显示所有功能按钮接口
-          wx.showAllNonBaseMenuItem();
-        }
+        // if (_shareObj.isOpenAllMenu) {
+        //   //显示所有功能按钮接口
+        //   wx.showAllNonBaseMenuItem();
+        // }
         //分享给朋友
         wx.onMenuShareAppMessage({
           title: _shareObj.title || "", // 分享标题
@@ -84,11 +121,28 @@ export default {
             // 用户取消分享后执行的回调函数
           }
         });
+        alert(
+          "wx.onMenuShareAppMessage---" +
+            JSON.stringify({
+              title: _shareObj.title || "", // 分享标题
+              desc: _shareObj.desc || "", // 分享描述
+              link: _shareObj.url || location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+              imgUrl: _shareObj.imgUrl || "", // 分享图标
+              //   type: _shareObj.desc || "", // 分享类型,music、video或link，不填默认为link
+              //   dataUrl: "", // 如果type是music或video，则要提供数据链接，默认为空
+              success: function() {
+                // 用户确认分享后执行的回调函数
+              },
+              cancel: function() {
+                // 用户取消分享后执行的回调函数
+              }
+            })
+        );
 
         //分享到朋友圈
         wx.onMenuShareTimeline({
           title: _shareObj.title || "", // 分享标题
-          link: _shareObj.url || "", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          link: _shareObj.url || location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
           imgUrl: _shareObj.imgUrl || "", // 分享图标
           success: function() {
             // 用户确认分享后执行的回调函数
@@ -97,6 +151,11 @@ export default {
             // 用户取消分享后执行的回调函数
           }
         });
+      });
+      wx.error(function(res) {
+        alert("error");
+        // location.reload();
+        // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
       });
     }
   }

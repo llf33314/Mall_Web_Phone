@@ -1,18 +1,35 @@
 <template>
     <div>
-        <!--<router-view></router-view>-->
+      <div class="goShopModule van-hairline--top-bottom">
+        <a class="custom-store-link">
+          <i class="custom-store-img"></i>
+          <span class="custom-store-name">{{data.stoName}}</span>
+          <span class="custom-store-enter">{{data.name}}</span>
+        </a>
+      </div>
     </div>
 </template>
 
 <script>
 
-	// import Lib from '@/assets/js/Lib';
+	
 
 	export default {
     name: 'GoShop',
 		data() {
 			return {}
 		},
+    props:{
+      data:{
+        type: [Object,Array]
+      },
+      _page:{
+        type: Number
+      },
+      picJson:{
+        type: [Object,Array]
+      }
+    },
 		components: {},
 		//实例初始化最之前，无法获取到data里的数据
 		beforeCreate() {
@@ -34,3 +51,4 @@
 	}
 
 </script>
+

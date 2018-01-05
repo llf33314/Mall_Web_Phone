@@ -196,7 +196,8 @@ export default {
       let _data = {
         busId: _this.busId, //商家id
         url: location.href, //当前页面地址
-        browerType: _this.$store.state.browerType //浏览器类型 1微信 99 其他浏览器
+        browerType: _this.$store.state.browerType, //浏览器类型 1微信 99 其他浏览器
+        ucLogin: 1//不需要登陆
       };
       _this.ajaxRequest({
         url: h5App.activeAPI.my_center_post,

@@ -666,6 +666,7 @@ export default {
       let _data = {
           url: _this.$store.state.loginDTO_URL,
           browerType: _this.$store.state.browerType,
+          ucLogin: 1,//不需要登陆
           shopId: _this.$store.state.shopId,
           busId: _this.$store.state.busId,
           productId: _this.$route.params.goodsId,
@@ -1398,7 +1399,7 @@ export default {
       padding: 30/@dev-Width *1rem 0;
       .goods-address-txt {
         width: 94%;
-        float: left;
+        // float: left;
       }
       .shopGray {
         color: #c7c7cc;

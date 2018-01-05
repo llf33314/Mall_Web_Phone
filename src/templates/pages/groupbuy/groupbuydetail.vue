@@ -103,6 +103,7 @@
       </div>
     </div>
 </section>
+<wx-share :shareData="shareObj"></wx-share>
 </div>
 </template>
 
@@ -112,6 +113,7 @@ import tuangoubg from "assets/img/tungoubg.jpg";
 import grounpSharebg from "assets/img/grounpShare.png";
 import countDown from "../home/classify_child/countDown";
 import filter from "@/lib/filters";
+import wxShare from "components/wxShare"; //微信分享
 export default {
   data() {
     return {
@@ -132,12 +134,14 @@ export default {
       curPage: 1, //当前页数
       pageCount: 1, //总页数
       shopId: 0, //店铺id
-      isMore: 2
+      isMore: 2,
+      shareObj: null //分享内容
     };
   },
   components: {
     defaultImg,
-    countDown
+    countDown,
+    wxShare
   },
   watch: {
     isShowShare(e) {
@@ -175,6 +179,7 @@ export default {
         busId: _this.busId, //商家id
         url: location.href, //当前页面的地址
         browerType: _this.$store.state.browerType, //浏览器类型
+        ucLogin: 1,//不需要登陆
         id: this.id, //团购id
         joinId: this.joinId, //参团id
         buyerUserId: this.memberId
@@ -206,13 +211,9 @@ export default {
         url: location.href,
         imgUrl: this.imgUrl + myData.productMap.imageUrl,
         isOpenAllMenu: true, //显示所有功能按钮接口
-        jsApiList: [
-          "onMenuShareTimeline",
-          "onMenuShareAppMessage",
-          "showAllNonBaseMenuItem"
-        ]
+        jsApiList: ["onMenuShareTimeline", "onMenuShareAppMessage"]
       };
-      this.$parent.getWxShare(_shareObj);
+      this.shareObj = _shareObj;
     },
     loadMore() {
       let pageCount = this.pageCount; //总页数
@@ -238,6 +239,7 @@ export default {
       let _data = {
         url: _this.$store.state.loginDTO_URL,
         browerType: _this.$store.state.browerType,
+        ucLogin: 1,//不需要登陆
         shopId: _this.shopId,
         busId: _this.busId,
         type: 1, //	类型，1.团购 3.秒杀 4.拍卖 5 粉币 6预售 7批发	可不传

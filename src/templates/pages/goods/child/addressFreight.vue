@@ -8,7 +8,7 @@
         <!-- <i class="iconfont icon-jiantou-copy shopGray"></i> -->
     </div>
     <div class="shopGray fs40 goods-address-postage">
-        运费 :{{data.freightMoney}}
+        运费 : {{data.freightMoney}}
     </div>
 </section>
 </template>

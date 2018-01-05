@@ -23,6 +23,7 @@ const state = {
     orderData:null,
     imgUrl:"",
     QQ: null,//QQ客服
+    firstUrl : ""//第一次访问的路径
 }
 const actions ={
     
@@ -43,6 +44,7 @@ const mutations = {
         state.loginDTO_URL =  data.loginDTO_URL || state.loginDTO_URL;
         state.pageId = data.pageId || state.pageId;
         state.QQ = data.QQ || state.QQ;
+        state.firstUrl = data.firstUrl || state.firstUrl;
     },
     show_top:(state,Booleans)=>state.showTop =  Booleans,
     show_footer:(state,Booleans)=>state.showfooter =  Booleans,

@@ -8,30 +8,34 @@
     </div>
     <div class="index-nav clearfix" >
       <div class="index-title">我的二维码</div>
-      <div class="image-div" v-if="qrCodePath　!= null">
-        <default-img :background="qrCodePath"
-                          :isHeadPortrait="1"></default-img>
+      <div class="image-div" >
+        <img :src="qrCodePath" />
       </div>
       <div class="index-msg">将此链接或二维码图片发送给您的好友，并且好友
 完成下单购买，您就可以获得商家设置的丰厚佣金哦</div>
 
     </div>
+  <wx-share :shareData="shareObj"></wx-share>
   </div>
 </template>
 
 <script>
 import defaultImg from "components/defaultImg";
+import wxShare from "components/wxShare"; //微信分享
 export default {
   data() {
     return {
       type: this.$route.params.type,
       busId: this.$route.params.busId || sessionStorage.getItem("busId"),
-      qrCodePath: null,
-      imgUrl: null
+      saleMemberId:this.$route.params.saleMemberId,
+      qrCodePath:  null,
+      imgUrl: null,
+      shareObj:null,//分享内容
     };
   },
   components: {
-    defaultImg
+    defaultImg,
+    wxShare
   },
   //已成功挂载，相当ready()
   mounted() {
@@ -39,6 +43,8 @@ export default {
     this.$store.commit("show_footer", false); //隐藏底部导航栏
 
     this.loadDatas(); //初始化数据
+
+    this.qrCodePath = h5App.activeAPI.generate_qr_code_get+"?url=/seller/mallindex/"+this.busId+"/"+this.saleMemberId;
   },
   beforeDestroy() {
     //离开后的操作
@@ -60,7 +66,7 @@ export default {
         success: function(data) {
           let myData = data.data;
           _this.imgUrl = data.imgUrl;
-          _this.qrCodePath = myData.qrCodePath;
+          // _this.qrCodePath = myData.qrCodePath;
           _this.getWxShare(myData);
         }
       });
@@ -81,10 +87,9 @@ export default {
         jsApiList: [
           "onMenuShareTimeline",
           "onMenuShareAppMessage",
-          "showAllNonBaseMenuItem"
         ]
       };
-      this.$parent.getWxShare(_shareObj);
+      this.shareObj = _shareObj;
     },
     back() {
       window.history.go(-1);
@@ -113,8 +118,8 @@ export default {
       padding-top: 110/@dev-Width *1rem;
     }
     .image-div {
-      width: 440/@dev-Width *1rem;
-      height: 440/@dev-Width *1rem;
+      width: 600/@dev-Width *1rem;
+      height: 600/@dev-Width *1rem;
       margin: 120/@dev-Width *1rem auto;
     }
     .index-msg {

@@ -1,9 +1,12 @@
 <template>
     <div class="shop-wrapper">
       
-        <div class="title_div" v-if="isSuccess">授权成功</div>
-        <div class="title_div" v-else-if="isGrantError"></div>
-        <div class="title_div" v-if="isError">请用微信浏览器扫描二维码</div>
+        <div class="title_div" v-if="isLoading">授权中</div>
+        <div v-else>
+          <div class="title_div" v-if="isSuccess">授权成功</div>
+          <div class="title_div" v-if="isGrantError"></div>
+          <div class="title_div" v-if="isError">请用微信浏览器扫描二维码</div>
+        </div>
         <div class="error_url_image" v-if="isError || isGrantError"><img src="../../../assets/img/error/error_url.png"/></div>
         <div class="error_url_image" v-else><img src="../../../assets/img/error/success.png"/></div>
     </div>
@@ -14,9 +17,10 @@ export default {
   data() {
     return {
       busId: this.$route.params.busId || sessionStorage.getItem("busId"),
-      isError: true,
+      isError: false,
       isSuccess: false,
-      isGrantError: false
+      isGrantError: false,
+      isLoading: true
     };
   },
   mounted() {
@@ -41,10 +45,12 @@ export default {
       _this.ajaxRequest({
         status: false,
         url: h5App.activeAPI.busGrant_get + _busId,
-        data: {},
-        type: "get",
+        data: {
+          url: location.href
+        },
         status: false,
         success: function(data) {
+          _this.isLoading = false;
           if (data.code == 1026) {
             _this.isError = true;
           } else if (data.code == 0) {

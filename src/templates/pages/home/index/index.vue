@@ -8,7 +8,6 @@ import Admin from "./components/Admin";
 export default {
   data() {
     return {
-      materialUrl: "https://deeptel.com.cn/mallPage/82/79B4DE7C/pageIndex.do"
     };
   },
   components: {
@@ -28,5 +27,6 @@ export default {
 <style lang="less" scoped>
 .main-divs {
   margin-bottom: 63px;
+  
 }
 </style>

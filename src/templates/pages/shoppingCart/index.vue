@@ -425,7 +425,8 @@ export default {
             url: _this.$store.state.loginDTO_URL,
             browerType:_this.$store.state.browerType,
             busId:_this.$route.params.busId,
-            shopId: _this.$route.params.shopId
+            shopId: _this.$route.params.shopId,
+            ucLogin: 1,//不需要登陆
         }
         if(_this.$route.params.type == 1){
             //批发购买条件 1

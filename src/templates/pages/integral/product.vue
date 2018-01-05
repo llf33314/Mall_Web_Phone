@@ -134,7 +134,8 @@ export default {
         busId: _this.busId, //商家id
         url: location.href, //当前页面的地址
         browerType: _this.$store.state.browerType, //浏览器类型
-        productId: _this.productId //商品id
+        productId: _this.productId, //商品id
+        ucLogin: 1,//不需要登陆
       };
       _this.ajaxRequest({
         url: h5App.activeAPI.integral_product_post,

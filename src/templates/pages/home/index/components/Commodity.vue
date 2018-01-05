@@ -172,7 +172,7 @@
 
 <script>
 
-	// import Lib from '@/assets/js/Lib';
+	
 
 	export default {
 	  name:'Commodity',

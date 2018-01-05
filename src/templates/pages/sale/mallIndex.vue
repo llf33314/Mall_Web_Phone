@@ -42,12 +42,14 @@
           </p>
         </div>
       </div>
+      <wx-share :shareData="shareObj"></wx-share>
     </div>
 </template>
 
 <script>
 import defaultImg from "components/defaultImg";
 import filte from "@/lib/filters";
+import wxShare from "components/wxShare"; //微信分享
 export default {
   data() {
     return {
@@ -58,11 +60,13 @@ export default {
       productList: null, //商品集合
       mallSet: null, //商城设置
       background: "/static/img/kuaidiyuan.21c5411.png",
-      imgUrl: null
+      imgUrl: null,
+      shareObj: null,//分享内容
     };
   },
   components: {
-    defaultImg
+    defaultImg,
+    wxShare
   },
   //已成功挂载，相当ready()
   mounted() {
@@ -81,7 +85,8 @@ export default {
         busId: _this.busId, //商家id
         url: location.href, //当前页面的地址
         browerType: _this.$store.state.browerType, //浏览器类型
-        saleMemberId: this.saleMemberId
+        saleMemberId: this.saleMemberId,
+        ucLogin: 1,//不需要登陆
       };
       _this.ajaxRequest({
         url: h5App.activeAPI.seller_mall_index_post,
@@ -110,10 +115,9 @@ export default {
         jsApiList: [
           "onMenuShareTimeline",
           "onMenuShareAppMessage",
-          "showAllNonBaseMenuItem"
         ]
       };
-      this.$parent.getWxShare(_shareObj);
+      this.shareObj = _shareObj;
     },
     //进入商城设置页面
     toSet() {

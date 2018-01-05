@@ -75,6 +75,10 @@ export default {
     .spec-box{
       width: 100%;
       border: 1px solid #ddd;
+      border-bottom: 0;
+    }
+    .spec-box:last-child{
+      border-bottom: 1px solid #ddd;
     }
     .spec-list{
       width: 100%;

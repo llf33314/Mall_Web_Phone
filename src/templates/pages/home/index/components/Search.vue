@@ -4,18 +4,19 @@
         <div style="margin: 0 auto;position: relative;"
              :style="{'width': conversion(data.attr.width) +'rem','height': conversion(data.attr.height + 2) + 'rem'}">
           <input type="text"
-                 placeholder="请输入搜索关键字"
+                 placeholder="搜索商品"
                  style="width:100%;height:100%;"
                  :style="{'borderColor':data.attr.borderColor,'color':data.attr.color,'backgroundColor':data.attr.bgColor}">
           <i class="find_icon"></i>
         </div>
+
       </div>
     </div>
 </template>
 
 <script>
 
-	// import Lib from '@/assets/js/Lib';
+	
 
 	export default {
     name: 'Search',
@@ -52,3 +53,4 @@
 	}
 
 </script>
+

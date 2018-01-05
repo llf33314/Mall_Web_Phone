@@ -209,6 +209,7 @@ export default {
                 // 'loginDTO':  JSON.stringify(_this.$store.state.loginDTO),
                 'url':    _this.$store.state.loginDTO_URL,
                 'browerType':    _this.$store.state.browerType,
+                'ucLogin': 1,//不需要登陆
                 'shopId':	 _this.$store.state.shopId ,
                 'busId'	:    _this.$store.state.busId,
                 'groupId':	data.groupId || '',

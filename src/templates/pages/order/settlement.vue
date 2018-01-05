@@ -561,7 +561,8 @@ export default {
         from: _this.from,
         busId: this.$route.params.busId || sessionStorage.getItem("busId"),
         url: location.href,
-        browerType: _this.$store.state.browerType
+        browerType: _this.$store.state.browerType,
+        ucLogin: 1,//不需要登陆
       };
       if (_this.from == 1) {
         _data.cartIds = _this.$route.params.ids;

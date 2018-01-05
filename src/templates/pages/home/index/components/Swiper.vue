@@ -7,7 +7,7 @@
               <div class="swiper-title">{{pic.title}}</div>
               <a :href="picJson.imgID[index].url">
                 <img id="swiper_fist_pic" :src="pic.src" v-if="index == 0"/>
-                <img id="swiper_fist_pic" class="swiper-lazy" :src="pic.src" v-if="index != 0"/>
+                <img id="swiper_fist_pic" class="swiper-lazy" :src="pic.src" v-if="index!=0"/>
                 <div class="swiper-lazy-preloader box21" v-if="index != 0"></div>
               </a>
             </div>
@@ -22,10 +22,10 @@
 
 <script>
 
-	// import Lib from '@/assets/js/Lib';
+	
 
 	export default {
-    name: 'ShopSwiper',
+    name: 'Swiper',
 		data() {
 			return {}
 		},

@@ -8,7 +8,7 @@
     <loading ref="loading"></loading>
     <footer-nav ref="footer_nav" v-if="$store.state.showfooter" :busId="$store.state.busId"></footer-nav>
 
-    <wx-share :wxData="wxObj" :shareData="shareObj" v-show="wxObj != null"></wx-share>
+    <!-- <wx-share :shareData="shareObj"></wx-share> -->
     <!-- <iframe ref="footer_nav" src="https://deeptel.com.cn/mallPage/82/79B4DE7C/pageIndex.do" class="material"></iframe> -->
   </div>
 </template>
@@ -20,7 +20,7 @@ import shopDialog from "components/shopDialog.vue"; //弹窗
 import Top from "components/Top"; //置顶
 import footerNav from "components/footerNav"; //置顶
 import ajax from "@/lib/ajax.js";
-import wxShare from "components/wxShare"; //微信分享
+// import wxShare from "components/wxShare"; //微信分享
 
 export default {
   components: {
@@ -29,7 +29,7 @@ export default {
     shopDialog,
     Top,
     footerNav,
-    wxShare
+    // wxShare
   },
   computed: {
     listenshowpage1() {
@@ -53,7 +53,6 @@ export default {
     return {
       style: "",
       Messenger: "",
-      wxObj: null, //微信分享的配置
       shareObj: null //分享内容
     };
   },
@@ -61,6 +60,8 @@ export default {
     this.browser_type();
   },
   mounted() {
+    this.$store.commit("mutationData", { firstUrl: location.href });
+    console.log("url---app---",this.$store.state.firstUrl)
     this.commonFn.setFontSize();
   },
   methods: {
@@ -258,27 +259,7 @@ export default {
         },
         success: function(data) {}
       });
-    },
-    //获取微信分享数据
-    getWxShare(_shareObj) {
-      let _this = this;
-      _this.shareObj = _shareObj || null;
-      //只有微信浏览器才有分享
-      if(_shareObj == null || _this.$store.state.browerType != 1){
-        return;
-      }
-      _this.ajaxRequest({
-        url: h5App.activeAPI.wx_share_get,
-        data: {
-          url: location.href
-        },
-        type: "get",
-        success: function(data) {
-          _this.wxObj = data.data;
-          // console.log(_this.wxObj, "_this.wxObj");
-        }
-      });
-    }
+    } 
   }
 };
 </script>

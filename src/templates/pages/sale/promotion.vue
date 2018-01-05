@@ -28,11 +28,13 @@
     <section  class="section5">
           好友通过扫描海报购买商品，您将获得佣金
     </section> -->
+    <wx-share :shareData="shareObj"></wx-share>
   </div>
 </template>
 
 <script>
 import defaultImg from "components/defaultImg";
+import wxShare from "components/wxShare"; //微信分享
 export default {
   data() {
     return {
@@ -41,11 +43,13 @@ export default {
       qrCodePath: null,
       imageUrl: null,
       headImageUrl: null,
-      imgUrl: null
+      imgUrl: null,
+      shareObj: null//分享内容
     };
   },
   components: {
-    defaultImg
+    defaultImg,
+    wxShare
   },
   //已成功挂载，相当ready()
   mounted() {
@@ -97,10 +101,9 @@ export default {
         jsApiList: [
           "onMenuShareTimeline",
           "onMenuShareAppMessage",
-          "showAllNonBaseMenuItem"
         ]
       };
-      this.$parent.getWxShare(_shareObj);
+      this.shareObj = _shareObj;
     },
     back() {
       window.history.go(-1);

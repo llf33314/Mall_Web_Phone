@@ -31,11 +31,13 @@
           <p><span>第二步</span><span>从您转发的链接或图片进入商场的好友，系统将自动定为您的客户，它们在微信商场中购买任何商品，您都可以获得销售佣金</span></p>
           <p><span>第三步</span><span>您可以在销售中心查看【我的客户】和【客户订单】，好友确认收货后佣金方可提现。</span></p>
         </div>
+        <wx-share :shareData="shareObj"></wx-share>
     </div>
 </template>
 
 <script>
 import defaultImg from "components/defaultImg";
+import wxShare from "components/wxShare"; //微信分享
 export default {
   data() {
     return {
@@ -49,11 +51,13 @@ export default {
       productMap: null, //商品集合
       mallSet: {
         mallName: null
-      } //商城设置
+      }, //商城设置
+      shareObj: null//分享内容
     };
   },
   components: {
-    defaultImg
+    defaultImg,
+    wxShare
   },
   //已成功挂载，相当ready()
   mounted() {
@@ -80,7 +84,8 @@ export default {
       let _data = {
         busId: _this.busId, //商家id
         url: location.href, //当前页面的地址
-        browerType: _this.$store.state.browerType, //浏览器类型
+        browerType: _this.$store.state.browerType, //浏览器类型,
+        ucLogin: 1,//不需要登陆
         saleMemberId: this.saleMemberId, //销售员id
         productId: this.proId //商品id
       };
@@ -115,10 +120,9 @@ export default {
         jsApiList: [
           "onMenuShareTimeline",
           "onMenuShareAppMessage",
-          "showAllNonBaseMenuItem"
         ]
       };
-      this.$parent.getWxShare(_shareObj);
+      this.shareObj = _shareObj;
     },
     productDetail() {
       console.log(this.productMap);

@@ -10,13 +10,13 @@
       </div>
       <div class="no-news" v-if="statu == 2">
         <div class="shop-no-icon">
-          <i>！</i>
+          <i>!</i>
         </div>
         <a class="fs36"> 暂不相关信息</a>
       </div>
       <div class="no-shopcart" v-if="statu == 3">
         <div class="shop-no-icon">
-          <i>！</i>
+          <i>!</i>
         </div>
         <p class="fs36 shopGray">您的购物车还没有任何商品</p>
         <span class="no-button shopborder fs36"  @click="lockMall">去逛逛</span>
@@ -79,7 +79,6 @@ export default {
       width: 215/@dev-Width *1rem;
       height: 215/@dev-Width *1rem;
       margin: 0 auto;
-
       margin-bottom: 100/@dev-Width *1rem;
       .ik-box;
       .ik-box-align(center);

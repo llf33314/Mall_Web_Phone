@@ -527,14 +527,14 @@ export default new Router({
         title: '累计佣金'
       }
     }, {
-      path: '/seller/twoCode/:busId',
+      path: '/seller/twoCode/:busId/:saleMemberId',
       name: 'twoCode',
       component: twoCode,
       meta: {
         title: '我的二维码'
       }
     }, {
-      path: '/seller/promotion/:busId',
+      path: '/seller/promotion/:busId/:saleMemberId',
       name: 'promotion',
       component: promotion,
       meta: {

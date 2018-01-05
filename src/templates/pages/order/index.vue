@@ -1,8 +1,8 @@
 <template>
 <div id='app' class="shop-wrapper  order-wrapper">  
-    <header-nav :headers= "homeNav" v-if="homeNav != null && homeNav.length > 0" :status="'order'"></header-nav>  
+    <header-nav :headers= "homeNav" v-if="homeNav != null && homeNav.length > 0 && isShowNav" :status="'order'"></header-nav>  
     <content-no :statu="statu" :errorMsg="errorMsg" v-if="isShowNullContent"></content-no>
-    <section class="shop-main order-main" v-if="!isShowNullContent && orderList != null">
+    <section class="shop-main order-main" v-if="!isShowNullContent && orderList != null" :class="[!isShowNav , 'order-main2']">
         <div class="order-box">
             <div class="order-item" v-for="(busItem,index) in orderList" :key="index">
                 <div class="order-item-title fs40" @click="jumpBus(busItem)">
@@ -135,12 +135,12 @@ export default {
     return {
       homeNav: Language.order_nav_msg,
       isNavshow: "my",
+      isShowNav: false,
       statu: 1,
       bondStatu: 2,
       isShow: false,
       isShowNullContent: false,
-      background:
-        null,
+      background: null,
       busId: this.$route.params.busId || sessionStorage.getItem("busId"), //商家id
       type: this.$route.params.type, //查看订单类型 0查看全部订单 1待付款订单 2待发货订单 3已发货订单 4已完成订单 5 待评价 6 退款 7团购 8 秒杀
       curPage: 0, //当前页数
@@ -168,6 +168,15 @@ export default {
       }
     });
     _this.setTitle();
+    if(this.homeNav != null && this.homeNav.length > 0){
+      for(let i = 0;i<this.homeNav.length; i++){
+        let navs = this.homeNav[i];
+        if(navs.id + 1 == this.type){
+          this.isShowNav = true;
+          break;
+        }
+      }
+    }
   },
   watch: {
     $route(a, b) {
@@ -370,6 +379,9 @@ export default {
 }
 .order-main {
   padding: 148/@dev-Width *1rem 0;
+}
+.order-main2{
+  padding-top: 0;
 }
 .order-main,
 .deltails-main {

@@ -21,7 +21,7 @@ import storeConfig from './vuex/store'
 
 import jq from './lib/jquery-2.2.2.min';
 
-import vueFilter from './lib/vueDirective';
+import vueFilter from './lib/vueDirective.js';
 
 
 import MintUi from 'mint-ui'

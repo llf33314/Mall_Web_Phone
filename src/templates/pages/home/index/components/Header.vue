@@ -1,17 +1,17 @@
 <template>
     <div>
       <div class="tpl-shop" v-if="data.radio">
-        <div class="tpl-shop-header" style="background-color:#ffffff" :style="{'backgroundImage': 'url(' + data.stoPicture + ')'}">
-          <div class="tpl-shop-title">{{data.stoName}}</div>
+        <div class="tpl-shop-header" style="background-color:#ffffff" :style="{'backgroundImage': 'url(' + picJson.stoPicture + ')'}">
+          <div class="tpl-shop-title">{{picJson.stoName}}</div>
           <div class="tpl-shop-avatar">
-            <img :src="data.headImg" alt="头像">
+            <img :src="picJson.headImg" alt="头像">
           </div>
         </div>
         <div class="tpl-shop-content">
           <ul class="clearfix">
             <li class="js-all-goods">
               <a href="javascript:void(0);" onclick="shoppingall();">
-                <span class="count">{{data.countproduct}}</span>
+                <span class="count">{{picJson.countproduct}}</span>
                 <span class="text">全部商品</span>
               </a>
             </li>
@@ -35,7 +35,7 @@
 
 <script>
 
-	// import Lib from '@/assets/js/Lib';
+	
 
 	export default {
     name: 'ShopHeader',
@@ -44,6 +44,12 @@
 		},
     props:{
       data:{
+        type: [Object,Array]
+      },
+      _page:{
+        type: Number
+      },
+      picJson:{
         type: [Object,Array]
       }
     },
@@ -60,7 +66,6 @@
 		},
 		//已成功挂载，相当ready()
 		mounted() {
-
 
 		},
 		//相关操作事件

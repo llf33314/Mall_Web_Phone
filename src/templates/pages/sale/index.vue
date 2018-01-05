@@ -154,11 +154,13 @@ export default {
     },
     //我的二维码
     twoCode() {
-      this.$router.push("/seller/twoCode/" + this.busId);
+      let saleMemberId = this.sellerObj.seller.memberId;
+      this.$router.push("/seller/twoCode/" + this.busId+"/"+saleMemberId);
     },
     //推广海报
     promotion() {
-      this.$router.push("/seller/promotion/" + this.busId);
+      let saleMemberId = this.sellerObj.seller.memberId;
+      this.$router.push("/seller/promotion/" + this.busId+"/"+saleMemberId);
     },
     //销售规则
     saleRule() {

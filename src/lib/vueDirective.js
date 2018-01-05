@@ -11,7 +11,6 @@ Vue.directive('SwiperDraggable', {
   inserted: function (el,name,self) {
     var element = $(el);
     if(element.find('.swiper-slide').length<=1)return;
-    console.log(element.find('.swiper-container'))
     var swiper = new Swiper(element.find('.swiper-container'), {
       pagination: element.find(".swiper-pagination"),
       paginationClickable: true,
@@ -23,6 +22,13 @@ Vue.directive('SwiperDraggable', {
     });
   }
 });
+
+Vue.directive('scroll', {
+  // 当被绑定的元素插入到 DOM 中时……
+  inserted: function (el,name,self) {
+  }
+});
+
 Vue.directive('CountDown', {
   // 当被绑定的元素插入到 DOM 中时……
   inserted: function (el,name,self) {

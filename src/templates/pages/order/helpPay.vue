@@ -52,6 +52,7 @@
             </div>
         </section>
       <technical-support></technical-support>
+      <wx-share  :shareData="shareObj"></wx-share>
   </div>
 </template>
 
@@ -59,19 +60,22 @@
 import technicalSupport from "components/technicalSupport"; //技术支持
 import countDown from "./componet/countDown"; //倒计时
 import defaultImg from "components/defaultImg";
+import wxShare from "components/wxShare"; //微信分享
 
 export default {
   components: {
     technicalSupport,
     countDown,
-    defaultImg
+    defaultImg,
+    wxShare
   },
   data() {
     return {
       busId: this.$route.params.busId || sessionStorage.getItem("busId"), //商家id
       orderId: this.$route.params.orderId, //订单id
       imgUrl: "", //图片域名
-      orderObj: [] //订单对象
+      orderObj: [], //订单对象
+      shareObj:null, //分享内容
     };
   },
   mounted() {
@@ -91,6 +95,7 @@ export default {
         busId: _this.busId, //商家id
         url: location.href, //当前页面的地址
         browerType: _this.$store.state.browerType, //浏览器类型
+        ucLogin: 1,//不需要登陆
         orderId: _this.orderId //订单id
       };
       _this.ajaxRequest({
@@ -116,10 +121,9 @@ export default {
         jsApiList: [
           "onMenuShareTimeline",
           "onMenuShareAppMessage",
-          "showAllNonBaseMenuItem"
         ]
       };
-      this.$parent.getWxShare(_shareObj);
+      this.shareObj = _shareObj;
     },
     toReturnProduct(productId, shopId) {
       //跳转至订单详情页面
