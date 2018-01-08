@@ -138,7 +138,7 @@ export default {
         aucId: this.aucId, //拍卖id
         marginMoney: _myData.aucMargin, //保证金金额 必传
         proName: _productObj.proName, //商品名称
-        proImgUrl: _myData.imageObj.image_url, //商品图片
+        proImgUrl: _myData.imageObj.imageUrl, //商品图片
         proSpecificaIds: _myData.proSpecificaIds, //商品规格id
         payWay: _selectPayWay.id //选择的支付方式
       };

@@ -85,7 +85,7 @@
             <p class="fs40 ">
                 <span>起拍价：￥{{goodsData.auctionResult.aucStartPrice}}</span>
                 <span v-if="goodsData.auctionResult.aucLowestPrice>=0">保留价：￥{{goodsData.auctionResult.aucLowestPrice}}</span>
-                <span v-if="goodsData.auctionResult.aucLowestPrice>=0">保证金：￥{{goodsData.auctionResult.depositMoney}}</span>
+                <span v-if="goodsData.auctionResult.aucLowestPrice>=0 && goodsData.auctionResult.depositMoney > 0">保证金：￥{{goodsData.auctionResult.depositMoney}}</span>
             </p>
             <p class="fs40 ">
                 <span v-if="goodsData.auctionResult.aucType == 2 ">加价幅度：￥{{goodsData.auctionResult.aucAddPrice}}</span>

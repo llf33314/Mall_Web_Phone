@@ -11,6 +11,9 @@ Vue.mixin({
 		 */
 		caculationOrder(type) {
 			let _this = this;
+			if(_this.orderData.type > 0){
+				return;
+			}
 			let _commonFm = _this.commonFn;
 			let data = _this.orderData;
 			let totalYouHuiMoneys = 0;//保存优惠的金额

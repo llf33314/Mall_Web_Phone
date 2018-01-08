@@ -107,6 +107,7 @@ Vue.mixin({
                     opts.error(error);
                 } else {
                     console.log('catch');
+                    vmParent.$refs.bubble.show_tips('请求超时请联系客服');
                 }
                 if(typeof(vmParent.$refs.loading) != "undefined"){
                     vmParent.$refs.loading.show(false);//关闭loading*/

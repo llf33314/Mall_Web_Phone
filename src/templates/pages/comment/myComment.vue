@@ -17,7 +17,7 @@
                     </div>
                 </div>
             </div>
-            <div class="item-center clearfix">
+            <div class="item-center clearfix" @click="jumpProductDetail(comment)">
                 <div class="comment-img">
                     <default-img :background="imgUrl+comment.productImageUrl"
                                 :isHeadPortrait="0">
@@ -126,6 +126,10 @@ export default {
           }
         }
       });
+    },
+    //跳转到商品详情页面
+    jumpProductDetail(e){
+      this.$router.push("/goods/details/"+e.shopId+"/"+this.busId+"/0/"+e.productId+"/0");
     }
   }
 };

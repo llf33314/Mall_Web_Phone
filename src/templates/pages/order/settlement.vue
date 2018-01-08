@@ -261,8 +261,10 @@
             <!-- 实际支付的价格 -->
             <p>合计：<span class="style-main-font">￥{{orderData.totalPayMoney | moneySplit1}}</i>.{{orderData.totalPayMoney | moneySplit2}}</span></p>
             <!-- 优惠前的价格 -->
+            <p>
             <span>总额:￥{{orderData.totalMoney | moneySplit1}}</i>.{{orderData.totalMoney | moneySplit2}}</span>
             <span>总优惠:￥{{orderData.totalYouHuiMoney | moneySplit1}}</i>.{{orderData.totalYouHuiMoney | moneySplit2}}</span>
+            </p>
         </div>
         <div class="orderTotal-button fs40 style-main-bg" @click="submitOrder">
             提交订单

@@ -151,7 +151,7 @@ export default {
     blurRemark() {
       //验证退款说明
       let remark = this.returnRemark;
-      if (remark.length > 200) {
+      if (remark != null && remark.length > 200) {
         this.$parent.$refs.bubble.show_tips("退款说明不能超过200个字");
         return false;
       }

@@ -15,27 +15,27 @@
 完成下单购买，您就可以获得商家设置的丰厚佣金哦</div>
 
     </div>
-  <wx-share :shareData="shareObj"></wx-share>
+  <!-- <wx-share :shareData="shareObj"></wx-share> -->
   </div>
 </template>
 
 <script>
 import defaultImg from "components/defaultImg";
-import wxShare from "components/wxShare"; //微信分享
+// import wxShare from "components/wxShare"; //微信分享
 export default {
   data() {
     return {
       type: this.$route.params.type,
       busId: this.$route.params.busId || sessionStorage.getItem("busId"),
-      saleMemberId:this.$route.params.saleMemberId,
-      qrCodePath:  null,
+      saleMemberId: this.$route.params.saleMemberId,
+      qrCodePath: null,
       imgUrl: null,
-      shareObj:null,//分享内容
+      shareObj: null //分享内容
     };
   },
   components: {
-    defaultImg,
-    wxShare
+    defaultImg
+    // wxShare
   },
   //已成功挂载，相当ready()
   mounted() {
@@ -44,7 +44,12 @@ export default {
 
     this.loadDatas(); //初始化数据
 
-    this.qrCodePath = h5App.activeAPI.generate_qr_code_get+"?url=/seller/mallindex/"+this.busId+"/"+this.saleMemberId;
+    this.qrCodePath =
+      h5App.activeAPI.generate_qr_code_get +
+      "?url=/seller/mallindex/" +
+      this.busId +
+      "/" +
+      this.saleMemberId;
   },
   beforeDestroy() {
     //离开后的操作
@@ -73,23 +78,23 @@ export default {
     },
     //获取微信分享数据
     getWxShare(myData) {
-       let title = myData.mallName || myData.userName;
-      if(title.split("的商城").length == 1){
-        title += "的商城";
-      }
-      let desc = myData.mallIntroducation;
-      let _shareObj = {
-        title: title,
-        desc: desc,
-        url: location.href,
-        imgUrl: this.imgUrl + myData.mallHeadPath,
-        isOpenAllMenu: true, //显示所有功能按钮接口
-        jsApiList: [
-          "onMenuShareTimeline",
-          "onMenuShareAppMessage",
-        ]
-      };
-      this.shareObj = _shareObj;
+      //  let title = myData.mallName || myData.userName;
+      // if(title.split("的商城").length == 1){
+      //   title += "的商城";
+      // }
+      // let desc = myData.mallIntroducation;
+      // let _shareObj = {
+      //   title: title,
+      //   desc: desc,
+      //   url: location.href,
+      //   imgUrl: this.imgUrl + myData.mallHeadPath,
+      //   isOpenAllMenu: true, //显示所有功能按钮接口
+      //   jsApiList: [
+      //     "onMenuShareTimeline",
+      //     "onMenuShareAppMessage",
+      //   ]
+      // };
+      // this.shareObj = _shareObj;
     },
     back() {
       window.history.go(-1);

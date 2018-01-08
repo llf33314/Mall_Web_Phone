@@ -85,9 +85,15 @@ export default {
     .icon-daifukuan,
     .icon-huodaofukuan,
     .icon-chuzhika,
-    .icon-daodianziti {
+    .icon-daodianziti,
+    .icon-duofenlogoyuanwenjian- {
       color: #f7ba2a;
     }
+    // .icon-duofenzhifu {
+    //   background: url("../../assets/img/bitbug_favicon.jpg");
+    //   width: 100/@dev-Width *1rem;
+    //   height: 100/@dev-Width *1rem;
+    // }
   }
 }
 </style>

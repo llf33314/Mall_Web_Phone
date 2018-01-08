@@ -232,7 +232,7 @@ export default new Router({
       }
       ]
     }, {
-      path: '/goods/details/:shopId/:busId/:type/:goodsId/:activityId/:saleMemberId/:toshop',
+      path: '/goods/details/:shopId/:busId/:type/:goodsId/:activityId/:saleMemberId/:toShop',
       name: 'goods',
       component: Goods,
       meta: {

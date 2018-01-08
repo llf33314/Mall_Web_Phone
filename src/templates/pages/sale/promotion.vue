@@ -28,13 +28,13 @@
     <section  class="section5">
           好友通过扫描海报购买商品，您将获得佣金
     </section> -->
-    <wx-share :shareData="shareObj"></wx-share>
+    <!-- <wx-share :shareData="shareObj"></wx-share> -->
   </div>
 </template>
 
 <script>
 import defaultImg from "components/defaultImg";
-import wxShare from "components/wxShare"; //微信分享
+// import wxShare from "components/wxShare"; //微信分享
 export default {
   data() {
     return {
@@ -44,12 +44,12 @@ export default {
       imageUrl: null,
       headImageUrl: null,
       imgUrl: null,
-      shareObj: null//分享内容
+      shareObj: null //分享内容
     };
   },
   components: {
-    defaultImg,
-    wxShare
+    defaultImg
+    // wxShare
   },
   //已成功挂载，相当ready()
   mounted() {
@@ -87,23 +87,23 @@ export default {
     },
     //获取微信分享数据
     getWxShare(myData) {
-       let title = myData.mallName || myData.userName;
-      if(title.split("的商城").length == 1){
-        title += "的商城";
-      }
-      let desc = myData.mallIntroducation;
-      let _shareObj = {
-        title: title,
-        desc: desc,
-        url: location.href,
-        imgUrl: this.imgUrl + myData.mallHeadPath,
-        isOpenAllMenu: true, //显示所有功能按钮接口
-        jsApiList: [
-          "onMenuShareTimeline",
-          "onMenuShareAppMessage",
-        ]
-      };
-      this.shareObj = _shareObj;
+      //  let title = myData.mallName || myData.userName;
+      // if(title.split("的商城").length == 1){
+      //   title += "的商城";
+      // }
+      // let desc = myData.mallIntroducation;
+      // let _shareObj = {
+      //   title: title,
+      //   desc: desc,
+      //   url: location.href,
+      //   imgUrl: this.imgUrl + myData.mallHeadPath,
+      //   isOpenAllMenu: true, //显示所有功能按钮接口
+      //   jsApiList: [
+      //     "onMenuShareTimeline",
+      //     "onMenuShareAppMessage",
+      //   ]
+      // };
+      // this.shareObj = _shareObj;
     },
     back() {
       window.history.go(-1);

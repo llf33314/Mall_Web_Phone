@@ -18,7 +18,7 @@
                 </div>
             </swipe-item> 
        </swipe>
-        <p class="goods-origin-box">
+        <p class="goods-origin-box" v-if="banner.length > 1">
             <i class="goods-origin " 
             v-for="(img,index) in banner"
             :class="[index == imgSelecte ?style:'']"

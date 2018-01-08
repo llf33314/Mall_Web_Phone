@@ -87,6 +87,18 @@ export default {
         }
       });
     },
+      //获取微信分享数据
+    getWxShare(myData) {
+      let _shareObj = {
+        title: "评价分享",
+        desc: "评价分享",
+        url: location.href,
+        imgUrl: "",
+        isOpenAllMenu: true, //显示所有功能按钮接口
+        jsApiList: ["onMenuShareTimeline", "onMenuShareAppMessage"]
+      };
+      this.shareObj = _shareObj;
+    },
     toProductDetail() {
       //前往商品详情也页面
       let orderType = this.product.orderType || 0;

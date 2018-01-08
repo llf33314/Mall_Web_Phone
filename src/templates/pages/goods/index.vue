@@ -580,6 +580,7 @@ export default {
       isShowButtom:false,//是否显示底部菜单
       chujiaMoney : 0,//出价金额
       saleMemberId:0,//销售员id
+      toShop : this.$route.params.toShop || 0,//到店购买  1到店购买
       isPhoto:"",
       dialogImageUrl:""//弹出框图片地址
     };
@@ -671,7 +672,8 @@ export default {
           busId: _this.$store.state.busId,
           productId: _this.$route.params.goodsId,
           type: _this.$route.params.type,
-          activityId: activityId
+          activityId: activityId,
+          toShop: _this.toShop || 0
         };
       if(this.saleMemberId != null && this.saleMemberId > 0){
         _data.saleMemberId = this.saleMemberId;

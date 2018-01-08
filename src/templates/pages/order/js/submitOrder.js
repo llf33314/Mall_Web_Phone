@@ -33,12 +33,14 @@ Vue.mixin({
 				url: h5App.activeAPI.submit_order_post,
 				data: _data,
 				loading: true,//开启loading
+				time: 60 * 1000,
 				success: function (data) {
 					//各种跳转
 					let reData = data.data;
 					let url = reData.url;
 					let orderId = reData.orderId;
 					if (_commonFn.isNotNull(url)) {
+						_this.commonFn.loading(_this, false);
 						location.href = url;
 						return;
 					}

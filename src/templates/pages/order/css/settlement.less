@@ -373,24 +373,30 @@
     position: fixed;
     bottom: 0;
     z-index: 2;
-    font-size:0;
+    font-size: 0;
     line-height: 1;
     .orderTotal-fr {
         width: 75%;
         float: left;
         padding: 20/@dev-Width *1rem 0;
         padding-left: 45/@dev-Width *1rem;
+        p:first-child {
+            padding-bottom: 20/@dev-Width *1rem;
+        }
     }
     .orderTotal-button {
         width: 25%;
         float: left;
         color: #fff;
         height: 164/@dev-Width *1rem;
-        line-height: 164/@dev-Width *1rem;
-        text-align: center;
+        // line-height: 164/@dev-Width *1rem;
+        // text-align: center;
+
+        .ik-box;
+        .ik-box-pack(center);
+        .ik-box-align(center);
     }
 }
-
 
 input {
     border: 0px;
