@@ -99,9 +99,11 @@ export default {
     },
     goReturnWuliu(returnId) {
       //跳入填写物流的页面
+      sessionStorage.setItem("refundReturnUrl", location.href);
       this.$router.push("/return/logistics/" + this.busId + "/" + returnId);
     },
     updateReturn(detailId, returnId) {
+      sessionStorage.setItem("refundReturnUrl", location.href);
       this.$router.push(
         "/return/apply/" + this.busId + "/" + detailId + "/-1/" + returnId
       );

@@ -23,6 +23,8 @@ import jq from './lib/jquery-2.2.2.min';
 
 import vueFilter from './lib/vueDirective.js';
 
+import 'babel-polyfill';
+
 
 import MintUi from 'mint-ui'
 Vue.use(MintUi);

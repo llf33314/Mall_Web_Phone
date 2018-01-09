@@ -415,7 +415,7 @@ export default new Router({
       }
     },
     {
-      path: '/auction/success/:busId',
+      path: '/auction/success/:busId/:proId/:aucId/:shopId/:type',
       name: 'auction_success',
       component: auction_success,
       meta: {
@@ -590,6 +590,13 @@ export default new Router({
         title: '超级销售员商城首页'
       }
     }, {
+      path: '/error/404',
+      name: 'error_404',
+      component: error_404,
+      meta: {
+        title: '404页面'
+      }
+    }, {
       path: '/error/404/:busId',
       name: 'error_404',
       component: error_404,
@@ -611,7 +618,7 @@ export default new Router({
         title: '商家授权页面'
       }
     }
-    
+
 
 
   ]

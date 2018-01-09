@@ -90,8 +90,7 @@ export default {
   },
   components: {
     payWayDialog,
-    defaultImg,
-    filters
+    defaultImg
   },
   mounted() {
     if (this.agree == 1) {

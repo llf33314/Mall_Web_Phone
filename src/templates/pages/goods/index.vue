@@ -159,7 +159,7 @@
                     @click="lijiBuy(3)">
                     支付尾款
                 </div>
-                <div class="goods-footer-botton ui-col-2 fs50 style-main-bg"
+                <div class="goods-footer-botton ui-col-2 fs50"
                     style="color:#fff;background-color:#999999"
                     :class="{'shopFff':isSoldOut}"
                     v-if="type == 6 && goodsData.presaleResult != null && goodsData.presaleResult.isShowStartButton == 1"
@@ -1203,6 +1203,7 @@ export default {
         busId: _this.$store.state.busId,
         url: _this.$store.state.loginDTO_URL,
         browerType: _this.$store.state.browerType,
+        ucLogin: 1,//不需要登陆
         productId: _this.$route.params.goodsId
       };
       if (c === 1) {
