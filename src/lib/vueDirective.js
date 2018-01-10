@@ -6,9 +6,161 @@
 import Vue from 'vue';
 import Swiper from './swiper.js';
 
+var throttle = function (fn, delay) {
+  var now,lastExec,timer,context,args;
+
+  var execute = function () {
+    fn.apply(context,args);
+    lastExec = now;
+  };
+
+  return function () {
+    context = this;
+    args = arguments;
+
+    var scrollTop = getScrollTop();
+    scrolls.forEach(e => {
+      if(e.navHeight>0) {
+        if (scrollTop < e.top) {
+          e.navDom.removeClass('fixedBottom fixedTop');
+        }else if (scrollTop > e.top && scrollTop < e.bottom + getVisibleHeight() - e.navHeight) {
+          e.navDom.removeClass('fixedBottom').addClass('fixedTop')
+        }else{
+          e.navDom.removeClass('fixedTop').addClass('fixedBottom')
+        }
+
+        if(scrollTop>e.navTop[e.vm.select+1]&&e.vm.select<e.navTop.length-1){
+          e.vm.select += 1;
+        }else if(scrollTop<e.navTop[e.vm.select]&&e.vm.select>0){
+          e.vm.select -= 1;
+        }
+      }
+    });
+
+    now = Date.now();
+
+    if(timer){
+      clearTimeout(timer);
+      timer = null;
+    }
+
+    if(lastExec){
+      var diff = delay - (now - lastExec);
+
+      if(diff>0){
+        timer = setTimeout(execute,diff)
+      }else{
+        execute();
+      }
+
+    }else{
+      execute();
+    }
+
+  }
+};
+
+var getScrollTop = function() {
+  return Math.max(window.pageYOffset || 0, document.documentElement.scrollTop);
+};
+var getElementBottom = function (element) {
+  return element.getBoundingClientRect().bottom + window.pageYOffset - document.documentElement.clientTop;
+};
+var getElementTop = function (element) {
+  return element.getBoundingClientRect().top + window.pageYOffset - document.documentElement.clientTop;
+};
+var getVisibleHeight = function(element) {
+  if(element){
+    return element.clientHeight;
+  }else{
+    return document.documentElement.clientHeight;
+  }
+};
+
+var scrolls = [];
+
+window.addEventListener('scroll',throttle(function () {
+  var scrollTop = getScrollTop();
+  scrolls.forEach(e => {
+    if(scrollTop > e.bottom && !e.vm[e.distanceExpr]){
+      e.binding.value();
+    }
+  })
+},200));
+
+Vue.directive('scroll', {
+  // 当被绑定的元素插入到 DOM 中时……
+  inserted: function (el,binding,vnode) {
+    var distanceExpr = el.getAttribute('infinite-scroll-distance'),
+        scrollTop = el.getAttribute('infinite-scroll-top'),
+        directive = {},
+        vm =  vnode.context;
+
+    if(vm.data.nav == 0){
+      let navTop = [];
+      $(el).find('.grouping-list-title').each(function () {
+        navTop.push($(this).offset().top)
+      });
+      vm.navTop = navTop;
+      directive = {
+        el,
+        binding,
+        distanceExpr,
+        scrollTop,
+        vm,
+        navTop,
+        navDom: $(el).find('.grouping-leftNav-l-box'),
+        navHeight: getVisibleHeight($(el).find('.grouping-leftNav-l-box')[0]),
+        bottom: getElementBottom(el) - getVisibleHeight(),
+        top: getElementTop(el)
+      };
+    }else{
+      directive = {
+        el,
+        binding,
+        distanceExpr,
+        vm,
+        bottom: getElementBottom(el) - getVisibleHeight(),
+        top: getElementTop(el)
+      };
+    }
+
+    vm.updataBottom = function () {
+      scrolls.forEach(e => {
+        e.bottom = getElementBottom(e.el) - getVisibleHeight();
+        e.top = getElementTop(e.el)
+      })
+    };
+
+    vm.$watch(distanceExpr, function (value) {
+      if(value)return;
+      vm.updataBottom();
+    });
+
+    vm.updataBottom();
+    scrolls.push(directive);
+  }
+});
+
+Vue.directive('Roll',{
+  inserted: function (el,binding,vnode) {
+    var span = $(el).find('span'),
+        width = span.width();
+    if(span.width() > window.screen.availWidth-20){
+      span.after("<span>"+span.text()+"</span>");
+      setInterval(function () {
+        el.scrollLeft += 1;
+        if(el.scrollLeft >= width){
+          el.scrollLeft = 0;
+        }
+      },30)
+    }
+  }
+});
+
 Vue.directive('SwiperDraggable', {
   // 当被绑定的元素插入到 DOM 中时……
-  inserted: function (el,name,self) {
+  inserted: function (el,binding,vnode) {
     var element = $(el);
     if(element.find('.swiper-slide').length<=1)return;
     var swiper = new Swiper(element.find('.swiper-container'), {
@@ -18,21 +170,15 @@ Vue.directive('SwiperDraggable', {
       autoplay: 4500,
       autoplayDisableOnInteraction: false,
       lazyLoading: true,
-      lazyLoadingInPrevNextAmount:2
+      lazyLoadingInPrevNextAmount: 2
     });
-  }
-});
-
-Vue.directive('scroll', {
-  // 当被绑定的元素插入到 DOM 中时……
-  inserted: function (el,name,self) {
   }
 });
 
 Vue.directive('CountDown', {
   // 当被绑定的元素插入到 DOM 中时……
-  inserted: function (el,name,self) {
-    var datatime = self.data.attrs.datatime;
+  inserted: function (el,name,vnode) {
+    var datatime = vnode.data.attrs.datatime;
 
     if(datatime<=0)return;
     var _this = $(el);

@@ -1,5 +1,5 @@
 <template>
-	<div class="loading-box" v-show="isLoadingShow">
+	<div class="loading-box" v-show="$store.state.isShowLoading">
 		<div class="loading" >
 			<div class="loader">
 				<div class="loader-inner ball-clip-rotate">

@@ -72,5 +72,5 @@ var vm = new Vue({
       hint_msg:''
  * }
  * ----不需要icon   直接传入 显示的 文本
-    _this.$parent.$refs.bubble.show_tips(xxx); //调用方法
+    _this.$store.commit("error_msg", xxx); //调用方法
  */

@@ -277,7 +277,7 @@ export default {
       let selectList = this.selectList;
 
       if (selectList == null || selectList.length == 0) {
-        this.$parent.$refs.bubble.show_tips("请选择商品");
+        this.$store.commit("error_msg", "请选择商品");
         return;
       }
       this.$router.push(

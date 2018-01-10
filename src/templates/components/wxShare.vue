@@ -51,7 +51,8 @@ export default {
       _this.ajaxRequest({
         url: h5App.activeAPI.wx_share_get,
         data: {
-          url: location.href
+          url: location.href,
+          ucLogin: 1//1不需要登陆
         },
         type: "get",
         success: function(data) {

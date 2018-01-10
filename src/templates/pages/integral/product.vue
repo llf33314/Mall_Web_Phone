@@ -34,7 +34,7 @@
           </div>
           <div class="right-div">
             <em class="em-choice" @click="jian">-</em>
-            <input type="text" class="em-choice" v-model="buyNum"/>
+            <input type="text" class="em-choice" v-model="buyNum" @blur="blurNum"/>
             <em  class="em-choice" @click="jia">+</em>
           </div>
         </div>
@@ -135,7 +135,7 @@ export default {
         url: location.href, //当前页面的地址
         browerType: _this.$store.state.browerType, //浏览器类型
         productId: _this.productId, //商品id
-        ucLogin: 1,//不需要登陆
+        ucLogin: 1 //不需要登陆
       };
       _this.ajaxRequest({
         url: h5App.activeAPI.integral_product_post,
@@ -233,11 +233,14 @@ export default {
         this.selectGuigePrice = this.guigePriceObj[selectValueIds.toString()];
         _this.stockNum = this.selectGuigePrice.inv_num * 1;
       }
+      if (this.buyNum >= this.stockNum) {
+        this.buyNum = this.stockNum;
+      }
     },
     //减法时间
     jian() {
       let num = this.buyNum;
-      if (num == 1 || !this.isInvNum()) {
+      if (num == 1) {
         return;
       }
       this.buyNum--;
@@ -246,19 +249,30 @@ export default {
     jia() {
       let num = this.buyNum;
       if (num >= this.stockNum) {
+        this.buyNum = this.stockNum;
         return;
       }
       this.buyNum++;
     },
-    blurNum(obj) {
-      parseInt(obj);
+    blurNum() {
+      let re = /^[0-9]+$/;
+      let _buyNum = this.buyNum;
+      if (!re.test(_buyNum)) {
+        this.$store.commit("error_msg", "请输入大于0的整数");
+        this.buyNum = 1;
+        return;
+      }
+      if (_buyNum >= this.stockNum) {
+        this.buyNum = this.stockNum * 1;
+        return;
+      }
     },
     confirmPhone() {
       let flowPhone = this.flowPhone;
       let _commonfn = this.commonFn;
       let _isNull = _commonfn.isNull;
       if (_isNull(flowPhone) || !_commonfn.validPhone(flowPhone)) {
-        this.$parent.$refs.bubble.show_tips(Language.flow_phone_msg);
+        this.$store.commit("error_msg", Language.flow_phone_msg);
         return;
       }
       this.submitData();
@@ -348,7 +362,7 @@ export default {
         loading: true,
         data: _data,
         success: function(data) {
-          _this.commonFn.loading(_this, false); //关闭loading
+          _this.$store.commit("is_show_loading", false); //关闭loading
           if (proTypeId == 0) {
             //进入地址列表页面
             sessionStorage.setItem("addressBeforeUrl", location.href);

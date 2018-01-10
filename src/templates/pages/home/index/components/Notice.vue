@@ -1,10 +1,7 @@
 <template>
     <div>
       <div class="noticeNavModule">
-        <div class="custom-notice">
-          <span class="noticeNav-tip">公告:</span>
-          <span class="noticeNav-text">{{data.text}}</span>
-        </div>
+        <div class="custom-notice" v-roll><span>{{data.text}}</span></div>
       </div>
     </div>
 </template>
@@ -50,4 +47,3 @@
 	}
 
 </script>
-

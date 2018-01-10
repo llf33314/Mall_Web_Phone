@@ -327,7 +327,7 @@ export default {
         data: _data,
         loading: true,
         success: function(data) {
-          _this.commonFn.loading(_this, false);
+          _this.$store.commit("is_show_loading", false);
           _this.deleteLoadUrls();
         }
       });
@@ -361,7 +361,7 @@ export default {
       }
       if (this.type == 2 && mallSet.isOpenOptional == 1) {
         if (this.sellerProList == null || this.sellerProList.length == 0) {
-          _this.$parent.$refs.bubble.show_tips("请选择商品");
+          _this.$store.commit("error_msg", "请选择商品");
           return;
         }
         let sellerProList = [];
@@ -388,7 +388,7 @@ export default {
         data: _data,
         loading: true,
         success: function(data) {
-          _this.commonFn.loading(_this, false);
+          _this.$store.commit("is_show_loading", false);
           if (_this.type == 1) {
             _this.type = 2;
             return;
@@ -444,7 +444,7 @@ export default {
         data: _data,
         loading: true,
         success: function(data) {
-          _this.commonFn.loading(_this, false);
+          _this.$store.commit("is_show_loading", false);
         }
       });
     },

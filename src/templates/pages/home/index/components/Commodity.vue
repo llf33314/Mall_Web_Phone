@@ -124,7 +124,7 @@
                 </div>
 
               </div>
-              <div class="good-buy" :class="{0:'btn1',1:'btn2',2:'btn3',3:'btn4'}[data.btnpage]" v-show="data.btn"></div>
+              <div class="good-buy" :class="{0:'btn1',1:'btn2',2:'btn3',3:'btn4'}[data.btnpage]" v-show="data.btn" onclick="showLayerProduct()"></div>
             </div>
             <div class="simpleness-price clearfix" :class="{'left-10':data.name}" v-if="data.css == 1">
               <p class="simpleness-title" v-show="data.name">{{pic.title}}</p>
@@ -220,4 +220,3 @@
 	}
 
 </script>
-

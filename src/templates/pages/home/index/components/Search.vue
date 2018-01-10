@@ -1,9 +1,8 @@
 <template>
     <div>
       <div class="search">
-        <div style="margin: 0 auto;position: relative;"
-             :style="{'width': conversion(data.attr.width) +'rem','height': conversion(data.attr.height + 2) + 'rem'}">
-          <input type="text"
+        <div :style="{'width': conversion(data.attr.width) +'rem','height': conversion(data.attr.height + 2) + 'rem'}">
+          <input type="text" @click="search"
                  placeholder="搜索商品"
                  style="width:100%;height:100%;"
                  :style="{'borderColor':data.attr.borderColor,'color':data.attr.color,'backgroundColor':data.attr.bgColor}">
@@ -48,9 +47,11 @@
 		methods: {
       conversion(num){
         return num / (320/(1242/150));
+      },search(){
+        let _pageData = this.$parent.pageData;
+        this.$router.push("/search/"+_pageData.busId+"/0/k=k");
       }
     }
 	}
 
 </script>
-

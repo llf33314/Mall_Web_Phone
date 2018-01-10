@@ -4,7 +4,7 @@
         <div style="width: 960px;transform: scale(0.333333);transform-origin: left top;">
           <div class="coupon-list bg-cover">
             <div class="coupon-list-t">
-              <div class="coupon-list-t-l bg-cover" style="background-image: url(../assets/images/coupon_bg02.jpg)"></div>
+              <div class="coupon-list-t-l bg-cover" style="background-image: url(../../../../../assets/images/coupon_bg02.jpg)"></div>
               <div class="coupon-list-t-r">
                 <div class="coupon-list-t-r-name">优惠券名称</div>
                 <div class="coupon-list-t-r-price">9.8<span>折</span></div>
@@ -19,7 +19,7 @@
 
           <div class="coupon-list bg-cover">
             <div class="coupon-list-t">
-              <div class="coupon-list-t-l bg-cover" style="background-image: url(../assets/images/coupon_bg02.jpg)"></div>
+              <div class="coupon-list-t-l bg-cover" style="background-image: url(../../../../../assets/images/coupon_bg02.jpg)"></div>
               <div class="coupon-list-t-r">
                 <div class="coupon-list-t-r-name">优惠券名称</div>
                 <div class="coupon-list-t-r-price">9.8<span>折</span></div>
@@ -34,7 +34,7 @@
 
           <div class="coupon-list bg-cover">
             <div class="coupon-list-t">
-              <div class="coupon-list-t-l bg-cover" style="background-image: url(../assets/images/coupon_bg02.jpg)"></div>
+              <div class="coupon-list-t-l bg-cover" style="background-image: url(../../../../../assets/images/coupon_bg02.jpg)"></div>
               <div class="coupon-list-t-r">
                 <div class="coupon-list-t-r-name">优惠券名称</div>
                 <div class="coupon-list-t-r-price">9.8<span>折</span></div>

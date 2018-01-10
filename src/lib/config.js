@@ -52,8 +52,8 @@
 
 
   //打包时切换
-  // h5App.api = "/api";
-  h5App.api ="";
+  h5App.api = "/api";
+  // h5App.api ="";
 
   /**
    * 环境配置
@@ -83,6 +83,8 @@
     get_member_post: '/phoneMember/L6tgXlBFeK/memberCenter',
     /*获取店铺风格接口 */
     getShopStyle_post: '/phonePage/L6tgXlBFeK/getShopStyle',
+    /*查询规格和商品图片的接口*/
+    getSpecificaAndImage_post: '/phoneProduct/L6tgXlBFeK/getSpecificaAndImage',
     /***********************   以下接口都是 商品分类页面相关接口 ***********************/
     //商品详情
     /*商品搜索接口*/
@@ -269,6 +271,8 @@
     //缴纳定金的接口
     my_deposit_post: "/phonePresale/L6tgXlBFeK/myDepositList",
     //我的定金接口
+    messageRemind_post: "/phonePresale/L6tgXlBFeK/messageRemind",
+    //消息提醒接口
     /**********************以下接口是积分相关接口*****************************/
     integral_product_list_post: "/phoneIntegral/L6tgXlBFeK/integralProductList",
     // 22.	获取积分商城商品列表

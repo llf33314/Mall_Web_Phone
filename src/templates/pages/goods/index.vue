@@ -874,23 +874,23 @@ export default {
       let re = /^[0-9]+$/;
 
       if (!re.test(_this.spec_num)) {
-        _this.$parent.$refs.bubble.show_tips("请输入大于0的整数");
+        _this.$store.commit("error_msg", "请输入大于0的整数");
         _this.spec_num = 0;
       }
       //库存为0
       if (_this.dialogData.inv_num == 0) {
-        _this.$parent.$refs.bubble.show_tips("商品已售罄");
+        _this.$store.commit("error_msg", "商品已售罄");
         return;
       }
       if (_this.spec_num < 0) {
-        _this.$parent.$refs.bubble.show_tips("数量不能小于1");
+        _this.$store.commit("error_msg", "数量不能小于1");
         _this.spec_num = 1;
         return;
       }
       if (e === "-") {
         //减小时，
         if (_this.spec_num <= 1) {
-          _this.$parent.$refs.bubble.show_tips("数量不能小于1");
+          _this.$store.commit("error_msg", "数量不能小于1");
           return;
         }
         _this.spec_num--;
@@ -901,12 +901,12 @@ export default {
           _this.goodsData.maxBuyNum &&
           _this.spec_num >= _this.goodsData.maxBuyNum
         ) {
-          _this.$parent.$refs.bubble.show_tips("超出限购数量");
+          _this.$store.commit("error_msg", "超出限购数量");
           return;
         }
         //超出规格库存
         if (_this.spec_num >= _this.dialogData.inv_num) {
-          _this.$parent.$refs.bubble.show_tips("超出现有库存量");
+          _this.$store.commit("error_msg", "超出现有库存量");
           _this.spec_num = _this.dialogData.inv_num;
           return;
         }
@@ -955,11 +955,11 @@ export default {
 
         if (item.inv_num == 0) {
           item.productNum = 0;
-          _this.$parent.$refs.bubble.show_tips("商品已售罄");
+          _this.$store.commit("error_msg", "商品已售罄");
           return;
         }
         if (item.productNum < 0) {
-          _this.$parent.$refs.bubble.show_tips("数量不能小于1");
+          _this.$store.commit("error_msg", "数量不能小于1");
           item.productNum = 1;
           return;
         }
@@ -967,7 +967,7 @@ export default {
         if (c === "-") {
           //减小时，
           if (item.productNum <= 0) {
-            _this.$parent.$refs.bubble.show_tips("数量不能小于0");
+            _this.$store.commit("error_msg", "数量不能小于0");
             return;
           }
           item.productNum--;
@@ -975,7 +975,7 @@ export default {
           //增减时
           //超出规格库存
           if (item.productNum.num >= _data.inv_num) {
-            _this.$parent.$refs.bubble.show_tips("超出现有库存量");
+            _this.$store.commit("error_msg", "超出现有库存量");
             item.productNum = _data.inv_num;
             return;
           }
@@ -984,7 +984,7 @@ export default {
             _this.goodsData.maxBuyNum &&
             item.num >= _this.goodsData.maxBuyNum
           ) {
-            _this.$parent.$refs.bubble.show_tips("超出限购数量");
+            _this.$store.commit("error_msg", "超出限购数量");
             return;
           }
           if (c === "+") {
@@ -1070,7 +1070,7 @@ export default {
       let re = /^[0-9]+$/;
 
       if (!re.test(_data.productNum)) {
-        _this.$parent.$refs.bubble.show_tips("请输入大于0的整数");
+        _this.$store.commit("error_msg", "请输入大于0的整数");
         _data.productNum = 0;
       }
       //库存为0
@@ -1082,19 +1082,19 @@ export default {
           _this.$set(_this.w_guigePrice, index, _data);
         }
 
-        _this.$parent.$refs.bubble.show_tips("商品已售罄");
+        _this.$store.commit("error_msg", "商品已售罄");
         return;
       }
 
       if (_data.productNum < 0) {
-        _this.$parent.$refs.bubble.show_tips("数量不能小于0");
+        _this.$store.commit("error_msg", "数量不能小于0");
         _this.$set(_this.w_guigePrice[index], "productNum", 0);
         return;
       }
       if (e === "-") {
         //减小时，
         if (_data.productNum <= 0) {
-          _this.$parent.$refs.bubble.show_tips("数量不能小于0");
+          _this.$store.commit("error_msg", "数量不能小于0");
           return;
         }
 
@@ -1108,12 +1108,12 @@ export default {
           _this.goodsData.maxBuyNum &&
           _data.productNum >= _this.goodsData.maxBuyNum
         ) {
-          _this.$parent.$refs.bubble.show_tips("超出限购数量");
+          _this.$store.commit("error_msg", "超出限购数量");
           return;
         }
         //库存不为0，超出规格库存
         if (_data.productNum >= _data.inv_num) {
-          _this.$parent.$refs.bubble.show_tips("超出现有库存量");
+          _this.$store.commit("error_msg", "超出现有库存量");
           _data.productNum = _data.inv_num;
           return;
         }
@@ -1140,7 +1140,7 @@ export default {
       //"pfStatus"--//批发状态  0 未审核  1审核通过   -1 审核不通过  -2还未申请
       if (!_this.w_pfStatus) {
         //跳转申请页
-        _this.$parent.$refs.bubble.show_tips(data.pfErrorMsg);
+        _this.$store.commit("error_msg", data.pfErrorMsg);
         _this.$router.push("/wholesale/apply");
         return;
       }
@@ -1245,7 +1245,7 @@ export default {
             type: "success",
             msg: "加入购物车成功"
           };
-          _this.$parent.$refs.bubble.show_tips(msg);
+          _this.$store.commit("error_msg", msg);
         }
       });
     },

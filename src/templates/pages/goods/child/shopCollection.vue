@@ -66,9 +66,9 @@ export default {
                     if(data.code == 0){
                         _this.data.isCollect = !_this.data.isCollect;
                         if(_this.data.isCollect){
-                            _this.$parent.$refs.bubble.show_tips('收藏成功');
+                            _this.$store.commit("error_msg", '收藏成功');
                         }else{
-                            _this.$parent.$refs.bubble.show_tips('取消成功');
+                            _this.$store.commit("error_msg", '取消成功');
                         }
                     }
                 } 

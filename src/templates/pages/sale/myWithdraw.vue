@@ -130,7 +130,7 @@ export default {
     withdraw() {
       let _this = this;
       if (this.withdrawMoney == 0) {
-        _this.$parent.$refs.bubble.show_tips("您实际能提现的佣金为0，请继续累积");
+        _this.$store.commit("error_msg", "您实际能提现的佣金为0，请继续累积");
         return;
       }
       let _data = {
@@ -153,7 +153,7 @@ export default {
               loading: true,
               data: _data,
               success: function(data) {
-                _this.commonFn.loading(_this, false);
+                _this.$store.commit("is_show_loading", false);
               }
             });
           } //点击按执行方法

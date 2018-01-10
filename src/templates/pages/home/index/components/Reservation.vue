@@ -1,12 +1,12 @@
 <template>
     <div>
       <div v-if="picJson.imgID.length>0">
-        <div v-for="res in picJson.imgID">
+        <div class="reservation-content" v-for="res in picJson.imgID">
           <div class="reservation">
             <div class="reservation_m">
-              <div class="res-photo"><a :href="res.url"><img class="img_class" :src="res.proImgUrl"></a></div>
+              <div class="res-photo" @click="jumpProductDetail(res.url)"><img class="img_class" :src="res.proImgUrl"></div>
               <div class="res-m">
-                <a :href="res.url"><div class="res-title">{{res.proName}}</div></a>
+                <div class="res-title" @click="jumpProductDetail(res.url)">{{res.proName}}</div>
                 <div class="h1"></div>
                 <div class="res-m1">{{res.product_introdu}}</div>
                 <div class="h1"></div>
@@ -15,7 +15,7 @@
                 <div class="res-money">
                   <span class="r-money">￥<font>{{res.proPrice}}</font></span>
                   <div class="res-btn">
-                    <a :href="res.url"><button>点我预订<img src="../../../../../assets/images/icon_02.png" class="w1"></button></a>
+                    <a  @click="jumpProductDetail(res.url)"><button>点我预订<img src="../../../../../assets/images/icon_02.png" class="w1"></button></a>
                     <div class="h1"></div>
                     <div class="res-p">已有<span>{{res.orderNum}}</span>人预定</div>
                   </div>
@@ -37,48 +37,60 @@
 </template>
 
 <script>
-
-	
-
-	export default {
-    name: 'Reservation',
-		data() {
-			return {}
-		},
-    props:{
-      data:{
-        type: [Object,Array]
-      },
-      _page:{
-        type: Number
-      },
-      picJson:{
-        type: [Object,Array]
-      }
+export default {
+  name: "Reservation",
+  data() {
+    return {};
+  },
+  props: {
+    data: {
+      type: [Object, Array]
     },
-		components: {},
-		//实例初始化最之前，无法获取到data里的数据
-		beforeCreate() {
-
-
-		},
-		//在挂载开始之前被调用
-		beforeMount() {
-
-
-		},
-		//已成功挂载，相当ready()
-		mounted() {
-
-
-		},
-		//相关操作事件
-		methods: {
-      message(){
-
-      }
+    _page: {
+      type: Number
+    },
+    picJson: {
+      type: [Object, Array]
     }
-	}
-
+  },
+  components: {},
+  //实例初始化最之前，无法获取到data里的数据
+  beforeCreate() {},
+  //在挂载开始之前被调用
+  beforeMount() {},
+  //已成功挂载，相当ready()
+  mounted() {},
+  //相关操作事件
+  methods: {
+    /**
+       * 消息提醒
+       */
+    message(presaleId) {
+      console.log(presaleId, "presaleId");
+      var self = this;
+      let _pageData = this.$parent.pageData;
+      self.ajaxRequest({
+        url: h5App.activeAPI.messageRemind_post,
+        data: {
+          url: location.href,
+          busId: _pageData.busId, //商家id
+          shopId: _pageData.shopId, //店铺id
+          browerType: self.$store.state.browerType, //浏览器,
+          preId: presaleId //分组id
+        },
+        success: function(res) {
+          let msg = {
+            type: "success",
+            msg: "提醒成功"
+          };
+          self.$store.commit("error_msg", msg);
+          // location.reload();
+        }
+      });
+    },
+    jumpProductDetail(href) {
+      this.$router.push(href);
+    }
+  }
+};
 </script>
-

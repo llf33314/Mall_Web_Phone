@@ -354,7 +354,7 @@ Vue.mixin({
 					}
 				});
 				if (canUseCouponProductPrice == 0 || canUseCouponProductNum == 0) {//能使用优惠券的商品总价和商品总数 = 0  则跳出当前循环
-					_this.$parent.$refs.bubble.show_tips(Language.select_coupon_msg);
+					_this.$store.commit("error_msg", Language.select_coupon_msg);
 					shop.selectCoupon = null;
 					continue;
 				}
@@ -364,7 +364,7 @@ Vue.mixin({
 				let couponNum = coupons.couponNum//叠加的数量
 				let shopYouhuiHouTotalPrice = 0;//保存 店铺下 商品优惠后的总额
 				if (cardType == 0 && bus.isSelectDiscount == 1) {
-					_this.$parent.$refs.bubble.show_tips(Language.coupon_discount_msg);
+					_this.$store.commit("error_msg", Language.coupon_discount_msg);
 					shop.selectCoupon = null;
 					continue;
 				}
@@ -396,7 +396,7 @@ Vue.mixin({
 						shopYouhuiHouTotalPrice = _commonFm.floatMul(coupons.reduceCost, couponNum);
 					}
 					if (coupons.cashLeastCost > canUseCouponProductPrice) {//满减条件  大于能 使用优惠券的商品金额
-						_this.$parent.$refs.bubble.show_tips("能使用优惠券的金额没有达到满减条件");
+						_this.$store.commit("error_msg", "能使用优惠券的金额没有达到满减条件");
 						shop.selectCoupon = null;
 						continue;
 					}
@@ -492,7 +492,7 @@ Vue.mixin({
 						//选中抵扣才能提醒
 						let msg = Language.jifen_start_money_msg;
 						msg = msg.replace("{0}", canUseDiscountMoney);
-						_this.$parent.$refs.bubble.show_tips(msg);
+						_this.$store.commit("error_msg", msg);
 					}
 				}
 
@@ -527,7 +527,7 @@ Vue.mixin({
 						//选中抵扣才能提醒
 						let msg = Language.fenbi_start_money_msg;
 						msg = msg.replace("{0}", canUseDiscountMoney);
-						_this.$parent.$refs.bubble.show_tips(msg);
+						_this.$store.commit("error_msg", msg);
 					}
 				}
 			}

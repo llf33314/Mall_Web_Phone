@@ -23,7 +23,9 @@ const state = {
     orderData:null,
     imgUrl:"",
     QQ: null,//QQ客服
-    firstUrl : ""//第一次访问的路径
+    firstUrl : "",//第一次访问的路径
+    errorMsg : null,//错误提醒
+    isShowLoading : false,//错误
 }
 const actions ={
     
@@ -52,6 +54,9 @@ const mutations = {
     goods_details:(state,data)=>state.goodsdetails = data,
     orderData_change:(state,data)=>state.orderData = data,
     img_url:(state,data)=>state.imgUrl = data,
+    error_msg:(state,data)=>state.errorMsg = data,
+    is_show_loading:(state,Booleans)=>state.isShowLoading =  Booleans
+    
 }
 
 const tipMsg = {

@@ -167,7 +167,7 @@ export default {
         loading: true,
         data: _data,
         success: function(data) {
-          _this.commonFn.loading(_this, false); //关闭loading
+          _this.$store.commit("is_show_loading", false); //关闭loading
           //进入地址列表页面
           sessionStorage.removeItem("addressBeforeUrl");
           sessionStorage.removeItem("integralData");

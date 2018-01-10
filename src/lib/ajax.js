@@ -30,9 +30,7 @@ Vue.mixin({
                 alert('请填写接口地址');
                 return false;
             }
-            if(typeof(vmParent.$refs.loading) != "undefined"){
-                vmParent.$refs.loading.show(loading);//开启loading*/
-            }
+            vm.$store.commit("is_show_loading",loading);//开启loading*/
             //配置请求头
             axios({
                 "method": opts.type || 'post',
@@ -51,17 +49,19 @@ Vue.mixin({
     
                     if (opts.success) {
                         // if(typeof(vmParent.$refs.loading) != "undefined"){
-                        //     vmParent.$refs.loading.show(false);//关闭loading*/
+                        //     vm.$store.commit("is_show_loading",false);//关闭loading*/
                         // }
                         //需要登陆（需要跳转）
                         if(res.data.code == 1001){
                             location.href = res.data.url;
+                            vm.$store.commit("is_show_loading",false);//关闭loading*/
                             return
                         }
                         //商家已过期（需要跳转）
                         if(res.data.code == 1004 || res.data.code == 1007){
                             let busId = vm.$route.params.busId || sessionStorage.getItem("busId") || 0;
-                            vm.$router.push({path:"/error/404/"+busId});
+                            vm.$router.push({path:"/error/404/"+busId}); 
+                            vm.$store.commit("is_show_loading",false);//关闭loading*/
                             return
                         }
                         //链接已过期/模块已删除
@@ -69,6 +69,7 @@ Vue.mixin({
                             console.log(vm.$router)
                             let busId = vm.$route.params.busId || sessionStorage.getItem("busId") || 0;
                             vm.$router.push({path:"/error/url/"+busId});
+                            vm.$store.commit("is_show_loading",false);//关闭loading*/
                             return;
                         }
                         //请求失败 1 请求数据为空1000  参数传值不完整1003
@@ -79,9 +80,9 @@ Vue.mixin({
                                     type :'error',
                                     msg :  res.data.msg
                                 }
-                                vmParent.$refs.bubble.show_tips(msg);
+                                vm.$store.commit("error_msg", msg);
                                 if(typeof(vmParent.$refs.loading) != "undefined"){
-                                    vmParent.$refs.loading.show(false);//关闭loading*/
+                                    vm.$store.commit("is_show_loading",false);//关闭loading*/
                                 }
                                 return
                             }
@@ -91,7 +92,7 @@ Vue.mixin({
     
                 } else {
                     if(typeof(vmParent.$refs.loading) != "undefined"){
-                        vmParent.$refs.loading.show(false);//关闭loading*/
+                        vm.$store.commit("is_show_loading",false);//关闭loading*/
                     }
                     if (data.error) {
                         opts.error(error);
@@ -107,10 +108,11 @@ Vue.mixin({
                     opts.error(error);
                 } else {
                     console.log('catch');
-                    vmParent.$refs.bubble.show_tips('请求超时请联系客服');
+                    vm.$store.commit("error_msg", '请求超时请联系客服');
+                    
                 }
                 if(typeof(vmParent.$refs.loading) != "undefined"){
-                    vmParent.$refs.loading.show(false);//关闭loading*/
+                    vm.$store.commit("is_show_loading",false);//关闭loading*/
                 }
             });
     

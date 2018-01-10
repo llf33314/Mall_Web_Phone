@@ -63,7 +63,7 @@ export default {
   methods: {
     selectDialog(obj) {
       if (obj.cardType == 0 && this.isSelectDiscount == 1) {
-        this.$parent.$parent.$refs.bubble.show_tips("会员折扣和折扣券不能同时使用");
+        this.$store.commit("error_msg", "会员折扣和折扣券不能同时使用");
         return;
       }
       this.$emit("selectDialog", [this.type, obj, this.busId]);

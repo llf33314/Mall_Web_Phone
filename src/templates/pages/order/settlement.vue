@@ -817,10 +817,10 @@ export default {
       let _this = this;
       let _commonFm = this.commonFn;
       if (_commonFm.isNull(obj)) {
-        _this.$parent.$refs.bubble.show_tips(Language.tihuo_name_msg);
+        _this.$store.commit("error_msg", Language.tihuo_name_msg);
         return false;
       } else if (obj.length > 15) {
-        _this.$parent.$refs.bubble.show_tips(Language.tihuo_name_length_msg);
+        _this.$store.commit("error_msg", Language.tihuo_name_length_msg);
         return false;
       }
       return true;
@@ -832,7 +832,7 @@ export default {
       let _this = this;
       let _commonFm = this.commonFn;
       if (_commonFm.isNull(obj) || !_commonFm.validPhone(obj)) {
-        _this.$parent.$refs.bubble.show_tips(Language.tihuo_phone_msg);
+        _this.$store.commit("error_msg", Language.tihuo_phone_msg);
         return false;
       }
       return true;
@@ -844,7 +844,7 @@ export default {
       let _this = this;
       let _commonFm = this.commonFn;
       if (_commonFm.isNotNull(obj) && obj.length >= 100) {
-        _this.$parent.$refs.bubble.show_tips("买家留言长度不能超过100个字");
+        _this.$store.commit("error_msg", "买家留言长度不能超过100个字");
         return false;
       }
       return true;
@@ -899,7 +899,7 @@ export default {
       let _commonfn = this.commonFn;
       let _isNull = _commonfn.isNull;
       if (_isNull(flowPhone) || !_commonfn.validPhone(flowPhone)) {
-        this.$parent.$refs.bubble.show_tips(Language.flow_phone_msg);
+        this.$store.commit("error_msg", Language.flow_phone_msg);
         return;
       }
       this.submitOrder();

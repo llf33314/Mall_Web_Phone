@@ -126,7 +126,7 @@ export default {
       let _selectPayWay = this.selectPayWay;
       let _commonFn = this.commonFn;
       if (!this.isAgree) {
-        _this.$parent.$refs.bubble.show_tips("请阅读用户竞拍协议"); //调用气泡显示
+        _this.$store.commit("error_msg", "请阅读用户竞拍协议"); //调用气泡显示
         return;
       }
       //提交数据
@@ -161,7 +161,7 @@ export default {
             url = "/auction/success/" + busId;
             _this.$router.push(url);
           }
-          _this.commonFn.loading(_this, false);
+          _this.$store.commit("is_show_loading", false);
         }
       });
     },

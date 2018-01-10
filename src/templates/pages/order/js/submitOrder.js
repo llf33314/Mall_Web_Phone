@@ -40,7 +40,7 @@ Vue.mixin({
 					let url = reData.url;
 					let orderId = reData.orderId;
 					if (_commonFn.isNotNull(url)) {
-						_this.commonFn.loading(_this, false);
+						_this.$store.commit("is_show_loading", false);
 						location.href = url;
 						return;
 					}
@@ -51,7 +51,7 @@ Vue.mixin({
 					} else if (reData.orderPayWay == 4) {
 						//跳转到积分商城的页面
 					}
-					_this.commonFn.loading(_this, false);
+					_this.$store.commit("is_show_loading", false);
 					_this.$router.push(url);
 				}
 			});

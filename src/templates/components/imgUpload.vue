@@ -36,9 +36,7 @@ export default {
     imageValidate() {
       if (this.imgData != null) {
         if (this.imgData.length >= this.maxNum) {
-          this.$parent.$parent.$refs.bubble.show_tips(
-            "图片最多上传" + this.maxNum + "张"
-          ); //调用气泡显示
+          this.$store.commit("error_msg", "图片最多上传" + this.maxNum + "张"); //调用气泡显示
           return false;
         }
       }
@@ -49,13 +47,11 @@ export default {
 
       if (this.imgData != null) {
         if (_this.imgData.length + file.length > _this.maxNum) {
-          _this.$parent.$parent.$refs.bubble.show_tips(
-            "图片最多上传" + this.maxNum + "张"
-          ); //调用气泡显示
+          _this.$store.commit("error_msg", "图片最多上传" + this.maxNum + "张"); //调用气泡显示
           return;
         }
       }
-      this.$parent.$parent.$refs.loading.show(true);
+      this.$store.commit("is_show_loading",true);
       //创建form对象
       let formData = new FormData();
       formData.append("busId", _this.$store.state.busId); //添加form表单中其他数据
@@ -72,14 +68,14 @@ export default {
       let url = window.h5App.api + h5App.activeAPI.upload_image_post;
       // 添加请求头
       axios.post(url, formData, config).then(response => {
-        _this.$parent.$parent.$refs.loading.show(false);
+        this.$store.commit("is_show_loading",false);
         let data = response.data;
         if (data.code == 1001) {
           location.href = data.url;
           return;
         }
         if (data.code != 0) {
-          _this.$parent.$refs.bubble.show_tips(data.msg); //调用气泡显示
+          _this.$store.commit("error_msg", data.msg); //调用气泡显示
           return;
         }
         let _imageUrl = data.data;

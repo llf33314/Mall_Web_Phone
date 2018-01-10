@@ -44,7 +44,7 @@ export default {
       let _commonfn = this.commonFn;
       let _isNull = _commonfn.isNull;
       if (_isNull(_phone) || !_commonfn.validPhone(_phone)) {
-        this.$parent.$parent.$refs.bubble.show_tips("请输入手机号码");
+        this.$store.commit("error_msg", "请输入手机号码");
         return;
       }
       let _this = this;
@@ -60,7 +60,7 @@ export default {
         loading: true,
         type: "get",
         success: function(data) {
-          _this.commonFn.loading(_this, false);
+          _this.$store.commit("is_show_loading", false);
         }
       });
     },
@@ -84,11 +84,11 @@ export default {
       let _isNull = _commonfn.isNull;
       let _code = this.code;
       if (_isNull(_phone) || !_commonfn.validPhone(_phone)) {
-        this.$parent.$parent.$refs.bubble.show_tips("请输入手机号码");
+        this.$store.commit("error_msg", "请输入手机号码");
         return;
       }
       if (_isNull(_code)) {
-        this.$parent.$parent.$refs.bubble.show_tips("请输入验证码");
+        this.$store.commit("error_msg", "请输入验证码");
         return;
       }
       let _this = this;
@@ -106,7 +106,7 @@ export default {
         vmParent: _this.$parent.$parent,
         success: function(data) {
           console.log(data, "data");
-          _this.commonFn.loading(_this, false, _this.$parent.$parent);
+          _this.$store.commit("is_show_loading", false, _this.$parent.$parent);
           _this.$emit("update:isShowMemberPhone", false);
           _this.$emit("confirmPhones", [_phone]);
         }

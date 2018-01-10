@@ -159,7 +159,7 @@ export default {
         data: _data,
         loading: true,
         success: function(data) {
-          _this.commonFn.loading(_this, false);
+          _this.$store.commit("is_show_loading", false);
         }
       });
     },
@@ -191,7 +191,7 @@ export default {
         loading: true,
         success: function(data) {
           _this.showDialogs();
-          _this.commonFn.loading(_this, false);
+          _this.$store.commit("is_show_loading", false);
         }
       });
     },

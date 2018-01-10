@@ -237,7 +237,7 @@ export default {
       //改变手机号事件
       let flag = this.commonFn.validPhone(this.returnTelphone);
       if (!flag) {
-        this.$parent.$refs.bubble.show_tips(Language.telephone_msg);
+        this.$store.commit("error_msg", Language.telephone_msg);
       }
       return flag;
     },
@@ -245,7 +245,7 @@ export default {
       //验证退款说明
       let remark = this.returnRemark;
       if (remark != null && remark.length > 200) {
-        this.$parent.$refs.bubble.show_tips("退款说明不能超过200个字");
+        this.$store.commit("error_msg", "退款说明不能超过200个字");
         return false;
       }
       return true;
@@ -293,17 +293,17 @@ export default {
       let data = _this.returnReasonData;
       let returnType = _this.returnType;
       if (data == null || data == null || data.id == "") {
-        _this.$parent.$refs.bubble.show_tips("请选择退款原因");
+        _this.$store.commit("error_msg", "请选择退款原因");
         return;
       }
       if (_this.returnTelphone == null || _this.returnTelphone == "") {
-        _this.$parent.$refs.bubble.show_tips(Language.telephone_msg);
+        _this.$store.commit("error_msg", Language.telephone_msg);
       }
       if (!_this.blurPhone()) {
         return;
       }
       if (returnType == null || returnType == 0 || returnType == "") {
-        _this.$parent.$refs.bubble.show_tips("请选择处理方式");
+        _this.$store.commit("error_msg", "请选择处理方式");
       }
       if (!this.blurRemark()) {
         return;

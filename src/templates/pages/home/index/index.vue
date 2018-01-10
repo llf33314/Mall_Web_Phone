@@ -18,7 +18,7 @@ export default {
 
   mounted() {
     this.$store.commit("show_footer", true);
-    console.log(this.$store.state.showfooter,"this.$store")
+    // console.log(this.$store.state.showfooter,"this.$store")
   },
   methods: {}
 };

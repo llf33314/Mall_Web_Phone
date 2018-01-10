@@ -33,6 +33,7 @@ export default {
     }
     p{
         font-size: 42/@dev-Width *1rem ;
+        text-align: center;
     }
 }
 

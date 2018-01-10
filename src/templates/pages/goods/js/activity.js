@@ -95,7 +95,7 @@ Vue.mixin({
 						type: "success",
 						msg: "出价成功"
 					};
-					_this.$parent.$refs.bubble.show_tips(msg);
+					_this.$store.commit("error_msg", msg);
 					window.setTimeout(function () {
 						location.reload();
 					}, 1000);
@@ -126,7 +126,7 @@ Vue.mixin({
 			let num = this.spec_num;
 			this.$router.push("/presale/deposit/" + busId + "/" + proId + "/" + preId + "/" + invId + "/" + num);
 		}, jijiangPresale() {
-			this.$parent.$refs.bubble.show_tips("预售还没开始，请耐心等待");
+			this.$store.commit("error_msg", "预售还没开始，请耐心等待");
 		},
 		/**
 		 * 立即购买 

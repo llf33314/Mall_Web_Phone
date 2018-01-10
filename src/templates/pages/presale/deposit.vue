@@ -176,7 +176,7 @@ export default {
             // _this.$router.push(url);
             _this.toProduct();
           }
-          _this.commonFn.loading(_this, false);
+          _this.$store.commit("is_show_loading", false);
         }
       });
     },

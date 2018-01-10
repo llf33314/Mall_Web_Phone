@@ -138,7 +138,7 @@ export default {
                             if(data.code == 0){ //code 1  清空成功
                                 _this.keywordList = null
                             }else{
-                                _this.$parent.$refs.bubble.show_tips('清空失败');//bubble_hint*/
+                                _this.$store.commit("error_msg", '清空失败');//bubble_hint*/
                             }
                         }
                     })

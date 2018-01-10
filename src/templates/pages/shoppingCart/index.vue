@@ -443,7 +443,7 @@ export default {
                         type :'error',
                         msg :  data.msg
                     }
-                    _this.$parent.$refs.bubble.show_tips(msg);
+                    _this.$store.commit("error_msg", msg);
                     _this.shopCartList =  null;//购物车集合
                     return
                 }
@@ -596,7 +596,7 @@ export default {
                     type :'success',
                     msg :  '删除成功'
                 };
-                _this.$parent.$refs.bubble.show_tips(msg);
+                _this.$store.commit("error_msg", msg);
                 _this.settlement = [];
                 _this.settlementarr = [];
                 _this.cartAjax()
@@ -727,30 +727,30 @@ export default {
         let re = /^[0-9]+$/ ;
             
         if(!re.test( e.productNum)){
-            _this.$parent.$refs.bubble.show_tips('请输入大于0的整数');
+            _this.$store.commit("error_msg", '请输入大于0的整数');
             e.productNum = 1 ;
         
         }else if( e.stockNum == 0){
             //库存为0 
             e.productNum = 0 ;
-            _this.$parent.$refs.bubble.show_tips('商品已售罄');
+            _this.$store.commit("error_msg", '商品已售罄');
         }else if( c === '-' || c === ''){
             //减小时 或者 手动输入
             e.productNum--;
 
             if(e.productNum <= 0){
-                _this.$parent.$refs.bubble.show_tips('数量不能小于1');
+                _this.$store.commit("error_msg", '数量不能小于1');
                 e.productNum = 1 ;
             }
         }else{//增减时
 
             //限购数量不为零时，购买数量不能超出限购数量
             if(e.maxBuyNum && ( e.productNum >= e.maxBuyNum)){
-                _this.$parent.$refs.bubble.show_tips('超出限购数量');
+                _this.$store.commit("error_msg", '超出限购数量');
                 
             }else  if(e.productNum >= e.stockNum){
                 //库存不为0，超出规格库存
-                _this.$parent.$refs.bubble.show_tips('超出现有库存量');
+                _this.$store.commit("error_msg", '超出现有库存量');
                 e.productNum = e.stockNum;
             }else if(c === '+'){
                 e.productNum ++;
@@ -773,7 +773,7 @@ export default {
         if( e.stockNum == 0){
             //库存为0 
             e.productNum = 0 ;
-            _this.$parent.$refs.bubble.show_tips('商品已售罄');
+            _this.$store.commit("error_msg", '商品已售罄');
         }else if( c === '-' ){
             //减小时 或者 手动输入
             e.productNum -= num;
@@ -781,7 +781,7 @@ export default {
                 item.productNum --;
             })
             if(e.productNum <= 0){
-                _this.$parent.$refs.bubble.show_tips('数量不能小于1');
+                _this.$store.commit("error_msg", '数量不能小于1');
                 e.productNum = num ;
                  e.pifaSpecificaList.forEach((item,i)=>{
                     item.productNum = 1;
@@ -791,11 +791,11 @@ export default {
 
             //限购数量不为零时，购买数量不能超出限购数量
             if(e.maxBuyNum && ( e.productNum >= e.maxBuyNum)){
-                _this.$parent.$refs.bubble.show_tips('超出限购数量');
+                _this.$store.commit("error_msg", '超出限购数量');
                 
             }else  if(e.productNum >= e.stockNum){
                 //库存不为0，超出规格库存
-                _this.$parent.$refs.bubble.show_tips('超出现有库存量');
+                _this.$store.commit("error_msg", '超出现有库存量');
                 e.productNum = e.stockNum;
             }else if(c === '+'){
                 e.productNum += num;
@@ -819,23 +819,23 @@ export default {
         if( e.stockNum == 0){
             //库存为0 
             e.productNum = 0 ;
-            _this.$parent.$refs.bubble.show_tips('商品已售罄');
+            _this.$store.commit("error_msg", '商品已售罄');
         }else if( c === '-' ){
             //减小时 或者 手动输入
             e.productNum --;
             if(e.productNum <= 0){
-                _this.$parent.$refs.bubble.show_tips('数量不能小于1');
+                _this.$store.commit("error_msg", '数量不能小于1');
                 e.productNum = num ;    
             }
         }else{//增减时
 
             //限购数量不为零时，购买数量不能超出限购数量
             if(goods.maxBuyNum && ( e.productNum >= goods.maxBuyNum)){
-                _this.$parent.$refs.bubble.show_tips('超出限购数量');
+                _this.$store.commit("error_msg", '超出限购数量');
                 
             }else  if(e.productNum >= e.stockNum){
                 //库存不为0，超出规格库存
-                _this.$parent.$refs.bubble.show_tips('超出现有库存量');
+                _this.$store.commit("error_msg", '超出现有库存量');
                 e.productNum = e.stockNum;
             }else if(c === '+'){
                 e.productNum ++;

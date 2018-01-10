@@ -159,7 +159,7 @@ export default {
         msg = "请把链接分享给好友";
       }
       //发送代付请求
-      this.$parent.$refs.bubble.show_tips(msg); //弹出框
+      this.$store.commit("error_msg", msg); //弹出框
     },
     submitPay(dfPayWay) {
       let _this = this;

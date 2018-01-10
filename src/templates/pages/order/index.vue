@@ -168,10 +168,11 @@ export default {
       }
     });
     _this.setTitle();
-    if(this.homeNav != null && this.homeNav.length > 0){
-      for(let i = 0;i<this.homeNav.length; i++){
+    console.log("this.homeNav", this.homeNav);
+    if (this.homeNav != null && this.homeNav.length > 0) {
+      for (let i = 0; i < this.homeNav.length; i++) {
         let navs = this.homeNav[i];
-        if(navs.id + 1 == this.type){
+        if (navs.id == this.type) {
           this.isShowNav = true;
           break;
         }
@@ -284,8 +285,8 @@ export default {
       this.$router.push("/comment/" + busId + "/" + orderDetailId);
     },
     returnToPay(busItem) {
-      let orderPayWay = busItem.orderPayWay;//支付方式
-      let orderId = busItem.orderId
+      let orderPayWay = busItem.orderPayWay; //支付方式
+      let orderId = busItem.orderId;
       let busId = busItem.busId;
       // 去支付 跳转至提交订单页面
       sessionStorage.setItem("payUrl", location.href);
@@ -305,12 +306,12 @@ export default {
       this.commonFn.setTitle(Language.order_title_data_msg[_this.type].name);
     },
     /**跳转到商家页面 */
-    jumpBus(e){
-      this.$router.push("/stores/"+e.busId);
+    jumpBus(e) {
+      this.$router.push("/stores/" + e.busId);
     },
     /**跳转到店铺页面 */
-    jumpShop(e){
-      this.$parent.getPageId(e.busId,e.shopId,true);
+    jumpShop(e) {
+      this.$parent.getPageId(e.busId, e.shopId, true);
     }
   }
 };
@@ -380,7 +381,7 @@ export default {
 .order-main {
   padding: 148/@dev-Width *1rem 0;
 }
-.order-main2{
+.order-main2 {
   padding-top: 0;
 }
 .order-main,
@@ -428,9 +429,9 @@ export default {
       margin: 30/@dev-Width *1rem;
     }
   }
-  .order-item-content{
-    line-height:1;
-    font-size:0;
+  .order-item-content {
+    line-height: 1;
+    font-size: 0;
   }
   .order-item-content,
   .order-number-time {

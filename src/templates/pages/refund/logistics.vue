@@ -144,7 +144,7 @@ export default {
       //改变手机号事件
       let flag = this.commonFn.validPhone(this.returnTelphone);
       if (!flag) {
-        this.$parent.$refs.bubble.show_tips("请填写正确的手机号码");
+        this.$store.commit("error_msg", "请填写正确的手机号码");
       }
       return flag;
     },
@@ -152,7 +152,7 @@ export default {
       //验证退款说明
       let remark = this.returnRemark;
       if (remark != null && remark.length > 200) {
-        this.$parent.$refs.bubble.show_tips("退款说明不能超过200个字");
+        this.$store.commit("error_msg", "退款说明不能超过200个字");
         return false;
       }
       return true;
@@ -161,10 +161,10 @@ export default {
       //验证物流单号
       let no = this.wuliuNo;
       if (no == null || no == "") {
-        this.$parent.$refs.bubble.show_tips("请填写正确的物流单号");
+        this.$store.commit("error_msg", "请填写正确的物流单号");
         return false;
       } else if (!this.commonFn.validateWuliuNo(no)) {
-        this.$parent.$refs.bubble.show_tips("请填写正确的物流单号");
+        this.$store.commit("error_msg", "请填写正确的物流单号");
         return false;
       }
       return true;
@@ -231,7 +231,7 @@ export default {
       let _this = this;
       let data = _this.selectDialogData;
       if (data == null || data.id == null || data.id == "") {
-        _this.$parent.$refs.bubble.show_tips("请选择物流公司");
+        _this.$store.commit("error_msg", "请选择物流公司");
         return false;
       } else if (
         !_this.blurWuLiuNo() ||

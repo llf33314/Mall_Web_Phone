@@ -69,7 +69,7 @@ var Rxports = {
 		} else if (isiOS) {
 			var $body = $('body')
 			document.title = title
-			var $iframe = $('<iframe src="/favicon.ico"></iframe>')
+			var $iframe = $('<iframe src="/static/favicon.ico"></iframe>')
 			$iframe.on('load', function () {
 				window.setTimeout(function () {
 					$iframe.off('load').remove()
@@ -240,13 +240,6 @@ var Rxports = {
 			return false;
 		}
 		return true;
-	},
-	/**
-	 * 开启或关闭loading
-	 */
-	loading(_this, flag,_parent) {
-		_parent = _parent || _this.$parent;
-		_parent.$refs.loading.show(flag);//关闭loading*/
 	}
 };
 
