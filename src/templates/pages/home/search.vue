@@ -10,6 +10,7 @@
                                 v-model="keyWord"
                                 placeholder="请输入商品关键词"
                                 autofocus="autofocus"
+                                 @keydown.enter="submit"
                                 id="input"/> 
                     </form>
                     <span class="fs42" @click="submit()">搜索</span>

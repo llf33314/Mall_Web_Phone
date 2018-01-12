@@ -1,10 +1,7 @@
 <template>
 <div id='app' class="shop-wrapper order-wrapper">
     <header-nav :headers= "homeNav" :status="'cart'" style="z-index:3" :selectColor="'style-main-font'" :selectbg="'style-main-bg'" ></header-nav>
-    <section class="shop-main-no fs40 my-bond" v-if="shopCartList == null">
-        <content-no :statu='bondStatu'></content-no>
-    </section>
-    <section class="shop-main order-main shoopCart-main" v-else>
+    <section class="shop-main order-main shoopCart-main" v-if="shopCartList != null ||  sxShopCartList != null">
         <div class="order-box" v-if="shopCartList != null ">
             <div class="order-item" v-for=" (cart,i) in shopCartList"
                 :key = "i">
@@ -202,7 +199,7 @@
                 @click="delete_dialog(2)">清空失效商品
             </div>
         </div>
-        <div class="shopping-footer clearfix" style="z-index:2">
+        <div class="shopping-footer clearfix" style="z-index:2" :class="{'shopping-footer-bottom-clear' : !$store.state.isShowFooter}">
             <div class="pifa-warning-box" v-if="pifawarning && type == 1">
                 <div class="pifa-warning">
                     <p class="fs40" v-if="spHand-pifa1num > 0">
@@ -220,7 +217,7 @@
                     <p class="fs40">,可混批</p>
                 </div>
             </div>
-            <div class="shopping-footer-l fs40">
+            <div class="shopping-footer-l fs40" >
                 <i class="iconfont icon-dui"
                 :class="{'style-main-bg':isPifaAmount}"
                 @click="select_PifaAmount()"
@@ -236,6 +233,9 @@
                 </div>
             </div>
         </div>
+    </section>
+    <section class="shop-main-no fs40 my-bond"v-else>
+        <content-no :statu='bondStatu'></content-no>
     </section>
 </div>
 </template>
@@ -301,19 +301,50 @@ export default {
 
         let pifaTotal = 0;
         _this.pifaAmount = 0;
-        //监听选中购物车数据
-        _this.shopCartList.forEach((item,i)=>{
-            let isBusSelect = true;//判断商家点亮
+        if( _this.shopCartList != null &&  _this.shopCartList.length > 0){
+            //监听选中购物车数据
+            _this.shopCartList.forEach((item,i)=>{
+                let isBusSelect = true;//判断商家点亮
 
-            item.shopResultList.forEach((test,j)=> {
-                let isShopSelect = true;//判断商家店铺点亮
+                item.shopResultList.forEach((test,j)=> {
+                    let isShopSelect = true;//判断商家店铺点亮
 
-                test.productResultList.forEach((m, n) => {
-                    //批发
-                    if(_this.$route.params.type == 1){
-                        let isGoodsSelect = true;//批发--商品点亮
-                        m.pifaSpecificaList.forEach((a,b)=>{
-                            if(a.show){//商品点亮
+                    test.productResultList.forEach((m, n) => {
+                        //批发
+                        if(_this.$route.params.type == 1){
+                            let isGoodsSelect = true;//批发--商品点亮
+                            m.pifaSpecificaList.forEach((a,b)=>{
+                                if(a.show){//商品点亮
+                                    if(ispifaAmount){
+                                        _this.isPifaAmount = true;
+                                    }
+                                    if( isBusSelect){
+                                        item.show = true;
+                                    }
+                                    if (isShopSelect) {
+                                        //店铺下的商品全部选择时，店铺都选择;
+                                        test.show = true;
+                                    }
+                                    if (isGoodsSelect) {
+                                        //店铺下的商品全部选择时，店铺都选择;
+                                        m.show = true;
+                                    }
+                                }else{//商品不亮
+                                    isBusSelect = false;
+                                    isShopSelect = false;
+                                    ispifaAmount = false;
+                                    isGoodsSelect = false;
+                                    item.show = false;
+                                    test.show = false;
+                                    m.show = false;
+                                    a.show=false;
+                                    _this.isPifaAmount = false;
+                                }
+                            })
+                        }
+                        //正常购物
+                        if(_this.$route.params.type != 1){
+                            if(m.show){//商品点亮
                                 if(ispifaAmount){
                                     _this.isPifaAmount = true;
                                 }
@@ -324,89 +355,60 @@ export default {
                                     //店铺下的商品全部选择时，店铺都选择;
                                     test.show = true;
                                 }
-                                if (isGoodsSelect) {
-                                    //店铺下的商品全部选择时，店铺都选择;
-                                    m.show = true;
-                                }
                             }else{//商品不亮
                                 isBusSelect = false;
                                 isShopSelect = false;
-                                ispifaAmount = false;
-                                isGoodsSelect = false;
+                                ispifaAmount = false
                                 item.show = false;
                                 test.show = false;
                                 m.show = false;
-                                a.show=false;
                                 _this.isPifaAmount = false;
                             }
-                        })
-                    }
-                    //正常购物
-                    if(_this.$route.params.type != 1){
-                        if(m.show){//商品点亮
-                            if(ispifaAmount){
-                                _this.isPifaAmount = true;
-                            }
-                            if( isBusSelect){
-                                item.show = true;
-                            }
-                            if (isShopSelect) {
-                                //店铺下的商品全部选择时，店铺都选择;
-                                test.show = true;
-                            }
-                        }else{//商品不亮
-                            isBusSelect = false;
-                            isShopSelect = false;
-                            ispifaAmount = false
-                            item.show = false;
-                            test.show = false;
-                            m.show = false;
-                            _this.isPifaAmount = false;
                         }
-                    }
-        
+            
+                    })
                 })
-            })
 
-            //总价计算
-            //批发商家小计--清空
-            item.num = 0;
-            item.money = 0; 
-            item.shopResultList.forEach((test,j)=>{
-                //批发店铺小计--清空
-                test.num = 0;
-                test.money = 0;
-                test.productResultList.forEach((e,n)=>{
-                    if(e.show){
-                        //批发
-                        if(_this.$route.params.type == 1){
-                            e.pifaSpecificaList.forEach((a,b)=>{
-                                if(a.show){
-                                    //商家小计 数量 金额
-                                    item.num += a.productNum;
-                                    item.money += a.productNum * a.specificaPrice;
-                                    //店铺小计 数量 金额
-                                    test.num += a.productNum;
-                                    test.money += a.productNum * a.specificaPrice;
-                                    pifaTotal += a.productNum * a.specificaPrice
+                //总价计算
+                //批发商家小计--清空
+                item.num = 0;
+                item.money = 0; 
+                item.shopResultList.forEach((test,j)=>{
+                    //批发店铺小计--清空
+                    test.num = 0;
+                    test.money = 0;
+                    test.productResultList.forEach((e,n)=>{
+                        if(e.show){
+                            //批发
+                            if(_this.$route.params.type == 1){
+                                e.pifaSpecificaList.forEach((a,b)=>{
+                                    if(a.show){
+                                        //商家小计 数量 金额
+                                        item.num += a.productNum;
+                                        item.money += a.productNum * a.specificaPrice;
+                                        //店铺小计 数量 金额
+                                        test.num += a.productNum;
+                                        test.money += a.productNum * a.specificaPrice;
+                                        pifaTotal += a.productNum * a.specificaPrice
+                                    }
+                                    _this.pifaAmount += a.productNum;
+                                })
+                                
+                            }else{
+                            //正常购买
+                                if(e.productHyPrice>0){ //会员价
+                                    pifaTotal += e.productNum * e.productHyPrice
+                                }else{ //商品价
+                                    pifaTotal += e.productNum * e.productPrice
                                 }
-                                _this.pifaAmount += a.productNum;
-                            })
-                            
-                        }else{
-                        //正常购买
-                            if(e.productHyPrice>0){ //会员价
-                                pifaTotal += e.productNum * e.productHyPrice
-                            }else{ //商品价
-                                pifaTotal += e.productNum * e.productPrice
+                                _this.pifaAmount += e.productNum;
                             }
-                            _this.pifaAmount += e.productNum;
                         }
-                    }
+                    })
                 })
-            })
-            //批发条件审核
-        })
+                //批发条件审核
+            });
+        }
         _this.pifaTotal = pifaTotal;
 
         if(_this.flag){
@@ -421,6 +423,11 @@ export default {
      */
     cartAjax(){
         let _this = this;
+        _this.hpMoney='';
+        _this.hpNum='';
+        _this.spHand='';
+        _this.shopCartList= null;//购物车集合
+        _this.sxShopCartList = null//失败购物车集合
         let _data = {
             url: _this.$store.state.loginDTO_URL,
             browerType:_this.$store.state.browerType,
@@ -453,7 +460,6 @@ export default {
 
                 console.log(data,'购物车数据');
                 if(data.data == null){
-
                     return;
                 }
                 _this.hpMoney=data.data.hpMoney;
@@ -463,34 +469,35 @@ export default {
                 _this.sxShopCartList = data.data.sxShopCartList || null//失败购物车集合
 
                 let pifaTotal = 0;
-                //全选后的总价
-                _this.shopCartList.forEach((item,i)=>{
-                    item.show = true;
-                    //批发时 添加 小计 数量和金额
-                    if(_this.$route.params.type == 1){
-                        item.num = 0;
-                        item.money = 0;
-                    }
-                    item.shopResultList.forEach((test,j)=>{
-                        test.show = true;
-                        test.edit = false;
+                if( _this.shopCartList != null &&  _this.shopCartList.length > 0){
+                    //全选后的总价
+                    _this.shopCartList.forEach((item,i)=>{
+                        item.show = true;
+                        //批发时 添加 小计 数量和金额
                         if(_this.$route.params.type == 1){
-                            test.num = 0;
-                            test.money = 0;
+                            item.num = 0;
+                            item.money = 0;
                         }
-                        test.productResultList.forEach((e,n)=>{
-                            e.show = true;
+                        item.shopResultList.forEach((test,j)=>{
+                            test.show = true;
+                            test.edit = false;
                             if(_this.$route.params.type == 1){
-                                e.pifaSpecificaList.forEach((a,b)=>{
-                                    a.show = true;
-                                })
+                                test.num = 0;
+                                test.money = 0;
                             }
-                            pifaTotal += e.productNum*e.productHyPrice;
-                            _this.pifaAmount += e.productNum;
+                            test.productResultList.forEach((e,n)=>{
+                                e.show = true;
+                                if(_this.$route.params.type == 1){
+                                    e.pifaSpecificaList.forEach((a,b)=>{
+                                        a.show = true;
+                                    })
+                                }
+                                pifaTotal += e.productNum*e.productHyPrice;
+                                _this.pifaAmount += e.productNum;
+                            })
                         })
-                    })
-                });
-
+                    });
+                }
                 _this.pifaTotal = pifaTotal;
             }
         })
@@ -1166,6 +1173,9 @@ export default {
             top:0;
             left: 0;
         }
+    }
+    .shopping-footer-bottom-clear{
+        bottom:0 !important;
     }
     .shopping-footer{
         width: 100%;

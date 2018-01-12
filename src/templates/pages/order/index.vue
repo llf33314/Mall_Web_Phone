@@ -2,7 +2,7 @@
 <div id='app' class="shop-wrapper  order-wrapper">  
     <header-nav :headers= "homeNav" v-if="homeNav != null && homeNav.length > 0 && isShowNav" :status="'order'"></header-nav>  
     <content-no :statu="statu" :errorMsg="errorMsg" v-if="isShowNullContent"></content-no>
-    <section class="shop-main order-main" v-if="!isShowNullContent && orderList != null" :class="[!isShowNav , 'order-main2']">
+    <section class="shop-main order-main" v-if="!isShowNullContent && orderList != null" :class="{'order-main2' : !isShowNav ,'padding-bottom-clear' : !$store.state.isShowFooter}">
         <div class="order-box">
             <div class="order-item" v-for="(busItem,index) in orderList" :key="index">
                 <div class="order-item-title fs40" @click="jumpBus(busItem)">
@@ -380,6 +380,9 @@ export default {
 }
 .order-main {
   padding: 148/@dev-Width *1rem 0;
+}
+.padding-bottom-clear {
+    padding-bottom: 0!important;
 }
 .order-main2 {
   padding-top: 0;

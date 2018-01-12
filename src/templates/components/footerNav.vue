@@ -1,5 +1,5 @@
 <template>
-  <footer class="shop-footer-fixed" v-if="isFooter">
+  <footer class="shop-footer-fixed" v-if="$store.state.showfooter && $store.state.isShowFooter">
     <div class="footer-nav fs36">
         <div class="footer-itme" 
             :class="[ item.isSelect ?'shopFont':'' ]"
@@ -54,8 +54,7 @@ export default {
           selectArr: ["my", "order/list"]
         }
       ],
-      isShow: "",
-      isFooter: true
+      isShow: ""
     };
   },
   mounted() {
@@ -127,7 +126,7 @@ export default {
         success: function(data) {
           let footerMenu = data.data;
           if (footerMenu == null || footerMenu.length == 0) {
-            _this.isFooter = false;
+             _this.$store.commit("is_show_footer", false);
             return;
           }
           for (var menu in footerMenu) {
@@ -137,7 +136,7 @@ export default {
               }
             });
           }
-          _this.isFooter = true;
+          _this.$store.commit("is_show_footer", true);
         }
       });
     },

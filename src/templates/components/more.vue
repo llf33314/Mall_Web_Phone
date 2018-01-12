@@ -1,5 +1,5 @@
 <template>
-  <section class="more-main">
+  <section class="more-main" :class="{'margin-bottom-clear' : !$store.state.isShowFooter}">
     <p v-show="isMore == 2">加载中，请稍等……</p>
     <p v-show="isMore == 3">抱歉,没有更多了</p>
     <!-- <p v-show="isMore == 4">网络繁忙，请稍后试试吧</p> -->
@@ -25,5 +25,10 @@ module.exports = {
 
 .more-main p {
   margin-bottom: 0.05rem;
+  text-align: center;
+}
+
+.margin-bottom-clear {
+    margin-bottom: 0!important;
 }
 </style>

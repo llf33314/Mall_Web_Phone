@@ -143,7 +143,8 @@ Vue.mixin({
 				busId: _this.$route.params.busId, //商家id，必传
 				productNum: _this.spec_num, //productNum	商品数量，必传
 				price: _this.dialogData.inv_price, //商品价格，必传
-				type: _this.type //查看商品类型，1.团购商品 3.秒杀商品 4.拍卖商品 5 粉币商品 6预售商品 7批发商品
+				type: _this.type, //查看商品类型，1.团购商品 3.秒杀商品 4.拍卖商品 5 粉币商品 6预售商品 7批发商品
+				toShop: _this.toShop
 			};
 			if (_this.dialogData.xsid != null) {
 				_data.productSpecificas = _this.dialogData.xsid.toString();
@@ -157,10 +158,10 @@ Vue.mixin({
 			if (_this.$route.params.joinActivityId != null) {
 				_data.joinActivityId = _this.$route.params.joinActivityId;
 			}
-			if(_this.saleMemberId != null){
+			if (_this.saleMemberId != null) {
 				_data.saleMemberId = _this.saleMemberId;
 			}
-			if(_this.dialogData.commissionMoney != null){
+			if (_this.dialogData.commissionMoney != null) {
 				_data.commission = _this.dialogData.commissionMoney;
 			}
 			if (type == 1 || type == 2) {

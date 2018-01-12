@@ -1,5 +1,5 @@
 <template>
-  <div class="main-divs">
+  <div :class="{'main-divs' : $store.state.isShowFooter}">
     <Admin/>
   </div>
 </template>
@@ -27,6 +27,5 @@ export default {
 <style lang="less" scoped>
 .main-divs {
   margin-bottom: 63px;
-  
 }
 </style>

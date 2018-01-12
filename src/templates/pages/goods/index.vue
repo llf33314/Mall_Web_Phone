@@ -534,7 +534,7 @@ export default {
       webPath: "",
       goodsData: {
         auctionResult: null,
-        productPrice: ["", ""],
+        productPrice: 0.00,
         imageList:[{ imageUrl : ""}]
       },
       pifaResult: {
@@ -582,7 +582,8 @@ export default {
       saleMemberId:0,//销售员id
       toShop : this.$route.params.toShop || 0,//到店购买  1到店购买
       isPhoto:"",
-      dialogImageUrl:""//弹出框图片地址
+      dialogImageUrl:"",//弹出框图片地址
+      isError: false,//商品是否出错
     };
   },
   watch: {
@@ -639,6 +640,10 @@ export default {
       console.log(this.isShow);
       // debugger
       // if(!this.isSoldOut) return;
+      if(!this.isError){
+        this.$store.commit("error_msg", "暂不能选规格");
+        return;
+      }
       if(this.goodsData != null){
         let presale = this.goodsData.presaleResult;
         if(presale != null){
@@ -690,7 +695,7 @@ export default {
             _this.SoldOut = data.msg;
             return;
           }
-
+          _this.isError = true;
           _this.goodsData = data.data;
           _this.path = data.path;
           _this.imgUrl = data.imgUrl;

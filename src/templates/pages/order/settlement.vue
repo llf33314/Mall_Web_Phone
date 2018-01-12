@@ -12,7 +12,7 @@
                 首页
             </div>
         </div>
-        <div v-if="orderData.proTypeId == 0 && isShowAddress">
+        <div v-if="orderData.proTypeId == 0 && isShowAddress && orderData.toShop != 1">
         <!-- 收货地址区域 -->
           <div class="header-bottom clearfix" v-if="hasAddress && memberAddresss != null"
            @click="toAddress">

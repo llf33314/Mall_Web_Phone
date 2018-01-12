@@ -17,7 +17,7 @@
                 </div>
             </div>
         </div>
-        <div class="goods-shop-rigtn">
+        <div class="goods-shop-rigtn" v-if="isError">
             <div class="style-main-border goods-shop-buttom fs42" 
                 v-if="!data.isCollect"
                 @click="collectProductAjax()">收藏商品

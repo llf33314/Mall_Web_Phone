@@ -42,7 +42,7 @@
             </div>
         </div>
     </header>
-    <section class="classify-content-nav" v-if="isNav">
+    <section class="classify-content-nav" v-if="isNav" :class="{'padding-bottom-clear' : !$store.state.isShowFooter}">
             <ul class="classify-nav" :class="{'navshow':isNav}">
                 <li class="fs42 " 
                     v-for="(item,index) in classNav"
@@ -593,6 +593,10 @@ export default {
                 position: relative;
             }
         }
+    }
+    
+    .padding-bottom-clear {
+        padding-bottom: 0!important;
     }
 }
 

@@ -26,6 +26,7 @@ const state = {
     firstUrl : "",//第一次访问的路径
     errorMsg : null,//错误提醒
     isShowLoading : false,//错误
+    isShowFooter: true,//是否显示底部菜单
 }
 const actions ={
     
@@ -55,7 +56,8 @@ const mutations = {
     orderData_change:(state,data)=>state.orderData = data,
     img_url:(state,data)=>state.imgUrl = data,
     error_msg:(state,data)=>state.errorMsg = data,
-    is_show_loading:(state,Booleans)=>state.isShowLoading =  Booleans
+    is_show_loading:(state,Booleans)=>state.isShowLoading =  Booleans,
+    is_show_footer:(state,Booleans)=>state.isShowFooter =  Booleans
     
 }
 

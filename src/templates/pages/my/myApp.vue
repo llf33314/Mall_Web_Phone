@@ -1,6 +1,6 @@
 <template>
   <div class="shop-wrapper ">
-     <section class="shop-main fs40 my-index">
+     <section class="shop-main fs40 my-index" :class="{'margin-bottom-clear' : !$store.state.isShowFooter}">
         <div class="my-header shop-bg" @click="toLogin">
             <div class="my-indexUser">
                <default-img :background="background"
@@ -466,5 +466,9 @@ export default {
       }
     }
   }
+}
+
+.margin-bottom-clear {
+    margin-bottom: 0!important;
 }
 </style>

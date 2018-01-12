@@ -6,7 +6,7 @@
     <shop-dialog ref="dialog"></shop-dialog>
     <top ref="top" v-if="$store.state.showTop" :shopId="$store.state.shopId"></top>
     <loading ref="loading"></loading>
-    <footer-nav ref="footer_nav" v-if="$store.state.showfooter" :busId="$store.state.busId"></footer-nav>
+    <footer-nav ref="footer_nav" :busId="$store.state.busId"></footer-nav>
 
     <!-- <wx-share :shareData="shareObj"></wx-share> -->
     <!-- <iframe ref="footer_nav" src="https://deeptel.com.cn/mallPage/82/79B4DE7C/pageIndex.do" class="material"></iframe> -->

@@ -82,7 +82,7 @@ Vue.mixin({
 				let selectDelivery = bus.selectDelivery;
 
 				if (orderData.proTypeId == 0) {
-					if (_isNull(_this.selectPayWay) || _isNull(_this.selectPayWay.id)) {
+					if ((_isNull(_this.selectPayWay) || _isNull(_this.selectPayWay.id)) && _this.toShop != 1) {
 						_showTip(Language.select_pay_way_msg);//收货地址提醒
 						flag = false;
 						break;
@@ -123,12 +123,16 @@ Vue.mixin({
 			let _commonFn = _this.commonFn;
 			let orderData = _this.orderData;
 			let orderList = _this.orderList;//商家集合
+			let addressId = 0;
+			if(_this.memberAddresss != null){
+				addressId = _this.memberAddresss.id || 0;
+			}
 			//总数据
 			let _data = {
 				totalMoney: orderData.totalMoney,//商品总额（优惠前的价格）
 				totalPayMoney: orderData.totalPayMoney,//合计（商品支付总价）
 				selectPayWayId: _this.selectPayWay.id,//选中的支付方式id
-				selectMemberAddressId: _this.memberAddresss.id || 0,//选中会员地址id
+				selectMemberAddressId: addressId || 0,//选中会员地址id
 				orderType: orderData.type || 0, // 订单类型 1.团购商品 3.秒杀商品 4.拍卖商品 5 粉币商品 6预售商品 7批发商品
 				flowPhone: orderData.flowPhone || "", //流量充值需要传的手机号码
 				shopCartIds: _this.$route.params.shopCartIds || "",//购物车id，多个用逗号隔开
@@ -136,7 +140,6 @@ Vue.mixin({
 			if (orderData.proTypeId > 0) {//虚拟物品不用选择收货地址
 				_data.selectMemberAddressId = 0;
 			}
-
 			let wxShopIds = [];
 			let busIds = [];
 
