@@ -65,7 +65,7 @@
         </div>
     </section>
     <section class="shop-footer-ab shop-footer">
-        <div class="shop-logo"></div>
+       <technical-support v-if="$store.state.isAdvert == 1"></technical-support>
     </section>
     <shop-dialog ref="dialog"></shop-dialog>
 </div>
@@ -73,6 +73,7 @@
 
 <script>
 import shopDialog from "components/shopDialog";
+import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   name: "apply",
   data() {
@@ -90,7 +91,8 @@ export default {
     };
   },
   components: {
-    shopDialog
+    shopDialog,
+    technicalSupport
   },
   mounted() {
     this.loadDatas(); //初始化协商详情数据

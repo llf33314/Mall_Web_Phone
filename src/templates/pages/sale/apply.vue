@@ -70,7 +70,7 @@
             <p class="fs36 shopGray">您可以通过多种方式进行推广，将客户引导到我们的商场或关注我 们的公众号，只要他们购买了符合成标准的产品，您就可以自动赚 取佣金</p>
         </section>
         <section class="shop-footer-ab shop-footer">
-            <div class="shop-logo"></div>
+          <technical-support v-if="$store.state.isAdvert == 1"></technical-support>
         </section>
         <shop-dialog ref="dialog"></shop-dialog>
     </div>
@@ -78,6 +78,7 @@
 
 <script>
 import shopDialog from "components/shopDialog";
+import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   data() {
     return {
@@ -93,7 +94,8 @@ export default {
     };
   },
   components: {
-    shopDialog
+    shopDialog,
+    technicalSupport
   },
   mounted() {
     this.loadDatas(); //初始化协商详情数据

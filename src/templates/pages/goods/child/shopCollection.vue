@@ -17,7 +17,7 @@
                 </div>
             </div>
         </div>
-        <div class="goods-shop-rigtn" v-if="isError">
+        <div class="goods-shop-rigtn" v-if="isErrors">
             <div class="style-main-border goods-shop-buttom fs42" 
                 v-if="!data.isCollect"
                 @click="collectProductAjax()">收藏商品
@@ -37,7 +37,7 @@
 <script>
 import defaultImg from 'components/defaultImg';
 export default {
-    props:['row','imgUrl'],
+    props:['row','imgUrl','isErrors'],
     components: {
         defaultImg
     },

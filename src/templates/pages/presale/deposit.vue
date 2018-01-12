@@ -49,7 +49,7 @@
             </div>
         </section>
         <section class="shop-footer-ab shop-footer">
-            <div class="shop-logo"></div>
+          <technical-support v-if="$store.state.isAdvert == 1"></technical-support>
         </section>
         <!-- 支付方式   -->
         <section class="shop-main-no fs40 my-bond" 
@@ -66,6 +66,7 @@
 import payWayDialog from "components/payWayDialog"; //支付方式
 import defaultImg from "components/defaultImg";
 import filte from "@/lib/filters"; //过滤器
+import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   name: "myAddress",
 
@@ -90,7 +91,8 @@ export default {
   },
   components: {
     payWayDialog,
-    defaultImg
+    defaultImg,
+    technicalSupport
   },
   mounted() {
     if (this.agree == 1) {

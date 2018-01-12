@@ -84,7 +84,7 @@
                             </div>
                         </div>
                         <div class="border orderTotal-list-box" v-if="product.pfSpecResultList != null && product.pfSpecResultList.length > 0">
-                          <div class=" clearfix pf-div" v-for="pfSpec in product.pfSpecResultList">
+                          <div class=" clearfix pf-div" v-for="(pfSpec,pfIndex) in product.pfSpecResultList" :key="pfIndex">
                             <p class="fs40 shop-fl pf-spec-left">规格：{{pfSpec.specificaValues}} X {{pfSpec.totalNum}}</p>
                             <div class="fs40 shop-fr text-overflow pf-spec-right style-main-font" >批发价：{{pfSpec.pfPrice}}元</div>
                           </div>

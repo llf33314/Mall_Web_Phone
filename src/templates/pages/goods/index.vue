@@ -32,7 +32,12 @@
             <i class="iconfont icon-jiantou-copy shopGray"></i>
           </div>
         </section>
-
+        <!-- 流量 flowDesc -->
+        <section class="goods-selected" v-if="goodsData.flowDesc != null">
+          <div class="goods-selected-main">
+            <div class="fs40">{{goodsData.flowDesc}}</div> 
+          </div>
+        </section>
         <!--地址显示--选择-->
         <address-freight :row="goodsData">
         </address-freight>
@@ -45,7 +50,7 @@
                     v-if="type == 1 && goodsData.joinList != null && goodsData.joinList.length > 0">
         </join-group>
         <!---店铺信息与收藏---->
-        <shop-collection :row="goodsData" :imgUrl="imgUrl"></shop-collection>
+        <shop-collection :row="goodsData" :imgUrl="imgUrl" :isErrors="isError"></shop-collection>
         <!----团购-拼团玩法---->
         <group-method v-if="type == 1"></group-method>
         <!---拍卖-竞拍玩法---->

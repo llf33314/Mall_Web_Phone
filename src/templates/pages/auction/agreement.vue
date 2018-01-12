@@ -110,7 +110,7 @@
             </div>
         </section>
         <section class="shop-footer">
-            <div class="shop-logo"></div>
+          <technical-support v-if="$store.state.isAdvert == 1"></technical-support>
         </section>
         <section class="auction-footer shop-footer-fixed">
             <div class="auction-buttom fs50 shop-bg" @click="returnAuction">
@@ -122,13 +122,16 @@
 </template>
 
 <script>
+import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   name: "agreement",
 
   data() {
     return {};
   },
-  components: {},
+  components: {
+      technicalSupport
+  },
   mounted() {
     this.commonFn.setTitle("用户竞拍服务协议");
     this.$store.commit("show_footer", false); //隐藏底部导航栏

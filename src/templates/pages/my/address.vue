@@ -28,7 +28,7 @@
                         <select class="right-txt province" v-model="addressObj.memProvince" 
                           @change="getAreas(0, 1,true,provinceArr)"
                           v-if="provinceArr != null && provinceArr.length > 0">
-                            <option v-for="province in provinceArr" :value="province.id">{{province.city_name}}</option>
+                            <option v-for="(province,pIndex) in provinceArr" :value="province.id" :key="pIndex">{{province.city_name}}</option>
                         </select>
                         <select class="right-txt" v-else>
                            <option>{{addressObj.provincename || '请选择省'}}</option>
@@ -44,7 +44,7 @@
                          @click="getAreas(addressObj.memProvince, 2,false,cityArr)"
                          @change="getAreas(addressObj.memProvince, 2,true,cityArr)"
                          v-if="cityArr != null && cityArr.length > 0">
-                          <option  v-for="city in cityArr" :value="city.id">{{city.city_name}}</option>
+                          <option  v-for="(city,cIndex) in cityArr" :value="city.id" :key="cIndex">{{city.city_name}}</option>
                         </select>
                          <select class="right-txt" v-else>
                            <option>{{addressObj.cityname || '请选择市'}}</option>
@@ -59,7 +59,7 @@
                         <select class="right-txt area" v-model="addressObj.memArea"
                          @click="getAreas(addressObj.memCity, 3,false,areaArr)"
                          v-if="areaArr != null && areaArr.length > 0">
-                           <option v-for="area in areaArr" :value="area.id">{{area.city_name}}</option>
+                           <option v-for="(area,aIndex) in areaArr" :value="area.id" :key="aIndex">{{area.city_name}}</option>
                         </select>
                         <select class="right-txt" v-else>
                            <option>{{addressObj.areaname || '请选择区'}}</option>
@@ -95,7 +95,7 @@
             </div>
         </section> 
         <section class="shop-footer-ab">
-            <div class="shop-logo"></div>
+          <technical-support v-if="$store.state.isAdvert == 1"></technical-support>
         </section>
         <map-address v-if="isShowMap" :type="mapTypes" :lat="addressObj.memLatitude" :lng="addressObj.memLongitude"
         :memAddress="addressDetail"
@@ -107,6 +107,7 @@
 
 <script>
 import mapAddress from "components/mapAddress";
+import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   name: "address",
   data() {
@@ -158,7 +159,8 @@ export default {
     this.$store.commit("show_footer", true); //显示底部导航栏
   },
   components: {
-    mapAddress
+    mapAddress,
+    technicalSupport
   },
   methods: {
     loadDatas() {

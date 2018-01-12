@@ -3,11 +3,15 @@
         <dialog-modular :dialogTitle = "'绑定手机号码'">
             <div class="dialog-input-main">
                 <div class="dialog-input-box">
-                    <div class="dialog-input">
+                    <div class="dialog-input code_div">
+                        <div @click="isShowAreaCode=true">
+                          <em class="fs45">+{{areaCodeStr}}</em>
+                          <i class="iconfont icon-jiantou"></i>
+                        </div>
                         <input class="fs50" placeholder="请输入手机号码" v-model="telPhone"/>
                     </div>
                     <div class="dialog-input dialog-code">
-                        <input class=" fs50" placeholder="请输入验证码" v-model="code"/>
+                        <input class="fs50" placeholder="请输入验证码" v-model="code"/>
                         <span class="fs50 style-main-font" @click="getValiCode" v-text="getCodeMsg">获取验证码</span>
                     </div>
                 </div>
@@ -20,10 +24,12 @@
                 </div>
             </div>
         </dialog-modular>
+        <area-code v-if="isShowAreaCode" @selectCode="returnAreaCode"></area-code>
     </div>
 </template>
 <script>
 import dialogModular from "components/dialogModular"; //绑定手机号码弹出框
+import areaCode from "components/areaCode"; //绑定手机号码
 export default {
   props: ["phone", "type"],
   data: function() {
@@ -31,11 +37,14 @@ export default {
       code: "",
       waitTime: 60, //等待时间
       getCodeMsg: Language.get_validate_code_msg,
-      telPhone: null
+      telPhone: null,
+      isShowAreaCode: false,
+      areaCodeStr: "86"
     };
   },
   components: {
-    dialogModular
+    dialogModular,
+    areaCode
   },
   methods: {
     //获取短信验证码
@@ -111,6 +120,13 @@ export default {
           _this.$emit("confirmPhones", [_phone]);
         }
       });
+    },
+    returnAreaCode(data) {
+      this.isShowAreaCode = false;
+      if (data == null || data == "") {
+        return;
+      }
+      this.areaCodeStr = data.areacode;
     }
   }
 };
@@ -121,6 +137,9 @@ export default {
 @import "../../assets/css/mixins.less";
 @import "../../assets/css/base.less";
 @import "../../assets/css/common.less";
+// .dialog-main{
+//   .border-radius(2px);
+// }
 .dialog-button3 {
   width: 100%;
   display: block;
@@ -129,5 +148,26 @@ export default {
   line-height: 140/@dev-Width *1rem;
   margin-top: 65/@dev-Width *1rem;
   border-top: 1px solid #e0e0e0;
+}
+.code_div {
+  .ik-box;
+  .ik-box-pack(justify);
+  // .ik-box-align(center);
+  input {
+    width: 77% !important;
+    display: block;
+    padding-left: 35/@dev-Width *1rem;
+  }
+  div {
+    width: 23%;
+    border-right: 1px solid #d1d1d5;
+    em {
+      vertical-align: sub;
+    }
+    i {
+      color: #c7c7cc;
+      margin: 0 20/@dev-Width *1rem;
+    }
+  }
 }
 </style>
