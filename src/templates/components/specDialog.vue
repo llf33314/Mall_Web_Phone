@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="spec-dialog-div">
         <div class="fade" id="fade" v-if="isShow && dialogProduct != null" style="display:block;" @click="closeDialog"></div>
         <div class="attr-lay" v-if="isShow && dialogProduct != null">
             <div class="lay-header">
@@ -281,3 +281,188 @@ export default {
   }
 };
 </script>
+<style lang="less" scoped>
+.spec-dialog-div {
+  .fade {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index: 99998;
+    -moz-opacity: 0.4;
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+  }
+  .attr-lay {
+    z-index: 99999;
+    position: fixed;
+    bottom: 0;
+    width: 8.28rem;
+    padding-bottom: 0.142313rem;
+    background-color: #fff;
+  }
+
+  .attr-lay .delete {
+    display: inline-block;
+    width: 0.25875rem;
+    height: 0.25875rem;
+    position: absolute;
+    right: 0.09315rem;
+    top: 0.09315rem;
+  }
+
+  .lay-header {
+    background-color: #fff;
+    height: 1.52145rem;
+    position: relative;
+    border-bottom: 0.025875rem solid #cbc9c9;
+  }
+
+  .lay-header .img-box {
+    width: 1.9665rem;
+    height: 1.9665rem;
+    border: 0.025875rem solid #edeef1;
+    border-radius: 0.077625rem;
+    background-color: #fff;
+    position: absolute;
+    left: 0.25875rem;
+    top: -0.58995rem;
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
+    display: box;
+    box-orient: horizontal;
+    box-pack: center;
+    box-align: center;
+  }
+
+  .img-box img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .lay-header .header-box {
+    position: relative;
+    left: 2.561625rem;
+    top: 0.621rem;
+    width: 5.252625rem;
+    font-size: 0.284625rem;
+    color: #828282;
+  }
+
+  .lay-header .sum {
+    color: #f20000;
+    font-size: 0.3105rem;
+    line-height: 1.6;
+  }
+
+  .lay-header .inv-num {
+    font-size: 0.232875rem;
+  }
+
+  .lay-content {
+    padding: 0 0.181125rem;
+    background-color: #fff;
+    font-size: 0.284625rem;
+    color: #828282;
+  }
+
+  .lay-content .content-box .title {
+    line-height: 1.8;
+  }
+
+  .lay-content .inv-list {
+    overflow: hidden;
+  }
+
+  .lay-content .inv-list .inv-item {
+    float: left;
+    width: 1.423125rem;
+    height: 0.5175rem;
+    line-height: 0.5175rem;
+    border: 0.025875rem solid #cbcccc;
+    margin-right: 0.25875rem;
+    margin-bottom: 0.142313rem;
+    text-align: center;
+    border-radius: 0.077625rem;
+  }
+
+  .lay-content .inv-list .inv-item-active {
+    border-color: #f23030;
+    color: #f23030;
+  }
+
+  .lay-bottom {
+    text-align: center;
+    background-color: #fff;
+    padding-top: 0.284625rem;
+  }
+
+  em {
+    font-style: normal;
+  }
+
+  .gw_num {
+    border: 0.025875rem solid #828282;
+    height: 0.543375rem;
+    line-height: 0.543375rem;
+    overflow: hidden;
+    position: absolute;
+    right: 0;
+    top: 0.142313rem;
+  }
+
+  .gw_num em {
+    display: block;
+    height: 100%;
+    width: 0.608062rem;
+    float: left;
+    color: #7a7979;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.3312rem;
+    background-color: #cbc9c9;
+  }
+
+  .gw_num .num {
+    display: block;
+    float: left;
+    text-align: center;
+    width: 0.67275rem;
+    height: 100%;
+    font-style: normal;
+    font-size: 0.245812rem;
+    border: 0;
+  }
+
+  .gw_num em.add {
+    float: right;
+    border-right: 0;
+  }
+
+  .shop-btn {
+    display: inline-block;
+    width: 3.027375rem;
+    height: 0.750375rem;
+    line-height: 0.750375rem;
+    text-align: center;
+    font-size: 0.284625rem;
+    color: #fff;
+    border-radius: 0.077625rem;
+    -webkit-border-radius: 0.077625rem;
+  }
+
+  .add-shop {
+    background-color: #ff8522;
+  }
+
+  .now-shop {
+    background-color: #f23030;
+  }
+}
+</style>
+
