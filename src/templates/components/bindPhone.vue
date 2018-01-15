@@ -39,7 +39,8 @@ export default {
       getCodeMsg: Language.get_validate_code_msg,
       telPhone: null,
       isShowAreaCode: false,
-      areaCodeStr: "86"
+      areaCodeStr: "86",
+      areaId:1
     };
   },
   components: {
@@ -60,7 +61,8 @@ export default {
       let _data = {
         busId: this.$route.params.busId || sessionStorage.getItem("busId"),
         phone: _phone,
-        type: 1
+        type: 1,
+        areaCode: areaCodeStr
       };
       this.time();
       _this.ajaxRequest({
@@ -106,7 +108,9 @@ export default {
         url: location.href,
         browerType: _this.$store.state.browerType,
         phone: _phone,
-        code: _code
+        code: _code,
+        areaId:_this.areaId,
+        areaCode: _this.areaCodeStr
       };
       _this.ajaxRequest({
         url: h5App.activeAPI.bind_phone_post,
@@ -127,6 +131,7 @@ export default {
         return;
       }
       this.areaCodeStr = data.areacode;
+      this.areaId = data.id;
     }
   }
 };
