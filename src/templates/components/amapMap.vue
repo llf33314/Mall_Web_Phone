@@ -1,85 +1,68 @@
 <template>
   <transition name="slide-fade">
-    <div class="amapmap-box">
-      <el-amap-search-box class="search-box fs44" :search-option="searchOption" :on-search-result="onSearchResult"></el-amap-search-box>
-        <el-amap vid="amapDemo" :center="center" :map-manager="amapManager" :zoom="zoom" :events="events" class="amap-demo">
-      </el-amap>
-      <mt-loadmore :top-method="loadTop" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" ref="loadmore">
+    <iframe :src="URL"></iframe>
+    <!-- <div class="amapmap-box ">
+     <div id="map-container"> </div>
+    </div> -->
+      <!-- <mt-loadmore :top-method="loadTop" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" ref="loadmore">
         <ul>
           <li v-for="(item,i) in list" :key="i">{{ item }}</li>
         </ul>
-      </mt-loadmore>
-    </div>
+      </mt-loadmore> -->
   </transition>
 </template>
 <script>
-import VueAMap from 'vue-amap';    
-import { lazyAMapApiLoaderInstance } from 'vue-amap';
-import { Search,Loadmore } from 'mint-ui';
-export default {
-    props: ['lat', 'lng'],
-    data() {
-       return {
-         value:'',
-          zoom: 12,
-          center: [121.59996, 31.197646],
-          amapManager:'',
-          events: {
-            init(map) {
-              // AMapUI.loadUI(['overlay/SimpleMarker'], function(SimpleMarker) {
-              //   const marker = new SimpleMarker({
-              //     iconLabel: 'A',
-              //     iconStyle: 'red',
-              //     map: map,
-              //     position: map.getCenter()
-              //   });
-              // });
-            }
-          }
-        };
-    },
-    components: {
-      Search,
-      Loadmore
-    },
-    created () {
-      let _this = this;
-      this.center=[_this.lat,_this.lng]
-      //this.loadPromise()
-        // lazyAMapApiLoaderInstance.load().then(() => {
-        // // your code ...
-        //     this.map = new AMap.Map('amapContainer', {
-        //         center: new AMap.LngLat(_this.lat, _this.lng)
-        //     });
-        // });
-        
-    },
-    watch: {
-        searchKey () {
-          if (this.searchKey === '') {
-              this.placeSearch.clear()
-          }
-        }
-    },
-    methods: {
-        // 加载更多数据
-        loadTop() {
-          this.$refs.loadmore.onTopLoaded();
-        },
-        // 搜索
-        handleSearch () {
-        
-        },
-        // 实例化地图
-        initMap () {
+import AMap from 'AMap';
+import AMapUI from 'AMapUI';
 
-        },
-        loadPromise(){
-            let newloadPromise = VueAMap.lazyAMapApiLoaderInstance.load();
-        }
+import { Search,Loadmore } from 'mint-ui';
+export default  {
+  props: ['lat', 'lng'],
+  data(){
+  return {
+     URL:''
+    }
+  },
+  mounted () {
+    /*eslint-disable no-undef*/
+    this.init();
+      var iframe = document.getElementById('test').contentWindow;
+      document.getElementById('test').onload = function(){
+        iframe.postMessage('hello','https://m.amap.com/picker/');
+      };
+      window.addEventListener("message", function(e){
+        alert('您选择了:' + e.data.name + ',' + e.data.location)
+      }, false);
+  },
+  methods: {
+    /** 
+     * 搜索
+     */
+    searchOption(){
+
     },
-    
+    /**  
+     * 接收
+    */
+    onSearchResult(){
+
+    },
+    /** 
+     * 初始
+     */
+    init(){
+      let keywords = '';//表示搜索的关键词，支持3个关键词，用英文逗号分隔;（超过3个时取前三个值） 缺省时，默认值：写字楼，小区，学校
+      let zoom = '';    //地图区域的缩放级别，取值范围是3-18，默认值是15
+      let center = '';//格式为（经纬，纬度）;
+      let radius ='';//表示搜索的范围半径，单位为：米。取值范围（1,50000），为空则默认为1000。
+      let total = '';//检索结果条数，默认为20，取值范围1-50。
+      let key = '3b73726ac868e5fcf8e26513ce6860d1';
+      this.URL  = 'https://m.amap.com/picker/?keywords=parameter1&amp;zoom=parameter2&amp;center=parameter3&amp;radius=parameter4&amp;total=parameter5&key=3b73726ac868e5fcf8e26513ce6860d1'
+      
+    }
+  }
 }
+
 </script>
 
 <style lang="less" scoped>

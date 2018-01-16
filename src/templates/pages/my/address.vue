@@ -16,15 +16,14 @@
                         联系电话
                     </div>
                     <div class="shop-fl right" >
-                        <!-- <div class="shop-fl " style="width:25%">
+                        <div class="shop-fl " style="width:25%">
                           <area-code :dataStyle="{
                             color:'#666',
                             padding: '0.27rem 0 0.231rem 0'
                             }"
                             @selectCode = "changeArea"></area-code>
-                        </div> -->
-                        <!--style="width:75%"-->
-                        <input  placeholder="手机号码" class="right-txt" v-model="addressObj.memPhone"
+                        </div>
+                        <input style="width:75%" placeholder="手机号码" class="right-txt" v-model="addressObj.memPhone"
                         @blur="validateData(2)">
                     </div>
                 </div>

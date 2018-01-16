@@ -16,7 +16,7 @@ import App from './App'
 import router from './router'
 
 import storeConfig from './vuex/store'
-import VueAMap from 'vue-amap';
+
 //Vue.config.productionTip = false
 //import AMap from 'vue-amap';
 
@@ -31,14 +31,6 @@ import MintUi from 'mint-ui'
 
 Vue.use(MintUi);
 
-VueAMap.initAMapApiLoader({
-  key: '3b73726ac868e5fcf8e26513ce6860d1',
-  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar',
-  'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor','AMap.Geolocation','AMap.Geocoder','AMap.LngLat']
- 
-});
-Vue.use(VueAMap);
-
 //消除移动端300ms延迟
 import FastClick from 'fastclick'
 FastClick.attach(document.body);
@@ -47,7 +39,6 @@ FastClick.attach(document.body);
 var vm = new Vue({
   el: '#app',
   router,
-  VueAMap,
   store: storeConfig,
   template: '<App/>',
   components: { App }
