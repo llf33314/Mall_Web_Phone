@@ -1,7 +1,7 @@
 <template>
   <div style="width: 100%;">
     <!--按钮-->
-    <div class="code-button" @click="isShow=true" >
+    <div class="code-button" @click="isShow=true" :style="dataStyle">
       {{select==null?'国家/地区':'+'+select.areacode}}
     </div>
     <!--搜索页-->
@@ -25,6 +25,10 @@
  import {Popup} from 'mint-ui'
 export default {
   props: {
+    'dataStyle':{
+      type:[Object,Number],
+      default: 0
+    }
   },
   components: {
     Popup
@@ -37,6 +41,11 @@ export default {
       style:{},
       select:null
     };
+  },
+  watch: {
+    'select'(a){
+      this.$emit("selectCode",a);
+    }
   },
   computed: {
     searchData: function() {
@@ -51,6 +60,9 @@ export default {
     }
   },
   mounted() {
+    if(this.dataStyle != 0){
+      this.style = this.dataStyle;
+    }
     this.load();
   },
   methods: {
@@ -61,8 +73,14 @@ export default {
         loading: true,
         success: function(data) {
           _this.$store.commit("is_show_loading", false);
-          //console.log(data.data);
           _this.codeArr = data.data;
+          //areacode
+          data.data.forEach((item,i) => {
+            if(item.areacode  == '86'){
+              _this.select = item;
+            }
+          });
+          
         }
       });
     },
@@ -73,7 +91,6 @@ export default {
       }else{
         this.select = data;
       }
-      this.$emit("selectCode",data);
     }
   }
 };
@@ -83,8 +100,7 @@ export default {
 @import "../../assets/css/base.less";
 .code-button{
   width: 100%;
-  padding: 40/ @dev-Width * 1rem 0 35/ @dev-Width * 1rem 0;
-  color: #666;
+  height: 100%;
 }
 .select-code{
   color: #333!important;
