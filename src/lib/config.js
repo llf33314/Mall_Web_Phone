@@ -71,6 +71,10 @@
     wx_share_get: '/phonePage/L6tgXlBFeK/wxShare',
     /*获取店铺id*/
     get_shop_id_post: '/phonePage/L6tgXlBFeK/getShopId',
+    /*获取店铺风格接口 */
+    getShopStyle_post: '/phonePage/L6tgXlBFeK/getShopStyle',
+    /*获取所有国家区号列表接口 */
+    areaPhoneList_post: '/phonePage/L6tgXlBFeK/areaPhoneList',
     /*获取我的页面数据*/
     my_center_post: '/phoneMember/L6tgXlBFeK/toUser',
     /*我的收藏 */
@@ -81,8 +85,6 @@
     is_login_post: '/phoneMember/L6tgXlBFeK/isLogin',
     /*获取会员中心的地址 */ 
     get_member_post: '/phoneMember/L6tgXlBFeK/memberCenter',
-    /*获取店铺风格接口 */
-    getShopStyle_post: '/phonePage/L6tgXlBFeK/getShopStyle',
     /*查询规格和商品图片的接口*/
     getSpecificaAndImage_post: '/phoneProduct/L6tgXlBFeK/getSpecificaAndImage',
     /***********************   以下接口都是 商品分类页面相关接口 ***********************/

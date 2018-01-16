@@ -1,8 +1,8 @@
 <template>
   <div style="width: 100%;">
     <!--按钮-->
-    <div class="code-button" @click="isShow=true" :class="{'select-code':select !== null}">
-      国家/地区
+    <div class="code-button" @click="isShow=true" >
+      {{select==null?'国家/地区':'+'+select.areacode}}
     </div>
     <!--搜索页-->
     <popup v-model="isShow" position="right" class="mint-popup-3" :modal="false">
@@ -61,7 +61,7 @@ export default {
         loading: true,
         success: function(data) {
           _this.$store.commit("is_show_loading", false);
-          console.log(data.data);
+          //console.log(data.data);
           _this.codeArr = data.data;
         }
       });

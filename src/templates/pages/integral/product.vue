@@ -15,7 +15,7 @@
       <div class="guige-div">
         <div class="guige-title">
           <p>规格</p>
-          <p class="iconfont icon-jiantou"></p>
+          <p class="iconfont icon-jiantou" @click="isShowSpec ? isShowSpec = false: isShowSpec = true"></p>
         </div>
         <div class="guige-item" v-if="specificaList != null"
          v-for="(specifica,index) in specificaList" :key="index">
@@ -28,7 +28,7 @@
           </div>
         </div>
         
-        <div class="guige-item2">
+        <div class="guige-item2" v-show="isShowSpec">
           <div class="name-div fs40">
             <span>数量</span>
           </div>
@@ -105,7 +105,8 @@ export default {
       disabledMsg: "", //禁用提示
       stockNum: 0, //库存数量
       flowPhone: "", //充值流量
-      isShowFlowPhone: false //是否显示流量弹出框
+      isShowFlowPhone: false, //是否显示流量弹出框
+      isShowSpec: true//是否显示规格
     };
   },
   components: {
@@ -328,6 +329,8 @@ export default {
     //提交数据
     submitData() {
       let _this = this;
+      let _commonfn = this.commonFn;
+      let _isNull = _commonfn.isNull;
       let _showTip = _this.$parent.$refs.bubble.show_tips; //冒泡提醒
       if (!_this.isDisabledButtons()) {
         if (this.disabledMsg != "") {
@@ -351,12 +354,13 @@ export default {
       if (proTypeId == 4 && this.flowPhone != "") {
         _data.flowPhone = this.flowPhone;
       }
-      if (proTypeId == 4 && _data.flowPhone == "") {
+      if (proTypeId == 4 && (_isNull(_data.flowPhone) || !_commonfn.validPhone(_data.flowPhone))) {
         //弹出充值流量弹出框
         this.isShowFlowPhone = true;
         return false;
       }
       console.log("_data", _data);
+      // return;
       _this.ajaxRequest({
         url: h5App.activeAPI.record_integral_post,
         loading: true,
