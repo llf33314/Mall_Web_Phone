@@ -15,8 +15,14 @@
                     <div class="shop-fl left">
                         联系电话
                     </div>
-                    <div class="shop-fl right">
-                        <input placeholder="手机号码" class="right-txt" v-model="addressObj.memPhone"
+                    <div class="shop-fl right" >
+                        <div class="shop-fl " style="width:25%">
+                          <area-code :dataStyle="{
+                            color:'#666;',
+                            padding: '40/ @dev-Width * 1rem 0 35/ @dev-Width * 1rem 0'
+                            }"></area-code>
+                        </div>
+                        <input style="width:75%" placeholder="手机号码" class="right-txt" v-model="addressObj.memPhone"
                         @blur="validateData(2)">
                     </div>
                 </div>
@@ -97,21 +103,30 @@
         <section class="shop-footer-ab">
           <technical-support v-if="$store.state.isAdvert == 1"></technical-support>
         </section>
-        <map-address v-if="isShowMap" :type="mapTypes" :lat="addressObj.memLatitude" :lng="addressObj.memLongitude"
+        <!-- <map-address v-if="isShowMap" :type="mapTypes" :lat="addressObj.memLatitude" :lng="addressObj.memLongitude"
         :memAddress="addressDetail"
         :isShow.sync="isShowMap"
         @confirmMap="confirmMaps"
-        ></map-address>
+        ></map-address> -->
+        <map-amap  v-if="isShowMap" 
+                @drag="dragMap()"
+                :lat="addressObj.memLatitude" 
+                :lng="addressObj.memLongitude"></map-amap>
   </div>
 </template>
 
 <script>
+import areaCode from 'components/areaCode';
 import mapAddress from "components/mapAddress";
+import mapAmap from "components/amapMap.vue";
 import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   name: "address",
   data() {
     return {
+      pickerVisible:'',
+
+
       busId: this.$route.params.busId || sessionStorage.getItem("busId"), //商家id
       id: this.$route.params.id || 0,
       addressObj: {
@@ -139,10 +154,15 @@ export default {
         }
       ],
       addressDetail: "",
-      roseColor: null
+      roseColor: null,
+
+
+      dragData:'',
+      isAreacode:false//选择区号
     };
   },
   mounted() {
+    
     this.loadDatas(); //初始化数据
     if (this.id > 0) {
       this.commonFn.setTitle(Language.edit_address_msg);
@@ -153,6 +173,7 @@ export default {
     if (this.commonFn.isNotNull(sessionStorage.getItem("integralData"))) {
       this.roseColor = "rose_cla";
     }
+   
   },
   beforeDestroy() {
     //离开后的操作
@@ -160,9 +181,25 @@ export default {
   },
   components: {
     mapAddress,
-    technicalSupport
+    technicalSupport,
+    mapAmap,
+    areaCode
   },
   methods: {
+    handleConfirm(){
+
+    },
+    dragMap (data) {
+      console.log(data);
+      this.dragData = {
+        lng: data.position.lng,
+        lat: data.position.lat,
+        address: data.address,
+        nearestJunction: data.nearestJunction,
+        nearestRoad: data.nearestRoad,
+        nearestPOI: data.nearestPOI
+      }
+    },
     loadDatas() {
       if (this.id == 0) {
         this.getAreas(0, 1, false, this.provinceArr);
@@ -403,7 +440,8 @@ export default {
         }
       });
     }
-  }
+  },
+  
 };
 </script>
 

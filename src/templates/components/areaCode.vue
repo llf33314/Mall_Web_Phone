@@ -1,25 +1,41 @@
 <template>
-    <div class="code-main">
-      <div class="code-top border">
-        <input  class="fs50" placeholder="搜索国家/地区" v-model="content" />
-        <i class="iconfont icon-guanbi" @click="selectCode(null)"></i>
-      </div>
-      <div class="code-content" v-if="searchData != null">
-        <div class="border code-item" v-for="(code,index) in searchData" :key="index" @click="selectCode(code)">
-          <span class="fs52 span_left">{{code.country}}</span>
-          <span class="fs52 span_right">+{{code.areacode}}</span>
+  <div style="width: 100%;">
+    <!--按钮-->
+    <div class="code-button" @click="isShow=true" :class="{'select-code':select !== null}">
+      国家/地区
+    </div>
+    <!--搜索页-->
+    <popup v-model="isShow" position="right" class="mint-popup-3" :modal="false">
+      <div class="code-main">
+        <div class="code-top border">
+          <input  class="fs50" placeholder="搜索国家/地区" v-model="content" />
+          <i class="iconfont icon-guanbi" @click="selectCode(null)"></i>
+        </div>
+        <div class="code-content" v-if="searchData != null">
+          <div class="border code-item" v-for="(code,index) in searchData" :key="index" @click="selectCode(code)">
+            <span class="fs52 span_left">{{code.country}}</span>
+            <span class="fs52 span_right">+{{code.areacode}}</span>
+          </div>
         </div>
       </div>
-      </div>
-    </div>
+    </popup>
+  </div>
 </template>
 <script>
+ import {Popup} from 'mint-ui'
 export default {
-  props: [],
+  props: {
+  },
+  components: {
+    Popup
+  },
   data: function() {
     return {
       content: "",
-      codeArr: null
+      codeArr: null,
+      isShow:false,
+      style:{},
+      select:null
     };
   },
   computed: {
@@ -49,7 +65,14 @@ export default {
           _this.codeArr = data.data;
         }
       });
-    },selectCode(data){
+    },
+    selectCode(data){
+      this.isShow = false;
+      if(data == null){
+        this.select = null
+      }else{
+        this.select = data;
+      }
       this.$emit("selectCode",data);
     }
   }
@@ -58,6 +81,18 @@ export default {
 <style lang="less" scoped>
 @import "../../assets/css/mixins.less";
 @import "../../assets/css/base.less";
+.code-button{
+  width: 100%;
+  padding: 40/ @dev-Width * 1rem 0 35/ @dev-Width * 1rem 0;
+  color: #666;
+}
+.select-code{
+  color: #333!important;
+}
+.mint-popup-3{
+  width: 100%;
+  height: 100%;
+}
 .code-main {
   width: 100%;
   height: 100%;
