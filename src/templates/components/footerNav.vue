@@ -26,7 +26,7 @@ export default {
           statu: "index",
           title: "index",
           isSelect: false,
-          selectArr: ["index", "seller/mallindex"]
+          selectArr: ["home","index", "seller/mallindex"]
         },
         {
           name: "分类",

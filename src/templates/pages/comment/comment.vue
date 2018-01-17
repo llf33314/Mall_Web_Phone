@@ -248,8 +248,8 @@ export default {
         //display: inline-block;
         float: left;
         position: relative;
-        width: 22%;
-        height: 230/@dev-Width *1rem;
+        width: 265/@dev-Width *1rem;
+        height: 265/@dev-Width *1rem;
         background-size: cover;
         background-position: center;
         margin-top: 40/@dev-Width *1rem;
@@ -266,11 +266,13 @@ export default {
       }
       .comment-img {
         position: relative;
+        z-index: 1;
         img {
           width: 100%;
           height: 100%;
         }
         i {
+          z-index: 2;
           width: 60/@dev-Width *1rem;
           height: 60/@dev-Width *1rem;
           text-align: center;

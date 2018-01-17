@@ -31,11 +31,14 @@
                 去看看
             </div>
         </section>
+        <!-- 微信分享 -->
+        <wx-share :shareData="shareObj" ></wx-share>
     </div>  
 </template>
 
 <script>
 import defaultImg from "components/defaultImg";
+import wxShare from "components/wxShare"; //微信分享
 export default {
   name: "myAddress",
 
@@ -52,7 +55,8 @@ export default {
     };
   },
   components: {
-    defaultImg
+    defaultImg,
+    wxShare
   },
   mounted() {
     this.loadDatas(); //初始化数据
