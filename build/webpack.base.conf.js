@@ -30,10 +30,6 @@ module.exports = {
       'pages': path.resolve(__dirname, '../src/templates/pages'),
     }
   },
-  externals: {
-    'AMap': 'window.AMap',
-    'AMapUI': 'window.AMapUI'
-  },
   module: {
     rules: [
       {

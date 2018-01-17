@@ -65,6 +65,7 @@
                     <div class="shop-fl right">
                         <select class="right-txt area" v-model="addressObj.memArea"
                          @click="getAreas(addressObj.memCity, 3,false,areaArr)"
+                         @change="getAreas(addressObj.memCity, 3,true,areaArr)"
                          v-if="areaArr != null && areaArr.length > 0">
                            <option v-for="(area,aIndex) in areaArr" :value="area.id" :key="aIndex">{{area.city_name}}</option>
                         </select>
@@ -109,17 +110,18 @@
         :isShow.sync="isShowMap"
         @confirmMap="confirmMaps"
         ></map-address> -->
-        <map-amap  v-if="isShowMap" 
-                @drag="dragMap()"
-                :lat="addressObj.memLatitude" 
-                :lng="addressObj.memLongitude"></map-amap>
-  </div>
+        <map-amap v-if="isShowMap"
+              :memAddress="addressDetail"
+              :isShowMap.sync="isShowMap"
+              @change="selectAddress"
+              ></map-amap>
+        </div>
 </template>
 
 <script>
 import areaCode from 'components/areaCode';
 import mapAddress from "components/mapAddress";
-import mapAmap from "components/amapMap.vue";
+import mapAmap from "components/amapMap.vue";//高德地图
 import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   name: "address",
@@ -258,6 +260,7 @@ export default {
         _shopTips(Language.city_null_msg);
         return;
       }
+
       if (isChange) {
         addressObj.memLatitude = 0;
         addressObj.memLongitude = 0;
@@ -332,7 +335,13 @@ export default {
       let city = $(".city option:selected").text();
       let area = $(".area option:selected").text();
       let address = this.addressObj;
-      this.addressDetail = province + city + area + address.memAddress;
+      let addressDetail={
+        province: province,
+        city: city,
+        area: area
+      }
+      //this.addressDetail = province + city + area + address.memAddress;
+      this.addressDetail = addressDetail;
       this.isShowMap = true;
     },
     confirmMaps(data) {
@@ -442,10 +451,51 @@ export default {
       });
     },
     /** 
-     * 接受国家地区编号
+     * 接收国家地区编号
      */
     changeArea(val){
       console.log(val,'val')
+    },
+    /** 
+     * 接收高德选择地址
+     * @param data  返回数据
+     */
+    selectAddress(data){
+      let _this = this;
+      console.log(data,'selectAddress');
+      if(data.code == 0){
+        _this.addressObj.memAddress = data.address;
+      }else{
+        console.log('code2');
+        //省级是否修改
+        let isProvinc = true;
+        //市级是否修改
+        let isCity = true;
+        //区级是否修改
+        let isArea = true;
+
+        _this.provinceArr.forEach((item,i) => {
+          if(isProvinc &&item.city_name == data.province && item.id != _this.addressObj.memProvince){
+            //省级修改
+            isProvinc = false;
+            _this.addressObj.memProvince = item.id;
+            _this.getAreas(0, 1,true, _this.provinceArr)
+          }
+        });
+        debugger
+        _this.cityArr.forEach((item,i) => {
+            if(isCity && item.city_name == data.city && item.id != _this.addressObj.memCity){
+              //省级修改
+            isCity = false;
+            _this.addressObj.memCity = item.id;
+            _this.getAreas(_this.addressObj.memProvince, 2,true,_this.cityArr)
+          }
+        });
+        
+        _this.addressObj.memArea = data.id;
+        _this.getAreas(this.addressObj.memCity, 3,true,_this.areaArr);
+        _this.addressObj.memAddress = data.address;
+      }
     }
   },
   
