@@ -1253,7 +1253,7 @@ export default {
         success: function(data) {
           let msg = {
             type: "success",
-            msg: "加入购物车成功"
+            msg: "添加购物车成功"
           };
           _this.$store.commit("error_msg", msg);
         }

@@ -1,11 +1,11 @@
 <template>
     <div class="bubble" v-show="show" >
-      <p>
-        <i class="iconfont icon-dui1" v-if=" msg.type == 'success'"></i>
+      <div class="success_p"  v-if="msg.type == 'success'"><p><i class="iconfont icon-dui1" ></i>{{msg.msg}}</p></div>
+      <div v-else class="bubble_div">
         <i class="iconfont icon-guanbi" v-if=" msg.type == 'error'"></i>
         <i v-if=" msg.type == 'warning'">!</i>
         {{msg.msg}}
-      </p>
+      </div>
     </div>
  
 </template>
@@ -56,7 +56,9 @@ module.exports = {
 //使用
 //  this.$root.$refs.bubble.show_tips('最多只能选择3个');//bubble_hint*/
 </script>
-<style>
+<style lang="less" scoped>
+@import "../../assets/css/mixins.less";
+@import "../../assets/css/base.less";
 /*气泡提示---------------------------------------------------------------------------------------------*/
 
 .bubble {
@@ -67,23 +69,40 @@ module.exports = {
   width: 100%;
   height: 100%;
   text-align: center;
+  .bubble_div {
+    display: inline-block;
+  }
+  .bubble_div,
+  .success_p {
+    margin: 70% auto;
+    padding: 0.15rem 0.2rem;
+    color: white;
+    white-space: nowrap;
+    font-size: 0.28rem;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5);
+
+    border-radius: 5px;
+    i {
+      font-size: 28px;
+      display: block;
+      margin: 0 auto;
+    }
+  }
 }
 
-.bubble p {
-  margin: 70% auto;
-  padding: 0.15rem 0.2rem;
-  color: white;
-  white-space: nowrap;
-  font-size: 0.28rem;
-  text-align: center;
-  background: rgba(0, 0, 0, 0.5);
-  display: inline-block;
-  border-radius: 5px;
+.success_p {
+  width: 2.58rem;
+  height: 2.58rem;
 }
-.bubble p i {
-  font-size: 28px;
-  display: block;
-  margin: 0 auto;
+.success_p {
+  .ik-box;
+  .ik-box-pack(center);
+  .ik-box-align(center);
+  .icon-dui1 {
+    font-size: 1.15rem !important;
+    margin-bottom: 15/@dev-Width *1rem !important;
+  }
 }
 /*气泡提示完---------------------------------------------------------------------------------------------*/
 </style>

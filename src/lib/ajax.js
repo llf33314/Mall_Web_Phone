@@ -51,8 +51,8 @@ Vue.mixin({
                         // if(typeof(vmParent.$refs.loading) != "undefined"){
                         //     vm.$store.commit("is_show_loading",false);//关闭loading*/
                         // }
-                        //需要登陆（需要跳转）
-                        if(res.data.code == 1001){
+                        //1001 需要登陆（需要跳转）  1028会员卡购买跳转
+                        if(res.data.code == 1001 || res.data.code == 1028){
                             location.href = res.data.url;
                             vm.$store.commit("is_show_loading",false);//关闭loading*/
                             return

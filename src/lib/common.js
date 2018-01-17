@@ -31,7 +31,9 @@ var Rxports = {
 		let u = navigator.userAgent;
 		let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
 		if (isAndroid) {
+			return 'android';
 		}
+		return 'ios';
 	},
 	//判断微信浏览器类型
 	checkPlatform() {
