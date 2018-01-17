@@ -18,7 +18,7 @@
         <div class="shop-no-icon">
           <i>!</i>
         </div>
-        <p class="fs36 shopGray">您的购物车还没有任何商品</p>
+        <p class="fs36 shopGray text-c">您的购物车还没有任何商品</p>
         <span class="no-button shopborder fs36"  @click="lockMall">去逛逛</span>
       </div>
       <div class="no-shopcart" v-if="statu == 4">

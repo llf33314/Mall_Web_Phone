@@ -18,6 +18,7 @@ import router from './router'
 import storeConfig from './vuex/store'
 
 //Vue.config.productionTip = false
+//import AMap from 'vue-amap';
 
 import jq from './lib/jquery-2.2.2.min';
 
@@ -27,8 +28,8 @@ import 'babel-polyfill';
 
 
 import MintUi from 'mint-ui'
-Vue.use(MintUi);
 
+Vue.use(MintUi);
 
 //消除移动端300ms延迟
 import FastClick from 'fastclick'

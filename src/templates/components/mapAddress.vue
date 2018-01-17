@@ -95,5 +95,6 @@ export default {
 <style lang="less" scoped>
 @import "../../assets/css/mixins.less";
 @import "../../assets/css/base.less";
-</style>
+ </style>
 
+ 

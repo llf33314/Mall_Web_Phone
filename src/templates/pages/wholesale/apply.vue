@@ -29,12 +29,20 @@
                     手机号
                 </div>
                 <div class="apply-txt fs40">
-                    <input placeholder="请输入手机号(必填)" class="apply-tel" v-model="telephone"
-                    @blur="blurValidate(telephone,3)" />
-                    <span class="apply-tel-button shop-font" v-text="getCodeMsg"
-                        @click="getPhoneCode">
-                        获取验证码
-                    </span>
+                  <div class="shop-fl " style="width:10%">
+                    <area-code :dataStyle="{
+                      color:'#666',
+                      padding: '0.2rem 0'
+                      }"
+                      @selectCode = "changeArea"></area-code>
+                  </div>
+                  <input placeholder="请输入手机号(必填)" class="apply-tel" v-model="telephone"
+                  @blur="blurValidate(telephone,3)" 
+                  style="width: 58%;"/>
+                  <span class="apply-tel-button shop-font" v-text="getCodeMsg"
+                      @click="getPhoneCode">
+                      获取验证码
+                  </span>
                 </div>
             </div>
             <div class="apply-item border">
@@ -72,6 +80,7 @@
 </template>
 
 <script>
+import areaCode from 'components/areaCode';//国家/地区
 import shopDialog from "components/shopDialog";
 import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
@@ -87,12 +96,14 @@ export default {
       code: "", // 验证码
       isSend: false, //是否已经发送验证码
       waitTime: 60, //等待时间
-      getCodeMsg: Language.get_validate_code_msg
+      getCodeMsg: Language.get_validate_code_msg,
+      selectArea:''//选择区号
     };
   },
   components: {
     shopDialog,
-    technicalSupport
+    technicalSupport,
+    areaCode
   },
   mounted() {
     this.loadDatas(); //初始化协商详情数据
@@ -162,6 +173,7 @@ export default {
     submitApply() {
       let _this = this;
       let vali = this.blurValidate;
+      
       if (
         !vali(this.name, 1) ||
         !vali(this.companyName, 2) ||
@@ -171,16 +183,18 @@ export default {
       ) {
         return;
       }
+
       let _data = {
         busId: _this.busId, //商家id
         url: location.href, //当前页面的地址
         browerType: _this.$store.state.browerType, //浏览器类型
         name: _this.name, //姓名必传
         companyName: _this.companyName, //公司名称必传
-        telephone: _this.telephone, //手机号码必传
+        telephone: _this.selectArea.areacode+","+_this.telephone, //手机号码必传
         remark: _this.remark, //备注
         code: _this.code //验证码必传
       };
+
       this.ajaxRequest({
         url: h5App.activeAPI.add_pifa_post,
         data: _data,
@@ -252,6 +266,12 @@ export default {
     toReturnMyApp() {
       let busId = this.$route.params.busId;
       this.$router.push("/my/center/" + busId);
+    },
+    /** 
+     * 接受国家地区编号
+     */
+    changeArea(val){
+      this.selectArea = val;
     }
   }
 };

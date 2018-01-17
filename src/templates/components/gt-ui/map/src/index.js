@@ -27,6 +27,7 @@ var defaults = {
   lat:0,
   lng:0,
   http: 'http://apis.map.qq.com/tools/locpicker?search=1&type=1&key=GQKBZ-BKZW6-ZCVSQ-MD5GX-MYNBQ-LSBPK&referer=myapp',
+  http2: 'http://webapi.amap.com/maps?v=1.4.3&key=3b73726ac868e5fcf8e26513ce6860d1',
 };
 
 import Vue from 'vue';

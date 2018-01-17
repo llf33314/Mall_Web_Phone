@@ -1,26 +1,51 @@
 <template>
-    <div class="code-main">
-      <div class="code-top border">
-        <input  class="fs50" placeholder="搜索国家/地区" v-model="content" />
-        <i class="iconfont icon-guanbi" @click="selectCode(null)"></i>
-      </div>
-      <div class="code-content" v-if="searchData != null">
-        <div class="border code-item" v-for="(code,index) in searchData" :key="index" @click="selectCode(code)">
-          <span class="fs52 span_left">{{code.country}}</span>
-          <span class="fs52 span_right">+{{code.areacode}}</span>
+  <div style="width: 100%;">
+    <!--按钮-->
+    <div class="code-button" @click="isShow=true" :style="dataStyle">
+      {{select==null?'国家/地区':'+'+select.areacode}}
+    </div>
+    <!--搜索页-->
+    <popup v-model="isShow" position="right" class="mint-popup-3" :modal="false">
+      <div class="code-main">
+        <div class="code-top border">
+          <input  class="fs50" placeholder="搜索国家/地区" v-model="content" />
+          <i class="iconfont icon-guanbi" @click="selectCode(null)"></i>
+        </div>
+        <div class="code-content" v-if="searchData != null">
+          <div class="border code-item" v-for="(code,index) in searchData" :key="index" @click="selectCode(code)">
+            <span class="fs52 span_left">{{code.country}}</span>
+            <span class="fs52 span_right">+{{code.areacode}}</span>
+          </div>
         </div>
       </div>
-      </div>
-    </div>
+    </popup>
+  </div>
 </template>
 <script>
+ import {Popup} from 'mint-ui'
 export default {
-  props: [],
+  props: {
+    'dataStyle':{
+      type:[Object,Number],
+      default: 0
+    }
+  },
+  components: {
+    Popup
+  },
   data: function() {
     return {
       content: "",
-      codeArr: null
+      codeArr: null,
+      isShow:false,
+      style:{},
+      select:null
     };
+  },
+  watch: {
+    'select'(a){
+      this.$emit("selectCode",a);
+    }
   },
   computed: {
     searchData: function() {
@@ -35,6 +60,9 @@ export default {
     }
   },
   mounted() {
+    if(this.dataStyle != 0){
+      this.style = this.dataStyle;
+    }
     this.load();
   },
   methods: {
@@ -45,12 +73,24 @@ export default {
         loading: true,
         success: function(data) {
           _this.$store.commit("is_show_loading", false);
-          console.log(data.data);
           _this.codeArr = data.data;
+          //areacode
+          data.data.forEach((item,i) => {
+            if(item.areacode  == '86'){
+              _this.select = item;
+            }
+          });
+          
         }
       });
-    },selectCode(data){
-      this.$emit("selectCode",data);
+    },
+    selectCode(data){
+      this.isShow = false;
+      if(data == null){
+        this.select = null
+      }else{
+        this.select = data;
+      }
     }
   }
 };
@@ -58,6 +98,17 @@ export default {
 <style lang="less" scoped>
 @import "../../assets/css/mixins.less";
 @import "../../assets/css/base.less";
+.code-button{
+  width: 100%;
+  height: 100%;
+}
+.select-code{
+  color: #333!important;
+}
+.mint-popup-3{
+  width: 100%;
+  height: 100%;
+}
 .code-main {
   width: 100%;
   height: 100%;
