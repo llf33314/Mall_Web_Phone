@@ -16,10 +16,10 @@
                         联系电话
                     </div>
                     <div class="shop-fl right" >
-                        <div class="shop-fl " style="width:25%">
+                        <div class="shop-fl ">
                           <area-code :dataStyle="{
                             color:'#666',
-                            padding: '0.27rem 0 0.231rem 0'
+                            padding: '0.27rem 0.2rem 0.231rem '
                             }"
                             @selectCode = "changeArea"></area-code>
                         </div>
@@ -454,7 +454,7 @@ export default {
      * 接收国家地区编号
      */
     changeArea(val){
-      console.log(val,'val')
+      console.log(val,'valto')
     },
     /** 
      * 接收高德选择地址
@@ -471,34 +471,71 @@ export default {
         let isProvinc = true;
         //市级是否修改
         let isCity = true;
-        //区级是否修改
-        let isArea = true;
 
         _this.provinceArr.forEach((item,i) => {
           if(isProvinc &&item.city_name == data.province && item.id != _this.addressObj.memProvince){
             //省级修改
             isProvinc = false;
             _this.addressObj.memProvince = item.id;
-            _this.getAreas(0, 1,true, _this.provinceArr)
+            _this.changeGetAreas(item.id,1,data)
           }
         });
-        debugger
-        _this.cityArr.forEach((item,i) => {
-            if(isCity && item.city_name == data.city && item.id != _this.addressObj.memCity){
-              //省级修改
-            isCity = false;
-            _this.addressObj.memCity = item.id;
-            _this.getAreas(_this.addressObj.memProvince, 2,true,_this.cityArr)
-          }
-        });
-        
-        _this.addressObj.memArea = data.id;
-        _this.getAreas(this.addressObj.memCity, 3,true,_this.areaArr);
+        if(isProvinc){
+          _this.cityArr.forEach((item,i) => {
+              if(isCity && item.city_name == data.city && item.id != _this.addressObj.memCity){
+                //省级修改
+              isCity = false;
+              _this.addressObj.memCity = item.id;
+              _this.changeGetAreas(item.id,2,data)
+            }
+          });
+        }
+        if(isCity){
+           _this.areaArr.forEach((item,i) => {
+              if(item.city_name == data.area){
+              _this.addressObj.memArea = item.id;
+            }
+          });
+        }
         _this.addressObj.memAddress = data.address;
       }
+    },
+    /** 
+     * 地图重选后请求
+     * @param id 查询id
+     * @param type 1省级 2城市
+     * @param data 返回数据
+     */
+    changeGetAreas(id,type,data){
+      let _this = this;
+      let _data = data
+      _this.ajaxRequest({
+          url: h5App.activeAPI.address_city_post,
+          data: {
+            cityId:id
+          },
+          success: function(data) {
+            if(type == 1){
+              _this.cityArr = data.data;
+              _this.cityArr.forEach((item,i) => {
+                  if(item.city_name == _data.city){
+                  _this.addressObj.memCity = item.id;
+                  _this.changeGetAreas(item.id,2,_data);
+                }
+              });
+            }
+            if(type == 2){
+              _this.areaArr = data.data;
+              _this.areaArr.forEach((item,i) => {
+                if(item.city_name == _data.area){
+                  _this.addressObj.memArea = item.id;
+                }
+              });
+            }
+          }
+      })
     }
-  },
-  
+  }  
 };
 </script>
 

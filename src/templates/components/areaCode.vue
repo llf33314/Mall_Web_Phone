@@ -2,7 +2,10 @@
   <div style="width: 100%;">
     <!--按钮-->
     <div class="code-button" @click="isShow=true" :style="dataStyle">
-      {{select==null?'国家/地区':'+'+select.areacode}}
+      <p>{{'+'+select.areacode}}
+        <i class="iconfont icon-jiantou fs50"></i>
+      </p>
+      
     </div>
     <!--搜索页-->
     <popup v-model="isShow" position="right" class="mint-popup-3" :modal="false">
@@ -39,12 +42,17 @@ export default {
       codeArr: null,
       isShow:false,
       style:{},
-      select:null
+      select:null,
+      defaultData:{}//默认
     };
   },
   watch: {
-    'select'(a){
-      this.$emit("selectCode",a);
+    'select'(a,b){
+      if(a == null){
+        this.select = b
+      }
+      this.$emit("selectCode",this.select);
+      
     }
   },
   computed: {
@@ -78,6 +86,7 @@ export default {
           data.data.forEach((item,i) => {
             if(item.areacode  == '86'){
               _this.select = item;
+              _this.defaultData = item
             }
           });
           
@@ -87,7 +96,7 @@ export default {
     selectCode(data){
       this.isShow = false;
       if(data == null){
-        this.select = null
+        this.select = null;
       }else{
         this.select = data;
       }
@@ -101,6 +110,14 @@ export default {
 .code-button{
   width: 100%;
   height: 100%;
+  p{
+     border-right: 1px solid #d1d1d5;
+     i{
+       color:#c7c7cc;
+       font-size: 12px;
+       padding: 0px 3px
+     }
+  }
 }
 .select-code{
   color: #333!important;
