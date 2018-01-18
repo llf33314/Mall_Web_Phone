@@ -462,16 +462,18 @@ export default {
      */
     selectAddress(data){
       let _this = this;
-      console.log(data,'selectAddress');
       if(data.code == 0){
         _this.addressObj.memAddress = data.address;
       }else{
-        console.log('code2');
         //省级是否修改
         let isProvinc = true;
         //市级是否修改
         let isCity = true;
-
+        //直辖市
+        if(data.city.length == 0){
+            data.city = data.province;
+            data.province = data.province.split('市')[0];
+        }
         _this.provinceArr.forEach((item,i) => {
           if(isProvinc &&item.city_name == data.province && item.id != _this.addressObj.memProvince){
             //省级修改
@@ -515,6 +517,7 @@ export default {
             cityId:id
           },
           success: function(data) {
+            debugger
             if(type == 1){
               _this.cityArr = data.data;
               _this.cityArr.forEach((item,i) => {
