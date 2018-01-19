@@ -30,7 +30,7 @@
                         <em class="shop-font">*</em> 手机号码
                     </div>
                     <div class="apply-txt fs40">
-                        <div class="shop-fl " style="width:10%">
+                        <div class="shop-fl " style="width:18%">
                           <area-code :dataStyle="{
                             color:'#666',
                             padding: '0.2rem 0'
@@ -38,8 +38,7 @@
                             @selectCode = "changeArea"></area-code>
                         </div>
                         <input placeholder="请输入手机号(必填)" class="apply-tel" v-model="telephone"
-                        @blur="blurValidate(telephone,3)" 
-                        style="width: 58%;"/>
+                        @blur="blurValidate(telephone,3)" />
                         <span class="apply-tel-button shopBlue" v-text="getCodeMsg" @click="getPhoneCode">
                             获取验证码
                         </span>
@@ -85,7 +84,7 @@
 </template>
 
 <script>
-import areaCode from 'components/areaCode';//国家/地区
+import areaCode from "components/areaCode"; //国家/地区
 import shopDialog from "components/shopDialog";
 import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
@@ -100,7 +99,7 @@ export default {
       isSend: false, //是否已经发送验证码
       waitTime: 60, //等待时间
       getCodeMsg: "获取验证码",
-      selectArea:''//选择区号
+      selectArea: "" //选择区号
     };
   },
   components: {
@@ -194,7 +193,7 @@ export default {
         browerType: _this.$store.state.browerType, //浏览器类型
         userName: _this.name, //姓名必传
         companyName: _this.companyName, //公司名称必传
-        telephone: _this.selectArea.areacode+","+_this.telephone, //手机号码必传
+        telephone: _this.selectArea.areacode + "," + _this.telephone, //手机号码必传
         remark: _this.remark, //备注
         code: _this.code //验证码必传
       };
@@ -274,7 +273,7 @@ export default {
     /** 
      * 接受国家地区编号
      */
-    changeArea(val){
+    changeArea(val) {
       this.selectArea = val;
     }
   }
@@ -333,12 +332,13 @@ export default {
           border: 0;
         }
         .apply-tel {
-          width: 68%;
+          width: 50%;
+          padding-left: 15/@dev-Width *1rem;
         }
         .apply-tel-button {
           display: inline-block;
           width: 30%;
-          padding: 30/@dev-Width *1rem 0;
+          margin: 30/@dev-Width *1rem 0;
           text-align: center;
           border-left: 1px solid #e8e8ed;
         }

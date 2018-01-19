@@ -2,7 +2,7 @@
   <div style="width: 100%;">
     <!--按钮-->
     <div class="code-button" @click="isShow=true" :style="dataStyle">
-      <p>{{'+'+select.areacode}}
+      <p v-if="select != null">{{'+'+select.areacode}}
         <i class="iconfont icon-jiantou fs50"></i>
       </p>
       
@@ -115,7 +115,8 @@ export default {
      i{
        color:#c7c7cc;
        font-size: 12px;
-       padding: 0px 3px
+       padding: 0px 3px;
+       vertical-align:0.03rem;
      }
   }
 }

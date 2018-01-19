@@ -29,7 +29,7 @@
                     手机号
                 </div>
                 <div class="apply-txt fs40">
-                  <div class="shop-fl " style="width:10%">
+                  <div class="shop-fl " style="width:18%">
                     <area-code :dataStyle="{
                       color:'#666',
                       padding: '0.2rem 0'
@@ -37,8 +37,7 @@
                       @selectCode = "changeArea"></area-code>
                   </div>
                   <input placeholder="请输入手机号(必填)" class="apply-tel" v-model="telephone"
-                  @blur="blurValidate(telephone,3)" 
-                  style="width: 58%;"/>
+                  @blur="blurValidate(telephone,3)" />
                   <span class="apply-tel-button shop-font" v-text="getCodeMsg"
                       @click="getPhoneCode">
                       获取验证码
@@ -329,12 +328,13 @@ export default {
           border: 0;
         }
         .apply-tel {
-          width: 68%;
+          width: 50%;
+          padding-left: 15/@dev-Width *1rem;
         }
         .apply-tel-button {
           display: inline-block;
           width: 30%;
-          padding: 30/@dev-Width *1rem 0;
+          margin: 30/@dev-Width *1rem 0;
           text-align: center;
           border-left: 1px solid #e8e8ed;
         }

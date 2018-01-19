@@ -3,11 +3,14 @@
         <dialog-modular :dialogTitle = "'绑定手机号码'">
             <div class="dialog-input-main">
                 <div class="dialog-input-box">
-                    <div class="dialog-input code_div">
-                        <div @click="isShowAreaCode=true">
+                    <div class="dialog-input code_div" >
+                        <div class="div2 fs45">
+                          <area-code @selectCode="returnAreaCode" :dataStyle="{color: '#666666'}"></area-code>
+                        </div>
+                        <!-- <div @click="isShowAreaCode=true">
                           <em class="fs45">+{{areaCodeStr}}</em>
                           <i class="iconfont icon-jiantou"></i>
-                        </div>
+                        </div> -->
                         <input class="fs50" placeholder="请输入手机号码" v-model="telPhone"/>
                     </div>
                     <div class="dialog-input dialog-code">
@@ -24,7 +27,7 @@
                 </div>
             </div>
         </dialog-modular>
-        <area-code v-if="isShowAreaCode" @selectCode="returnAreaCode"></area-code>
+        
     </div>
 </template>
 <script>
@@ -38,9 +41,7 @@ export default {
       waitTime: 60, //等待时间
       getCodeMsg: Language.get_validate_code_msg,
       telPhone: null,
-      isShowAreaCode: false,
-      areaCodeStr: "86",
-      areaId:1
+      areaCodeData: null
     };
   },
   components: {
@@ -62,7 +63,7 @@ export default {
         busId: this.$route.params.busId || sessionStorage.getItem("busId"),
         phone: _phone,
         type: 1,
-        areaCode: areaCodeStr
+        areaCode: areaCodeData.areacode
       };
       this.time();
       _this.ajaxRequest({
@@ -109,8 +110,8 @@ export default {
         browerType: _this.$store.state.browerType,
         phone: _phone,
         code: _code,
-        areaId:_this.areaId,
-        areaCode: _this.areaCodeStr
+        areaId: _this.areaCodeData.id,
+        areaCode: _this.areaCodeData.areacode
       };
       _this.ajaxRequest({
         url: h5App.activeAPI.bind_phone_post,
@@ -126,12 +127,11 @@ export default {
       });
     },
     returnAreaCode(data) {
-      this.isShowAreaCode = false;
+      console.log("--------11", data);
       if (data == null || data == "") {
         return;
       }
-      this.areaCodeStr = data.areacode;
-      this.areaId = data.id;
+      this.areaCodeData = data;
     }
   }
 };
@@ -159,20 +159,25 @@ export default {
   .ik-box-pack(justify);
   // .ik-box-align(center);
   input {
-    width: 77% !important;
+    width: 80% !important;
     display: block;
     padding-left: 35/@dev-Width *1rem;
   }
-  div {
-    width: 23%;
-    border-right: 1px solid #d1d1d5;
-    em {
-      vertical-align: sub;
-    }
-    i {
-      color: #c7c7cc;
-      margin: 0 20/@dev-Width *1rem;
-    }
+  .div2 {
+    width: 20%;
+    // border-right: 1px solid #d1d1d5;
+    // .ik-box;
+    // .ik-box-pack(justify);
+    // .ik-box-align(center);
+    // em {
+    //   vertical-align: sub;
+    //   display: block;
+    // }
+    // i {
+    //   display: block;
+    //   color: #c7c7cc;
+    //   padding: 0 20/@dev-Width *1rem;
+    // }
   }
 }
 </style>
