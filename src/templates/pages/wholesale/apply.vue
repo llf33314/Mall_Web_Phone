@@ -343,6 +343,7 @@ export default {
     .apply-buttom {
       margin-top: 25%;
       height: 148/@dev-Width *1rem;
+      padding-right: 25/@dev-Width *1rem;
       p {
         margin-top: 28/@dev-Width *1rem;
         color: #87858f;

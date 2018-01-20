@@ -35,8 +35,8 @@ export default {
 @import '../../assets/css/mixins.less';
 @import '../../assets/css/base.less';
 .imgbox{
-    width: 101%;
-    height: 101%;
+    width: 100%;
+    height: 100%;
     position: relative;
 }
 .user-head-portrait{

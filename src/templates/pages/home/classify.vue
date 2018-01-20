@@ -74,8 +74,7 @@
             <div class="classify-txt">
                 <p  class="fs42 " 
                     :class="[isList?'text-overflow':'',goods.pro_name.length>30?'text-more-overflow':'']">
-                    <em class="em-tag" v-if="goods.pro_label">{{goods.pro_label}}</em>
-                    {{goods.pro_name}}
+                    <em class="em-tag" v-if="goods.pro_label">{{goods.pro_label}}</em>{{goods.pro_name}}
                 </p>
                 <div class="classify-money">
                     <p class="fs32 shop-font">
@@ -487,11 +486,12 @@ export default {
             float: left;
             padding: 20/@dev-Width *1rem;
             .classify-img{
-                width: 520/@dev-Width *1rem;
-                height: 520/@dev-Width *1rem;
+                width: 570/@dev-Width *1rem;
+                height: 570/@dev-Width *1rem;
                 background-size: cover;
                 background-position: center;
                 margin-bottom: 20/@dev-Width *1rem;
+                margin: 0 auto;
             }
             .classify-txt{
                 width: 100%;
