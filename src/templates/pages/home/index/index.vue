@@ -26,6 +26,6 @@ export default {
 
 <style lang="less" scoped>
 .main-divs {
-  margin-bottom: 63px;
+  padding-bottom: 1.2rem;
 }
 </style>
