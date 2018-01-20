@@ -81,7 +81,7 @@ export default  {
       let address = data.province + data.city + data.area;
       $.ajax({
         type: "get",
-        url: 'http://restapi.amap.com/v3/geocode/geo?key=bf4628347e7c20e886552030722b8f81&address='+address+'&city='+data.city,
+        url: 'https://restapi.amap.com/v3/geocode/geo?key=bf4628347e7c20e886552030722b8f81&address='+address+'&city='+data.city,
         success: function(data){
           //初始化
           if(type == 1){
@@ -111,7 +111,7 @@ export default  {
       let _this = this;
        $.ajax({
         type: "get",
-        url: 'http://restapi.amap.com/v3/geocode/regeo?key=bf4628347e7c20e886552030722b8f81&location='+address.location+'&poitype=&radius=&extensions=all&batch=false&roadlevel=0',
+        url: 'https://restapi.amap.com/v3/geocode/regeo?key=bf4628347e7c20e886552030722b8f81&location='+address.location+'&poitype=&radius=&extensions=all&batch=false&roadlevel=0',
         success: function(data){
            //查询经纬度
            let newAddress = data.regeocode.addressComponent;
