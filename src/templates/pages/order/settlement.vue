@@ -4,11 +4,11 @@
     <header class="orderTotal-header"  :class="[orderData.proTypeId == 0,'order-header']">
         <!-- 导航 -->
         <div class="header-top">
-            <div class="fs46" @click="backBefore">
+            <div class="fs45" @click="backBefore">
                 <i class="iconfont icon-jiantou-copy1"></i>
                 返回
             </div>
-            <div class="fs46 shop-textr">
+            <div class="fs45 shop-textr">
                 首页
             </div>
         </div>
@@ -16,7 +16,7 @@
         <!-- 收货地址区域 -->
           <div class="header-bottom clearfix" v-if="hasAddress && memberAddresss != null"
            @click="toAddress">
-              <p class="fs46">{{memberAddresss.memberName}}  {{memberAddresss.memberPhone}}</p>
+              <p class="fs45">{{memberAddresss.memberName}}  {{memberAddresss.memberPhone}}</p>
               <div class="header-bottom-left">
                   <p class="fs36 shopGray">{{memberAddresss.memberAddress}}</p>
               </div>
@@ -51,7 +51,7 @@
                     <div class="order-shop border" @click="jumpPageIndex(shop,bus.busId)">
                         <p class="order-shop-name">
                             <i class="iconfont icon-dianpu"></i>
-                            <span class="fs36">{{shop.shopName}}</span>
+                            <span class="fs40">{{shop.shopName}}</span>
                             <i class="iconfont icon-you"></i>
                         </p>
                     </div>
@@ -64,22 +64,22 @@
                                 </default-img>
                             </div>
                             <div class="order-item-txt">
-                                <p class="fs42 text-overflow"  @click="toProductDetail(product,bus.busId)">{{product.productName}}</p>
-                                <p class="fs36 shopGray" v-if="product.productSpecificaValue != null">{{product.productSpecificaValue}}</p>
-                                <div class="fs42 style-main-font orderTotal-money">
+                                <p class="fs43 text-overflow"  @click="toProductDetail(product,bus.busId)">{{product.productName}}</p>
+                                <p class="fs38 shopGray" v-if="product.productSpecificaValue != null">{{product.productSpecificaValue}}</p>
+                                <div class="fs40 style-main-font orderTotal-money">
                                     <div>
                                       <p  v-if="product.productOldPrice > product.productPrice && orderData.type > 0" style="margin-bottom:0" >
                                         <span class="span-block">原价：</span>
                                         <del>¥{{product.productOldPrice | moneySplit1}}.{{product.productOldPrice | moneySplit2}}</del>
                                         
-                                        </p>
+                                      </p>
                                       <p>
                                         <span class="span-block" 
                                         v-if="orderData.type > 0 && orderData.typePriceName != null">{{orderData.typePriceName}}：</span>
                                         ¥{{product.productPrice | moneySplit1}}.{{product.productPrice | moneySplit2}}
                                       </p>
                                     </div>
-                                    <p class="shopGray">X{{product.productNum}}</p>
+                                    <p class="shopGray fs43">X{{product.productNum}}</p>
                                 </div>
                             </div>
                         </div>
@@ -93,8 +93,8 @@
                     <!-- 优惠券 -->
                     <div class="border orderTotal-list-box" v-if="shop.isCanUseYhqDiscount == 1 && shop.couponList != null && shop.couponList.length > 0">
                       <div class="orderTotal-list border" @click="showDialogs(shop.couponList,3,shop.shopId,bus.isSelectDiscount,shop.selectCoupon)">
-                          <p class="fs40"> 优惠券</p>
-                          <p class="fs40">
+                          <p class="fs42"> 优惠券</p>
+                          <p class="fs42">
                               <span v-if="shop.selectCoupon != null">{{shop.selectCoupon.couponsName || ""}}
                                 <em v-if="shop.selectCoupon.couponsFrom == 2 && shop.selectCoupon.addUser == 1 && shop.useCouponNum > 0"> X{{shop.useCouponNum}}</em>
                               </span>
@@ -106,8 +106,8 @@
                 <div class="border orderTotal-list-box">
                     <div class="orderTotal-list border" v-if="bus.deliveryWayList != null && bus.deliveryWayList.length > 0 && orderData.proTypeId == 0"
                       @click="showDialogs(bus.deliveryWayList,2,bus.busId,bus.isSelectDiscount,bus.selectDelivery)">
-                        <p class="fs40">配送方式</p>
-                        <p class="fs40">
+                        <p class="fs42">配送方式</p>
+                        <p class="fs42">
                             {{bus.selectDelivery.wayName}}
                             <i class="iconfont icon-jiantou-copy shopGray"></i>
                         </p>
@@ -115,34 +115,34 @@
                     <!-- 到店自提区域 -->
                     <div class="clearfix " v-if="bus.selectDelivery != null && bus.selectDelivery.id == 2">
                       <div class="border clearfix orderTotal-table">
-                         <p class="fs40 shop-fl">提货人：</p>
-                         <input  class="fs40 shop-fr my-table" placeholder="请填写提货人姓名（必填）" v-model="bus.appointmentUserName"
+                         <p class="fs42 shop-fl">提货人：</p>
+                         <input  class="fs42 shop-fr my-table" placeholder="请填写提货人姓名（必填）" v-model="bus.appointmentUserName"
                          @blur="blurName(bus.appointmentUserName)"/>
                       </div>
                       <div class="border clearfix orderTotal-table">
-                         <p class="fs40 shop-fl">手机号码：</p>
-                         <input  class="fs40 shop-fr my-table" placeholder="请填写提货人手机号码（必填）" v-model="bus.appointmentUserPhone"
+                         <p class="fs42 shop-fl">手机号码：</p>
+                         <input  class="fs42 shop-fr my-table" placeholder="请填写提货人手机号码（必填）" v-model="bus.appointmentUserPhone"
                             @blur="blurPhone(bus.appointmentUserPhone)" />
                       </div>
                       <div class="border clearfix orderTotal-table">
-                         <p class="fs40 shop-fl">提货地址：</p>
-                         <div  class="fs40 shop-fr my-table text-overflow" placeholder="请填选择提货地址（必选）" v-text="bus.takeAddress"
+                         <p class="fs42 shop-fl">提货地址：</p>
+                         <div  class="fs42 shop-fr my-table text-overflow" placeholder="请填选择提货地址（必选）" v-text="bus.takeAddress"
                           @click="showTakeAddress(bus.busId,bus.takeDataArr,bus.takeId)"></div>
                       </div>
                       <div class="border clearfix orderTotal-table">
-                         <p class="fs40 shop-fl">提货时间：</p>
-                         <div  class="fs40 shop-fr my-table"   @click="showDialogs(bus.takeTimeList,4,bus.busId,0,bus.selectTakeTime)" 
+                         <p class="fs42 shop-fl">提货时间：</p>
+                         <div  class="fs42 shop-fr my-table"   @click="showDialogs(bus.takeTimeList,4,bus.busId,0,bus.selectTakeTime)" 
                             v-if="(bus.takeTimeList != null && bus.takeTimeList.length > 0) || bus.selectTakeTime != null"
                             v-text="bus.selectTakeTime.times +' '+ bus.selectTakeTime.startTime +'-'+ bus.selectTakeTime.endTime"></div>
-                          <div  class="fs40 shop-fr my-table" v-else ></div>
+                          <div  class="fs42 shop-fr my-table" v-else ></div>
                       </div>
                     </div>
                     <!-- 会员折扣，联盟折扣，积分抵扣 和 粉币抵扣区域 -->
                     <div v-if="(bus.isCanUseUnionDiscount == 1 && bus.unionStatus == 1) || bus.isCanUseMemberDiscount == 1 || bus.isCanUseFenbiDiscount == 1 || bus.isCanUseJifenDiscount == 1">
                       <div class="orderTotal-list border"
                           @click="order_ulShow">
-                          <p class="fs40">折扣信息<span class="shopGray">(可点击展开编辑)</span></p>
-                          <p class="fs40">
+                          <p class="fs42">折扣信息<span class="shopGray">(可点击展开编辑)</span></p>
+                          <p class="fs42">
                               <i class="iconfont icon-jiantou shopGray"></i>
                               <i class="iconfont icon-up shopGray shop-hide"></i>
                           </p>
@@ -197,10 +197,10 @@
                     </div>
                     <!-- 买家留言区域 -->
                     <div class="orderTotal-table border shopGray clearfix">
-                        <p class="fs40 shop-fl">
+                        <p class="fs42 shop-fl">
                                 买家留言：
                         </p>
-                        <input class="fs40 shop-fr my-table" placeholder=" 请填写备注信息" v-model="bus.buyerMessage" 
+                        <input class="fs42 shop-fr my-table" placeholder=" 请填写备注信息" v-model="bus.buyerMessage" 
                             @blur="blurBuyerMessage(bus.buyerMessage)"/>
                     </div>
                 </div>
@@ -246,8 +246,8 @@
         <div class="border orderTotal-list-box" style="background-color:#fff;" 
           v-if="orderData.payWayList != null && orderData.payWayList.length > 0">
           <div class="orderTotal-list border" @click="showDialogs(orderData.payWayList,1,-1,0,selectPayWay)">
-              <p class="fs40">支付方式</p>
-              <p class="fs40">
+              <p class="fs42">支付方式</p>
+              <p class="fs42">
                   {{selectPayWay.wayName}}
                   <i class="iconfont icon-jiantou-copy shopGray"></i>
               </p>
@@ -257,16 +257,16 @@
         <technical-support v-if="$store.state.isAdvert == 1"></technical-support>
     </section>
     <section class="orderTotal-footer clearfix" v-if="orderList != null && orderList.length > 0">
-        <div class="orderTotal-fr fs40 ">
+        <div class="orderTotal-fr ">
             <!-- 实际支付的价格 -->
-            <p>合计：<span class="style-main-font">￥{{orderData.totalPayMoney | moneySplit1}}</i>.{{orderData.totalPayMoney | moneySplit2}}</span></p>
+            <p class="fs48">合计：<span class="style-main-font">￥{{orderData.totalPayMoney | moneySplit1}}</i>.{{orderData.totalPayMoney | moneySplit2}}</span></p>
             <!-- 优惠前的价格 -->
-            <p>
+            <p class="fs32">
             <span>总额:￥{{orderData.totalMoney | moneySplit1}}</i>.{{orderData.totalMoney | moneySplit2}}</span>
             <span>总优惠:￥{{orderData.totalYouHuiMoney | moneySplit1}}</i>.{{orderData.totalYouHuiMoney | moneySplit2}}</span>
             </p>
         </div>
-        <div class="orderTotal-button fs40 style-main-bg" @click="submitOrder">
+        <div class="orderTotal-button fs52 style-main-bg" @click="submitOrder">
             提交订单
         </div>
     </section>

@@ -24,7 +24,7 @@
                             <i class="iconfont icon-dui" :class="{'style-main-bg':shop.show}"
                             @click="select_Goods(shop)"></i>
                             <i class="iconfont icon-dianpu" @click.self="jupm_shop(shop,cart.busId)"></i>
-                            <span class="fs36"  @click.self="jupm_shop(shop,cart.busId)">{{shop.shopName}}</span>
+                            <span class="fs40"  @click.self="jupm_shop(shop,cart.busId)">{{shop.shopName}}</span>
                             <i class="iconfont icon-you" ></i>
                         </p>
                         <p class="fs42 shopGray" @click="edit(i,j,shop)">
@@ -153,7 +153,7 @@
                     <div class="order-shop border" @click="jupm_shop(shop,cart.busId)">
                         <p class="order-shop-name">
                             <i class="iconfont icon-dianpu"></i>
-                            <span class="fs36">{{shop.shopName}}</span>
+                            <span class="fs40">{{shop.shopName}}</span>
                             <i class="iconfont icon-you" ></i>
                         </p>
                     </div>
