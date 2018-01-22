@@ -132,60 +132,74 @@
                     <em class="goods-footer-num style-main-bg" v-if="goodsData.shopCartNum">{{goodsData.shopCartNum }}
                     </em>
                 </div>
-                <!--团购-->
-                <div class="goods-footer-botton ui-col-2 fs50 style-middle-bg"
-                    :class="{'shopFff':isSoldOut}"
-                    v-if=" goodsData.isShowAddShopButton == 1 && type == 1"
-                    style="color:#fff"
-                    @click="dialogShow">
-                    <p class="fs40">￥{{goodsData.hyPrice > 0 ? goodsData.hyPrice : goodsData.productPrice}}</p>
-                    <p class="fs32">单独购买</p>
+                <div v-if="goodsData.productError == 1006">
+                  <div class="goods-footer-botton ui-col-2 fs50 style-main-bg"
+                      style="color:#fff;padding: 0 1rem;"
+                      @click="toJumpShop(1)">
+                      查看店铺其他商品
+                  </div>
                 </div>
-                <div class="goods-footer-botton ui-col-2 fs50 style-main-bg"
-                    :class="{'shopFff':isSoldOut}"
-                    v-if=" goodsData.isShowLiJiBuyButton == 1 && type == 1"
-                    style="color:#fff"
-                    @click="dialogShow">
-                    <p class="fs40">￥{{goodsData.groupPrice}}</p>
-                    <p class="fs32">{{goodsData.groupPeopleNum}}人拼团</p>
+                <div v-else-if="goodsData.productError == 1007">
+                  <div class="goods-footer-botton ui-col-2 fs50 style-main-bg"
+                      style="color:#fff;padding: 0 1rem;"
+                      @click="toJumpShop(2)">
+                      查看其他店铺的商品
+                  </div>
                 </div>
-                <!--预售 -->
-                <div class="goods-footer-botton ui-col-2 fs50 style-main-bg"
-                    style="color:#fff"
-                    :class="{'shopFff':isSoldOut}"
-                    v-if="type == 6 && goodsData.presaleResult != null && goodsData.presaleResult.isShowPresaleButton == 1"
-                     @click="dialogShow">
-                    立即预定
-                </div>
-                <div class="goods-footer-botton ui-col-2 fs50 style-main-bg"
-                    style="color:#fff"
-                    :class="{'shopFff':isSoldOut}"
-                    v-if="type == 6 && goodsData.presaleResult != null && goodsData.presaleResult.isShowWeiMoneyButton == 1"
-                    @click="lijiBuy(3)">
-                    支付尾款
-                </div>
-                <div class="goods-footer-botton ui-col-2 fs50"
-                    style="color:#fff;background-color:#999999"
-                    :class="{'shopFff':isSoldOut}"
-                    v-if="type == 6 && goodsData.presaleResult != null && goodsData.presaleResult.isShowStartButton == 1"
-                     @click="jijiangPresale">
-                    即将开售
-                </div>
-                <!--普通购买-->
-                <div class="goods-footer-botton ui-col-2 fs50 style-middle-bg"
-                    :class="{'shopFff':isSoldOut}"
-                    style="color:#fff"
-                    v-if=" goodsData.isShowAddShopButton == 1 && type != 1"
-                    @click="dialogShow">
-                    加入购物车
-                </div>
-                <div class="goods-footer-botton ui-col-2 fs50 style-main-bg"
-                    style="color:#fff"
-                    :class="{'shopFff':isSoldOut}"
-                    v-if=" goodsData.isShowLiJiBuyButton == 1 && type != 1"
-                    @click="dialogShow">
-                    立即购买
-                </div>
+                  <!--团购-->
+                  <div class="goods-footer-botton ui-col-2 fs50 style-middle-bg"
+                      :class="{'shopFff':isSoldOut}"
+                      v-if=" goodsData.isShowAddShopButton == 1 && type == 1 && goodsData.productError == null"
+                      style="color:#fff"
+                      @click="dialogShow">
+                      <p class="fs40">￥{{goodsData.hyPrice > 0 ? goodsData.hyPrice : goodsData.productPrice}}</p>
+                      <p class="fs32">单独购买</p>
+                  </div>
+                  <div class="goods-footer-botton ui-col-2 fs50 style-main-bg"
+                      :class="{'shopFff':isSoldOut}"
+                      v-if=" goodsData.isShowLiJiBuyButton == 1 && type == 1 && goodsData.productError == null"
+                      style="color:#fff"
+                      @click="dialogShow">
+                      <p class="fs40">￥{{goodsData.groupPrice}}</p>
+                      <p class="fs32">{{goodsData.groupPeopleNum}}人拼团</p>
+                  </div>
+                  <!--预售 -->
+                  <div class="goods-footer-botton ui-col-2 fs50 style-main-bg"
+                      style="color:#fff"
+                      :class="{'shopFff':isSoldOut}"
+                      v-if="type == 6 && goodsData.presaleResult != null && goodsData.presaleResult.isShowPresaleButton == 1 && goodsData.productError == null"
+                      @click="dialogShow">
+                      立即预定
+                  </div>
+                  <div class="goods-footer-botton ui-col-2 fs50 style-main-bg"
+                      style="color:#fff"
+                      :class="{'shopFff':isSoldOut}"
+                      v-if="type == 6 && goodsData.presaleResult != null && goodsData.presaleResult.isShowWeiMoneyButton == 1 && goodsData.productError == null"
+                      @click="lijiBuy(3)">
+                      支付尾款
+                  </div>
+                  <div class="goods-footer-botton ui-col-2 fs50"
+                      style="color:#fff;background-color:#999999"
+                      :class="{'shopFff':isSoldOut}"
+                      v-if="type == 6 && goodsData.presaleResult != null && goodsData.presaleResult.isShowStartButton == 1 && goodsData.productError == null"
+                      @click="jijiangPresale">
+                      即将开售
+                  </div>
+                  <!--普通购买-->
+                  <div class="goods-footer-botton ui-col-2 fs50 style-middle-bg"
+                      :class="{'shopFff':isSoldOut}"
+                      style="color:#fff"
+                      v-if=" goodsData.isShowAddShopButton == 1 && type != 1 && goodsData.productError == null"
+                      @click="dialogShow">
+                      加入购物车
+                  </div>
+                  <div class="goods-footer-botton ui-col-2 fs50 style-main-bg"
+                      style="color:#fff"
+                      :class="{'shopFff':isSoldOut}"
+                      v-if=" goodsData.isShowLiJiBuyButton == 1 && type != 1 && goodsData.productError == null"
+                      @click="dialogShow">
+                      立即购买
+                  </div>
             </div>
         </section>
     </div>
@@ -254,8 +268,13 @@
                     v-if=" goodsData.isShowAddShopButton == 1 && type != 1">
                     加入购物车
                 </div>
+                 <div class="goods-dialog-button fs52  shop-gray-bg" 
+                   v-if="goodsData.isShowLiJiBuyButton == 1 && type != 1 && dialogData.isJoin == 0 && type != 0">
+                    <span v-if="type == 1">不能参加团购</span>
+                    <span v-if="type == 3">不能参加秒杀</span>
+                </div> 
                 <div class="goods-dialog-button fs52  style-main-bg" @click="lijiBuy(0)"
-                   v-if=" goodsData.isShowLiJiBuyButton == 1 && type != 1">
+                   v-else-if=" goodsData.isShowLiJiBuyButton == 1 && type != 1">
                     立即购买
                 </div> 
                 <!-- 预售 -->
@@ -585,10 +604,11 @@ export default {
       isShowButtom:false,//是否显示底部菜单
       chujiaMoney : 0,//出价金额
       saleMemberId:0,//销售员id
-      toShop : this.$route.params.toShop || 0,//到店购买  1到店购买
+      toShop : 0,//到店购买  1到店购买
       isPhoto:"",
       dialogImageUrl:"",//弹出框图片地址
-      isError: false,//商品是否出错
+      isError: false,//商品是否出错 true 没有出错  false 出错
+      view:''//show 预览
     };
   },
   watch: {
@@ -683,7 +703,8 @@ export default {
           productId: _this.$route.params.goodsId,
           type: _this.$route.params.type,
           activityId: activityId,
-          toShop: _this.toShop || 0
+          toShop: _this.toShop || 0,
+          view: _this.view || ''
         };
       if(this.saleMemberId != null && this.saleMemberId > 0){
         _data.saleMemberId = this.saleMemberId;
@@ -705,6 +726,11 @@ export default {
           _this.path = data.path;
           _this.imgUrl = data.imgUrl;
           _this.webPath = data.webPath;
+          if(_this.goodsData.productError != null && _this.goodsData.productError > 0){//商品未上架或未发布
+            _this.isSoldOut = true;
+            _this.SoldOut = _this.goodsData.productErrorMsg;
+            _this.isError = false;
+          }
           if(_this.goodsData.type == 0){
             _this.type = 0;
           }
@@ -795,6 +821,7 @@ export default {
             ? (_this.spec_num = 0)
             : (_this.spec_num = 1);
           //console.log(_this.dialogData,'dialogData无规格');
+          
         }
       });
     },
@@ -1162,8 +1189,7 @@ export default {
          */
     choice_product(e, id) {
       let _this = this;
-      let specs = [],
-        invid;
+      let specs = [], invid;
 
       if (id) {
         _this.wholesaleId = id;
@@ -1171,16 +1197,12 @@ export default {
 
       if (e) {
         //获取选中值 存成数组
-        $(e.target)
-          .siblings()
-          .removeClass("shop-bg");
+        $(e.target).siblings().removeClass("shop-bg");
         $(e.target).addClass("shop-bg");
       }
       for (var i = 0; i < $(".js-specValue .shop-bg").length; i++) {
         specs.push(
-          $(".js-specValue .shop-bg")
-            .eq(i)
-            .attr("value")
+          $(".js-specValue .shop-bg").eq(i).attr("value")
         );
       }
       //获取选中值的规格集合
@@ -1307,6 +1329,16 @@ export default {
         "http://wpa.qq.com/msgrd?v=3&amp;uin=&amp;site=" +
         this.$store.state.QQ +
         "&amp;menu=yes";
+    },
+    // type 1   查看店铺其他商品  2 查看其他店铺商品
+    toJumpShop(type){
+      let busId = this.$route.params.busId;
+      let shopId =  this.$route.params.shopId;
+      if(type == 1){
+        this.$router.push("/classify/"+shopId+"/"+busId+"/0/0");
+      }else if(type == 2){
+        this.$router.push("/stores/"+busId);
+      }
     }
     
   },
@@ -1316,6 +1348,18 @@ export default {
   mounted() {
     // this.$parent.getShopStyle(this.$route.params.busId);
     // console.log(this.$route,'this.$route')
+    let desc = this.$route.params.toShop;
+    if(desc != null){
+      let str = desc.split("-");
+      if(str != null && str.length > 0){
+        if(str[0] != null && str[0] != ''){
+          this.toShop = str[0];
+        }
+        if(str.length >= 2 && str[1] != null && str[1] != ''){
+          this.view = str[1];
+        }
+      }
+    }
     let saleMemberId = this.$route.params.saleMemberId;
     if(this.commonFn.isNotNull(saleMemberId) && saleMemberId > 0){
       this.saleMemberId = saleMemberId;

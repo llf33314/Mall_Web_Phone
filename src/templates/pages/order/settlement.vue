@@ -1,7 +1,7 @@
 <template>
-<div class="order-wrapper">
+<div class="order-wrapper" v-if="orderData != null">
     <!-- 头部导航 + 收货地址区域 + 新增收货地址区域 -->
-    <header class="orderTotal-header" :class="[orderData.proType == 0,'order-header']">
+    <header class="orderTotal-header"  :class="[orderData.proTypeId == 0,'order-header']">
         <!-- 导航 -->
         <div class="header-top">
             <div class="fs46" @click="backBefore">
@@ -306,7 +306,7 @@
         ></take-address-dialog>
     </section>
     <shop-dialog ref="dialog"></shop-dialog>
-    <section v-show="isShowFlowPhone">
+    <section v-show="isShowFlowPhone && orderData != null">
        <dialog-modular :dialogTitle = "'流量充值'">
         <div class="dialog-input-main">
             <div class="dialog-input-box">
@@ -364,7 +364,7 @@ export default {
       memberAddresss: {}, //粉丝收货地址
       payWayList: [], //支付集合
       orderList: [], //订单集合
-      orderData: {}, //订单对象
+      orderData: null, //订单对象
       imgUrl: "", //图片域名
       selectPayWay: {}, //选中的支付方式
       dialogName: "选择支付方式", //标题
@@ -537,18 +537,18 @@ export default {
             busFreight
           );
         });
-        bus.productFreightMoneyOld = _floatSub(oldFreightMoney, busFreight);
+        bus.productFreightMoneyOld = _floatSub(oldFreightMoney, busFreight).toFixed(2)*1;
         // console.log(bus.totalMoney, "----", busFreight);
-        bus.totalMoney = _floatSub(bus.totalMoney, busFreight);
-        bus.totalNewPrice = _floatSub(bus.totalNewPrice, busFreight);
+        bus.totalMoney =_floatSub(bus.totalMoney, busFreight).toFixed(2)*1;
+        bus.totalNewPrice = _floatSub(bus.totalNewPrice, busFreight).toFixed(2)*1;
 
         chaFreightMoney = _floatAdd(chaFreightMoney, busFreight);
 
         _this.$set(_this.orderList, index, bus);
       });
       let totalPayMoney = _orderData.totalPayMoney;
-      _orderData.totalPayMoney = _floatSub(totalPayMoney, chaFreightMoney);
-      _orderData.totalMoney = _floatSub(_orderData.totalMoney, chaFreightMoney);
+      _orderData.totalPayMoney = _floatSub(totalPayMoney, chaFreightMoney).toFixed(2)*1;
+      _orderData.totalMoney = _floatSub(_orderData.totalMoney, chaFreightMoney).toFixed(2)*1;
       // console.log(totalPayMoney, "---", "totalPayMoney", chaFreightMoney);
     },
     order_ulShow() {

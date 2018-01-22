@@ -45,7 +45,7 @@ export default {
     //逛商城
     lockMall() {
       let busId = this.$route.params.busId;
-      this.$parent.getMemberCenter(busId,type);
+      this.$parent.getMemberCenter(busId,1);
     }
   }
 };

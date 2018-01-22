@@ -36,7 +36,6 @@ export default {
   data() {
     return {
       shopData: "",
-      imgUrl: "http://maint.yifriend.net/upload/"
     };
   },
   beforeCreate() {},
@@ -57,7 +56,6 @@ export default {
           busId: _this.$store.state.busId
         },
         success: function(data) {
-          //_this.imgUrl = data.imgUrl;
           _this.shopData = data.data;
         }
       });

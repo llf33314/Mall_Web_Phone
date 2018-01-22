@@ -71,7 +71,7 @@ export default {
           }
           if(data.data.qq != null){
             _this.QQ = data.data.qq;
-            _this.$store.commit("QQ", data.data.qq);
+            _this.$store.commit("mutationData", {QQ:data.data.qq});
           }
           _this.$store.commit("is_Advert", data.data.isAdvert);
         }
