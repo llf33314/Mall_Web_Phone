@@ -11,7 +11,7 @@
                 </div>
                 <div class="item-comment-photo clearfix" v-if="comment.commentImageList != null && comment.commentImageList.length > 0">
                     <div class="comment-img" v-for="image in comment.commentImageList">
-                        <default-img :background="imgUrl+comment.imageUrl"
+                        <default-img :background="imgUrl+image.imageUrl"
                                     :isHeadPortrait="0">
                         </default-img>
                     </div>
