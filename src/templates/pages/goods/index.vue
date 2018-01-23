@@ -1485,16 +1485,18 @@ export default {
       width: 100%;
       .goods-shop-info {
         float: left;
-        width: 65%;
+        width: 63%;
       }
       .goods-shop-rigtn {
         float: right;
-        width: 35%;
+        width: 37%;
         height: 158/@dev-Width *1rem;
+        
         .ik-box;
         .ik-box-align(center);
         .ik-box-pack(right);
         .goods-shop-buttom {
+          letter-spacing: 1px;
           display: block;
           .border-radius(3px);
           padding: 5px 3px;
