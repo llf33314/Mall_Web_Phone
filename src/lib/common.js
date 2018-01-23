@@ -70,8 +70,8 @@ var Rxports = {
 			document.title = title
 		} else if (isiOS) {
 			var $body = $('body')
-			document.title = title
-			var $iframe = $('<iframe src="/static/favicon.ico"></iframe>')
+			document.title = title 
+			var $iframe = $('<iframe style="opacity:0;"></iframe>')
 			$iframe.on('load', function () {
 				window.setTimeout(function () {
 					$iframe.off('load').remove()

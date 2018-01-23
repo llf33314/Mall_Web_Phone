@@ -387,7 +387,7 @@ export default {
 .my-index {
   width: 100%;
   color: #666;
-  margin-bottom: 148 /@dev-Width *1rem;
+  padding-bottom: 148 /@dev-Width *1rem;
   .my-header {
     width: 100%;
     height: 520 /@dev-Width *1rem;
