@@ -10,8 +10,11 @@
              @change="handleChange">
             <!-- 这部分放你要渲染的那些内容 --> 
             <swipe-item  v-for="(item,index) in banner"  :key="item[index]">
-                <div class="goods-img">
-                    <img :src="imgUrl+item.imageUrl" :class="[imgCla == 'cla-img'?'cla-img':'img']" v-if="item.imageUrl != ''">
+                <div class="goods-img" >
+                    <a :href="item.returnUrl"  v-if="item.returnUrl != ''">
+                      <img :src="imgUrl+item.imageUrl" :class="[imgCla == 'cla-img'?'cla-img':'img']" v-if="item.imageUrl != ''">
+                    </a>
+                    <img :src="imgUrl+item.imageUrl" :class="[imgCla == 'cla-img'?'cla-img':'img']" v-else-if="item.imageUrl != ''">
                     <div v-else >
                       <i class="iconfont icon-tupianjiazaizhong-"></i>
                     </div>

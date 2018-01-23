@@ -95,7 +95,11 @@ export default {
             _this.style += ".style-witch:checked{border-color:" + myData[0] + "!important;background-color:" +  myData[0] + "!important;}";
             _this.style += ".style-main-border{color:" +  myData[0] + "!important;border:1px solid " + myData[0] + "!important;}";
             if (myData.length > 1) {
-              _this.style += ".style-middle-bg{ background: " +  myData[1] + "!important;color: #fff!important;}";
+              let color = "#fff";
+              if( myData[1] == "#ffe6e9" || myData[1] == "#f8f0db" || myData[1] == "#c4eff6"){
+                color = myData[0];
+              }
+              _this.style += ".style-middle-bg{ background: " +  myData[1] + "!important;color: "+color+"!important;}";
               _this.style += ".style-middle-font{color: " + myData[1] + "!important;}";
             }
             if (myData.length > 2) {
