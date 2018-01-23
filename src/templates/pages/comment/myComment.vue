@@ -1,16 +1,17 @@
 <template>
     <div class="mycomment-wrapper" v-if="commentArr != null && commentArr.length > 0">
-        <div class="mycomment-item" v-for="comment in commentArr">
+        <div class="mycomment-item" v-for="(comment,cIndex) in commentArr" :key="cIndex">
             <div class="item-top">
                 <p class="item-spec-time shopGray">
                     <span class="fs36" v-if="comment.productSpecifica != null">规格：{{comment.productSpecifica}}</span>
+                    <span class="fs36" v-else>&nbsp;</span>
                     <span class="fs36">{{comment.commentTime}}</span>
                 </p>
                 <div class="item-comment fs44">
                    {{comment.content}}
                 </div>
                 <div class="item-comment-photo clearfix" v-if="comment.commentImageList != null && comment.commentImageList.length > 0">
-                    <div class="comment-img" v-for="image in comment.commentImageList">
+                    <div class="comment-img" v-for="(image,iIndex) in comment.commentImageList" :key="iIndex">
                         <default-img :background="imgUrl+image.imageUrl"
                                     :isHeadPortrait="0">
                         </default-img>
