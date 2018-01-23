@@ -1556,7 +1556,7 @@ export default {
         .shop-inblock;
         .fs40;
         width: 50/@dev-Width *1rem;
-        heigth: 50/@dev-Width *1rem;
+        height: 50/@dev-Width *1rem;
         line-height: 50/@dev-Width *1rem;
         background: #e4393c;
         color: #fff;
