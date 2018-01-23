@@ -1181,6 +1181,7 @@ export default {
         width: 100%;
         background: #fff;
         position: fixed;
+        max-width: 8.28rem;
         height: 164/@dev-Width *1rem;
         bottom: 1.05333333rem;
         border-top: 1px solid #e2e2e2;

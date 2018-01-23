@@ -172,7 +172,6 @@ export default {
 .shop-footer-fixed {
   position: fixed;
   width: 100%;
-  background: #fff;
   z-index: 2;
   .footer-nav,
   .header-nav {

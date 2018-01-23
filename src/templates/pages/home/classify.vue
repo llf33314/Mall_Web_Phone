@@ -419,6 +419,7 @@ export default {
         background: #fff;
         position: absolute;
         z-index: 3;
+        max-width: 8.28rem;
         .price{
             span{
                 position: relative;
