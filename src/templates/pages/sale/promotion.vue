@@ -9,7 +9,7 @@
     </div>
     <div class="index-nav clearfix" v-else>
       <div class="p-scan">
-          <img :src="qrCodePath" class="p-code"><img :src="headImageUrl" class="p-headicon">
+          <img :src="qrCodePath" class="p-code" v-if="qrCodePath != null"><img :src="headImageUrl" class="p-headicon" v-if="headImageUrl != null">
       </div>
       <div class="p-footer">
           好友通过扫描海报购买商品，您将获得佣金
