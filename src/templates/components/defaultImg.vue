@@ -9,10 +9,10 @@
         <img src="../../assets/img/kuaidiyuan.png"
              class="default-img"
              v-if="isHeadPortrait==0 && background == undefined"></img> -->
-            <div v-if="isHeadPortrait==0 && background == undefined" class="default-img">
-                 <i class="iconfont icon-tupianjiazaizhong-" style="color:#d6d6d6;"></i>
+            <div v-if="isHeadPortrait==0" class="default-img1">
+                 <i class="iconfont icon-tupianjiazaizhong-" ></i>
             </div>
-            <div v-if="isHeadPortrait==1 && background == undefined" class="default-img">
+            <div v-if="isHeadPortrait==1" class="default-img2">
                  <i class="iconfont icon-ren1"></i>
             </div>
     </div>
@@ -48,7 +48,8 @@ export default {
     position: relative;
     z-index: 1;
 }
-.default-img{
+.default-img1,
+.default-img2{
     width: 100%;
     height: 100%;
     position: absolute;
@@ -62,6 +63,12 @@ export default {
     .iconfont{
         font-size: 200/@dev-Width *1rem;
         // color: #d6d6d6;
+        color:#d6d6d6;
+    }
+}
+.default-img2{
+    .iconfont{
+        font-size: 150/@dev-Width *1rem;
         color: #fff;
     }
 }
