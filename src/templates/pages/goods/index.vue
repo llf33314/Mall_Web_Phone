@@ -1589,6 +1589,7 @@ export default {
     bottom: 0;
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.1);
     z-index: 2;
+    max-width: 8.28rem;
     .goods-footer-no {
       text-align: center;
       background: rgba(0, 0, 0, 0.6);

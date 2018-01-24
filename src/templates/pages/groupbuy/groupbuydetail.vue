@@ -455,6 +455,7 @@ export default {
 .shop-footer-fixed {
   width: 100%;
   z-index: 2;
+  max-width: 8.28rem;
   .shop-box-justify;
   .goods-footer-botton,
   .goods-footer-botton2 {

@@ -8,8 +8,8 @@
                 </default-img>
             </div>
             <div class="goods-shop-txt">
-                <div class="goods-shop-name">
-                    <span class="fs46 text-overflow">{{data.shopName}}</span>
+                <div class="goods-shop-name" :class="{'text-overflow':!data.categoryName}">
+                    <span class="fs46" :class="{'text-overflow':data.categoryName}">{{data.shopName}}</span>
                     <em class="em-flag" v-if="data.categoryName">旗舰店</em>
                 </div>
                 <div class="fs40 shopGray text-overflow">
