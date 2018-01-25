@@ -371,7 +371,7 @@ export default {
         if (_isNull(obj)) {
           _shopTips(Language.address_name_null_msg);
           return false;
-        } else if (obj.length > 25) {
+        } else if (obj.length > 25) {//todo 
           _shopTips(Language.address_name_length_msg);
           return false;
         }
@@ -400,7 +400,7 @@ export default {
         }
       } else if (type == 5) {
         //验证门牌号码
-        if (addressObj.memHouseMember.length > 15) {
+        if (!_isNull(addressObj.memHouseMember) && addressObj.memHouseMember.length > 15) {
           _shopTips(Language.address_code_length_msg);
           return false;
         }
@@ -462,6 +462,11 @@ export default {
      */
     selectAddress(data){
       let _this = this;
+      if(data.location != null && data.location != ''){
+        let locations = data.location.split(",");
+        this.addressObj.memLongitude = locations[0];
+        this.addressObj.memLatitude = locations[1];
+      }
       if(data.code == 0){
         _this.addressObj.memAddress = data.address;
       }else{
@@ -517,7 +522,6 @@ export default {
             cityId:id
           },
           success: function(data) {
-            debugger
             if(type == 1){
               _this.cityArr = data.data;
               _this.cityArr.forEach((item,i) => {
