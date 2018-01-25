@@ -12,7 +12,7 @@
         <div class="shop-no-icon">
           <i>!</i>
         </div>
-        <a class="fs36"> 暂不相关信息</a>
+        <a class="fs36"> 暂无相关信息</a>
       </div>
       <div class="no-shopcart" v-if="statu == 3">
         <div class="shop-no-icon">
