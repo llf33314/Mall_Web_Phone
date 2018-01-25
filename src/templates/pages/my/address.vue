@@ -561,9 +561,10 @@ export default {
     height: 100%;
     input {
       width: 100%;
-      height: 98%;
+      height: 96%;
       border: 0;
       color: #666;
+      margin-top: 2px;
     }
     select {
       width: 100%;
