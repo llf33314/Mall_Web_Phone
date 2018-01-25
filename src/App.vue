@@ -42,8 +42,7 @@ export default {
         loginDTO_URL: window.location.href
       });
       this.loadData();
-      alert($('.wrapper').height()+','+document.body.scrollHeight);
-      // alert(document.body.scrollHeight);
+      document.body.scrollTop = 0;
     },
     listenshowpage1(a, b) {
       if (a != b) {
