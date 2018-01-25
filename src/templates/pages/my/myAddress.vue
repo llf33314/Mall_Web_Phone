@@ -169,8 +169,8 @@ export default {
         success: function(data) {
           _this.$store.commit("is_show_loading", false); //关闭loading
           //进入地址列表页面
-          sessionStorage.removeItem("addressBeforeUrl");
-          sessionStorage.removeItem("integralData");
+          // sessionStorage.removeItem("addressBeforeUrl");
+          // sessionStorage.removeItem("integralData");
           _this.$router.push("/integral/record/" + _this.busId);
         }
       });

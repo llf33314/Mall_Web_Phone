@@ -120,8 +120,8 @@ export default {
     this.loadDatas(); //初始化图片数据
     this.detailsAjax();
     //清空session
-    sessionStorage.removeItem("addressBeforeUrl");
-    sessionStorage.removeItem("integralData");
+    // sessionStorage.removeItem("addressBeforeUrl");
+    // sessionStorage.removeItem("integralData");
   },
   beforeDestroy() {
     //离开后的操作

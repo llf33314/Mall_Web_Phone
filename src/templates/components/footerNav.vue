@@ -23,7 +23,7 @@ export default {
         {
           name: "首页",
           icon: "icon-shouye",
-          statu: "index",
+          statu: "home",
           title: "index",
           isSelect: false,
           selectArr: ["home","index", "seller/mallindex"]
