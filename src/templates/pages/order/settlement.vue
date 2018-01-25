@@ -174,7 +174,7 @@
                               </p>
                               <p class="fs40">
                                   <input class="switch small-switch style-witch" type="checkbox" value="1"
-                                    :disabled = "bus.fenbiDisabled == 1 ? true : false"
+                                    :disabled="bus.fenbiMoney == 0 || bus.fenbiNum == 0 || bus.fenbiDisabled != 0 ? 'disabled' : false"
                                     v-model="bus.isSelectFenbi"
                                     @change="caculationOrder(3)"/>
                               </p>
@@ -188,7 +188,7 @@
                               </p>
                               <p class="fs40">
                                   <input class="switch small-switch style-witch" type="checkbox" value="1"
-                                  :disabled = "bus.jifenDisabled == 1 ? true : false"
+                                  :disabled="bus.jifenMoney == 0 || bus.jifenNum == 0 || bus.jifenDisabled != 0 ? true : false"
                                     v-model="bus.isSelectJifen" 
                                     @change="caculationOrder(4)"/>
                               </p>
