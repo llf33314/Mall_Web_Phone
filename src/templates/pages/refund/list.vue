@@ -436,6 +436,6 @@ export default {
   }
 }
 .more-main {
-  margin-bottom: 0px;
+  padding-bottom: 0px;
 }
 </style>

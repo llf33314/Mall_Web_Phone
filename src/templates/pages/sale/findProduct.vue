@@ -502,6 +502,6 @@ input {
   .fs40;
 }
 .more-main {
-  margin-bottom: 0;
+  padding-bottom: 0;
 }
 </style>

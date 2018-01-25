@@ -1,5 +1,5 @@
 <template>
-<div id='app' class="shop-wrapper order-wrapper">
+<div class="shop-wrapper order-wrapper">
     <header-nav :headers= "homeNav" :status="'cart'" style="z-index:3" :selectColor="'style-main-font'" :selectbg="'style-main-bg'" ></header-nav>
     <section class="shop-main order-main shoopCart-main" v-if="shopCartList != null ||  sxShopCartList != null">
         <div class="order-box" v-if="shopCartList != null ">
@@ -234,7 +234,7 @@
             </div>
         </div>
     </section>
-    <section class="shop-main-no fs40 my-bond"v-else>
+    <section class="shop-main-no fs40 my-bond" v-if="shopCartList == null && sxShopCartList == null">
         <content-no :statu='bondStatu'></content-no>
     </section>
 </div>
@@ -263,8 +263,8 @@ export default {
         hpMoney:'', //混批最低金额
         hpNum:'',//混批最低数量
         spHand:'',//手批最低数量
-        shopCartList:null,//购物车集合
-        sxShopCartList: null,//失败购物车集合
+        shopCartList: 1,//购物车集合
+        sxShopCartList:  1,//失败购物车集合
         imgUrl: '',
         path: '',
         webPath: '',
