@@ -1382,7 +1382,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" >
 
 @import "../../../assets/css/mixins.less";
 @import "../../../assets/css/base.less";

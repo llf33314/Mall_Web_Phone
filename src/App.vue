@@ -42,6 +42,7 @@ export default {
         loginDTO_URL: window.location.href
       });
       this.loadData();
+      document.body.scrollTop = 0;
     },
     listenshowpage1(a, b) {
       if (a != b) {
@@ -278,7 +279,8 @@ export default {
 <style lang="less">
 .wrapper {
   height: 100%;
-  max-width: 8.28rem;
+  width: 100%;
+  max-width: 8.30rem;
   margin: 0 auto;
 }
 </style>

@@ -20,7 +20,7 @@ module.exports = {
   color: #737373;
   text-align: center;
   padding: 0.25rem 0;
-  margin-bottom: 60px;
+  padding-bottom: 60px;
 }
 
 .more-main p {

@@ -33,9 +33,11 @@ const webpackConfig = merge(baseWebpackConfig, {
     // UglifyJs do not support ES6+, you can also use babel-minify for better treeshaking: https://github.com/babel/minify
     new webpack.optimize.UglifyJsPlugin({
       compress: {
-        warnings: false
+        warnings: false,
+        // drop_console: true,
+        // pure_funcs: ['console.log']
       },
-      sourceMap: true
+      sourceMap: false
     }),
     // extract css into its own file
     new ExtractTextPlugin({
@@ -82,6 +84,9 @@ const webpackConfig = merge(baseWebpackConfig, {
         )
       }
     }),
+    // 开启 Scope Hoisting （开启后 无人热替换）
+    // new webpack.optimize.ModuleConcatenationPlugin(),
+    
     // extract webpack runtime and module manifest to its own file in order to
     // prevent vendor hash from being updated whenever app bundle is updated
     new webpack.optimize.CommonsChunkPlugin({
