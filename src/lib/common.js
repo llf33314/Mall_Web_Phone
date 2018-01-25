@@ -70,7 +70,7 @@ var Rxports = {
 			document.title = title
 		} else if (isiOS) {
 			var $body = $('body')
-			document.title = title 
+			document.title = title;
 			var $iframe = $('<iframe style="display:none"></iframe>')
 			$iframe.on('load', function () {
 				window.setTimeout(function () {

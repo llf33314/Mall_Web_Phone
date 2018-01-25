@@ -43,16 +43,15 @@
         </div>
     </header>
     <section class="classify-content-nav" v-if="isNav" :class="{'padding-bottom-clear' : !$store.state.isShowFooter}">
-            <ul class="classify-nav" :class="{'navshow':isNav}">
-                <li class="fs42 " 
-                    v-for="(item,index) in classNav"
-                    :class="[selectedClass == index?'selected':'']" 
-                    v-text="item.group_name"
-                    @click="selected(index,item.group_id,item.is_child,item.group_name)"
-                    :key="index">
-                </li>
-            </ul>
-        </transition>
+        <ul class="classify-nav" :class="{'navshow':isNav}">
+            <li class="fs42 " 
+                v-for="(item,index) in classNav"
+                :class="[selectedClass == index?'selected':'']" 
+                v-text="item.group_name"
+                @click="selected(index,item.group_id,item.is_child,item.group_name)"
+                :key="index">
+            </li>
+        </ul>
         <sidebar-b :imgurl="imgUrl" 
                     :goodsData="classGoods"
                     :name="group_name" 
@@ -134,6 +133,7 @@ export default {
             footershow: 'classify',
             isGoods: false,//分类子集商品显示
             saleMemberId:0,//销售员id
+            groupId:null,
         }
     },
     watch: {
@@ -159,7 +159,8 @@ export default {
             this.productAjax({
                 sort: this.sort,
                 curPage: this.curPage,
-                type : this.$route.params.type
+                type : this.$route.params.type,
+                groupId: this.groupId
             });
         },
         /**
@@ -270,7 +271,8 @@ export default {
                 sort : sort,
                 isDesc : _this.desc_num,
                 curPage: 1,
-                type : this.$route.params.type
+                type :  _this.$route.params.type,
+                groupId: _this.groupId
             });
             this.curPage = 1
         },
@@ -348,6 +350,7 @@ export default {
                 if(Id==''){//是0的 就是全部分类
                     _this.$router.push('/classify/'+this.$route.params.shopId+'/'+this.$route.params.busId+'/'+this.$route.params.type+'/'+'k=k');
                 }
+                _this.groupId = Id;
                 _this.productAjax({
                     groupId: Id
                 });
