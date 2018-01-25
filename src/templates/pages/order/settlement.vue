@@ -8,7 +8,7 @@
                 <i class="iconfont icon-jiantou-copy1"></i>
                 返回
             </div>
-            <div class="fs45 shop-textr">
+            <div class="fs45 shop-textr" @click="jumpPageIndex(null,null)">
                 首页
             </div>
         </div>
@@ -922,7 +922,17 @@ export default {
     },
     //跳转到商城首页
     jumpPageIndex(e,busId){
-       this.$parent.getPageId(busId,e.shopId,true);
+      let _shopId = 0;
+      if(e !=  null){
+        _shopId = e.shopId;
+      }else{
+        _shopId = this.$store.state.shopId;
+      }
+      if(busId == null){
+        busId = this.$store.state.busId;
+      }
+
+      this.$parent.getPageId(busId,_shopId,true);
     }
   }
 };
