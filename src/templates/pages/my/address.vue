@@ -564,7 +564,6 @@ export default {
       height: 96%;
       border: 0;
       color: #666;
-      margin-top: 2px;
     }
     select {
       width: 100%;
@@ -595,7 +594,7 @@ export default {
     textarea {
       border: 0;
       width: 85%;
-      height: 150/@dev-Width *1rem;
+      height: 148/@dev-Width *1rem;
       display: inline-block;
       vertical-align: top;
     }
