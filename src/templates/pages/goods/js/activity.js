@@ -82,9 +82,11 @@ Vue.mixin({
 				aucId: this.activityId,//拍卖id
 				aucPrice: _chujiaMoney,//出价
 				proName: _goodsData.productName,//商品名称
-				proSpecificaIds: this.dialogData.xsid.toString(),//商品规格id
 				proImgUrl: _goodsData.imageList[0].imageUrl
 			};
+			if (this.dialogData.xsid != null) {
+				_data.proSpecificaIds = this.dialogData.xsid.toString();//商品规格id
+			}
 			console.log(_data);
 			_this.ajaxRequest({
 				url: h5App.activeAPI.add_offer_post,
