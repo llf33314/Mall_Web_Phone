@@ -9,18 +9,19 @@
         <img src="../../assets/img/kuaidiyuan.png"
              class="default-img"
              v-if="isHeadPortrait==0 && background == undefined"></img> -->
+             <!--isHeadPortrait-0-商品默认图/ 1-用户头像默认图-->
             <div v-if="isHeadPortrait==0" class="default-img1">
-                 <i class="iconfont icon-tupianjiazaizhong-" ></i>
+                 <i class="iconfont icon-tupianjiazaizhong-" :style="{'font-size':size}"></i>
             </div>
-            <div v-if="isHeadPortrait==1" class="default-img2">
-                 <i class="iconfont icon-ren1"></i>
+            <div v-if="isHeadPortrait==1" class="default-img2" >
+                 <i class="iconfont icon-ren1" :style="{'font-size':size}"></i>
             </div>
     </div>
 </template>
 <script>
 
 export default {
-    props:['background','isHeadPortrait'],
+    props:['background','isHeadPortrait','size'],
     data: function () {
         return {
             
@@ -62,14 +63,14 @@ export default {
     .ik-box-align(center);
     .iconfont{
         font-size: 200/@dev-Width *1rem;
-        // color: #d6d6d6;
         color:#d6d6d6;
     }
 }
 .default-img2{
+    background: #eee;
     .iconfont{
         font-size: 150/@dev-Width *1rem;
-        color: #fff;
+        color: #cecece;
     }
 }
 </style>

@@ -15,9 +15,9 @@
                       <img :src="imgUrl+item.imageUrl" :class="[imgCla == 'cla-img'?'cla-img':'img']" v-if="item.imageUrl != ''">
                     </a>
                     <img :src="imgUrl+item.imageUrl" :class="[imgCla == 'cla-img'?'cla-img':'img']" v-else-if="item.imageUrl != ''">
-                    <div v-else >
-                      <i class="iconfont icon-tupianjiazaizhong-"></i>
-                    </div>
+                    
+                    <i class="iconfont icon-tupianjiazaizhong-"></i>
+                    
                 </div>
             </swipe-item> 
        </swipe>
@@ -88,9 +88,19 @@ export default {
     .ik-box-align(center);
     position: relative;
     img {
+      position: relative;
       margin: 0 auto;
       display: block;
       max-width: 100%;
+      z-index: 2;
+    }
+    i.icon-tupianjiazaizhong-{
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      left: 50%;
+      margin-left: -1rem;
+      margin-top: -1rem;
     }
     .img{
          max-height: 100%;

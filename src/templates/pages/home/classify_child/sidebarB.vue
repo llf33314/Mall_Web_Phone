@@ -12,7 +12,8 @@
                     @click="goods_jump(item.group_name)">
                         <div class="goods-img">
                             <default-img :background="imgurl+item.image_url"
-                                :isHeadPortrait="1">
+                                :isHeadPortrait="0" 
+                                :size="'0.8rem'">
                             </default-img>
                         </div>
                         <p class="fs36" v-text="item.group_name"></p>

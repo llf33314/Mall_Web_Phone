@@ -11,7 +11,8 @@
               <div class="goods-dialog-detl border clearfix">
                   <div class="goods-dialog-img" >
                       <default-img :background="imgUrlHttp+dialogProduct.imageObj.imageUrl"
-                          :isHeadPortrait="1">
+                          :isHeadPortrait="0"
+                          :size="'0.8rem'">
                       </default-img>
                   </div>
                   <div class="goods-dialog-txt">

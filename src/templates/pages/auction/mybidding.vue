@@ -107,6 +107,7 @@ export default {
           console.log(myData, "myData");
           _this.bidArr = myData;
           _this.imgUrl = data.imgUrl;
+          _this.isShowNo = false;
         }
       });
     },
@@ -131,6 +132,7 @@ export default {
           console.log(myData, "myData");
           _this.bidArr = myData;
           _this.imgUrl = data.imgUrl;
+          _this.isShowNo = false;
         }
       });
     },
@@ -155,6 +157,7 @@ export default {
           console.log(myData, "myData");
           _this.bidArr = myData;
           _this.imgUrl = data.imgUrl;
+          _this.isShowNo = false;
         }
       });
     },

@@ -4,8 +4,9 @@
         <div class="comment-goods clearfix" v-if="productObj != null"
             @click="toReturnProductDetail(productObj.productId,productObj.shopId,productObj.busId)">
             <div class="goods-img">
-                <default-img :background="imgUrl+productObj.productImageUrl"
-                            :isHeadPortrait="0">
+                <default-img  :background="imgUrl+productObj.productImageUrl"
+                              :isHeadPortrait="0"
+                              :size="'0.8rem'">
                 </default-img>
             </div>
             <div class="goods-txt">
@@ -21,7 +22,8 @@
             <div class="comment-photo border clearfix">
                 <div class="comment-img"  v-if="imageArr != null" v-for="(image , index) in imageArr">
                     <default-img :background="imgUrl+image"
-                                 :isHeadPortrait="1">
+                                 :isHeadPortrait="0"
+                                 :size="'0.8rem'">
                     </default-img>
                     <i class="iconfont icon-guanbi"  @click="removeImages(index)"></i>
                 </div>

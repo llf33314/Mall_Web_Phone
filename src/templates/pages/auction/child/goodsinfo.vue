@@ -2,7 +2,7 @@
     <div class="goodsinfo-box" v-if="obj != null">
         <div class="goodsinfo-img">
             <default-img :background="imgpath+(obj.pro_img_url ||  obj.proImgUrl)"
-                        :isHeadPortrait="1">
+                        :isHeadPortrait="0" :size="'0.8rem'">
             </default-img>
         </div>
         <div class="goodsinfo-text">

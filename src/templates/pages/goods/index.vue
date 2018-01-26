@@ -216,7 +216,8 @@
             <div class="goods-dialog-detl border clearfix">
                 <div class="goods-dialog-img" @click="showImage(imgUrl+dialogData.specifica_img_url)">
                     <default-img :background="imgUrl+dialogData.specifica_img_url"
-                        :isHeadPortrait="1">
+                        :isHeadPortrait="0"
+                        :size="'0.8rem'">
                     </default-img>
                 </div>
                 <div class="goods-dialog-txt">
@@ -312,7 +313,8 @@
             <div class="goods-dialog-detl border clearfix">
                 <div class="goods-dialog-img">
                     <default-img :background="imgUrl+w_dialogData.specifica_img_url"
-                        :isHeadPortrait="0">
+                        :isHeadPortrait="0"
+                        :size="'0.8rem'">
                     </default-img>
                 </div>
                 <div class="goods-dialog-txt">
