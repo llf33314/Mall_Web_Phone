@@ -561,7 +561,7 @@ export default {
     height: 100%;
     input {
       width: 100%;
-      height: 96%;
+      height: 98%;
       border: 0;
       color: #666;
     }
@@ -574,7 +574,7 @@ export default {
       -moz-appearance: none;
       -webkit-appearance: none;
       background: url("../../../assets/img/icon/left.png") no-repeat scroll 96%
-        center transparent;
+      center transparent;
       padding-right: 14px;
       background-size: 8%;
     }
@@ -594,7 +594,7 @@ export default {
     textarea {
       border: 0;
       width: 85%;
-      height: 148/@dev-Width *1rem;
+      height: 150/@dev-Width *1rem;
       display: inline-block;
       vertical-align: top;
     }
@@ -617,12 +617,20 @@ export default {
 }
 .address-list {
   width: 100%;
+  margin: 1px 0px;
   .left {
-    line-height: 3.5em;
+      height: 122 /@dev-Width * 1rem;
+      line-height:122 /@dev-Width * 1rem;
+      // padding: 40/ @dev-Width * 1rem 0 35/ @dev-Width * 1rem 0;
   }
   .right {
     .right-txt {
-      padding: 40/ @dev-Width * 1rem 0 35/ @dev-Width * 1rem 0;
+      height: 120 /@dev-Width * 1rem;
+      line-height: 120 /@dev-Width * 1rem;
+      margin-top: -1px;
+    }
+    textarea.right-txt{
+      margin-top: 0;
     }
   }
 }

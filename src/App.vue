@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" v-cloak>
     <div v-html="style"></div> <!--主题切换渲染style-->
     <router-view ref="main"/>
     <bubble-hint ref="bubble"></bubble-hint>
@@ -59,12 +59,12 @@ export default {
   },
   created() {
     this.browser_type();
+    this.commonFn.setFontSize();
   },
   mounted() {
     this.$store.commit("mutationData", { firstUrl: location.href });
-    // console.log("url---app---",this.$store.state.firstUrl)
-    this.commonFn.setFontSize();
-  },
+    // console.log("url---app---",this.$store.state.firstUrl);
+ },
   methods: {
     /** 
      * 判断浏览器类型
@@ -277,6 +277,9 @@ export default {
 </script>
 
 <style lang="less">
+[v-cloak] {
+    display: none;
+}
 .wrapper {
   height: 100%;
   width: 100%;
