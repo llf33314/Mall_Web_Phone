@@ -157,7 +157,8 @@ export default {
       }
       let _data = {
         busId: this.busId, //商家id
-        mobile: this.telephone //手机号码
+        mobile: this.telephone ,//手机号码
+        areaCode: this.selectArea.areacode//区号
       };
       this.time();
       this.ajaxRequest({
