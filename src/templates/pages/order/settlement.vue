@@ -360,7 +360,7 @@ export default {
       background: null,
       busId: this.$route.params.busId || sessionStorage.getItem("busId"),
       from: 0, //来源 1 购物车结算进入 2 立即购买进入 3 去支付，必传
-      cartIds: "", //购物车id
+      cartIds: this.$route.params.ids, //购物车id
       memberAddresss: {}, //粉丝收货地址
       payWayList: [], //支付集合
       orderList: [], //订单集合

@@ -135,7 +135,7 @@ Vue.mixin({
 				selectMemberAddressId: addressId || 0,//选中会员地址id
 				orderType: orderData.type || 0, // 订单类型 1.团购商品 3.秒杀商品 4.拍卖商品 5 粉币商品 6预售商品 7批发商品
 				flowPhone: orderData.flowPhone || "", //流量充值需要传的手机号码
-				shopCartIds: _this.$route.params.shopCartIds || "",//购物车id，多个用逗号隔开
+				shopCartIds: _this.cartIds || "",//购物车id，多个用逗号隔开
 			};
 			if (orderData.proTypeId > 0) {//虚拟物品不用选择收货地址
 				_data.selectMemberAddressId = 0;
