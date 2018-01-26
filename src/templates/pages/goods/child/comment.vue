@@ -18,7 +18,8 @@
               <div class="comment-user clearfix">
                   <div class="comment-user-img">
                       <default-img :background="item.headimgurl"
-                                    :isHeadPortrait="1">
+                                    :isHeadPortrait="1" 
+                                    :size="'0.6rem'">
                         </default-img>
                   </div>
                   <div class="comment-user-fr">

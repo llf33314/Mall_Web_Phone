@@ -1,4 +1,5 @@
 <template>
+  <div>
     <div class="mycomment-wrapper" v-if="commentArr != null && commentArr.length > 0">
         <div class="mycomment-item" v-for="(comment,cIndex) in commentArr" :key="cIndex">
             <div class="item-top">
@@ -8,12 +9,13 @@
                     <span class="fs36">{{comment.commentTime}}</span>
                 </p>
                 <div class="item-comment fs44">
-                   {{comment.content}}
+                  {{comment.content}}
                 </div>
                 <div class="item-comment-photo clearfix" v-if="comment.commentImageList != null && comment.commentImageList.length > 0">
                     <div class="comment-img" v-for="(image,iIndex) in comment.commentImageList" :key="iIndex">
                         <default-img :background="imgUrl+image.imageUrl"
-                                    :isHeadPortrait="0">
+                                    :isHeadPortrait="1"
+                                    :size="'0.3rem'">
                         </default-img>
                     </div>
                 </div>
@@ -21,7 +23,8 @@
             <div class="item-center clearfix" @click="jumpProductDetail(comment)">
                 <div class="comment-img">
                     <default-img :background="imgUrl+comment.productImageUrl"
-                                :isHeadPortrait="0">
+                                :isHeadPortrait="0"
+                                :size="'0.8rem'">
                     </default-img>
                 </div>
                 <div class="item-center-text">
@@ -37,11 +40,14 @@
         </div>
         <more :is-more="isMore"></more>
     </div>
+    <content-no :statu="'2'" v-else></content-no>
+    </div>
 </template>
 
 <script>
 import defaultImg from "components/defaultImg";
 import more from "components/more"; //加载更多
+import contentNo from "components/contentNo"
 export default {
   name: "mycomment",
 
@@ -57,7 +63,8 @@ export default {
   },
   components: {
     defaultImg,
-    more
+    more,
+    contentNo
   },
   mounted() {
     let _this = this;

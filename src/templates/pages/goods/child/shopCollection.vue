@@ -4,7 +4,7 @@
         <div class="goods-shop-info">
             <div class="goods-shop-img">
                 <default-img :background="imgUrl+data.shopImageUrl"
-                    :isHeadPortrait="0">
+                    :isHeadPortrait="0" :size="'0.2rem'">
                 </default-img>
             </div>
             <div class="goods-shop-txt">

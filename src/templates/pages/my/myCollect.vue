@@ -18,7 +18,8 @@
                 <div class="goodsinfo-box border"  :class="{'div-left':isDelete}">
                   <div class="goodsinfo-img" @click="proDetail(collect)">
                       <default-img :background="imgUrl+ collect.productImageUrl"
-                                  :isHeadPortrait="1">
+                                  :isHeadPortrait="0"
+                                  :size="'0.8rem'">
                       </default-img>
                   </div>
                   <div class="goodsinfo-text">

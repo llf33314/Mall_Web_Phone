@@ -41,7 +41,8 @@
                 <div class="order-item-title fs40" @click="jumpBus(bus)">
                     <div class="order-title-img">
                         <default-img :background="bus.busImageUrl"
-                                    :isHeadPortrait="0">
+                                    :isHeadPortrait="0"
+                                    :size="'0.3rem'">
                         </default-img>
                     </div>
                     <span>{{bus.busName}}</span>
@@ -60,7 +61,8 @@
                         <div class="order-item-content">
                             <div class="order-item-img" @click="toProductDetail(product,bus.busId)">
                                 <default-img :background="imgUrl+product.productImageUrl"
-                                            :isHeadPortrait="0">
+                                            :isHeadPortrait="0"
+                                            :size="'0.8rem'">
                                 </default-img>
                             </div>
                             <div class="order-item-txt">

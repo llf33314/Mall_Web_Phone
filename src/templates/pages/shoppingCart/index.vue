@@ -11,7 +11,7 @@
                         @click="select_Goods(cart)"></i>
                     <div class="order-title-img" @click="jupm_cart(cart)">
                       <default-img :background="cart.userImageUrl"
-                                  :isHeadPortrait="1">
+                                  :isHeadPortrait="1" :size="'.3rem'">
                       </default-img>
                     </div>
                     <span @click.self="jupm_cart(cart)">{{cart.userName}}</span>
@@ -44,7 +44,8 @@
                                     <div class="order-item-img" >
                                         <a @click="jupm_goods(goods)">
                                         <default-img :background="imgUrl+goods.productImageUrl"
-                                                    :isHeadPortrait="0">
+                                                    :isHeadPortrait="0"
+                                                    :size="'0.8rem'">
                                         </default-img>
                                         </a>
                                         <i class="iconfont icon-dui" :class="{'style-main-bg':goods.show}"
@@ -96,7 +97,7 @@
                                 </span> 
                             </p>
                             <!----------------批发购物车 混批↓-规格------------------>
-                            <div class="shopGray fs40 pf2-spec "v-if=" goods.pfType == 2">
+                            <div class="shopGray fs40 pf2-spec " v-if=" goods.pfType == 2">
                                 <div class="pf2-list border" 
                                     v-for=" (pifa,index) in goods.pifaSpecificaList"
                                     :key="index">
@@ -142,7 +143,8 @@
                 <div class="order-item-title fs40" @click="jupm_cart(cart)">
                     <div class="order-title-img">
                       <default-img :background="cart.userImageUrl"
-                                  :isHeadPortrait="1">
+                                  :isHeadPortrait="1"
+                                  :size="'0.3rem'">
                       </default-img>
                     </div>
                     <span>{{cart.userName}}</span>
@@ -164,7 +166,8 @@
                             <div class="shoopCart-content" >
                                 <div class="order-item-img">
                                   <default-img :background="imgUrl+goods.productImageUrl"
-                                                :isHeadPortrait="0">
+                                                :isHeadPortrait="0"
+                                                :size="'0.8rem'">
                                   </default-img>
                                 </div>
                                 <div class="order-item-txt" >

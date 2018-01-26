@@ -7,7 +7,8 @@
                 <div class="comment-photo border clearfix" v-if="imageList != null && imageList.length > 0">
                     <div class="comment-img border-img" v-for="image in imageList">
                         <default-img :background="imgUrl+image.imageUrl"
-                            :isHeadPortrait="0">
+                            :isHeadPortrait="0"
+                            :size="'0.8rem'">
                         </default-img>
                     </div>
                 </div>
@@ -15,7 +16,8 @@
             <div class="comment-goods clearfix share-content" v-if="product != null" @click="toProductDetail">
                 <div class="goods-img">
                     <default-img :background="imgUrl+product.productImageUrl"
-                        :isHeadPortrait="0">
+                        :isHeadPortrait="0"
+                        :size="'0.8rem'">
                     </default-img>
                 </div>
                 <div class="goods-txt">
