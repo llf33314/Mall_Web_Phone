@@ -140,7 +140,7 @@ export default {
     technicalSupport
   },
   mounted() {
-    this.commonFn.setTitle(Language.title_return_apply_msg);//退款申请
+    this.commonFn.setTitle(this.$t('title_return_apply_msg'));//退款申请
     this.$store.commit("show_footer", false); //隐藏底部导航栏
     this.submitReturnUrl = sessionStorage.getItem("refundReturnUrl");
     if (this.submitReturnUrl != null && this.submitReturnUrl != "") {
@@ -237,7 +237,7 @@ export default {
       //改变手机号事件
       let flag = this.commonFn.validPhone(this.returnTelphone);
       if (!flag) {
-        this.$store.commit("error_msg", Language.telephone_msg);
+        this.$store.commit("error_msg", this.$t('telephone_msg'));
       }
       return flag;
     },
@@ -297,7 +297,7 @@ export default {
         return;
       }
       if (_this.returnTelphone == null || _this.returnTelphone == "") {
-        _this.$store.commit("error_msg", Language.telephone_msg);
+        _this.$store.commit("error_msg", this.$t('telephone_msg'));
       }
       if (!_this.blurPhone()) {
         return;

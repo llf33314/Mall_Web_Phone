@@ -396,7 +396,7 @@ export default {
     bindPhone
   },
   mounted() {
-    this.commonFn.setTitle(Language.submit_order_title);
+    this.commonFn.setTitle(this.$t('submit_order_title'));
     this.$store.commit("show_footer", false); //隐藏底部导航栏
     if (this.$route.params.from != null) {
       this.from = this.$route.params.from;
@@ -622,7 +622,7 @@ export default {
         _this.selectPayWay = _this.payWayList[0];
       }
       _this.orderData.typePriceName =
-        Language.order_type_price_name[myData.type];
+        _this.$t('order_type_price_name')[myData.type];
       _this.caculationOrder(0); //初始化计算订单
     },
     /**
@@ -819,10 +819,10 @@ export default {
       let _this = this;
       let _commonFm = this.commonFn;
       if (_commonFm.isNull(obj)) {
-        _this.$store.commit("error_msg", Language.tihuo_name_msg);
+        _this.$store.commit("error_msg", _this.$t('tihuo_name_msg'));
         return false;
       } else if (obj.length > 15) {
-        _this.$store.commit("error_msg", Language.tihuo_name_length_msg);
+        _this.$store.commit("error_msg",  _this.$t('tihuo_name_length_msg'));
         return false;
       }
       return true;
@@ -834,7 +834,7 @@ export default {
       let _this = this;
       let _commonFm = this.commonFn;
       if (_commonFm.isNull(obj) || !_commonFm.validPhone(obj)) {
-        _this.$store.commit("error_msg", Language.tihuo_phone_msg);
+        _this.$store.commit("error_msg", _this.$t('tihuo_phone_msg'));
         return false;
       }
       return true;
@@ -901,7 +901,7 @@ export default {
       let _commonfn = this.commonFn;
       let _isNull = _commonfn.isNull;
       if (_isNull(flowPhone) || !_commonfn.validPhone(flowPhone)) {
-        this.$store.commit("error_msg", Language.flow_phone_msg);
+        this.$store.commit("error_msg", _this.$t('flow_phone_msg'));
         return;
       }
       this.submitOrder();

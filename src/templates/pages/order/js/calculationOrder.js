@@ -337,10 +337,12 @@ Vue.mixin({
 			let _this = this;
 			let _commonFm = _this.commonFn;
 			bus.couponYouhuiMoney = 0;
+			let couponIds = new Array();
 			//循环店铺
 			for (let i = 0; i < bus.shopResultList.length; i++) {
 				let shop = bus.shopResultList[i];
 				let coupons = shop.selectCoupon;//选中的优惠券对象
+				console.log(coupons,"coupons")
 				if (coupons == null || coupons == "") {//没有选中优惠券直接跳出循环
 					shop.selectCoupon = null;
 					continue;
@@ -354,7 +356,7 @@ Vue.mixin({
 					}
 				});
 				if (canUseCouponProductPrice == 0 || canUseCouponProductNum == 0) {//能使用优惠券的商品总价和商品总数 = 0  则跳出当前循环
-					_this.$store.commit("error_msg", Language.select_coupon_msg);
+					_this.$store.commit("error_msg", _this.$t('select_coupon_msg'));
 					shop.selectCoupon = null;
 					continue;
 				}
@@ -364,7 +366,7 @@ Vue.mixin({
 				let couponNum = coupons.couponNum//叠加的数量
 				let shopYouhuiHouTotalPrice = 0;//保存 店铺下 商品优惠后的总额
 				if (cardType == 0 && bus.isSelectDiscount == 1) {
-					_this.$store.commit("error_msg", Language.coupon_discount_msg);
+					_this.$store.commit("error_msg",  _this.$t('coupon_discount_msg'));
 					shop.selectCoupon = null;
 					continue;
 				}
@@ -408,6 +410,18 @@ Vue.mixin({
 					shop.selectCoupon = null;
 					continue;
 				}
+				if(couponIds != null && couponIds.length > 0){
+					let flag = true;
+					couponIds.forEach((element,index) => {
+						if(element == coupons.id) flag = false;
+					});
+					if(!flag){
+						_this.$store.commit("error_msg", _this.$t('coupon_error_msg'));
+						shop.selectCoupon = null;
+						continue;
+					}
+				}
+				couponIds.push(coupons.id);
 				// console.log("shopYouhuiHouTotalPrice",shopYouhuiHouTotalPrice)
 				let useCouponTotalPrice = 0;//已使用优惠券的商品金额
 				let useCouponTotalNum = 0;//已使用优惠券的商品数量
@@ -490,7 +504,7 @@ Vue.mixin({
 					// bus.jifenMoney = 0;
 					if (isSelect) {
 						//选中抵扣才能提醒
-						let msg = Language.jifen_start_money_msg;
+						let msg = _this.$t('jifen_start_money_msg');
 						msg = msg.replace("{0}", canUseDiscountMoney);
 						_this.$store.commit("error_msg", msg);
 					}
@@ -525,7 +539,7 @@ Vue.mixin({
 					// bus.fenbiMoney = 0;
 					if (isSelect) {
 						//选中抵扣才能提醒
-						let msg = Language.fenbi_start_money_msg;
+						let msg = _this.$t('fenbi_start_money_msg');
 						msg = msg.replace("{0}", canUseDiscountMoney);
 						_this.$store.commit("error_msg", msg);
 					}

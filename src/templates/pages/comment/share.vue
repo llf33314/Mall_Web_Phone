@@ -53,7 +53,8 @@ export default {
       imgUrl: "", //图片域名
       comment: null, //评论对象
       product: null, //商品对象
-      imageList: [] //图片集合
+      imageList: [], //图片集合
+      shareObj: null,//分享对象
     };
   },
   components: {
@@ -90,6 +91,7 @@ export default {
           _this.imageList = myData.imageList;
           _this.product = myData.productResult;
           console.log(myData, "myData");
+          _this.getWxShare(myData);
         }
       });
     },

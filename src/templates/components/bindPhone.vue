@@ -39,7 +39,7 @@ export default {
     return {
       code: "",
       waitTime: 60, //等待时间
-      getCodeMsg: Language.get_validate_code_msg,
+      getCodeMsg: this.$t('get_validate_code_msg'),
       telPhone: null,
       areaCodeData: null
     };
@@ -80,7 +80,7 @@ export default {
       let _this = this;
       let waitTime = this.waitTime;
       if (waitTime == 0) {
-        this.getCodeMsg = Language.get_validate_code_msg; //"获取验证码";
+        this.getCodeMsg = this.$t('get_validate_code_msg'); //"获取验证码";
         waitTime = 60;
       } else {
         this.getCodeMsg = waitTime + "秒后重发";

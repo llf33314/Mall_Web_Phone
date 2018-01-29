@@ -142,7 +142,7 @@ export default {
       let _this = this;
       let waitTime = this.waitTime;
       if (waitTime == 0) {
-        this.getCodeMsg = Language.get_validate_code_msg; //获取验证码
+        this.getCodeMsg = this.$t('get_validate_code_msg'); //获取验证码
         waitTime = 60;
       } else {
         this.getCodeMsg = waitTime + "秒后重发";
@@ -213,9 +213,9 @@ export default {
       var _this = this;
       let msg = {
         btnNum: "1", //按钮数
-        dialogTitle: Language.submit_success_msg, //提示,(提交成功)
-        dialogMsg: Language.submit_apply_wait_msg, //内容,(您已提交申请，请耐心等待)
-        btnOne: Language.good_msg, //确定(好的)
+        dialogTitle: this.$t('submit_success_msg'), //提示,(提交成功)
+        dialogMsg: this.$t('submit_apply_wait_msg'), //内容,(您已提交申请，请耐心等待)
+        btnOne: this.$t('good_msg'), //确定(好的)
         callback: {
           btnOne: function() {
             _this.toReturnMyApp();
@@ -231,37 +231,37 @@ export default {
       if (type == 1) {
         //验证姓名
         if (_isNull(obj)) {
-          _showTip(Language.pifa_name_msg);
+          _showTip(this.$t('pifa_name_msg'));
           return false;
         } else if (obj.length > 25) {
-          _showTip(Language.pifa_name_length_msg);
+          _showTip(this.$t('pifa_name_length_msg'));
           return false;
         }
       } else if (type == 2) {
         //验证公司名称
         if (_isNull(obj)) {
-          _showTip(Language.pifa_company_name_msg);
+          _showTip(this.$t('pifa_company_name_msg'));
           return false;
         } else if (obj.length > 50) {
-          _showTip(Language.pifa_company_name_length_msg);
+          _showTip(this.$t('pifa_company_name_length_msg'));
           return false;
         }
       } else if (type == 3) {
         //验证手机号码
         if (_isNull(obj) || !_commonFn.validPhone(obj)) {
-          _showTip(Language.pifa_telePhone_msg);
+          _showTip(this.$t('pifa_telePhone_msg'));
           return false;
         }
       } else if (type == 4) {
         //验证验证码
         if (_isNull(obj)) {
-          _showTip(Language.pifa_validate_code_msg);
+          _showTip(this.$t('pifa_validate_code_msg'));
           return false;
         }
       } else if (type == 5) {
         //验证备注
         if (obj.length > 100) {
-          _showTip(Language.pifa_remark_length_msg);
+          _showTip(this.$t('pifa_remark_length_msg'));
           return false;
         }
       }

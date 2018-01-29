@@ -193,7 +193,8 @@ export default {
       logistics: {}, //物流数据
       orderType: 0, //活动类型 1.团购商品 3.秒杀商品 4.拍卖商品 5 粉币商品 6预售商品 7批发商品
       activityId: 0, //活动id
-      imgUrl: "" //图片域名
+      imgUrl: "", //图片域名
+      bondStatu:2
     };
   },
   components: {

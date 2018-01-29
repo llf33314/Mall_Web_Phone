@@ -83,19 +83,19 @@ Vue.mixin({
 
 				if (orderData.proTypeId == 0) {
 					if ((_isNull(_this.selectPayWay) || _isNull(_this.selectPayWay.id)) && _this.toShop != 1) {
-						_showTip(Language.select_pay_way_msg);//收货地址提醒
+						_showTip(_this.$t('select_pay_way_msg'));//收货地址提醒
 						flag = false;
 						break;
 					}
 					if (_isNull(selectDelivery)) {
-						_showTip(Language.select_delivery_msg);//配送方式提醒
+						_showTip(_this.$t('select_delivery_msg'));//配送方式提醒
 						flag = false;
 						break;
 					}
 					//选中配送方式的id  1, 快递配送  2,上门自提  3到店购买
 					if (selectDelivery.id == 1) {
 						if (_isNull(_this.memberAddresss) || _this.memberAddresss.id == 0) {
-							_showTip(Language.select_receipt_msg);//收货地址提醒
+							_showTip(_this.$t('select_receipt_msg'));//收货地址提醒
 							flag = false;
 						}
 					} else if (selectDelivery.id == 2) {
@@ -104,7 +104,7 @@ Vue.mixin({
 							break;
 						}
 						if (_isNull(bus.selectTakeTime)) {
-							_showTip(Language.tihuo_time_msg);//提货时间提醒
+							_showTip(_this.$t('tihuo_time_msg'));//提货时间提醒
 							flag = false;
 							break;
 						}

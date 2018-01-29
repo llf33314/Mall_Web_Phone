@@ -133,7 +133,7 @@ export default {
   name: "myorder",
   data() {
     return {
-      homeNav: Language.order_nav_msg,
+      homeNav: this.$t('order_nav_msg'),
       isNavshow: "my",
       isShowNav: false,
       statu: 1,
@@ -303,7 +303,7 @@ export default {
     setTitle() {
       //设置页头
       let _this = this;
-      this.commonFn.setTitle(Language.order_title_data_msg[_this.type].name);
+      this.commonFn.setTitle(this.$t('order_title_data_msg')[_this.type].name);
     },
     /**跳转到商家页面 */
     jumpBus(e) {

@@ -141,19 +141,19 @@ export default {
       provinceArr: [
         {
           id: 0,
-          city_name: Language.province_null_msg
+          city_name: this.$t('province_null_msg')
         }
       ],
       cityArr: [
         {
           id: 0,
-          city_name: Language.city_null_msg
+          city_name: this.$t('city_null_msg')
         }
       ],
       areaArr: [
         {
           id: 0,
-          city_name: Language.area_null_msg
+          city_name: this.$t('area_null_msg')
         }
       ],
       addressDetail: "",
@@ -168,9 +168,9 @@ export default {
     
     this.loadDatas(); //初始化数据
     if (this.id > 0) {
-      this.commonFn.setTitle(Language.edit_address_msg);
+      this.commonFn.setTitle(this.$t('edit_address_msg'));
     } else {
-      this.commonFn.setTitle(Language.add_address_msg);
+      this.commonFn.setTitle(this.$t('add_address_msg'));
     }
     this.$store.commit("show_footer", false); //隐藏底部导航栏
     if (this.commonFn.isNotNull(sessionStorage.getItem("integralData"))) {
@@ -254,10 +254,10 @@ export default {
         return;
       }
       if ((type == 2 || type == 3) && _isNull(addressObj.memProvince)) {
-        _shopTips(Language.province_null_msg);
+        _shopTips(this.$t('province_null_msg'));
         return;
       } else if (type == 3 && _isNull(addressObj.memCity)) {
-        _shopTips(Language.city_null_msg);
+        _shopTips(this.$t('city_null_msg'));
         return;
       }
 
@@ -286,7 +286,7 @@ export default {
             id: 0
           };
           if (type == 1) {
-            defaultObj.city_name = Language.province_null_msg;
+            defaultObj.city_name = _this.$t('province_null_msg');
             myData = [defaultObj].concat(myData);
             //给省份赋值
             _this.provinceArr = myData;
@@ -301,7 +301,7 @@ export default {
               _this.getAreas(addressObj.memProvince, 2, false, null);
             }
           } else if (type == 2) {
-            defaultObj.city_name = Language.city_null_msg;
+            defaultObj.city_name = _this.$t('city_null_msg');
             myData = [defaultObj].concat(myData);
             _this.cityArr = myData;
             if (_isNull(addressObj.memCity)) {
@@ -314,7 +314,7 @@ export default {
               _this.getAreas(addressObj.memCity, 3, false, null);
             }
           } else if (type == 3) {
-            defaultObj.city_name = Language.area_null_msg;
+            defaultObj.city_name = _this.$t('area_null_msg');
             myData = [defaultObj].concat(myData);
             //给区域赋值
             _this.areaArr = myData;
@@ -369,17 +369,17 @@ export default {
         //验证收件人
         let obj = addressObj.memName;
         if (_isNull(obj)) {
-          _shopTips(Language.address_name_null_msg);
+          _shopTips(this.$t('address_name_null_msg'));
           return false;
         } else if (obj.length > 25) {//todo 
-          _shopTips(Language.address_name_length_msg);
+          _shopTips(this.$t('address_name_length_msg'));
           return false;
         }
       } else if (type == 2) {
         let obj = addressObj.memPhone;
         //验证手机号码
         if (_isNull(obj) || !_commonFn.validPhone(obj)) {
-          _shopTips(Language.telephone_msg);
+          _shopTips(this.$t('telephone_msg'));
           return false;
         }
       } else if (type == 3) {
@@ -389,19 +389,19 @@ export default {
           _isNull(addressObj.memCity) ||
           _isNull(addressObj.memArea)
         ) {
-          _shopTips(Language.province_areas_null_msg);
+          _shopTips(this.$t('province_areas_null_msg'));
           return false;
         }
       } else if (type == 4) {
         //验证详细地址
         if (_isNull(addressObj.memAddress)) {
-          _shopTips(Language.address_null_msg);
+          _shopTips(this.$t('address_null_msg'));
           return false;
         }
       } else if (type == 5) {
         //验证门牌号码
         if (!_isNull(addressObj.memHouseMember) && addressObj.memHouseMember.length > 15) {
-          _shopTips(Language.address_code_length_msg);
+          _shopTips(this.$t('address_code_length_msg'));
           return false;
         }
       }

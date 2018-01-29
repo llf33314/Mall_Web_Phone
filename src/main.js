@@ -7,11 +7,14 @@ require('@/lib/common.js');
 //接口文件
 require('@/lib/config');
 //语言引用
-require('@/lib/gloabConstant');
+// require('@/lib/gloabConstant');
 
 require("mint-ui/lib/style.css");
 //vuex
 import Vue from 'vue'
+//vue 语言包
+import VueI18n from 'vue-i18n'
+
 import App from './App'
 import router from './router'
 
@@ -30,14 +33,26 @@ import 'babel-polyfill';
 import MintUi from 'mint-ui'
 
 Vue.use(MintUi);
+Vue.use(VueI18n);
 
 //消除移动端300ms延迟
 import FastClick from 'fastclick'
 FastClick.attach(document.body);
 
 
+/*---------使用语言包-----------*/
+const i18n = new VueI18n({
+  locale: 'CN',    // 语言标识
+  messages: {
+    'CN': require('@/lib/lang/cn'),   // 中文语言包
+    // 'EN': require('@/lib/lang/en')    // 英文语言包
+  },
+})
+
+
 var vm = new Vue({
   el: '#app',
+  i18n,
   router,
   store: storeConfig,
   template: '<App/>',

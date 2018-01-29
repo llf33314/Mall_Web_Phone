@@ -138,10 +138,10 @@ export default {
       let content = this.content;
       let _show_tip = this.$parent.$refs.bubble.show_tips;
       if (_isNull(content)) {
-        _show_tip(Language.comment_content_null_msg);
+        _show_tip(this.$t('comment_content_null_msg'));
         return false;
       } else if (content.length > 240) {
-        _show_tip(Language.comment_content_length_msg);
+        _show_tip(this.$t('comment_content_length_msg'));
         return false;
       }
       return true;

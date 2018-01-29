@@ -50,10 +50,10 @@ Vue.mixin({
 			_this.$parent.$refs.dialog.showDialog({
 				//弹出框组件调用
 				btnNum: "2",
-				dialogMsg: Language.delete_order_tip_msg,//如您主动删除此订单，您以后将无法看到此订单，请务必谨慎操作？
-				btnOne: Language.confirm_msg,//确定
-				btnTow: Language.close_msg,//关闭
-				dialogTitle: Language.delete_order_title_tip_msg,//删除订单提示
+				dialogMsg: _this.$t('delete_order_tip_msg'),//如您主动删除此订单，您以后将无法看到此订单，请务必谨慎操作？
+				btnOne: _this.$t('confirm_msg'),//确定
+				btnTow: _this.$t('close_msg'),//关闭
+				dialogTitle: _this.$t('delete_order_title_tip_msg'),//删除订单提示
 				callback: {
 					btnOne: function () {
 						_this.deloteOrders(orderId);
@@ -84,10 +84,10 @@ Vue.mixin({
 			var msg = {
 				//弹出框组件调用
 				btnNum: "2",
-				dialogMsg: Language.return_order_tip_msg,//如您主动关闭正在处理的退款后，您将无法 再次发起退款申请，请务必谨慎操作。
-				btnOne: Language.confirm_msg,//确定
-				btnTow: Language.close_msg,//关闭
-				dialogTitle: Language.close_return_title_msg,//撤销退款提示
+				dialogMsg: _this.$t('return_order_tip_msg'),//如您主动关闭正在处理的退款后，您将无法 再次发起退款申请，请务必谨慎操作。
+				btnOne: _this.$t('confirm_msg'),//确定
+				btnTow: _this.$t('close_msg'),//关闭
+				dialogTitle: _this.$t('close_return_title_msg'),//撤销退款提示
 				callback: {
 					btnOne: function () {
 						_this.closeReturn(returnId);

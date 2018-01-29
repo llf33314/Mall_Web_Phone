@@ -273,7 +273,7 @@ export default {
       let _commonfn = this.commonFn;
       let _isNull = _commonfn.isNull;
       if (_isNull(flowPhone) || !_commonfn.validPhone(flowPhone)) {
-        this.$store.commit("error_msg", Language.flow_phone_msg);
+        this.$store.commit("error_msg", this.$t('flow_phone_msg'));
         return;
       }
       this.submitData();

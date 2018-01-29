@@ -57,7 +57,7 @@ export default {
       isShowBottom: false,
       isShow: true,
       bondStatu: 2,
-      error: Language.address_null_error_msg,
+      error: this.$t('address_null_error_msg'),
       integralObj: sessionStorage.getItem("integralData"),
       roseColor: null
     };
@@ -68,7 +68,7 @@ export default {
   },
   mounted() {
     this.loadDatas(); //初始化数据
-    this.commonFn.setTitle(Language.title_my_address_msg);
+    this.commonFn.setTitle(this.$t('title_my_address_msg'));
     this.$store.commit("show_footer", false); //隐藏底部导航栏
     if (this.commonFn.isNotNull(sessionStorage.getItem("integralData"))) {
       this.integralObj = JSON.parse(sessionStorage.getItem("integralData"));
