@@ -84,7 +84,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         )
       }
     }),
-    // 开启 Scope Hoisting （开启后 无人热替换）
+    // 开启 Scope Hoisting （开启后 无热替换）
     // new webpack.optimize.ModuleConcatenationPlugin(),
     
     // extract webpack runtime and module manifest to its own file in order to
