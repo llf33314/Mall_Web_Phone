@@ -96,7 +96,7 @@ export default {
       isMember: 0, //是否是会员 1是
       guige: null, //默认规格
       guigePriceList: null, //规格价集合
-      imageList: null, //商品图片集合
+      imageList: [{ imageUrl : ""}], //商品图片集合
       recordNum: 0,
       buyNum: 1,
       guigePriceObj: null,

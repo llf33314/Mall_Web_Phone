@@ -1,5 +1,5 @@
 <template>
-<div class="order-wrapper" v-if="orderData != null">
+<div class="order-wrapper" >
     <!-- 头部导航 + 收货地址区域 + 新增收货地址区域 -->
     <header class="orderTotal-header"  :class="[orderData.proTypeId == 0,'order-header']">
         <!-- 导航 -->
@@ -366,7 +366,9 @@ export default {
       memberAddresss: {}, //粉丝收货地址
       payWayList: [], //支付集合
       orderList: [], //订单集合
-      orderData: null, //订单对象
+      orderData: {
+        proTypeId : 0,
+      }, //订单对象
       imgUrl: "", //图片域名
       selectPayWay: {}, //选中的支付方式
       dialogName: "选择支付方式", //标题
