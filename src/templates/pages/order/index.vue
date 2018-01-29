@@ -303,7 +303,7 @@ export default {
     setTitle() {
       //设置页头
       let _this = this;
-      this.commonFn.setTitle(this.$t('order_title_data_msg')[_this.type].name);
+      this.commonFn.setTitle(this.$t('title.order_title_data_msg')[_this.type].name);
     },
     /**跳转到商家页面 */
     jumpBus(e) {

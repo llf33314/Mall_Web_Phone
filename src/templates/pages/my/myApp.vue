@@ -14,33 +14,35 @@
                 <div class="my-list border" @click="returnMyOrder(0);">
                     <div>
                         <i class="iconfont icon-order"></i>
-                        我的订单
+                        {{$t("page.myApp.my_order")}}
+                        <!-- 我的订单 -->
                     </div>
                     <div class="my-right fs32">
-                        查看全部订单
+                        {{$t("page.myApp.show_all_order")}}
+                        <!-- 查看全部订单 -->
                         <i class="iconfont icon-jiantou-copy"></i>
                     </div>
                 </div>
                 <ul class="my-nav fs36">
                     <li @click="returnMyOrder(1);">
                         <i class="iconfont icon-zhifu"></i>
-                        <p>待支付</p>
+                        <p><!--待支付--> {{$t("page.myApp.wait_pay")}}</p>
                     </li>
                     <li @click="returnMyOrder(2);">
                         <i class="iconfont icon-daifahuo"></i>
-                        <p>待发货</p>
+                        <p><!--待发货-->{{$t("page.myApp.wait_delivery")}}</p>
                     </li>
                     <li @click="returnMyOrder(3);">
                         <i class="iconfont icon-daishouhuo"></i>
-                        <p>待收货</p>
+                        <p><!--待收货-->{{$t("page.myApp.wait_take_delivery")}}</p>
                     </li>
                     <li  @click="returnMyOrder(5);">
                         <i class="iconfont icon-daipingjia"></i>
-                        <p>待评价</p>
+                        <p><!--待评价-->{{$t("page.myApp.wait_comment")}}</p>
                     </li>
                     <li  @click="returnRefundOrder();">
                         <i class="iconfont icon-tuikuan"></i>
-                        <p>退款/售后</p>
+                        <p><!--退款/售后-->{{$t("page.myApp.refund")}}</p>
                     </li>   
                 </ul>
             </div>
@@ -48,7 +50,7 @@
                 <div class="my-list border" @click="memberCenter(1)">
                     <div>
                         <i class="iconfont icon-8"></i>
-                        我的会员
+                        <!-- 我的会员 -->{{$t("page.myApp.my_member")}}
                     </div>
                     <div class="my-right fs32">
                         <i class="iconfont icon-jiantou-copy"></i>
@@ -57,7 +59,7 @@
                 <div class="my-list border" @click="memberCenter(2)">
                     <div>
                         <i class="iconfont icon-youhuiquan"></i>
-                        我的优惠券
+                        <!-- 我的优惠券 -->{{$t("page.myApp.my_coupons")}}
                     </div>
                     <div class="my-right fs32">
                         <i class="iconfont icon-jiantou-copy"></i>
@@ -66,7 +68,7 @@
                 <div class="my-list border" @click="toReturnMyComment">
                     <div>
                         <i class="iconfont icon-daipingjia"></i>
-                        我的评价
+                        <!-- 我的评价 -->{{$t("page.myApp.my_comment")}}
                     </div>
                     <div class="my-right fs32">
                         <i class="iconfont icon-jiantou-copy"></i>
@@ -75,7 +77,7 @@
                 <div class="my-list border" @click="toCollect">
                     <div>
                         <i class="iconfont icon-fav"></i>
-                        我的收藏
+                        <!-- 我的收藏 -->{{$t("page.myApp.my_collect")}}
                     </div>
                     <div class="my-right fs32">
                         <i class="iconfont icon-jiantou-copy"></i>
@@ -84,7 +86,7 @@
                 <!-- <div class="my-list border">
                     <div>
                         <i class="iconfont icon-daifahuo"></i>
-                        快递查询
+                         快递查询 {{$t("page.myApp.express_inquiry")}}
                     </div>
                     <div class="my-right fs32">
                         <i class="iconfont icon-jiantou-copy"></i>
@@ -95,7 +97,7 @@
                 <div class="my-list border" @click="toAuction">
                     <div>
                         <i class="iconfont icon-jingpai"></i>
-                        我的竞拍
+                        <!-- 我的竞拍 -->{{$t("page.myApp.my_auction")}}
                     </div>
                     <div class="my-right fs32">
                         <i class="iconfont icon-jiantou-copy"></i>
@@ -104,7 +106,7 @@
                 <div class="my-list border"  @click="returnMyOrder(8);">
                     <div>
                         <i class="iconfont icon-miaoshaweixuanzhong"></i>
-                        我的秒杀
+                        <!-- 我的秒杀 -->{{$t("page.myApp.my_seckill")}}
                     </div>
                     <div class="my-right fs32">
                         <i class="iconfont icon-jiantou-copy"></i>
@@ -113,7 +115,7 @@
                 <div class="my-list border" v-if="isOpenPf" @click="pifaShow()">
                     <div>
                         <i class="iconfont icon-pifaguize"></i>
-                        我的批发
+                        <!-- 我的批发 -->{{$t("page.myApp.my_wholesale")}}
                     </div>
                     <div class="my-right fs32">
                         <i class="iconfont icon-jiantou-copy"></i>
@@ -122,7 +124,7 @@
                 <div class="my-list border"  @click="returnMyOrder(7);">
                     <div>
                         <i class="iconfont icon-tuangou"></i>
-                        我的团购
+                        <!-- 我的团购 -->{{$t("page.myApp.my_groupbuy")}}
                     </div>
                     <div class="my-right fs32">
                         <i class="iconfont icon-jiantou-copy"></i>
@@ -131,7 +133,7 @@
                 <div class="my-list border" @click="toDeposit">
                     <div>
                         <i class="iconfont icon-daishouchanpin"></i>
-                        我的预售
+                        <!-- 我的预售 -->{{$t("page.myApp.my_presale")}}
                     </div>
                     <div class="my-right fs32">
                         <i class="iconfont icon-jiantou-copy"></i>
@@ -140,7 +142,7 @@
                 <div class="my-list border" v-if="isOpenSeller" @click="sellerShow()">
                     <div>
                         <i class="iconfont icon-jingjiren"></i>
-                        超级销售员
+                        <!-- 超级销售员 -->{{$t("page.myApp.super_salesman")}}
                     </div>
                     <div class="my-right fs32">
                         <i class="iconfont icon-jiantou-copy"></i>
@@ -181,7 +183,7 @@ export default {
     technicalSupport
   },
   mounted() {
-    this.commonFn.setTitle(this.$t('title_my_msg'));
+    this.commonFn.setTitle(this.$t('title.title_my_msg'));
     this.loads();
   },
   methods: {

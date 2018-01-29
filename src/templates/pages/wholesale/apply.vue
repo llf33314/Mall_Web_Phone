@@ -106,7 +106,7 @@ export default {
   },
   mounted() {
     this.loadDatas(); //初始化协商详情数据
-    this.commonFn.setTitle(this.$t('title_pifa_apply_msg'));
+    this.commonFn.setTitle(this.$t('title.title_pifa_apply_msg'));
     this.$store.commit("show_footer", false); //隐藏底部导航栏
   },
   beforeDestroy() {

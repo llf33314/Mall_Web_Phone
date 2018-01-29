@@ -21,7 +21,7 @@ export default {
     return {
       footerData: [
         {
-          name: "首页",
+          name: this.$t("page.footerMenu.home"),//首页
           icon: "icon-shouye",
           statu: "home",
           title: "index",
@@ -29,7 +29,7 @@ export default {
           selectArr: ["home","index", "seller/mallindex"]
         },
         {
-          name: "分类",
+          name: this.$t("page.footerMenu.classify"),//分类
           icon: "icon-fenlei3",
           statu: "group",
           title: "classify",
@@ -37,7 +37,7 @@ export default {
           selectArr: ["classify"]
         },
         {
-          name: "购物车",
+          name: this.$t("page.footerMenu.shop_cart"),//购物车
           router: "",
           icon: "icon-yinhang",
           statu: "cart",
@@ -46,7 +46,7 @@ export default {
           selectArr: ["cart"]
         },
         {
-          name: "我的",
+          name: this.$t("page.footerMenu.my"),//我的
           icon: "icon-ren1",
           statu: "my",
           title: "my",

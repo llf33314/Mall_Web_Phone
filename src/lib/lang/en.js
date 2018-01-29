@@ -1,8 +1,8 @@
 module.exports = {
 	//页面标题
 	title: {
-		title_my_msg: "我的",
-		title_my_address_msg: "我的地址",
+		title_my_msg: "我的",//我的
+		title_my_address_msg: "我的地址",//我的地址
 		title_return_order_msg: "退货/售后",
 		title_pifa_apply_msg: '批发商申请',
 		title_return_apply_msg: '申请退款',
@@ -22,31 +22,31 @@ module.exports = {
 	page: {
 		//我的页面
 		myApp: {
-			my_order: "我的订单",//我的订单
-			show_all_order: "查看全部订单",//查看全部订单
-			wait_pay: "待支付",//待支付
-			wait_delivery: "待发货",//待发货
-			wait_take_delivery: "待收货",//待收货
-			wait_comment: "待评价",//待评价
-			refund: "退款/售后",//退款/售后
-			my_member: "我的会员", //我的会员
-			my_coupons: "我的优惠券",//我的优惠券
-			my_comment: "我的评价", //我的评价
-			my_collect: "我的收藏",//我的收藏
-			express_inquiry: "快递查询",// 快递查询
-			my_auction: "我的竞拍",//我的竞拍
-			my_seckill: "我的秒杀",//我的秒杀
-			my_wholesale: "我的批发",//我的批发
-			my_groupbuy: "我的团购",//我的团购
-			my_presale: "我的预售",//我的预售
-			super_salesman: "超级销售员"//超级销售员
+			my_order: "my order",//我的订单
+			show_all_order: "view all orders",//查看全部订单
+			wait_pay: "to be paid",//待支付
+			wait_delivery: "to be ship",//待发货
+			wait_take_delivery: "for the goods",//待收货
+			wait_comment: "to be evaluated",//待评价
+			refund: "refund/after-sale service",//退款/售后
+			my_member:"my members", //我的会员
+			my_coupons : "my coupon",//我的优惠券
+			my_comment: "my evaluation", //我的评价
+			my_collect : "my collection",//我的收藏
+			express_inquiry:"express inquiry",// 快递查询
+			my_auction:"my bidders",//我的竞拍
+			my_seckill: "my second kill",//我的秒杀
+			my_wholesale: "my wholesale",//我的批发
+			my_groupbuy: "group buy",//我的团购
+			my_presale: "my pre sale",//我的预售
+			super_salesman: "super salesman"//超级销售员
 		},
 		//底部菜单
 		footerMenu: {
-			home: "首页",//首页
-			classify: "分类",//分类
-			shop_cart: "购物车",//购物车
-			my: "我的",//我的
+			home: "home page",//首页
+			classify: "classify",//分类
+			shop_cart: "shopping Cart",//购物车
+			my: "my",//我的
 		}
 	},
 	//公用提示

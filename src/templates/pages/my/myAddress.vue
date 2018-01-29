@@ -68,7 +68,7 @@ export default {
   },
   mounted() {
     this.loadDatas(); //初始化数据
-    this.commonFn.setTitle(this.$t('title_my_address_msg'));
+    this.commonFn.setTitle(this.$t('title.title_my_address_msg'));
     this.$store.commit("show_footer", false); //隐藏底部导航栏
     if (this.commonFn.isNotNull(sessionStorage.getItem("integralData"))) {
       this.integralObj = JSON.parse(sessionStorage.getItem("integralData"));

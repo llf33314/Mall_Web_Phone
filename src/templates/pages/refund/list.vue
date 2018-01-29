@@ -271,7 +271,7 @@ export default {
       );
     },
     setTitle() {
-      this.commonFn.setTitle("退货/售后");
+      this.commonFn.setTitle(this.$t('title.title_return_order_msg'));
     },
     returnXieDetail(returnId) {
       //跳转至协商详情页面

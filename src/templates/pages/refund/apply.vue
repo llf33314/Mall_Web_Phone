@@ -140,7 +140,7 @@ export default {
     technicalSupport
   },
   mounted() {
-    this.commonFn.setTitle(this.$t('title_return_apply_msg'));//退款申请
+    this.commonFn.setTitle(this.$t('title.title_return_apply_msg'));//退款申请
     this.$store.commit("show_footer", false); //隐藏底部导航栏
     this.submitReturnUrl = sessionStorage.getItem("refundReturnUrl");
     if (this.submitReturnUrl != null && this.submitReturnUrl != "") {
