@@ -30,7 +30,7 @@ Vue.mixin({
 		auctionJian() {
 			let _auctionData = this.goodsData.auctionResult;
 			let _chujiaMoney = this.chujiaMoney;
-			let _num = _chujiaMoney - _auctionData.aucAddPrice;
+			let _num = (_chujiaMoney - _auctionData.aucAddPrice).toFixed(2)*1;
 			if (!this.commonFn.isInt(_num) || _num <= 0 || _num < _auctionData.nowPrice) {
 				return;
 			}
@@ -43,7 +43,7 @@ Vue.mixin({
 			let _auctionData = this.goodsData.auctionResult;
 			let _chujiaMoney = this.chujiaMoney;
 			let _num = _chujiaMoney + _auctionData.aucAddPrice;
-			console.log(_num, "_num")
+			// console.log(_num, "_num")
 			if (!this.commonFn.isInt(_num) || _num <= 0) {
 				return;
 			}
@@ -67,7 +67,7 @@ Vue.mixin({
 			}
 			var test = /^[0-9]{1,6}(\.\d{1,2})?$/;
 			//判断是否是数字
-			if (!test.test(_chujiaMoney) || _chujiaMoney * 1 == 1) {
+			if (!test.test(_chujiaMoney) || _chujiaMoney * 1 == 0) {
 				_shop_tips("请输入大于0的6小位数");
 				return;
 			} else if (_chujiaMoney * 1 < _auctionData.nowPrice) {

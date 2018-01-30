@@ -13,7 +13,6 @@
   </div>
 </template>
 <script>
-import EXIF from "exif-js";
 import axios from "axios";
 export default {
   props: ["maxNums", "imgURL", "styles", "index"],
@@ -25,7 +24,6 @@ export default {
     };
   },
   mounted() {
-    console.log(EXIF, "EXIF");
     if (this.maxNums > 0) {
       this.maxNum = this.maxNums;
     }

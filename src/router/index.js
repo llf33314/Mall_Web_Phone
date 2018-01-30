@@ -99,6 +99,8 @@ const integral_detail = resolve => require(['pages/integral/detail'], resolve);
 //integral_detail 积分明细页面
 const integral_record = resolve => require(['pages/integral/record'], resolve);
 //integral_detail 兑换记录页面
+const integral_my_address = resolve => require(['pages/integral/myAddress'], resolve);
+//integral_my_address 我的地址
 
 
 /***************      超级销售员相关页面     ******************/
@@ -373,8 +375,8 @@ export default new Router({
       }
     }, {
       path: '/address/:busId/:integralId',
-      name: 'myAddress',
-      component: myAddress,
+      name: 'integral_my_address',
+      component: integral_my_address,
       meta: {
         title: '地址列表(积分商城)'
       }
