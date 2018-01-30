@@ -13,7 +13,7 @@
   </div>
 </template>
 <script>
-import EXIF from "exif-js";
+//import EXIF from "exif-js";
 import axios from "axios";
 export default {
   props: ["maxNums", "imgURL", "styles", "index"],
