@@ -34,7 +34,7 @@ export default {
       if (e == -1) {
         return;
       }
-      if (!this.isCanSelect) {
+      if (!this.isCanSelect && this.isCanSelect != undefined) {//在商城设置页面，没有编辑基本信息是不允许切换tab
         this.$emit("isCanSelect", e);
         return;
       }

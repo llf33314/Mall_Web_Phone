@@ -90,7 +90,7 @@ export default {
 @import  (reference) '~assets/css/base.less';
 @import  (reference) '~assets/css/mixins.less';
 @import  (reference) "~assets/css/common.less";
-@import  (reference) "~assets/css/sellercommon.less";
+@import  "~assets/css/sellercommon.less";
 
 .sale-wrapper {
   .index-nav {

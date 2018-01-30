@@ -31,8 +31,7 @@ export default {
       shareObj: null //分享内容
     };
   },
-  components: {
-  },
+  components: {},
   //已成功挂载，相当ready()
   mounted() {
     this.commonFn.setTitle("我的二维码");
@@ -100,10 +99,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import  (reference) '~assets/css/base.less';
-@import  (reference) '~assets/css/mixins.less';
-@import  (reference) "~assets/css/common.less";
-@import  (reference) "~assets/css/sellercommon.less";
+@import (reference) "~assets/css/base.less";
+@import (reference) "~assets/css/mixins.less";
+@import (reference) "~assets/css/common.less";
+@import "~assets/css/sellercommon.less";
 
 .sale-wrapper {
   .seller-top {
