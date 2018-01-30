@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   data() {
     return {
@@ -26,7 +25,6 @@ export default {
     };
   },
   components: {
-    technicalSupport  
   },
   mounted() {
     this.commonFn.setTitle("提示");

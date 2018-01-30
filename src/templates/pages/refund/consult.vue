@@ -38,13 +38,9 @@
     </div>
 </template>
  <script>
-import defaultImg from "components/defaultImg";
-import contentNo from "components/contentNo";
 import filte from "../../../lib/filters";
 export default {
   components: {
-    defaultImg,
-    contentNo
   },
   data() {
     return {

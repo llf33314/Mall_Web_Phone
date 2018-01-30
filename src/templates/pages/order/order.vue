@@ -173,9 +173,6 @@
 </template>
 
 <script>
-import footerNav from "components/footerNav";
-import defaultImg from "components/defaultImg";
-import technicalSupport from "components/technicalSupport"; //技术支持
 import orderCommon from "./js/orderCommon"; //公用的订单业务js
 
 export default {
@@ -198,9 +195,6 @@ export default {
     };
   },
   components: {
-    footerNav,
-    defaultImg,
-    technicalSupport
   },
   mounted() {
     let _this = this;

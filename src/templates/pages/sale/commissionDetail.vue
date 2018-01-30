@@ -25,8 +25,6 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
-import contentNo from "components/contentNo";
 import headerNav from "./setchlid/headerNav";
 // import more from "components/more";
 import filter from "@/lib/filters";
@@ -46,9 +44,7 @@ export default {
     };
   },
   components: {
-    defaultImg,
-    headerNav,
-    contentNo
+    headerNav
   },
   watch: {
     type() {

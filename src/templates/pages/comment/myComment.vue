@@ -45,9 +45,7 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
 import more from "components/more"; //加载更多
-import contentNo from "components/contentNo"
 export default {
   name: "mycomment",
 
@@ -62,9 +60,7 @@ export default {
     };
   },
   components: {
-    defaultImg,
-    more,
-    contentNo
+    more
   },
   mounted() {
     let _this = this;

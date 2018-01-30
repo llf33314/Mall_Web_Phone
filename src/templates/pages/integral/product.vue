@@ -76,7 +76,6 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
 import banner from "../goods/child/banner";
 import dialogModular from "components/dialogModular"; //流量弹出框
 export default {
@@ -110,7 +109,6 @@ export default {
     };
   },
   components: {
-    defaultImg,
     banner,
     dialogModular
   },

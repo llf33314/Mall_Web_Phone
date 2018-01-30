@@ -79,7 +79,6 @@ import TextNav from "./TextNav";
 import ShopTitle from "./Title";
 import Window from "./Window";
 
-import wxShare from "components/wxShare"; //微信分享
 import specDialog from "components/specDialog"; //规格弹出框
 
 export default {
@@ -112,7 +111,6 @@ export default {
     TextNav,
     ShopTitle,
     Window,
-    wxShare,
     specDialog
   },
   //实例初始化最之前，无法获取到data里的数据

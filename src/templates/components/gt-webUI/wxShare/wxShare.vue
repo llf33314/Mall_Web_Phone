@@ -5,6 +5,7 @@
 import wx from "weixin-js-sdk";
 
 export default {
+  name:'wxShare',
   props: {
     //分享内容，以及是否开启分享
     shareData: {

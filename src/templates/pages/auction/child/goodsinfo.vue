@@ -19,12 +19,10 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
 import filters from "@/lib/filters";
 export default {
   props: ["obj", "imgpath"],
   components: {
-    defaultImg
   },
   watch: {
     obj(a, b) {

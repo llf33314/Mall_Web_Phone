@@ -57,10 +57,9 @@
 </template>
 <script>
 import more from 'components/more.vue';//加载更多
-import defaultImg from 'components/defaultImg'
 export default {
     components: {
-        more,defaultImg
+        more
     },
     props:['imgurl','goodsData','name'],
     data() {

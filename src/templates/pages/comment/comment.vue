@@ -62,7 +62,6 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
 import imgUpload from "components/imgUpload";
 export default {
   name: "comment",
@@ -80,7 +79,6 @@ export default {
     };
   },
   components: {
-    defaultImg,
     imgUpload
   },
   mounted() {

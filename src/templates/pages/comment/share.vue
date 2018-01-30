@@ -39,8 +39,6 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
-import wxShare from "components/wxShare"; //微信分享
 export default {
   name: "myAddress",
 
@@ -58,8 +56,6 @@ export default {
     };
   },
   components: {
-    defaultImg,
-    wxShare
   },
   mounted() {
     this.loadDatas(); //初始化数据

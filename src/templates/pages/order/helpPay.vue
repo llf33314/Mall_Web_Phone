@@ -57,17 +57,11 @@
 </template>
 
 <script>
-import technicalSupport from "components/technicalSupport"; //技术支持
 import countDown from "./componet/countDown"; //倒计时
-import defaultImg from "components/defaultImg";
-import wxShare from "components/wxShare"; //微信分享
 
 export default {
   components: {
-    technicalSupport,
     countDown,
-    defaultImg,
-    wxShare
   },
   data() {
     return {

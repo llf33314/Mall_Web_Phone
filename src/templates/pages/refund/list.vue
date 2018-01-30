@@ -88,9 +88,7 @@
 </template>
 
 <script>
-import contentNo from "components/contentNo";
 import shopDialog from "components/shopDialog";
-import defaultImg from "components/defaultImg";
 import orderCommon from "../order/js/orderCommon"; //公用的订单业务js
 import more from "components/more"; //加载更多
 
@@ -149,9 +147,7 @@ export default {
     }
   },
   components: {
-    contentNo,
     shopDialog,
-    defaultImg,
     more
   },
   methods: {

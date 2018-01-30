@@ -102,7 +102,6 @@
     </div>
 </template>
 <script>
-import defaultImg from "components/defaultImg";
 import headerNav from "./setchlid/headerNav";
 import imgUpload from "components/imgUpload";
 import filte from "@/lib/filters";
@@ -128,7 +127,6 @@ export default {
     };
   },
   components: {
-    defaultImg,
     headerNav,
     imgUpload
   },

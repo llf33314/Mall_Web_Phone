@@ -245,9 +245,7 @@
 
 <script>
 
-import defaultImg from 'components/defaultImg'
 import headerNav from 'components/headerNav'
-import contentNo from 'components/contentNo'
 import deleteSlide from './component/deleteSlide'
 import filter from '../../../lib/filters'// 过滤器
 import dialogModular from 'components/dialogModular'// 过滤器
@@ -289,7 +287,7 @@ export default {
     }
   },
   components:{
-	  defaultImg,headerNav,contentNo,deleteSlide,dialogModular
+	  headerNav,deleteSlide,dialogModular
   },
   watch: {
     '$route'(){

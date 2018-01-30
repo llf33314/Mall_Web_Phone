@@ -26,12 +26,8 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
-import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   components: {
-    defaultImg,
-    technicalSupport
   },
   data() {
     return {

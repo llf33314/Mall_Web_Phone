@@ -15,10 +15,8 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
 export default {
   components: {
-    defaultImg
   },
   data() {
     return {

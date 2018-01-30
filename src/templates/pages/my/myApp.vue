@@ -158,9 +158,6 @@
 
 <script>
 // import Lib from 'assets/js/Lib';
-import footerNav from "components/footerNav";
-import defaultImg from "components/defaultImg";
-import technicalSupport from "components/technicalSupport"; //技术支持
 
 export default {
   name: "my",
@@ -178,9 +175,6 @@ export default {
     };
   },
   components: {
-    footerNav,
-    defaultImg,
-    technicalSupport
   },
   mounted() {
     this.commonFn.setTitle(this.$t('title.title_my_msg'));

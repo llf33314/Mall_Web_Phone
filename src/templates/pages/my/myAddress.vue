@@ -44,8 +44,6 @@
 </template>
 
 <script>
-import technicalSupport from "components/technicalSupport"; //技术支持
-import contentNo from "components/contentNo";
 export default {
   name: "myAddress",
 
@@ -63,8 +61,6 @@ export default {
     };
   },
   components: {
-    technicalSupport,
-    contentNo
   },
   mounted() {
     this.loadDatas(); //初始化数据

@@ -26,12 +26,10 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
 import countDown from "../../../home/classify_child/countDown";
 export default {
   props: ["row", "imgUrl"],
   components: {
-    defaultImg,
     countDown
   },
   watch: {

@@ -36,8 +36,6 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
-import wxShare from "components/wxShare"; //微信分享
 export default {
   data() {
     return {
@@ -56,8 +54,6 @@ export default {
     };
   },
   components: {
-    defaultImg,
-    wxShare
   },
   //已成功挂载，相当ready()
   mounted() {

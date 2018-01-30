@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import contentNo from "components/contentNo"; //无内容显示
 import more from "components/more"; //更多
 import filte from "@/lib/filters";
 export default {
@@ -42,7 +41,7 @@ export default {
       isShowMore: false //是否显示 没有更多的 插件
     };
   },
-  components: { contentNo, more },
+  components: { more },
   mounted() {
     this.commonFn.setTitle("积分明细");
     this.$store.commit("show_footer", false); //隐藏底部导航栏

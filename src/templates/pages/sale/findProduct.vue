@@ -51,7 +51,6 @@
     </div>
 </template>
 <script>
-import defaultImg from "components/defaultImg";
 import headerNav from "./setchlid/headerNav";
 import imgUpload from "components/imgUpload";
 import more from "components/more";
@@ -75,7 +74,6 @@ export default {
     };
   },
   components: {
-    defaultImg,
     headerNav,
     imgUpload,
     more

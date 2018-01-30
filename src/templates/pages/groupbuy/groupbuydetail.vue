@@ -108,12 +108,10 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
 import tuangoubg from "assets/img/tungoubg.jpg";
 import grounpSharebg from "assets/img/grounpShare.png";
 import countDown from "../home/classify_child/countDown";
 import filter from "@/lib/filters";
-import wxShare from "components/wxShare"; //微信分享
 export default {
   data() {
     return {
@@ -139,9 +137,7 @@ export default {
     };
   },
   components: {
-    defaultImg,
-    countDown,
-    wxShare
+    countDown
   },
   watch: {
     isShowShare(e) {

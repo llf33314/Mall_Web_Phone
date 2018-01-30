@@ -57,7 +57,6 @@
 
 <script>
 import payWayDialog from "components/payWayDialog"; //支付方式
-import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   name: "myAddress",
 
@@ -79,8 +78,7 @@ export default {
     };
   },
   components: {
-    payWayDialog,
-    technicalSupport
+    payWayDialog
   },
   mounted() {
     if (this.agree == 1) {

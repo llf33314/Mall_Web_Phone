@@ -32,10 +32,7 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
 import filters from "@/lib/filters";
-import technicalSupport from "components/technicalSupport"; //技术支持
-import contentNo from "components/contentNo";
 export default {
   data() {
     return {
@@ -47,9 +44,6 @@ export default {
     };
   },
   components: {
-    defaultImg,
-    technicalSupport,
-    contentNo
   },
   //已成功挂载，相当ready()
   mounted() {

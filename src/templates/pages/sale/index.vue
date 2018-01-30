@@ -92,7 +92,6 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
 export default {
   data() {
     return {
@@ -102,7 +101,6 @@ export default {
     };
   },
   components: {
-    defaultImg
   },
   //已成功挂载，相当ready()
   mounted() {

@@ -26,14 +26,12 @@
 
 <script>
 import headerNav from "components/headerNav"; //头部
-import contentNo from "components/contentNo"; //无内容显示
 import goodsInfo from "./child/goodsinfo"; //商品信息
 import filters from "@/lib/filters"; //过滤器
 export default {
   components: {
     headerNav,
-    goodsInfo,
-    contentNo
+    goodsInfo
   },
   data() {
     return {

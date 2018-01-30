@@ -2,9 +2,9 @@
 <div class="shop-wrapper  order-wrapper" id='app'>
     <section class="fs40 logistics-header clearfix">
         <div class="order-header-img">
-        <defaultImg :background="background"
+        <default-img :background="background"
                      :isHeadPortrait="1">
-        </defaultImg>
+        </default-img>
         </div>
         <div class="order-header-txt">
             <div class="order-header-title fs45">物流状态
@@ -34,9 +34,9 @@
     <section class="order-content logistics-content">
         <div class="logistics-title fs46 border">
             <div class="logistics-img">
-                <defaultImg :background="background"
+                <default-img :background="background"
                             :isHeadPortrait="1">
-                </defaultImg>
+                </default-img>
             </div>
             本数据由<span class="shopBlue">多粉物流信息</span>提供
         </div>
@@ -63,7 +63,6 @@
 
 <script>
 import Lib from 'assets/js/Lib'; 
-import defaultImg from 'components/defaultImg'//图片组件
 
 export default {
     name: 'logistics',	
@@ -74,7 +73,6 @@ export default {
         }
     },
     components:{
-        defaultImg
     },
     mounted() {
         

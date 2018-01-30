@@ -27,7 +27,6 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
 import headerNav from "./setchlid/headerNav";
 import more from "components/more";
 export default {
@@ -48,7 +47,6 @@ export default {
     };
   },
   components: {
-    defaultImg,
     headerNav,
     more
   },

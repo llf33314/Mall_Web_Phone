@@ -63,16 +63,12 @@
     </div>
 </template>
  <script>
-import defaultImg from "components/defaultImg";
 import imgUpload from "components/imgUpload";
 import dialogShow from "./component/selectDialog";
-import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   components: {
-    defaultImg,
     imgUpload,
-    dialogShow,
-    technicalSupport
+    dialogShow
   },
   data() {
     return {

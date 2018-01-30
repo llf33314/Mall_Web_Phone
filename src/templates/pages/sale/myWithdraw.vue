@@ -69,7 +69,6 @@
     </div>
 </template>
       <script>
-import defaultImg from "components/defaultImg";
 import filter from "@/lib/filters";
 export default {
   data() {
@@ -82,7 +81,6 @@ export default {
     };
   },
   components: {
-    defaultImg
   },
   //已成功挂载，相当ready()
   mounted() {

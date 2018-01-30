@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
 import banner from "../goods/child/banner";
 export default {
   name: "succeed",
@@ -53,7 +52,6 @@ export default {
     };
   },
   components: {
-    defaultImg,
     banner
   },
   mounted() {

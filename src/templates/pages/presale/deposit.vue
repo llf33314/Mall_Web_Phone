@@ -64,9 +64,7 @@
 
 <script>
 import payWayDialog from "components/payWayDialog"; //支付方式
-import defaultImg from "components/defaultImg";
 import filte from "@/lib/filters"; //过滤器
-import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   name: "myAddress",
 
@@ -91,8 +89,6 @@ export default {
   },
   components: {
     payWayDialog,
-    defaultImg,
-    technicalSupport
   },
   mounted() {
     if (this.agree == 1) {

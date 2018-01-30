@@ -122,7 +122,6 @@
 </template>
 
 <script>
-import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   name: "agreement",
 
@@ -130,7 +129,6 @@ export default {
     return {};
   },
   components: {
-      technicalSupport
   },
   mounted() {
     this.commonFn.setTitle("用户竞拍服务协议");

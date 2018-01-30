@@ -507,7 +507,6 @@
 </div>
 </template>
 <script>
-import defaultImg from "components/defaultImg";
 import banner from "./child/banner"; //banner
 import goodsInfo from "./child/goodsInfo"; //商品信息
 import coupons from "./child/coupons"; //查看优惠券包
@@ -530,7 +529,6 @@ import shopPhotoDan from "components/shopPhotoDan"; //显示图片
 
 export default {
   components: {
-    defaultImg,
     banner,
     comment,
     spec,

@@ -102,7 +102,6 @@
 
 <script>
 import filter from "../../lib/filters"; // 过滤器
-import defaultImg from "components/defaultImg";
 export default {
   name: "Admin",
   props: {
@@ -116,7 +115,6 @@ export default {
     }
   },
   components: {
-    defaultImg
   },
   data() {
     return {

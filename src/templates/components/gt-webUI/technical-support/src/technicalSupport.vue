@@ -351,6 +351,7 @@
 
 <script>
     export default {
+		name:'technicalSupport',
       components: {},
       data() {
         return {};

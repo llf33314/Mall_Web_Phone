@@ -35,11 +35,9 @@
 </template>
 
 <script>
-import defaultImg from 'components/defaultImg';
 export default {
     props:['row','imgUrl','isErrors'],
     components: {
-        defaultImg
     },
     watch: {
         'row'(a,b){

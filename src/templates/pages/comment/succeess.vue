@@ -42,7 +42,6 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
 export default {
   name: "succeed",
   data() {
@@ -57,7 +56,6 @@ export default {
     };
   },
   components: {
-    defaultImg
   },
   mounted() {
     this.loadDatas(); //初始化数据
