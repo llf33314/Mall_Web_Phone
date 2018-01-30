@@ -97,7 +97,7 @@ export default {
         title: "评价分享",
         desc: "评价分享",
         url: location.href,
-        imgUrl: "",
+        imgUrl:  this.imgUrl + myData.productResult.productImageUrl,
         isOpenAllMenu: true, //显示所有功能按钮接口
         jsApiList: ["onMenuShareTimeline", "onMenuShareAppMessage"]
       };
@@ -155,7 +155,7 @@ export default {
   .comment-content {
     font-size: 0;
     background: #fff;
-    padding: 40/@dev-Width *1rem 0 0;
+    // padding: 40/@dev-Width *1rem 0 0;
     width: 100%;
     .comment-textarea {
       width: 92%;
@@ -231,7 +231,7 @@ export default {
     }
     .comment-txt {
       width: 100%;
-      padding: 0 40/@dev-Width *1rem;
+      padding: 40/@dev-Width *1rem;
     }
   }
   .comment-main-footer {
@@ -321,7 +321,9 @@ export default {
     background: #fff;
     margin: 0 auto;
     .border-radius(8px);
-    margin-bottom: 45/@dev-Width *1rem;
+    p{
+      margin: 45/@dev-Width *1rem 0;
+    }
   }
 }
 </style>

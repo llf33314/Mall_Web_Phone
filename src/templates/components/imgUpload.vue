@@ -25,7 +25,6 @@ export default {
     };
   },
   mounted() {
-    console.log(EXIF, "EXIF");
     if (this.maxNums > 0) {
       this.maxNum = this.maxNums;
     }

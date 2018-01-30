@@ -177,6 +177,7 @@ export default {
   components: {
   },
   mounted() {
+    // console.log(this.$t('title.title_my_msg'),"this.$t('title.title_my_msg')")
     this.commonFn.setTitle(this.$t('title.title_my_msg'));
     this.loads();
   },
