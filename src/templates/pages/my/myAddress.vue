@@ -44,8 +44,6 @@
 </template>
 
 <script>
-import technicalSupport from "components/technicalSupport"; //技术支持
-import contentNo from "components/contentNo";
 export default {
   name: "myAddress",
 
@@ -63,8 +61,6 @@ export default {
     };
   },
   components: {
-    technicalSupport,
-    contentNo
   },
   mounted() {
     this.loadDatas(); //初始化数据
@@ -180,8 +176,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 .shop-add-itme {
   margin-bottom: 10/@dev-Width *1rem;
 }

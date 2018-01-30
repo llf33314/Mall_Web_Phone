@@ -39,8 +39,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import '../../assets/css/mixins.less';
-@import '../../assets/css/base.less';
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 .searchbox-main{
     width: 100%;
     font-size: 0;

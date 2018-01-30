@@ -81,7 +81,6 @@
 <script>
 import areaCode from 'components/areaCode';//国家/地区
 import shopDialog from "components/shopDialog";
-import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   name: "apply",
   data() {
@@ -101,7 +100,6 @@ export default {
   },
   components: {
     shopDialog,
-    technicalSupport,
     areaCode
   },
   mounted() {
@@ -278,8 +276,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 .apply-wapper {
   width: 100%;
   height: 100%;

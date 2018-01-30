@@ -158,9 +158,6 @@
 
 <script>
 // import Lib from 'assets/js/Lib';
-import footerNav from "components/footerNav";
-import defaultImg from "components/defaultImg";
-import technicalSupport from "components/technicalSupport"; //技术支持
 
 export default {
   name: "my",
@@ -178,9 +175,6 @@ export default {
     };
   },
   components: {
-    footerNav,
-    defaultImg,
-    technicalSupport
   },
   mounted() {
     // console.log(this.$t('title.title_my_msg'),"this.$t('title.title_my_msg')")
@@ -384,8 +378,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 
 .my-index {
   width: 100%;

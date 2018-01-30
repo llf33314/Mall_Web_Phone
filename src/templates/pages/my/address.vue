@@ -122,7 +122,6 @@
 import areaCode from 'components/areaCode';
 import mapAddress from "components/mapAddress";
 import mapAmap from "components/amapMap.vue";//高德地图
-import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   name: "address",
   data() {
@@ -184,7 +183,6 @@ export default {
   },
   components: {
     mapAddress,
-    technicalSupport,
     mapAmap,
     areaCode
   },
@@ -547,8 +545,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 
 .address-main {
   background: #fff;

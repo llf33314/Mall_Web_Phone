@@ -351,6 +351,7 @@
 
 <script>
     export default {
+		name:'technicalSupport',
       components: {},
       data() {
         return {};
@@ -374,6 +375,4 @@
 </script>
 
 <style lang="less" scoped>
-    // @import "../../../../assets/css/mixins.less";
-    // @import "../../../../assets/css/base.less";
 </style>

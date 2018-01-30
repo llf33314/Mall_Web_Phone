@@ -25,8 +25,6 @@
 </template>
 
 <script>
-
-import contentNo from "components/contentNo";
 import headerNav from "./setchlid/headerNav";
 import more from "components/more";
 import filter from "@/lib/filters";
@@ -48,9 +46,7 @@ export default {
     };
   },
   components: {
-    defaultImg,
-    headerNav,
-    contentNo
+    headerNav
   },
   watch: {
     type() {
@@ -151,10 +147,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
-@import "../../../assets/css/common.less";
-@import "./css/sellercommon.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
+@import  (reference) "~assets/css/common.less";
+@import "~assets/css/sellercommon.less";
 
 .sale-wrapper {
   .seller-content {

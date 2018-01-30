@@ -20,7 +20,6 @@ import shopDialog from "components/shopDialog.vue"; //弹窗
 import Top from "components/Top"; //置顶
 import footerNav from "components/footerNav"; //置顶
 import ajax from "@/lib/ajax.js";
-// import wxShare from "components/wxShare"; //微信分享
 
 export default {
   components: {
@@ -28,8 +27,7 @@ export default {
     loading,
     shopDialog,
     Top,
-    footerNav,
-    // wxShare
+    footerNav
   },
   computed: {
     listenshowpage1() {

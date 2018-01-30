@@ -47,19 +47,15 @@
 </template>
 
 <script>
-import contentNo from "components/contentNo"; //无内容显示
 import more from "components/more"; //更多
 import goodsInfo from "../auction/child/goodsinfo"; //商品信息
 import deleteSlide from "../shoppingCart/component/deleteSlide"; //滑动删除插件
-import defaultImg from "components/defaultImg";
 import filters from "@/lib/filters"; //过滤器
 export default {
   components: {
     goodsInfo,
-    contentNo,
     more,
-    deleteSlide,
-    defaultImg
+    deleteSlide
   },
   data() {
     return {
@@ -230,9 +226,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
-@import "../../../assets/css/common.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
+@import  (reference) "~assets/css/common.less";
 .collect-nav {
   height: 100/@dev-Width *1rem;
   background-color: #f6f6f6;

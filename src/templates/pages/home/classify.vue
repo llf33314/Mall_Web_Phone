@@ -98,7 +98,6 @@
 </template>
 <script>
 
-import defaultImg from 'components/defaultImg'//默认图片
 import more from 'components/more.vue';//加载更多
 import goodsNo from 'components/goodsNo.vue';//加载更多
 import sidebarB from './classify_child/sidebarB';//侧导航
@@ -106,7 +105,6 @@ import countDown from './classify_child/countDown';//倒计时
 
 export default {
     components: {
-        defaultImg,
         more,
         goodsNo,
         sidebarB,
@@ -412,8 +410,8 @@ export default {
 </script>
 
 <style lang="less">
-@import '../../../assets/css/mixins.less';
-@import '../../../assets/css/base.less';
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 .classify-main{
     width: 100%;
     .classify-header{

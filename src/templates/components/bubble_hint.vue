@@ -57,8 +57,8 @@ module.exports = {
 //  this.$root.$refs.bubble.show_tips('最多只能选择3个');//bubble_hint*/
 </script>
 <style lang="less" scoped>
-@import "../../assets/css/mixins.less";
-@import "../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 /*气泡提示---------------------------------------------------------------------------------------------*/
 
 .bubble {

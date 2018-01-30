@@ -99,10 +99,8 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
 import imgUpload from "components/imgUpload";
 import dialogShow from "./component/selectDialog";
-import technicalSupport from "components/technicalSupport"; //技术支持
 import filters2 from "../../../lib/filters"; //过滤器
 export default {
   data() {
@@ -134,10 +132,8 @@ export default {
     };
   },
   components: {
-    defaultImg,
     imgUpload,
     dialogShow,
-    technicalSupport
   },
   mounted() {
     this.commonFn.setTitle(this.$t('title.title_return_apply_msg'));//退款申请
@@ -348,8 +344,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 
 .refund-wrapper {
   width: 100%;

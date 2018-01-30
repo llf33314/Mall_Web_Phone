@@ -167,8 +167,8 @@ export default {
 </script>
 
 <style lang="less">
-@import '../../../assets/css/mixins.less';
-@import '../../../assets/css/base.less';
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 .search-main{
     width: 100%;
     position: relative;

@@ -102,7 +102,6 @@
     </div>
 </template>
 <script>
-import defaultImg from "components/defaultImg";
 import headerNav from "./setchlid/headerNav";
 import imgUpload from "components/imgUpload";
 import filte from "@/lib/filters";
@@ -128,7 +127,6 @@ export default {
     };
   },
   components: {
-    defaultImg,
     headerNav,
     imgUpload
   },
@@ -471,10 +469,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
-@import "../../../assets/css/common.less";
-@import "./css/sellercommon.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
+@import  (reference) "~assets/css/common.less";
+@import  (reference) "~assets/css/sellercommon.less";
 
 .sale-wrapper {
   width: 100%;

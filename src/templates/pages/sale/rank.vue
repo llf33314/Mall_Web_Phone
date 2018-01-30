@@ -27,7 +27,6 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
 import headerNav from "./setchlid/headerNav";
 import more from "components/more";
 export default {
@@ -48,7 +47,6 @@ export default {
     };
   },
   components: {
-    defaultImg,
     headerNav,
     more
   },
@@ -149,10 +147,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
-@import "../../../assets/css/common.less";
-@import "./css/sellercommon.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
+@import  (reference) "~assets/css/common.less";
+@import  (reference) "~assets/css/sellercommon.less";
 
 .sale-wrapper {
   .seller-content {

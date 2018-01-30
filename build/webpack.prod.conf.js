@@ -8,7 +8,8 @@ const baseWebpackConfig = require('./webpack.base.conf')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const env = config.build.env
 
@@ -84,7 +85,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         )
       }
     }),
-    // 开启 Scope Hoisting （开启后 无人热替换）
+    // 开启 Scope Hoisting （开启后 无热替换）
     // new webpack.optimize.ModuleConcatenationPlugin(),
     
     // extract webpack runtime and module manifest to its own file in order to
@@ -100,7 +101,8 @@ const webpackConfig = merge(baseWebpackConfig, {
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
       }
-    ])
+    ]),
+    new BundleAnalyzerPlugin()
   ]
 })
 

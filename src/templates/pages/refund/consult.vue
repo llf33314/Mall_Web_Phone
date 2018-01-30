@@ -38,13 +38,9 @@
     </div>
 </template>
  <script>
-import defaultImg from "components/defaultImg";
-import contentNo from "components/contentNo";
 import filte from "../../../lib/filters";
 export default {
   components: {
-    defaultImg,
-    contentNo
   },
   data() {
     return {
@@ -113,8 +109,8 @@ export default {
 </script>
 
 <style lang="less">
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 /**------vars------*/
 
 .consult-wrapper {

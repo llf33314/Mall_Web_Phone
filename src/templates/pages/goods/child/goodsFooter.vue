@@ -12,12 +12,10 @@
 </template>
 
 <script>
-import technicalSupport from "components/technicalSupport"; //技术支持
 
 export default {
   props: ["row", "qrcodeUrl"],
   components: {
-    technicalSupport
   },
   watch: {
     row(a, b) {

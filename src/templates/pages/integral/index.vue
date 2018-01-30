@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
 import banner from "../goods/child/banner";
 export default {
   name: "succeed",
@@ -53,7 +52,6 @@ export default {
     };
   },
   components: {
-    defaultImg,
     banner
   },
   mounted() {
@@ -181,9 +179,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
-@import "../../../assets/css/common.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
+@import  (reference) "~assets/css/common.less";
 .integral-top {
   width: 100%;
   .bg-div {

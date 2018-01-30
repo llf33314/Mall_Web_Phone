@@ -35,9 +35,7 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
 import filters from "@/lib/filters";
-import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   data() {
     return {
@@ -48,8 +46,6 @@ export default {
     };
   },
   components: {
-    defaultImg,
-    technicalSupport
   },
   //已成功挂载，相当ready()
   mounted() {
@@ -91,9 +87,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
-@import "../../../assets/css/common.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
+@import  (reference) "~assets/css/common.less";
 .sale-wrapper {
   background: #fff;
   width: 100%;

@@ -57,10 +57,9 @@
 </template>
 <script>
 import more from 'components/more.vue';//加载更多
-import defaultImg from 'components/defaultImg'
 export default {
     components: {
-        more,defaultImg
+        more
     },
     props:['imgurl','goodsData','name'],
     data() {
@@ -91,9 +90,8 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-
-@import '../../../../assets/css/mixins.less';
-@import '../../../../assets/css/base.less';
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 
 .sidebar-goods{
     right: 0;

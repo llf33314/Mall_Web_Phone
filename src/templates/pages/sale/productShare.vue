@@ -36,8 +36,6 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
-import wxShare from "components/wxShare"; //微信分享
 export default {
   data() {
     return {
@@ -56,8 +54,6 @@ export default {
     };
   },
   components: {
-    defaultImg,
-    wxShare
   },
   //已成功挂载，相当ready()
   mounted() {
@@ -149,9 +145,9 @@ export default {
 </script>
 
 <style lang="less">
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
-@import "../../../assets/css/common.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
+@import  (reference) "~assets/css/common.less";
 
 .sale-wrapper {
   width: 100%;

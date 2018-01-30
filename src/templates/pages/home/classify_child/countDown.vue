@@ -131,9 +131,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../../assets/css/mixins.less";
-@import "../../../../assets/css/base.less";
-@import "../../../../assets/css/common.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
+@import  (reference) "~assets/css/common.less";
 
 .classify-time {
   margin-top: 10/@dev-Width *1rem;

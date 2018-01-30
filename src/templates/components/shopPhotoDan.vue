@@ -65,8 +65,8 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import "../../assets/css/mixins.less";
-@import "../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 .book-photo-wrapper {
   background: rgba(0, 0, 0, 0.9);
   padding: 40 / @dev-Width *1rem 0 (186+96) / @dev-Width *1rem;

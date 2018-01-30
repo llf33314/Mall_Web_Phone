@@ -122,7 +122,6 @@
 </template>
 
 <script>
-import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   name: "agreement",
 
@@ -130,7 +129,6 @@ export default {
     return {};
   },
   components: {
-      technicalSupport
   },
   mounted() {
     this.commonFn.setTitle("用户竞拍服务协议");
@@ -164,8 +162,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 .auction-wrapper {
   width: 100%;
   position: relative;

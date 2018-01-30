@@ -102,7 +102,6 @@
 
 <script>
 import filter from "../../lib/filters"; // 过滤器
-import defaultImg from "components/defaultImg";
 export default {
   name: "Admin",
   props: {
@@ -116,7 +115,6 @@ export default {
     }
   },
   components: {
-    defaultImg
   },
   data() {
     return {
@@ -348,8 +346,8 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import "../../assets/css/mixins.less";
-@import "../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 .goods-dialog {
   width: 100%;
   height: 100%;

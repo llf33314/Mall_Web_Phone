@@ -45,9 +45,7 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
 import more from "components/more"; //加载更多
-import contentNo from "components/contentNo"
 export default {
   name: "mycomment",
 
@@ -62,9 +60,7 @@ export default {
     };
   },
   components: {
-    defaultImg,
-    more,
-    contentNo
+    more
   },
   mounted() {
     let _this = this;
@@ -144,8 +140,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 .mycomment-wrapper {
   width: 100%;
   .mycomment-item {

@@ -82,9 +82,7 @@
 </template>
 
 <script>
-import technicalSupport from "components/technicalSupport"; //技术支持
 import headerNav from "components/headerNav"; //头部
-import contentNo from "components/contentNo"; //无内容显示
 import filters from "@/lib/filters"; //过滤器
 export default {
   name: "agreement",
@@ -104,7 +102,7 @@ export default {
       isShowNo: false
     };
   },
-  components: { technicalSupport, headerNav, contentNo },
+  components: { headerNav},
   mounted() {
     this.$store.commit("show_footer", false); //隐藏底部导航栏
     this.load();
@@ -166,8 +164,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 .auction-wrapper {
   width: 100%;
   position: relative;

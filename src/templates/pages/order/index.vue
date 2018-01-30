@@ -122,10 +122,8 @@
 </template>
 
 <script>
-import contentNo from "components/contentNo";
 import headerNav from "components/headerNav";
 import shopDialog from "components/shopDialog";
-import defaultImg from "components/defaultImg";
 import more from "components/more"; //加载更多
 import orderCommon from "./js/orderCommon"; //公用的订单业务js
 
@@ -191,9 +189,7 @@ export default {
   },
   components: {
     headerNav,
-    contentNo,
     shopDialog,
-    defaultImg,
     more
   },
   beforeDestroy() {
@@ -318,8 +314,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 
 .order-content {
   width: 100%;

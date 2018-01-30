@@ -136,7 +136,8 @@
 
 
 <style scoped lang="less" scoped>
-@import "../../../../assets/css/mixins.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
   .slider{
     width: 100%;
     height:100%;

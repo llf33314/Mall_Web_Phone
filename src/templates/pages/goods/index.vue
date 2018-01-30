@@ -507,7 +507,6 @@
 </div>
 </template>
 <script>
-import defaultImg from "components/defaultImg";
 import banner from "./child/banner"; //banner
 import goodsInfo from "./child/goodsInfo"; //商品信息
 import coupons from "./child/coupons"; //查看优惠券包
@@ -530,7 +529,6 @@ import shopPhotoDan from "components/shopPhotoDan"; //显示图片
 
 export default {
   components: {
-    defaultImg,
     banner,
     comment,
     spec,
@@ -1385,10 +1383,9 @@ export default {
 </script>
 
 <style lang="less" >
-
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
-@import "../../../assets/css/common.less";
+@import  '~assets/css/base.less';
+@import  '~assets/css/mixins.less';
+@import  '~assets/css/common.less';
 .goods-wrapper {
   width: 100%;
   position: relative;

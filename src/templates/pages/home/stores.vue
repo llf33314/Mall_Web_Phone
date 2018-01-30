@@ -15,10 +15,8 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
 export default {
   components: {
-    defaultImg
   },
   data() {
     return {
@@ -60,8 +58,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 .stores-wrapper {
   height: 100%;
   .stores-item {

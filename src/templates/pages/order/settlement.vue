@@ -335,11 +335,8 @@
 
 <script>
 //组件
-import footerNav from "components/footerNav";
-import defaultImg from "components/defaultImg";
 import shopDialog from "components/shopDialog";
 import payWayDialog from "components/payWayDialog"; //支付方式
-import technicalSupport from "components/technicalSupport"; //技术支持
 import dialogModular from "components/dialogModular"; //流量弹出框
 import bindPhone from "components/bindPhone"; //绑定手机号码
 import couponDialog from "./componet/couponDialog"; //优惠券弹出框
@@ -386,10 +383,7 @@ export default {
     };
   },
   components: {
-    footerNav,
-    defaultImg,
     shopDialog,
-    technicalSupport,
     payWayDialog,
     couponDialog,
     timesDialog,

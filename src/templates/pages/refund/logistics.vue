@@ -63,16 +63,12 @@
     </div>
 </template>
  <script>
-import defaultImg from "components/defaultImg";
 import imgUpload from "components/imgUpload";
 import dialogShow from "./component/selectDialog";
-import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   components: {
-    defaultImg,
     imgUpload,
-    dialogShow,
-    technicalSupport
+    dialogShow
   },
   data() {
     return {
@@ -271,8 +267,8 @@ export default {
 </script>
 
 <style lang="less">
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 
 .refund-wrapper {
   width: 100%;

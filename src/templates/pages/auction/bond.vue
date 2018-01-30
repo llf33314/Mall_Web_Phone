@@ -57,7 +57,6 @@
 
 <script>
 import payWayDialog from "components/payWayDialog"; //支付方式
-import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   name: "myAddress",
 
@@ -79,8 +78,7 @@ export default {
     };
   },
   components: {
-    payWayDialog,
-    technicalSupport
+    payWayDialog
   },
   mounted() {
     if (this.agree == 1) {
@@ -190,8 +188,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 .payMoney-wapper {
   background: #fff;
   width: 100%;

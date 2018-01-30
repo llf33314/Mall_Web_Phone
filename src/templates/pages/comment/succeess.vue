@@ -42,7 +42,6 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
 export default {
   name: "succeed",
   data() {
@@ -57,7 +56,6 @@ export default {
     };
   },
   components: {
-    defaultImg
   },
   mounted() {
     this.loadDatas(); //初始化数据
@@ -123,8 +121,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 .deltails-header {
   color: #fff;
   .ik-box;

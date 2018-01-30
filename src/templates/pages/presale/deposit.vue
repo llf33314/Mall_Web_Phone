@@ -64,9 +64,7 @@
 
 <script>
 import payWayDialog from "components/payWayDialog"; //支付方式
-import defaultImg from "components/defaultImg";
 import filte from "@/lib/filters"; //过滤器
-import technicalSupport from "components/technicalSupport"; //技术支持
 export default {
   name: "myAddress",
 
@@ -91,8 +89,6 @@ export default {
   },
   components: {
     payWayDialog,
-    defaultImg,
-    technicalSupport
   },
   mounted() {
     if (this.agree == 1) {
@@ -212,9 +208,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
-@import "../../../assets/css/common.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
+@import  (reference) "~assets/css/common.less";
 .payMoney-wapper {
   width: 100%;
   height: 100%;

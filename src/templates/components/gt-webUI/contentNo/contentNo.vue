@@ -32,6 +32,7 @@
 </template>
 <script>
 export default {
+  name:'contentNo',
   props: ["statu", "errorMsg"],
   data: function() {
     return { msg: "您还没有相关的订单" };
@@ -51,8 +52,8 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import "../../assets/css/mixins.less";
-@import "../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 .shop-main-no {
   padding: (250+148)/@dev-Width *1rem 0 250/@dev-Width *1rem;
   .shop-no-content {

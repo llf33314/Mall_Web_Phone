@@ -39,8 +39,6 @@
 </template>
 
 <script>
-import defaultImg from "components/defaultImg";
-import wxShare from "components/wxShare"; //微信分享
 export default {
   name: "myAddress",
 
@@ -58,8 +56,6 @@ export default {
     };
   },
   components: {
-    defaultImg,
-    wxShare
   },
   mounted() {
     this.loadDatas(); //初始化数据
@@ -132,8 +128,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 .comment-main {
   width: 100%;
   padding-bottom: 134/@dev-Width *1rem;

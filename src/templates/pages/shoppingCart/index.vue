@@ -245,9 +245,7 @@
 
 <script>
 
-import defaultImg from 'components/defaultImg'
 import headerNav from 'components/headerNav'
-import contentNo from 'components/contentNo'
 import deleteSlide from './component/deleteSlide'
 import filter from '../../../lib/filters'// 过滤器
 import dialogModular from 'components/dialogModular'// 过滤器
@@ -289,7 +287,7 @@ export default {
     }
   },
   components:{
-	  defaultImg,headerNav,contentNo,deleteSlide,dialogModular
+	  headerNav,deleteSlide,dialogModular
   },
   watch: {
     '$route'(){
@@ -1032,9 +1030,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import '../../../assets/css/mixins.less';
-@import '../../../assets/css/base.less';
-@import '../../../assets/css/common.less';
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
+@import  (reference) "~assets/css/common.less";
 .order-main{
     padding-top: 148/@dev-Width *1rem;
     padding-bottom: 360/@dev-Width *1rem;;
