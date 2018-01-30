@@ -176,8 +176,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 .shop-add-itme {
   margin-bottom: 10/@dev-Width *1rem;
 }

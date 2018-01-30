@@ -128,8 +128,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 .comment-main {
   width: 100%;
   padding-bottom: 134/@dev-Width *1rem;

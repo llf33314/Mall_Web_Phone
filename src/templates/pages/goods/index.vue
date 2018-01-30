@@ -1383,10 +1383,9 @@ export default {
 </script>
 
 <style lang="less" >
-
-@import "../../../assets/css/mixins.less";
-@import "../../../assets/css/base.less";
-@import "../../../assets/css/common.less";
+@import  '~assets/css/base.less';
+@import  '~assets/css/mixins.less';
+@import  '~assets/css/common.less';
 .goods-wrapper {
   width: 100%;
   position: relative;

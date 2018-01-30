@@ -34,8 +34,8 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@import '../less/mixins.less';
-@import '../less/base.less';
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 .imgbox{
     width: 100%;
     height: 100%;

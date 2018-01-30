@@ -52,8 +52,8 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import "../../assets/css/mixins.less";
-@import "../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 .payment-dialog-main {
   width: 100%;
   .payment-dialog-list {

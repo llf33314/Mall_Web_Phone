@@ -51,10 +51,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
-@import '../../../../../assets/css/mixins.less';
-@import '../../../../../assets/css/base.less';
-@import '../../../../../assets/css/common.less';
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
+@import  (reference) "~assets/css/common.less";
 .goods-group{
     width: 100%;
     .ik-box;

@@ -52,8 +52,8 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import "../less/base.less";
-@import "../less/mixins.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 .shop-main-no {
   padding: (250+148)/@dev-Width *1rem 0 250/@dev-Width *1rem;
   .shop-no-content {

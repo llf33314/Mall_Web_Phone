@@ -84,8 +84,8 @@ export default {
 
 <style lang="less" scoped>
 
-@import '../../../assets/css/mixins.less';
-@import '../../../assets/css/base.less';
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
 
 //查看物流
 .logistics-header{

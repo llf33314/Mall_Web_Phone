@@ -61,8 +61,9 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import "../../assets/css/mixins.less";
-@import "../../assets/css/base.less";
+@import  (reference) '~assets/css/base.less';
+@import  (reference) '~assets/css/mixins.less';
+@import  (reference) "~assets/css/common.less";
 .shop-header {
   top: 0;
   background: #fff;

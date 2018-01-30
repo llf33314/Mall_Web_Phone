@@ -33,9 +33,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../assets/css/mixins.less";
-@import "../../assets/css/base.less";
-
 .table {
   width: 98%;
   height: 200%;
