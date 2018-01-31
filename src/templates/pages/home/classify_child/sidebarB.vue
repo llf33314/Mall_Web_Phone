@@ -20,7 +20,6 @@
                     </div>
                 </div>
                 <!--全部商品-->
-                
             </div>
             <more :is-more="isMore"></more>
         </div>   
