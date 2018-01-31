@@ -214,7 +214,7 @@ export default {
                 'sort' : data.sort || 'new',    //new最新 || price销量 || sale价格
                 'isDesc':	data.isDesc || '',//排序 1、升序 -1 降序	可不传
                 'searchContent':	data.searchContent||'',//搜索内容	可不传
-                'type':    data.type|| 0,  //	类型，1.团购 3.秒杀 4.拍卖 5 粉币 6预售 7批发	可不传
+                'type':    data.type|| _this.$route.params.type || 0,  //	类型，1.团购 3.秒杀 4.拍卖 5 粉币 6预售 7批发	可不传
                 'curPage': data.curPage ||''//	当前页	可不传
             }
             if(this.commonFn.isNotNull( this.saleMemberId) &&  this.saleMemberId > 0){
@@ -350,7 +350,8 @@ export default {
                 }
                 _this.groupId = Id;
                 _this.productAjax({
-                    groupId: Id
+                    groupId: Id,
+                    type: _this.$route.params.type
                 });
             }
         },
