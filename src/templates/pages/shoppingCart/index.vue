@@ -11,7 +11,7 @@
                         @click="select_Goods(cart)"></i>
                     <div class="order-title-img" @click="jupm_cart(cart)">
                       <default-img :background="cart.userImageUrl"
-                                  :isHeadPortrait="1" :size="'.3rem'">
+                                  :isHeadPortrait="1" :size="'0.3'">
                       </default-img>
                     </div>
                     <span @click.self="jupm_cart(cart)">{{cart.userName}}</span>
@@ -45,7 +45,7 @@
                                         <a @click="jupm_goods(goods)">
                                         <default-img :background="imgUrl+goods.productImageUrl"
                                                     :isHeadPortrait="0"
-                                                    :size="'0.8rem'">
+                                                    :size="'0.8'">
                                         </default-img>
                                         </a>
                                         <i class="iconfont icon-dui" :class="{'style-main-bg':goods.show}"
@@ -144,7 +144,7 @@
                     <div class="order-title-img">
                       <default-img :background="cart.userImageUrl"
                                   :isHeadPortrait="1"
-                                  :size="'0.3rem'">
+                                  :size="'0.3'">
                       </default-img>
                     </div>
                     <span>{{cart.userName}}</span>
@@ -167,7 +167,7 @@
                                 <div class="order-item-img">
                                   <default-img :background="imgUrl+goods.productImageUrl"
                                                 :isHeadPortrait="0"
-                                                :size="'0.8rem'">
+                                                :size="'0.8'">
                                   </default-img>
                                 </div>
                                 <div class="order-item-txt" >

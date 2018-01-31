@@ -4,7 +4,8 @@
       <div class="group-top " :style="{backgroundImage: 'url(' + tuangoubg + ')'}">
           <div class="group-img" @click="toProductDetail(groupProduct.id,groupProduct.shopId,groupProduct.busId,groupObj.groupId)">
               <default-img :background="imgUrl+groupProduct.imageUrl"
-                          :isHeadPortrait="0">
+                          :isHeadPortrait="0"
+                          :size="'3'">
               </default-img>
           </div>
           <div class="group-title fs40">
@@ -28,7 +29,8 @@
           <div class="left ">
             <span class="img">
               <default-img :background="join.headimgurl"
-                          :isHeadPortrait="0">
+                          :isHeadPortrait="1"
+                          :size="'0.5'">
               </default-img>
             </span>
             <span class="fs40">{{join.nickname}}</span>
@@ -50,7 +52,8 @@
         @click="toProductDetail(product.id,product.shop_id,busId,product.activityId)">
           <div class="group-goods-img">
             <default-img :background="product.image_url"
-                        :isHeadPortrait="0">
+                        :isHeadPortrait="0"
+                        :size="'2'">
             </default-img>
           </div>
           <div class="group-goods-text">

@@ -7,32 +7,33 @@
         <p >{{integralObj.totalIntegral || 0}}</p>
       </div>
     </div>
-    <div class="integral-middle">
-
-    </div>
-    <div class="integral-product" v-if="integralArr != null">
-      <div class="product-item" v-for="(integral,index) in integralArr" :key="index">
-          <div class="product-content">
-            <p class="fs46 text-overflow">{{integral.det_pro_name}}</p>
-            <p class="div-text fs40">{{integral.times | formatNot}}</p>
+    <div class="integral-product" v-if="integralArr != null"
+      v-infinite-scroll="loadIntegralDetail"
+      infinite-scroll-disabled="false"
+      infinite-scroll-distance="0">
+      <div  class="product-item" v-for="(integral,index) in integralArr" :key="index">
+          <div class="shop-box-center">
+            <div class="product-content">
+              <p class="fs46 text-overflow">{{integral.det_pro_name}}</p>
+              <p class="div-text fs40">{{integral.times | formatNot}}</p>
+            </div>
+            <div class="div-icon shop-font fs46">-{{integral.order_money}}</div>
           </div>
-          <div class="div-icon shop-font fs46">-{{integral.order_money}}</div>
       </div>
     </div>
      <content-no :statu="statu" v-if="isShowNo"></content-no>
-      <more :is-more="3" v-if="isShowMore"></more>
+      <more :is-more="isMore" v-if="isShowMore"></more>
   </div>
 </template>
 
 <script>
 import more from "components/more"; //更多
-import filte from "@/lib/filters";
+//import filte from "@/lib/filters";
 export default {
   name: "succeed",
   data() {
     return {
-      background:
-        null,
+      background: null,
       busId: this.$route.params.busId || sessionStorage.getItem("busId"),
       imgUrl: "", //图片域名
       integralArr: null, //积分集合
@@ -41,57 +42,34 @@ export default {
       pageCount: 1, //总页数
       statu: 2, //无信息插件状态
       isShowNo: false, //是否显示没有内容的插件
-      isShowMore: false //是否显示 没有更多的 插件
+      isShowMore: false, //是否显示 没有更多的 插件
+      isMore: 2,
     };
   },
   components: {  more },
   mounted() {
     this.commonFn.setTitle("兑换记录");
     this.$store.commit("show_footer", false); //隐藏底部导航栏
-    this.loadIntegralDetail({
-      curPage: 1
-    });
-    let _this = this;
-    $(window).bind("scroll", function() {
-      var isScroll =
-        $(window).scrollTop() > 0 &&
-        $(window).scrollTop() >=
-          $(document).height() - $(window).height() - 1000;
-      if (isScroll) {
-        _this.loadMore();
-      }
-    });
+    this.loadIntegralDetail();
   },
   beforeDestroy() {
     //离开后的操作
     this.$store.commit("show_footer", true); //显示底部导航栏
   },
   methods: {
-    loadMore() {
-      let pageCount = this.pageCount; //总页数
-      if (this.curPage >= pageCount) {
-        this.isMore = 3; //没有更多
-        return;
-      }
-       if (this.isMore == 2) {
-        return;
-      }
-      console.log(this.isMore, "this.isMore");
-      this.curPage++; //请求页数
-      this.isMore = 2;
-      this.loadIntegralDetail({
-        curPage: this.curPage
-      });
-    },
-    loadIntegralDetail(data) {
-      console.log(data.curPage, "data.curPage");
+    loadIntegralDetail() {
+      console.log("-----------")
       //初始化数据
+       if (this.isMore == 3 || this.isMore == 1) {
+        return;
+      }
+      this.isMore = 1;
       let _this = this;
       let _data = {
         busId: _this.busId, //商家id
         url: location.href, //当前页面的地址
         browerType: _this.$store.state.browerType, //浏览器类型
-        curPage: data.curPage > 0 ? data.curPage : 1
+        curPage: this.curPage || 1
       };
       _this.ajaxRequest({
         url: h5App.activeAPI.integral_record_list_post,
@@ -102,7 +80,6 @@ export default {
           let pageUtil = data.data.pageUtil;
           if (pageUtil == null) {
             _this.isMore = 3; //没有更多
-            $(window).unbind("scroll");
             return;
           }
           let newOrderList = pageUtil.subList;
@@ -120,8 +97,11 @@ export default {
           _this.isMore = 1;
           if (_this.curPage >= _this.pageCount) {
             _this.isMore = 3; //没有更多
-            $(window).unbind("scroll");
+            return;
           }
+          _this.isMore = 2;
+          _this.curPage++; 
+          console.log("_this.curPage",_this.curPage,_this.isMore);
         }
       });
     },
@@ -137,9 +117,12 @@ export default {
 @import  (reference) '~assets/css/base.less';
 @import  (reference) '~assets/css/mixins.less';
 @import  (reference) "~assets/css/common.less";
+.integral-product{
+      // padding-bottom: 1px;
+}
 .integral-top {
   width: 100%;
-  position: relative;
+  // position: relative;
   z-index: 1;
   .icon-yuanq {
     display: block;
@@ -194,12 +177,15 @@ export default {
   }
 }
 .integral-product {
+  .product-item:last-child{
+    margin-bottom: 10px;
+  }
   .product-item {
     .border;
     height: 210/@dev-Width *1rem;
     background: #fff;
     padding: 0 30/@dev-Width *1rem;
-    .shop-box-center;
+    // .shop-box-center;
     .product-content {
       width: 80%;
       line-height: 1;
@@ -212,8 +198,8 @@ export default {
     .div-icon {
       width: 20%;
       .shop-textr;
-      height: 100%;
-      line-height: 300/@dev-Width *1rem;
+      // height: 100%;
+      line-height:210/@dev-Width *1rem;
     }
   }
 }

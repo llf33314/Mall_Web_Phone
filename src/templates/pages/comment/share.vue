@@ -8,7 +8,7 @@
                     <div class="comment-img border-img" v-for="image in imageList">
                         <default-img :background="imgUrl+image.imageUrl"
                             :isHeadPortrait="0"
-                            :size="'0.8rem'">
+                            :size="'0.8'">
                         </default-img>
                     </div>
                 </div>
@@ -17,7 +17,7 @@
                 <div class="goods-img">
                     <default-img :background="imgUrl+product.productImageUrl"
                         :isHeadPortrait="0"
-                        :size="'0.8rem'">
+                        :size="'0.8'">
                     </default-img>
                 </div>
                 <div class="goods-txt">

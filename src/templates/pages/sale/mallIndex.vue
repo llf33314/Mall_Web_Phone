@@ -13,7 +13,7 @@
           <default-img :background="imgUrl+mallSet.bannerPath" :isHeadPortrait="0" class="img-div"></default-img>
         </div>
         <div class="nav-content">
-          <default-img :background="imgUrl+mallSet.mallHeadPath" :isHeadPortrait="1" class="img-div"></default-img>
+          <default-img :background="imgUrl+mallSet.mallHeadPath" :isHeadPortrait="1" :size="'1.3'" class="img-div"></default-img>
           <div class="c-div-desc">
             <div class="nav-item-div" @click="toAllProduct">
               <p class="fs60">{{productList.length || 0}}</p>
@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import filte from "@/lib/filters";
+//import filte from "@/lib/filters";
 export default {
   data() {
     return {
@@ -165,7 +165,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import  (reference) '~assets/css/base.less';
 @import  (reference) '~assets/css/mixins.less';
 @import  (reference) "~assets/css/common.less";

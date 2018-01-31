@@ -2,7 +2,7 @@
 <template>
     <div class="shop-wrapper sale-wrapper" >
         <div class="seller-nav">
-            <default-img :background="mallSeller.headImagePath" :isHeadPortrait="1" class="img-div"></default-img>
+            <default-img :background="mallSeller.headImagePath" :isHeadPortrait="1" :size="'1'" class="img-div"></default-img>
             <div class="nav-right">
                 <p class="bgfont1"></p>
                 <p class="fs50">我是<em>{{mallSeller.userName || ""}}</em></p>

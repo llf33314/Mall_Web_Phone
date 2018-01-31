@@ -21,28 +21,35 @@
 
 <script>
 export default {
-    props:['row'],
-    watch: {
-      'row'(){
-          this.Data = this.row;
-      }  
-    },
-    data () {
-        return {
-            type: 0,
-            Data:{}
-        }
-    },
-    methods:{
-
-    },
-    mounted () {
-        this.type = this.$route.params.type;
+  props: ["row"],
+  watch: {
+    row() {
+      this.Data = this.row;
     }
-
-}
+  },
+  data() {
+    return {
+      type: 0,
+      Data: {}
+    };
+  },
+  methods: {},
+  mounted() {
+    this.type = this.$route.params.type;
+  }
+};
 </script>
 
-<style>
-
+<style lang="less" scoped>
+@import (reference) "~assets/css/base.less";
+@import (reference) "~assets/css/mixins.less";
+.goods-selected-main {
+  width: 100%;
+  .ik-box;
+  .ik-box-align(center);
+  .ik-box-pack(justify);
+  i {
+    color: #c7c7cc;
+  }
+}
 </style>

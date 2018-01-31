@@ -14,6 +14,20 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="less" scoped>
+@import (reference) "~assets/css/base.less";
+@import (reference) "~assets/css/mixins.less";
+.goods-selected {
+    width: 100%;
+    padding: 30/@dev-Width *1rem 22/@dev-Width *1rem 30/@dev-Width *1rem 46/@dev-Width *1rem;
+    .goods-selected-main {
+      width: 100%;
+      .ik-box;
+      .ik-box-align(center);
+      .ik-box-pack(justify);
+      i {
+        color: #c7c7cc;
+      }
+    }
+  }
 </style>

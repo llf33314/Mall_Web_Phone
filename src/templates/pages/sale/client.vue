@@ -29,7 +29,8 @@
                 <div class="left-div ">
                     <div class="img-div">
                         <default-img :background="client.headimgurl"
-                            :isHeadPortrait="1"></default-img>
+                            :isHeadPortrait="1"
+                            :size="'0.3'"></default-img>
                     </div>
                     <div class="div-title fs44 text-overflow">{{client.user_name || client.nickname}}</div>
                 </div>

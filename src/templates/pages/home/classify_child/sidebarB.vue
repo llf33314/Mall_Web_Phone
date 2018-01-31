@@ -13,42 +13,13 @@
                         <div class="goods-img">
                             <default-img :background="imgurl+item.image_url"
                                 :isHeadPortrait="0" 
-                                :size="'0.8rem'">
+                                :size="'0.8'">
                             </default-img>
                         </div>
                         <p class="fs36" v-text="item.group_name"></p>
                     </div>
                 </div>
                 <!--全部商品-->
-                <!-- <div class="whole-goods clearfix">
-                    <div class="whole-item">
-                        <div class="whole-img">
-                            <default-img :background="background"
-                                :isHeadPortrait="0">
-                            </default-img>
-                        </div>
-                        <p class="fs36 text-overflow">苹果手机苹果手机苹果手机苹果手机苹果手机</p>
-                        <span class="shop-font fs46">¥123</span>
-                    </div>
-                    <div class="whole-item">
-                        <div class="whole-img">
-                            <default-img :background="background"
-                                :isHeadPortrait="0">
-                            </default-img>
-                        </div>
-                        <p class="fs36 text-overflow">苹果手机苹果手机苹果手机苹果手机苹果手机</p>
-                        <span class="shop-font fs46">¥123</span>
-                    </div>
-                    <div class="whole-item">
-                        <div class="whole-img">
-                            <default-img :background="background"
-                                :isHeadPortrait="0">
-                            </default-img>
-                        </div>
-                        <p class="fs36 text-overflow">苹果手机苹果手机苹果手机苹果手机苹果手机</p>
-                        <span class="shop-font fs46">¥123</span>
-                    </div>
-                </div> -->
                 
             </div>
             <more :is-more="isMore"></more>

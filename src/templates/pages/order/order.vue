@@ -11,7 +11,7 @@
     </header> 
     <section class="deltails-express" v-if="logistics != null || memberAddress != null">
         <!-- 暂没做 -->
-        <div class="deltails-express-top border clearfix" v-if="logistics != null && logistics.length > 0">
+        <!-- <div class="deltails-express-top border clearfix" v-if="logistics != null && logistics.length > 0">
             <div class="col-1">
                 <i class="iconfont icon-kuaidi"></i>
             </div>
@@ -22,7 +22,7 @@
             <div class="col-1 shop-textr">
                 <i class="iconfont icon-jiantou-copy shopGray"></i>
             </div>
-        </div>
+        </div> -->
         <div class="deltails-express-bottom clearfix" v-if="memberAddress != null">
             <div class="col-1">
                 <i class="iconfont icon-dizhi"></i>
@@ -51,7 +51,8 @@
                   <div class="shop-box-center">
                     <div class="order-title-img" style="">
                           <default-img :background="order.busImageUrl"
-                                      :isHeadPortrait="1">
+                                      :isHeadPortrait="1"
+                                      :size="'0.3'">
                           </default-img>
                       </div>
                     <span>{{order.busName}}</span>
@@ -72,7 +73,8 @@
                     <div class="order-item-content" @click="toProductDetail(detail,order)">
                         <div class="order-item-img">
                             <default-img :background="imgUrl+detail.productImageUrl"
-                                    :isHeadPortrait="1">
+                                    :isHeadPortrait="1"
+                                    :size="'0.8'">
                         </default-img>
                         </div>
                         <div class="order-item-txt">
@@ -85,28 +87,28 @@
                     </div>
                     <div class="deltails-item-button">
                         <div class="deltails-button shop-bg fs36" v-if="detail.isShowApplyReturnButton == 1"
-                          @click="goApplyReturn(detail.orderDetailId,detail.detailStauts,detail.returnId)">
-                            申请退款
+                          @click="goApplyReturn(detail.orderDetailId,detail.detailStauts,detail.returnId)"
+                          >申请退款
                         </div> 
                         <div class="deltails-button shop-bg fs36" v-if="detail.isShowApplySaleButton == 1"
-                          @click="goApplyReturn(detail.orderDetailId,detail.detailStauts,detail.returnId)">
-                            申请售后
+                          @click="goApplyReturn(detail.orderDetailId,detail.detailStauts,detail.returnId)"
+                          >申请售后
                         </div>
                         <div class="deltails-button shop-bg fs36" v-if="detail.isShowReturnWuLiuButton == 1"
-                         @click="goReturnWuliu(detail.returnId,detail.detailStauts)">
-                            填写退货物流
+                         @click="goReturnWuliu(detail.returnId,detail.detailStauts)"
+                         >填写退货物流
                         </div>
                         <div class="deltails-button shop-bg fs36" v-if="detail.isShowUpdateReturnButton == 1"
-                         @click="goApplyReturn(detail.orderDetailId,detail.detailStauts,detail.returnId)">
-                            修改退款
+                         @click="goApplyReturn(detail.orderDetailId,detail.detailStauts,detail.returnId)"
+                         >修改退款
                         </div>
                         <div class="deltails-button shop-bg fs36" v-if="detail.isShowCloseReturnButton == 1"
-                         @click="goCloseReturn(detail.returnId)">
-                            撤销退款
+                         @click="goCloseReturn(detail.returnId)"
+                         >撤销退款
                         </div>
                         <div class="deltails-button shop-bg fs36" v-if="detail.isShowCommentButton == 1"
-                         @click="goComment(detail.orderDetailId,order.busId)">
-                            去评价
+                         @click="goComment(detail.orderDetailId,order.busId)"
+                         >去评价
                         </div>
                     </div>
                 </div>
@@ -146,24 +148,24 @@
             查看物流
         </div> -->
         <div class="deltails-button fs40 shop-bg" v-if="order.isShowReceiveGoodButton == 1" 
-          @click="confirmReceipt(order.orderId)">
-            确认收货
+          @click="confirmReceipt(order.orderId)"
+            >确认收货
         </div>
         <div class="deltails-button fs40 shop-bg" v-if="order.isShowGoPayButton == 1" 
-          @click="returnGoPay(order.orderId,order.busId)">
-            去支付
+          @click="returnGoPay(order.orderId,order.busId)"
+            >去支付
         </div>
         <div class="deltails-button fs40 shop-bg" v-if="order.isShowDeleteButton == 1" 
-        @click="showDialogDelete(order.orderId)">
-            删除订单
+        @click="showDialogDelete(order.orderId)"
+            >删除订单
         </div>
         <div class="deltails-button fs40 shop-bg" v-if="order.isShowDeleteButton == 1" 
-        @click="showDialogDelete(order.orderId)">
-            删除订单
+        @click="showDialogDelete(order.orderId)"
+            >删除订单
         </div>
         <div class="deltails-button fs40 shop-bg" v-if="order.orderType == 1 && order.activityId > 0" 
-        @click="groupBuyDetail(order.activityId,order.joinId,order.buyerUserId)">
-            查看团购详情
+        @click="groupBuyDetail(order.activityId,order.joinId,order.buyerUserId)"
+            >查看团购详情
         </div>
     </section>
     <section class="shop-main-no fs40 my-bond" v-if="isShow">
@@ -530,6 +532,7 @@ export default {
   padding: 20/@dev-Width *1rem 15/@dev-Width *1rem;
   .border-radius(5px);
   margin-right: 30/@dev-Width *1rem;
+  text-align: center;
 }
 .deltails-del {
   padding-left: 30 /@dev-Width *1rem;

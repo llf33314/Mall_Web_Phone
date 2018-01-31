@@ -4,7 +4,8 @@
             <section class="refund-goods clearfix">
                 <div class="goods-img">
                     <default-img :background="imgUrl+returnData.productImageUrl"
-                                 :isHeadPortrait="1">
+                                 :isHeadPortrait="0"
+                                 :size="'0.8'">
                     </default-img>
                 </div>
                 <div class="goods-delt">
@@ -71,7 +72,8 @@
                      style="padding:0;">
                     <div class="comment-img"  v-if="imageArr != null" v-for="(image , index) in imageArr" >
                          <default-img :background="imgUrl+image"
-                                 :isHeadPortrait="1">
+                                 :isHeadPortrait="0"
+                                 :size="'0.8'">
                         </default-img>
                         <i class="iconfont icon-guanbi" @click="removeImages(index)"></i>
                     </div>

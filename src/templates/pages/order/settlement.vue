@@ -42,7 +42,7 @@
                     <div class="order-title-img">
                         <default-img :background="bus.busImageUrl"
                                     :isHeadPortrait="0"
-                                    :size="'0.3rem'">
+                                    :size="'0.3'">
                         </default-img>
                     </div>
                     <span>{{bus.busName}}</span>
@@ -62,7 +62,7 @@
                             <div class="order-item-img" @click="toProductDetail(product,bus.busId)">
                                 <default-img :background="imgUrl+product.productImageUrl"
                                             :isHeadPortrait="0"
-                                            :size="'0.8rem'">
+                                            :size="'0.8'">
                                 </default-img>
                             </div>
                             <div class="order-item-txt">
@@ -142,15 +142,15 @@
                     <!-- 会员折扣，联盟折扣，积分抵扣 和 粉币抵扣区域 -->
                     <div v-if="(bus.isCanUseUnionDiscount == 1 && bus.unionStatus == 1) || bus.isCanUseMemberDiscount == 1 || bus.isCanUseFenbiDiscount == 1 || bus.isCanUseJifenDiscount == 1">
                       <div class="orderTotal-list border"
-                          @click="order_ulShow">
+                          @click="discountIsShow ? discountIsShow = false: discountIsShow = true">
                           <p class="fs42">折扣信息<span class="shopGray">(可点击展开编辑)</span></p>
                           <p class="fs42">
-                              <i class="iconfont icon-jiantou shopGray"></i>
-                              <i class="iconfont icon-up shopGray shop-hide"></i>
+                              <i class="iconfont icon-jiantou shopGray" :class="[discountIsShow?'shop-hide':'']"></i>
+                              <i class="iconfont icon-up shopGray" :class="[!discountIsShow?'shop-hide':'']"></i>
                           </p>
                       </div>
                       <!-- 各种抵扣 -->
-                      <div class="orderTotal-ul shop-hide">
+                      <div class="orderTotal-ul"  :class="[!discountIsShow?'shop-hide':'']">
                         <div class="orderTotal-list border" v-if="bus.isCanUseUnionDiscount == 1 && bus.unionStatus == 1"  >
                               <p class="fs40">联盟折扣</p>
                               <p class="fs40">
@@ -343,7 +343,7 @@ import couponDialog from "./componet/couponDialog"; //优惠券弹出框
 import timesDialog from "./componet/timeDialog"; //时间弹出框
 import takeAddressDialog from "./componet/takeAddressDialog"; //提货地址弹出框
 //过滤器
-import filte from "@/lib/filters"; //过滤器
+//import filte from "@/lib/filters"; //过滤器
 //js
 import calculation from "./js/calculationOrder"; //订单计算js
 import submitOrder from "./js/submitOrder"; //提交订单js
@@ -380,6 +380,7 @@ export default {
       isShowAddress: true,
       memberPhone: null,//会员手机号码，如果为空，则需要先绑定手机号码
       isShowMemberPhone : false,
+      discountIsShow : false
     };
   },
   components: {
@@ -548,11 +549,6 @@ export default {
       _orderData.totalPayMoney = _floatSub(totalPayMoney, chaFreightMoney).toFixed(2)*1;
       _orderData.totalMoney = _floatSub(_orderData.totalMoney, chaFreightMoney).toFixed(2)*1;
       // console.log(totalPayMoney, "---", "totalPayMoney", chaFreightMoney);
-    },
-    order_ulShow() {
-      $(".orderTotal-ul").toggleClass("shop-hide");
-      $(".icon-up").toggleClass("shop-hide");
-      $(".icon-jiantou").toggleClass("shop-hide");
     },
     /**初始化数据 */
     loadDatas() {

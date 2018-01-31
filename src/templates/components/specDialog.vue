@@ -12,7 +12,7 @@
                   <div class="goods-dialog-img" >
                       <default-img :background="imgUrlHttp+dialogProduct.imageObj.imageUrl"
                           :isHeadPortrait="0"
-                          :size="'0.8rem'">
+                          :size="'0.8'">
                       </default-img>
                   </div>
                   <div class="goods-dialog-txt">

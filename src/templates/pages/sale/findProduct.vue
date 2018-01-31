@@ -22,15 +22,19 @@
          <div class="right-div2" v-if="childClaList != null && childClaList.length > 0">
            <div class="child-item" v-for="(cla,index) in childClaList" :key="index"
              @click="selectGroup(cla,0)">
-              <default-img :background="imgUrl+cla.image_url" :isHeadPortrait="0" class="cla-img-div"></default-img>
+              <default-img :background="imgUrl+cla.image_url" :isHeadPortrait="0" :size="'0.5'" class="cla-img-div"></default-img>
               <p>{{cla.group_name}}</p>
            </div>
          </div>
          <!-- 商品列表 -->
-         <div class="right-div" v-if="productList != null" id="aaa">
+         <div class="right-div" v-if="productList != null" id="aaa"
+          v-infinite-scroll="loadDatas"
+          infinite-scroll-distance="200">
            <div class="pro-item" v-for="(pro,index) in productList" :key="index">
              <div class="pro-div" @click="toProductDetail(pro)">
-               <default-img :background="pro.image_url" :isHeadPortrait="0" class="img-div"></default-img>
+               <div class="img-divs">
+                 <default-img :background="pro.image_url" :isHeadPortrait="0" :size="'0.8'" class="img-div"></default-img>
+               </div>
                <div class="con-div fs0">
                  <p class="fs40">{{pro.pro_name}}</p>
                  <p class="fs32 shop-font">价格：￥{{pro.price | moneySplit1}}.<em class="fs28">{{pro.price | moneySplit2}}</em></p>
@@ -54,7 +58,7 @@
 import headerNav from "./setchlid/headerNav";
 import imgUpload from "components/imgUpload";
 import more from "components/more";
-import filte from "@/lib/filters";
+//import filte from "@/lib/filters";
 export default {
   data() {
     return {
@@ -70,7 +74,7 @@ export default {
       isMore: 2, //是否更多
       saleMemberId: 0, //销售员id
       selectList: [], //选中的集合
-      content: null //搜索内容
+      content: null, //搜索内容
     };
   },
   components: {
@@ -85,10 +89,10 @@ export default {
         this.productList != null &&
         this.productList.length > 0
       ) {
-        let _this = this;
-        this.$nextTick(function() {
-          _this.scroll();
-        });
+        // let _this = this;
+        // this.$nextTick(function() {
+        //   _this.scroll();
+        // });
       }
     }
   },
@@ -102,7 +106,7 @@ export default {
     if (this.ids != null) {
       this.selectList = this.ids.split(",");
     }
-    this.loadDatas(0); //初始化数据
+    this.loadDatas(); //初始化数据
     this.classAllAjax(0);
     let _this = this;
   },
@@ -123,11 +127,12 @@ export default {
         this.productList = null;
         this.curPage = 1;
       }
+      this.selectGroupId = groupId;
       if (obj.is_child == 1) {
         this.classAllAjax(groupId);
       } else {
         this.childClaList = null;
-        this.loadDatas(groupId);
+        this.loadDatas();
       }
     },
     //圆圈选中
@@ -148,46 +153,50 @@ export default {
       }
     },
     //调用滚动事件
-    scroll() {
-      let _this = this;
-      let parentHeight = $(".right-div").height();
-      $(".right-div").unbind("scroll");
-      $(".right-div").bind("scroll", function() {
-        let _proObj = $(this).find(".pro-item");
-        let proHeight = _proObj.length * _proObj.height();
-        let _scrollTop = $(".right-div").scrollTop();
+    // scroll() {
+    //   let _this = this;
+    //   let parentHeight = $(".right-div").height();
+    //   $(".right-div").unbind("scroll");
+    //   $(".right-div").bind("scroll", function() {
+    //     let _proObj = $(this).find(".pro-item");
+    //     let proHeight = _proObj.length * _proObj.height();
+    //     let _scrollTop = $(".right-div").scrollTop();
 
-        var isScroll =
-          _scrollTop > 0 && _scrollTop + parentHeight >= proHeight - 200;
-        if (isScroll) {
-          this.isMore = -1;
-          _this.loadMore();
-        }
-      });
+    //     var isScroll =
+    //       _scrollTop > 0 && _scrollTop + parentHeight >= proHeight - 200;
+    //     if (isScroll) {
+    //       this.isMore = -1;
+    //       _this.loadMore();
+    //     }
+    //   });
 
-      // console.log("----");
-      // $(".right-div").scroll(function() {
-      //   console.log("----");
-      //   $(".right-div").css("border", "1px solid");
-      // });
-    },
+    //   // console.log("----");
+    //   // $(".right-div").scroll(function() {
+    //   //   console.log("----");
+    //   //   $(".right-div").css("border", "1px solid");
+    //   // });
+    // },
     //加载更多
-    loadMore() {
-      let pageCount = this.pageCount; //总页数
-      if (this.curPage >= pageCount) {
-        this.isMore = 3; //没有更多
-        return;
-      }
-      if (this.isMore == 2) {
-        return;
-      }
-      this.curPage++; //请求页数
-      this.isMore = 2;
-      this.loadDatas(this.selectGroup);
-    },
-    loadDatas(groupId) {
+    // loadMore() {
+    //   let pageCount = this.pageCount; //总页数
+    //   if (this.curPage >= pageCount) {
+    //     this.isMore = 3; //没有更多
+    //     return;
+    //   }
+    //   if (this.isMore == 2) {
+    //     return;
+    //   }
+    //   this.curPage++; //请求页数
+    //   this.isMore = 2;
+    //   this.loadDatas(this.selectGroup);
+    // },
+    loadDatas() {
       //初始化数据
       let _this = this;
+      if (this.isMore == 3 || this.isMore == 1) {
+        return;
+      }
+      this.isMore = 1;
       let _data = {
         busId: _this.busId, //商家id
         url: location.href, //当前页面的地址
@@ -195,8 +204,8 @@ export default {
         curPage: this.curPage,
         proName: this.content
       };
-      if (groupId > 0) {
-        _data.groupId = groupId;
+      if (this.selectGroupId > 0) {
+        _data.groupId = this.selectGroupId;
       }
       _this.ajaxRequest({
         url: h5App.activeAPI.seller_find_product_post,
@@ -210,6 +219,7 @@ export default {
           _this.pageCount = page.pageCount;
           let productList = page.subList;
           if (productList == null || productList.length == 0) {
+            _this.isMore = 3;
             return;
           }
           let selectList = _this.selectList;
@@ -234,7 +244,10 @@ export default {
           _this.isMore = 1;
           if (_this.curPage >= _this.pageCount) {
             _this.isMore = 3; //没有更多
+            return;
           }
+          _this.isMore = 2;
+          _this.curPage++; //当前页数
         }
       });
     },
@@ -285,7 +298,8 @@ export default {
     search() {
       let content = this.content;
       this.curPage = 1;
-      this.loadDatas(0);
+      this.selectGroupId = 0;
+      this.loadDatas();
     },
     toProductDetail(obj) {
       let saleMemberId = this.saleMemberId;
@@ -408,9 +422,12 @@ export default {
           width: 87%;
           .ik-box;
           .ik-box-pack(left);
+          .img-divs{
+            margin-right: 20/@dev-Width *1rem;
+          }
           .img-div {
-            width: 228/@dev-Width *1rem;
-            height: 228/@dev-Width *1rem;
+            width: 218/@dev-Width *1rem;
+            height: 218/@dev-Width *1rem;
             margin: 10/@dev-Width *1rem 0;
           }
           .con-div {

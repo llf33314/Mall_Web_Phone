@@ -4,7 +4,7 @@
     <header class="sale-header" v-if="member != null">
         <div class="header-img">
             <default-img :background="member.headimgurl"
-                        :isHeadPortrait="1">
+                        :isHeadPortrait="1" :size="'1.2'">
             </default-img>
         </div>
         <p class="fs60">{{member.nickname}}</p>

@@ -6,7 +6,8 @@
              <div class="goodsinfo-box border" @click="toProduct">
               <div class="goodsinfo-img" v-if="productImage != null">
                   <default-img :background="imgUrl+productImage.image_url"
-                              :isHeadPortrait="1">
+                              :isHeadPortrait="1"
+                              :size="'0.8'">
                   </default-img>
               </div>
               <div class="goodsinfo-text">
@@ -64,7 +65,7 @@
 
 <script>
 import payWayDialog from "components/payWayDialog"; //支付方式
-import filte from "@/lib/filters"; //过滤器
+//import filte from "@/lib/filters"; //过滤器
 export default {
   name: "myAddress",
 

@@ -11,10 +11,11 @@
              v-if="isHeadPortrait==0 && background == undefined"></img> -->
              <!--isHeadPortrait-0-商品默认图/ 1-用户头像默认图-->
             <div v-if="isHeadPortrait==0" class="default-img1">
-                 <i class="iconfont icon-tupianjiazaizhong-" :style="{'font-size':size}"></i>
+                 <i class="iconfont icon-tupianjiazaizhong-" 
+                    :style="{'font-size':imgSize+'rem','margin-top':'-'+(imgSize/2)+'rem','margin-left':'-'+(imgSize/2)+'rem'}"></i>
             </div>
             <div v-if="isHeadPortrait==1" class="default-img2" >
-                 <i class="iconfont icon-ren1" :style="{'font-size':size}"></i>
+                 <i class="iconfont icon-ren1" :style="{'font-size':imgSize+'rem','margin-top':'-'+(imgSize/2)+'rem','margin-left':'-'+(imgSize/2)+'rem'}"></i>
             </div>
     </div>
 </template>
@@ -25,11 +26,13 @@ export default {
     props:['background','isHeadPortrait','size'],
     data: function () {
         return {
-            
+            imgSize : 1.8
         }
     },
     mounted() {
-        
+        if(this.size != undefined){
+            this.imgSize = this.size;
+        }
     },
 }
 </script>
@@ -65,6 +68,11 @@ export default {
     .iconfont{
         font-size: 200/@dev-Width *1rem;
         color:#d6d6d6;
+    }
+    i{
+        position: absolute;
+        top: 50%;
+        left: 50%;
     }
 }
 .default-img2{

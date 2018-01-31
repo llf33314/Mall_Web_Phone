@@ -8,7 +8,7 @@
         <em class="border"></em>
       </div>
       <div class="item-img">
-        <default-img :isHeadPortrait="0" :background="imgUrl+item.stoPicture"></default-img>
+        <default-img :isHeadPortrait="0" :background="imgUrl+item.stoPicture" :size="'0.8'"></default-img>
       </div>
     </div>
   </div>

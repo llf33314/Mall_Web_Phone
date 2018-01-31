@@ -19,7 +19,7 @@
                   <div class="goodsinfo-img" @click="proDetail(collect)">
                       <default-img :background="imgUrl+ collect.productImageUrl"
                                   :isHeadPortrait="0"
-                                  :size="'0.8rem'">
+                                  :size="'0.8'">
                       </default-img>
                   </div>
                   <div class="goodsinfo-text">

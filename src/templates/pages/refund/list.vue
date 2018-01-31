@@ -2,12 +2,15 @@
 <div id='app' class="shop-wrapper  order-wrapper">  
     <content-no :statu="statu" :errorMsg="errorMsg" v-if="isShowNullContent"></content-no>
     <section class="shop-main order-main" v-if="!isShowNullContent && orderList != null">
-        <div class="order-box">
+        <div class="order-box" 
+          v-infinite-scroll="getOrderList"
+          infinite-scroll-distance="200">
             <div class="order-item" v-for="(busItem,index) in orderList" :key="index">
                 <div class="order-item-title fs40" @click="jumpBus(busItem)">
                     <div class="order-title-img">
                         <default-img :background="busItem.busImageUrl"
-                                        :isHeadPortrait="1">
+                                        :isHeadPortrait="1"
+                                         :size="'0.3'">
                         </default-img>
                     </div>
                     <span>{{busItem.busName}}</span>
@@ -27,7 +30,8 @@
                         <div class="order-item-img">
                             <default-img  
                                 :background="imgUrl+detail.productImageUrl"
-                                        :isHeadPortrait="0">
+                                        :isHeadPortrait="0"
+                                         :size="'0.8'">
                             </default-img>
                         </div>
                         <div class="order-item-txt">
@@ -101,8 +105,7 @@ export default {
       bondStatu: 2,
       isShow: false,
       isShowNullContent: false,
-      background:
-        null,
+      background: null,
       busId: this.$route.params.busId || sessionStorage.getItem("busId"), //商家id
       type: 6, //查看订单类型 0查看全部订单 1待付款订单 2待发货订单 3已发货订单 4已完成订单 5 待评价 6 退款 7团购 8 秒杀
       curPage: 0, //当前页数
@@ -118,18 +121,6 @@ export default {
   mounted() {
     this.setTitle();
     let _this = this;
-    this.getOrderList({
-      curPage: 1
-    });
-    $(window).bind("scroll", function() {
-      var isScroll =
-        $(window).scrollTop() > 0 &&
-        $(window).scrollTop() >=
-          $(document).height() - $(window).height() - 1000;
-      if (isScroll) {
-        _this.loadMore();
-      }
-    });
     this.$store.commit("show_footer", false); //隐藏底部导航栏
   },
   beforeDestroy() {
@@ -139,10 +130,9 @@ export default {
   watch: {
     $route(a, b) {
       this.type = this.$route.params.type;
-      this.getOrderList({
-        curPage: 1,
-        type: this.type
-      });
+      this.isMore = 2;
+      this.curPage = 1;
+      this.getOrderList();
       this.setTitle();
     }
   },
@@ -151,30 +141,18 @@ export default {
     more
   },
   methods: {
-    loadMore() {
-      let pageCount = this.pageCount; //总页数
-      if (this.curPage >= pageCount) {
-        this.isMore = 3; //没有更多
-        return;
-      }
-      if (this.isMore == 2) {
-        return;
-      }
-      console.log("加载更多", this.isMore);
-      this.isMore = 2;
-      this.curPage++; //请求页数
-      this.getOrderList({
-        curPage: this.curPage
-      });
-    },
     getOrderList(data) {
       let _this = this;
+       if (this.isMore == 3 || this.isMore == 1) {
+        return;
+      }
+      this.isMore = 1;
       let _data = {
         busId: _this.busId, //商家id
         url: location.href, //当前页面地址
         browerType: _this.$store.state.browerType, //浏览器类型 1微信 99 其他浏览器
-        type: data.type >= 0 ? data.type : _this.type,
-        curPage: data.curPage > 0 ? data.curPage : 1
+        type: _this.type || 0,
+        curPage: this.curPage || 1
       };
       _this.ajaxRequest({
         status: false,
@@ -182,6 +160,7 @@ export default {
         data: _data,
         success: function(data) {
           if (data.code != 0) {
+            _this.isMore = 3; 
             _this.errorMsg = data.msg;
             _this.isShowNullContent = true; //有数据关闭
             return;
@@ -210,8 +189,12 @@ export default {
           _this.isShowNullContent = false;
           _this.isMore = 1;
           if (_this.curPage >= _this.pageCount) {
+            _this.isMore = 3; 
             _this.isMore = 3; //没有更多
+            return;
           }
+          _this.isMore = 2;
+          _this.curPage++; //请求页数
         }
       });
     },
@@ -267,7 +250,7 @@ export default {
       );
     },
     setTitle() {
-      this.commonFn.setTitle(this.$t('title.title_return_order_msg'));
+      this.commonFn.setTitle(this.$t("title.title_return_order_msg"));
     },
     returnXieDetail(returnId) {
       //跳转至协商详情页面
@@ -275,20 +258,20 @@ export default {
       this.$router.push("/return/consult/" + this.busId + "/" + returnId);
     },
     /**跳转到商家页面 */
-    jumpBus(e){
-      this.$router.push("/stores/"+e.busId);
+    jumpBus(e) {
+      this.$router.push("/stores/" + e.busId);
     },
     /**跳转到店铺页面 */
-    jumpShop(e){
-      this.$parent.getPageId(e.busId,e.shopId,true);
+    jumpShop(e) {
+      this.$parent.getPageId(e.busId, e.shopId, true);
     }
   }
 };
 </script>
 
 <style lang="less" scoped>
-@import  (reference) '~assets/css/base.less';
-@import  (reference) '~assets/css/mixins.less';
+@import (reference) "~assets/css/base.less";
+@import (reference) "~assets/css/mixins.less";
 
 .order-content {
   width: 100%;
@@ -432,6 +415,6 @@ export default {
   }
 }
 .more-main {
-  padding-bottom: 0px;
+  padding-bottom: 10px;
 }
 </style>

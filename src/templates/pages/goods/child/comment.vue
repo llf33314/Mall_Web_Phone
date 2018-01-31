@@ -19,7 +19,7 @@
                   <div class="comment-user-img">
                       <default-img :background="item.headimgurl"
                                     :isHeadPortrait="1" 
-                                    :size="'0.6rem'">
+                                    :size="'0.6'">
                         </default-img>
                   </div>
                   <div class="comment-user-fr">
@@ -33,7 +33,8 @@
               <div class="comment-photo scrollbar clearfix" v-if="item.is_upload_image == 1">
                   <div class="comment-img" v-for="img in item.imageList">
                     <default-img :background="imgUrl+img.imageUrl"
-                                    :isHeadPortrait="0">
+                                    :isHeadPortrait="0"
+                                    :size="'0.8'">
                     </default-img>
                   </div>
               </div>

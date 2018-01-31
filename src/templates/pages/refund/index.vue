@@ -4,7 +4,8 @@
             <section class="refund-goods clearfix" @click="toProductDetail()">
                 <div class="goods-img">
                     <default-img :background="imgUrl+myData.productImageUrl"
-                                 :isHeadPortrait="1">
+                                 :isHeadPortrait="0"
+                                 :size="'0.8'">
                     </default-img>
                 </div>
                 <div class="goods-delt">

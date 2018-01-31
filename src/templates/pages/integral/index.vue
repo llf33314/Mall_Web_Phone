@@ -19,7 +19,7 @@
       <div class="product-item" v-for="(integral , index) in integralList" :key="index" @click="toIntegralProduct(integral)">
           <div class="product-content">
             <div class="product-img">
-              <default-img :background="imgUrl+integral.image_url" :isHeadPortrait="0"></default-img>
+              <default-img :background="imgUrl+integral.image_url" :isHeadPortrait="0" :size="'0.8'"></default-img>
             </div>
             <div class="content-div">
               <p class="product-title">{{integral.pro_name}}</p>

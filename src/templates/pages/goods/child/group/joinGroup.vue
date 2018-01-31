@@ -17,7 +17,8 @@
                 </div>
                 <div class="goods-join-img">
                     <default-img :background="data.headimgurl"
-                        :isHeadPortrait="0">
+                        :isHeadPortrait="1"
+                        :size="'0.8'">
                     </default-img>
                 </div>
             </div>
@@ -170,6 +171,7 @@ export default {
     right: 0;
     border-top-right-radius: 50px;
     border-bottom-right-radius: 50px;
+    padding-left: 20/@dev-Width *1rem;
     i {
       .fs42;
     }

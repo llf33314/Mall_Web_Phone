@@ -30,14 +30,17 @@ import filters from './lib/filters.js'
 
 import 'babel-polyfill';
 
-//import MintUi from 'mint-ui'
-import { Popup } from 'mint-ui'
+import MintUi from 'mint-ui'
+// import { Popup,InfiniteScroll } from 'mint-ui'
 //webUI
 import ui from 'components/gt-webUI/index.js'
 
+Vue.use(MintUi);
 Vue.use(VueI18n);
 Vue.use(ui);
-Vue.use(Popup);
+//MintUi 组件
+// Vue.use(Popup);
+// Vue.use(InfiniteScroll);
 
 
 //消除移动端300ms延迟

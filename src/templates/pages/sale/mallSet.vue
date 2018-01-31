@@ -83,11 +83,11 @@
                 v-for="(pro,index) in sellerProList" :key="index">
                     <div class="pro-div">
                         <div class="img-div">
-                            <default-img :background="imgUrl+pro.image_url" :isHeadPortrait="0"></default-img>
+                            <default-img :background="pro.image_url" :isHeadPortrait="0" :size="'1'"></default-img>
                         </div>
                         <div class="fs0 right-div">
                             <p class="fs40">{{pro.pro_name}}</p>
-                            <p class="fs34">价格：￥{{pro.pro_price | moneySplit1}}.<em class="fs30">{{pro.pro_price | moneySplit2 }}</em></p>
+                            <p class="fs34">价格：￥{{pro.pro_price || pro.price | moneySplit1}}.<em class="fs30">{{pro.pro_price || pro.price | moneySplit2 }}</em></p>
                         </div>
                     </div>
                     <div class="pro-div-right " @click="deletePro(index,pro,false)">
@@ -104,7 +104,7 @@
 <script>
 import headerNav from "./setchlid/headerNav";
 import imgUpload from "components/imgUpload";
-import filte from "@/lib/filters";
+//import filte from "@/lib/filters";
 export default {
   data() {
     return {

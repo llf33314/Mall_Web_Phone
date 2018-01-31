@@ -3,12 +3,15 @@
     <header-nav :headers= "homeNav" v-if="homeNav != null && homeNav.length > 0 && isShowNav" :status="'order'"></header-nav>  
     <content-no :statu="statu" :errorMsg="errorMsg" v-if="isShowNullContent"></content-no>
     <section class="shop-main order-main" v-if="!isShowNullContent && orderList != null" :class="{'order-main2' : !isShowNav ,'padding-bottom-clear' : !$store.state.isShowFooter}">
-        <div class="order-box">
+        <div class="order-box" 
+          v-infinite-scroll="getOrderList"
+          infinite-scroll-distance="100">
             <div class="order-item" v-for="(busItem,index) in orderList" :key="index">
                 <div class="order-item-title fs40" @click="jumpBus(busItem)">
                     <div class="order-title-img">
                         <default-img :background="busItem.busImageUrl"
-                                        :isHeadPortrait="1">
+                                        :isHeadPortrait="1"
+                                        :size="'0.3'">
                         </default-img>
                     </div>
                     <span>{{busItem.busName}}</span>
@@ -28,7 +31,8 @@
                         <div class="order-item-img">
                             <default-img  
                                 :background="imgUrl+detail.productImageUrl"
-                                        :isHeadPortrait="0">
+                                        :isHeadPortrait="0" 
+                                        :size="'0.8'">
                             </default-img>
                         </div>
                         <div class="order-item-txt">
@@ -42,13 +46,13 @@
                     <div class="order-item-button fs42 border"  v-if="detail.isShowApplyReturnButton == 1 || detail.isShowCommentButton == 1 ">
                         <div class="order-button shop-bg" 
                             v-if="detail.isShowApplyReturnButton == 1"
-                            @click="returnApplyReturn(detail.orderDetailId)">
-                            申请退款
+                            @click="returnApplyReturn(detail.orderDetailId)"
+                            >申请退款
                         </div>
                         <div class="order-button shop-bg"
                             v-if="detail.isShowCommentButton == 1"
-                            @click="returnToComment(detail.orderDetailId,busItem.busId)">
-                            去评论
+                            @click="returnToComment(detail.orderDetailId,busItem.busId)"
+                            >去评论
                         </div>
                     </div>
                 </div>
@@ -75,18 +79,18 @@
                 <div class="order-item-button fs42"  v-if="busItem.isShowGoPayButton == 1 || busItem.isShowReceiveGoodButton == 1 || busItem.isShowDaifuButton == 1">
                     <div class="order-button shop-bg" 
                         v-if="busItem.isShowGoPayButton == 1"
-                        @click="returnToPay(busItem)">
-                        去支付
+                        @click="returnToPay(busItem)"
+                        >去支付
                     </div>
                     <div class="order-button shop-bg"
                         v-if="busItem.isShowReceiveGoodButton == 1"
-                        @click="sure_dialog(busItem.orderId)">
-                        确定收货
+                        @click="sure_dialog(busItem.orderId)"
+                        >确定收货
                     </div>
                     <div class="order-button shop-bg" 
                         v-if="busItem.isShowDaifuButton == 1"
-                        @click="returnDaifu(busItem.orderId,busItem.busId)">
-                        代付详情
+                        @click="returnDaifu(busItem.orderId,busItem.busId)"
+                        >代付详情
                     </div>
                 </div>
                 <!-- <div class="order-item-button fs42">
@@ -140,7 +144,7 @@ export default {
       isShowNullContent: false,
       background: null,
       busId: this.$route.params.busId || sessionStorage.getItem("busId"), //商家id
-      type: this.$route.params.type, //查看订单类型 0查看全部订单 1待付款订单 2待发货订单 3已发货订单 4已完成订单 5 待评价 6 退款 7团购 8 秒杀
+      type: this.$route.params.type || 0, //查看订单类型 0查看全部订单 1待付款订单 2待发货订单 3已发货订单 4已完成订单 5 待评价 6 退款 7团购 8 秒杀
       curPage: 0, //当前页数
       pageCount: 1, //页面总数
       orderId: 0, //订单id
@@ -148,25 +152,12 @@ export default {
       isMore: 2, //控制没有更多的显示 1 未加载；2 加载中 ；3 没有更多了；4 出错了
       imgUrl: "", //图片域名
       errorMsg: "", //错误提示语
-      clickOrderId: "" //点击事件保存的订单id
+      clickOrderId: "" ,//点击事件保存的订单id
     };
   },
   mounted() {
     let _this = this;
-    this.getOrderList({
-      curPage: 1
-    });
-    $(window).bind("scroll", function() {
-      var isScroll =
-        $(window).scrollTop() > 0 &&
-        $(window).scrollTop() >=
-          $(document).height() - $(window).height() - 1000;
-      if (isScroll) {
-        _this.loadMore();
-      }
-    });
     _this.setTitle();
-    console.log("this.homeNav", this.homeNav);
     if (this.homeNav != null && this.homeNav.length > 0) {
       for (let i = 0; i < this.homeNav.length; i++) {
         let navs = this.homeNav[i];
@@ -180,10 +171,9 @@ export default {
   watch: {
     $route(a, b) {
       this.type = this.$route.params.type;
-      this.getOrderList({
-        curPage: 1,
-        type: this.type
-      });
+      this.isMore = 2;
+      this.curPage = 1;
+      this.getOrderList();
       this.setTitle();
     }
   },
@@ -197,31 +187,18 @@ export default {
     this.isMore = -1;
   },
   methods: {
-    loadMore() {
-      let pageCount = this.pageCount; //总页数
-      if (this.curPage >= pageCount) {
-        this.isMore = 3; //没有更多
-        return;
-      }
-      if (this.isMore == 2) {
-        return;
-      }
-      this.curPage++; //请求页数
-      this.isMore = 2;
-      // console.log("加载更多");
-      this.getOrderList({
-        curPage: this.curPage
-      });
-      this.setTitle();
-    },
-    getOrderList(data) {
+    getOrderList() {
       let _this = this;
+      if (this.isMore == 3 || this.isMore == 1) {
+        return;
+      }
+      this.isMore = 1;
       let _data = {
         busId: _this.busId, //商家id
         url: location.href, //当前页面地址
         browerType: _this.$store.state.browerType, //浏览器类型 1微信 99 其他浏览器
-        type: data.type >= 0 ? data.type : _this.type,
-        curPage: data.curPage > 0 ? data.curPage : 1
+        type: _this.type,
+        curPage: _this.curPage
       };
       _this.ajaxRequest({
         status: false,
@@ -229,6 +206,7 @@ export default {
         data: _data,
         success: function(data) {
           if (data.code != 0) {
+            _this.isMore = 3; 
             _this.errorMsg = data.msg;
             _this.isShowNullContent = true; //有数据关闭
             return;
@@ -255,17 +233,14 @@ export default {
             _this.orderList = _this.orderList.concat(newOrderList) || []; //拼接多页数据
           }
           _this.isShowNullContent = false;
-          _this.isMore = 1;
           if (_this.curPage >= _this.pageCount) {
             _this.isMore = 3; //没有更多
+            return;
           }
+          _this.isMore = 2;
+          _this.curPage++; //请求页数
         }
       });
-    },
-    order_ulShow() {
-      $(".orderTotal-ul").toggleClass("shop-hide");
-      $(".icon-up").toggleClass("shop-hide");
-      $(".icon-jiantou").toggleClass("shop-hide");
     },
     sure_dialog(orderId) {
       this.showConfirmDialogs(orderId);
@@ -469,6 +444,6 @@ export default {
   }
 }
 .more-main {
-  padding-bottom: 0px;
+  padding-bottom: 20px;
 }
 </style>

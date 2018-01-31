@@ -12,11 +12,9 @@
 </template>
 
 <script>
-
 export default {
   props: ["row", "qrcodeUrl"],
-  components: {
-  },
+  components: {},
   watch: {
     row(a, b) {
       this.data = a;
@@ -50,6 +48,17 @@ export default {
 };
 </script>
 
-<style>
-
+<style lang="less" scoped>
+@import (reference) "~assets/css/base.less";
+@import (reference) "~assets/css/mixins.less";
+.goods-content-nav {
+  position: relative;
+}
+.goods-nav {
+  text-align: center;
+  padding: 30/@dev-Width *1rem 0;
+  span {
+    padding: 20/@dev-Width *1rem;
+  }
+}
 </style>

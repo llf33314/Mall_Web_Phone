@@ -38,6 +38,20 @@ export default {
 }
 </script>
 
-<style>
-
+<style  lang="less" scoped>
+@import (reference) "~assets/css/base.less";
+@import (reference) "~assets/css/mixins.less";
+ .goods-prove {
+    padding: 48/@dev-Width *1rem 30/@dev-Width *1rem;
+    line-height: 1;
+    span {
+      margin-right: 30/@dev-Width *1rem;
+    }
+    i {
+      font-size: 48/@dev-Width *1rem;
+      font-weight: bold;
+      margin-right: 3px;
+      vertical-align: -0.02rem;
+    }
+  }
 </style>

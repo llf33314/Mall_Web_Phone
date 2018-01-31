@@ -1,9 +1,9 @@
 <template>
    <section class="shop-main fs40 my-add">
        <div class="address-div-2" :class="{'rose_div':roseColor != null}">
-            <div class="shop-add-itme-1 fs36" itmeid="1" v-if="addressArr != null && addressArr.length > 0"
+            <div class="shop-add-itme-1 fs36 border" itmeid="1" v-if="addressArr != null && addressArr.length > 0"
                 v-for="(address,index) in addressArr" :key="index">
-                <div class="shop-add-txt border clearfix shop-box-center">
+                <div class="shop-add-txt clearfix shop-box-center">
                     <div class="i-add-left"  @click="defaultAddress(address.memberId,address,index)">
                       <i class="iconfont icon-yes fs52" :class="[address.memberDefault == 1?'shop-pink':'shop-gray' ] "></i>
                     </div>
@@ -16,10 +16,10 @@
                             <i class="iconfont icon-bianji"></i>
                             编辑
                           </span>
-                          <span  @click="deleteItme($event)">
+                          <!-- <span  @click="deleteItme($event)">
                               <i class="iconfont icon-shanchu"></i>
                               删除
-                          </span>
+                          </span> -->
                         </div>
                       </div>
                         
@@ -32,11 +32,13 @@
             <section class="shop-main-no fs40 my-bond" v-if="isShow">
                 <content-no :statu='4' :errorMsg="error"></content-no>
             </section>
-            <div class="bottom-div clearfix">
-              <div  class="address-add-button fs52"  @click="submitIntegralData">
-                立即兑换
+            <section class="bottom-div-fixed">
+              <div class="bottom-div clearfix">
+                <div  class="address-add-button fs52"  @click="submitIntegralData">
+                  立即兑换
+                </div>
               </div>
-            </div>
+            </section>
        </div>
     </section>
 </template>
@@ -190,11 +192,10 @@ export default {
 @import "../../../assets/css/base.less";
 .shop-main {
   background: #fff;
-  height: 100%;
+  min-height: 100%;
   .shop-add-itme-1 {
     height: 250/@dev-Width *1rem;
     padding: 50/@dev-Width *1rem 19/@dev-Width *1rem 55/@dev-Width *1rem 76/@dev-Width *1rem;
-
     .i-add-left {
       width: 4%;
       text-align: right;
@@ -235,22 +236,27 @@ export default {
   margin-bottom: 10/@dev-Width *1rem;
 }
 .address-div-2 {
-  padding-bottom: 135 /@dev-Width *1rem;
-  .bottom-div {
+  padding-bottom: 300 /@dev-Width *1rem;
+  .bottom-div-fixed {
     position: fixed;
-    bottom: 160/@dev-Width *1rem;
+    bottom: 0;
+    padding-bottom: 160/@dev-Width *1rem;
     width: 100%;
-    padding: 0 50/@dev-Width *1rem;
-    .address-add-button {
+    background: #fff;
+    .bottom-div {
       width: 100%;
-      height: 146 /@dev-Width *1rem;
-      line-height: 146 /@dev-Width *1rem;
-      text-align: center;
-      .border-radius(5px);
-      .fs52 {
-        font-size: 52 /@dev-Width *1rem;
-        font-weight: bold;
-        margin-right: 20 /@dev-Width *1rem;
+      padding: 0 50/@dev-Width *1rem;
+      .address-add-button {
+        width: 100%;
+        height: 146 /@dev-Width *1rem;
+        line-height: 146 /@dev-Width *1rem;
+        text-align: center;
+        .border-radius(5px);
+        .fs52 {
+          font-size: 52 /@dev-Width *1rem;
+          font-weight: bold;
+          margin-right: 20 /@dev-Width *1rem;
+        }
       }
     }
   }

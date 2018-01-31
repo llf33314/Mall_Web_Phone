@@ -37,6 +37,40 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="less" scoped>
+@import (reference) "~assets/css/base.less";
+@import (reference) "~assets/css/mixins.less";
+@import (reference) "~assets/css/common.less";
+.goods-auction {
+    width: 100%;
+    padding-left: 30/@dev-Width *1rem;
+    .goods-auction-title {
+      padding: 35/@dev-Width *1rem 0;
+      padding-right: 30/@dev-Width *1rem;
+      .shop-box-center;
+      span {
+        .shop-show;
+      }
+    }
+    .goods-auction-rule {
+      width: 100%;
+      padding: 46/@dev-Width *1rem 0;
+      text-align: center;
+      .fs36;
+      span {
+        margin: 0 3px;
+      }
+      em {
+        .shop-inblock;
+        .fs40;
+        width: 50/@dev-Width *1rem;
+        height: 50/@dev-Width *1rem;
+        line-height: 50/@dev-Width *1rem;
+        background: #e4393c;
+        color: #fff;
+        margin-right: 2px;
+        .border-radius(100%);
+      }
+    }
+  }
 </style>

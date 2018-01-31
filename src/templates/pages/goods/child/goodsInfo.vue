@@ -140,6 +140,44 @@ export default {
 };
 </script>
 
-<style>
-
+<style lang="less" scoped>
+@import (reference) "~assets/css/base.less";
+@import (reference) "~assets/css/mixins.less";
+@import (reference) "~assets/css/common.less";
+.goods-info {
+  width: 100%;
+  padding: 30/@dev-Width *1rem 46/@dev-Width *1rem;
+  .goods-info-money {
+    margin: 15/@dev-Width *1rem 0;
+    .shopGray {
+      margin-left: 20/@dev-Width *1rem;
+    }
+  }
+  .goods-bottom {
+    width: 100%;
+    padding-top: 5px;
+  }
+  .goods-info-other {
+    .ik-box;
+    .ik-box-pack(justify);
+    margin-top: 5px;
+    & > span {
+      display: block;
+    }
+    .goods-info-time {
+      span {
+        color: #333333;
+        margin: 3px;
+      }
+      em {
+        font-size: 32/@dev-Width *1rem;
+        display: inline-block;
+        background: #ffcc00;
+        color: #333333;
+        padding: 1px 2px;
+        .border-radius(3px);
+      }
+    }
+  }
+}
 </style>

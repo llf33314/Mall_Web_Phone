@@ -217,7 +217,7 @@
                 <div class="goods-dialog-img" @click="showImage(imgUrl+dialogData.specifica_img_url)">
                     <default-img :background="imgUrl+dialogData.specifica_img_url"
                         :isHeadPortrait="0"
-                        :size="'0.8rem'">
+                        :size="'0.8'">
                     </default-img>
                 </div>
                 <div class="goods-dialog-txt">
@@ -314,7 +314,7 @@
                 <div class="goods-dialog-img">
                     <default-img :background="imgUrl+w_dialogData.specifica_img_url"
                         :isHeadPortrait="0"
-                        :size="'0.8rem'">
+                        :size="'0.8'">
                     </default-img>
                 </div>
                 <div class="goods-dialog-txt">
@@ -558,15 +558,15 @@ export default {
       webPath: "",
       goodsData: {
         auctionResult: null,
-        productPrice: 0.00,
-        imageList:[{ imageUrl : ""}]
+        productPrice: 0.0,
+        imageList: [{ imageUrl: "" }]
       },
       pifaResult: {
         pfSetObj: {}
       }, //批发数据
       imgSelecte: 0,
       type: 0,
-      activityId:  this.$route.params.activityId || 0,//活动id
+      activityId: this.$route.params.activityId || 0, //活动id
       isProductCode: false, //商品编号,
       guigePrice: "", //规格集合分类
       specificaList: "", //规格集合
@@ -601,14 +601,14 @@ export default {
       flag: false,
       //newDialogData:'',
       arrDialog: "",
-      isShowButtom:false,//是否显示底部菜单
-      chujiaMoney : 0,//出价金额
-      saleMemberId:0,//销售员id
-      toShop : 0,//到店购买  1到店购买
-      isPhoto:"",
-      dialogImageUrl:"",//弹出框图片地址
-      isError: false,//商品是否出错 true 没有出错  false 出错
-      view:''//show 预览
+      isShowButtom: false, //是否显示底部菜单
+      chujiaMoney: 0, //出价金额
+      saleMemberId: 0, //销售员id
+      toShop: 0, //到店购买  1到店购买
+      isPhoto: "",
+      dialogImageUrl: "", //弹出框图片地址
+      isError: false, //商品是否出错 true 没有出错  false 出错
+      view: "" //show 预览
     };
   },
   watch: {
@@ -665,21 +665,24 @@ export default {
       console.log(this.isShow);
       // debugger
       // if(!this.isSoldOut) return;
-      if(!this.isError){
+      if (!this.isError) {
         this.$store.commit("error_msg", "暂不能选规格");
         return;
       }
-      if(this.goodsData != null){
+      if (this.goodsData != null) {
         let presale = this.goodsData.presaleResult;
-        if(presale != null){
-          if(presale.isShowWeiMoneyButton != null && presale.isShowWeiMoneyButton == 1){
-            let msg ={
-              btnNum: 1 ,//按钮显示个数
-              btnOne: '确定',//按钮文字
-              dialogTitle:'预售提醒',
-              dialogMsg: '您已经交纳了定金，不能更改规格',
-            }
-            this.$parent.$refs.dialog.showDialog(msg);//调用方法
+        if (presale != null) {
+          if (
+            presale.isShowWeiMoneyButton != null &&
+            presale.isShowWeiMoneyButton == 1
+          ) {
+            let msg = {
+              btnNum: 1, //按钮显示个数
+              btnOne: "确定", //按钮文字
+              dialogTitle: "预售提醒",
+              dialogMsg: "您已经交纳了定金，不能更改规格"
+            };
+            this.$parent.$refs.dialog.showDialog(msg); //调用方法
             return;
           }
         }
@@ -695,18 +698,18 @@ export default {
       let activityId = _this.$route.params.activityId;
       activityId == "undefined" ? (activityId = 0) : activityId;
       let _data = {
-          url: _this.$store.state.loginDTO_URL,
-          browerType: _this.$store.state.browerType,
-          ucLogin: 1,//不需要登陆
-          shopId: _this.$store.state.shopId,
-          busId: _this.$store.state.busId,
-          productId: _this.$route.params.goodsId,
-          type: _this.$route.params.type,
-          activityId: activityId,
-          toShop: _this.toShop || 0,
-          view: _this.view || ''
-        };
-      if(this.saleMemberId != null && this.saleMemberId > 0){
+        url: _this.$store.state.loginDTO_URL,
+        browerType: _this.$store.state.browerType,
+        ucLogin: 1, //不需要登陆
+        shopId: _this.$store.state.shopId,
+        busId: _this.$store.state.busId,
+        productId: _this.$route.params.goodsId,
+        type: _this.$route.params.type,
+        activityId: activityId,
+        toShop: _this.toShop || 0,
+        view: _this.view || ""
+      };
+      if (this.saleMemberId != null && this.saleMemberId > 0) {
         _data.saleMemberId = this.saleMemberId;
       }
       this.ajaxRequest({
@@ -726,15 +729,19 @@ export default {
           _this.path = data.path;
           _this.imgUrl = data.imgUrl;
           _this.webPath = data.webPath;
-          if(_this.goodsData.productError != null && _this.goodsData.productError > 0){//商品未上架或未发布
+          if (
+            _this.goodsData.productError != null &&
+            _this.goodsData.productError > 0
+          ) {
+            //商品未上架或未发布
             _this.isSoldOut = true;
             _this.SoldOut = _this.goodsData.productErrorMsg;
             _this.isError = false;
           }
-          if(_this.goodsData.type == 0){
+          if (_this.goodsData.type == 0) {
             _this.type = 0;
           }
-          if(_this.goodsData.activityId == 0){
+          if (_this.goodsData.activityId == 0) {
             _this.activityId = 0;
             activityId = 0;
           }
@@ -751,7 +758,9 @@ export default {
             //批发状态
             let _pfStatus = data.data.pifaResult.pfStatus;
             _this.pifaResult = data.data.pifaResult;
-            _pfStatus < 0 ? (_this.w_pfStatus = false) : (_this.w_pfStatus = true);
+            _pfStatus < 0
+              ? (_this.w_pfStatus = false)
+              : (_this.w_pfStatus = true);
           }
           //商品详情请求
           _this.detailsAjax();
@@ -821,7 +830,6 @@ export default {
             ? (_this.spec_num = 0)
             : (_this.spec_num = 1);
           //console.log(_this.dialogData,'dialogData无规格');
-          
         }
       });
     },
@@ -1189,7 +1197,8 @@ export default {
          */
     choice_product(e, id) {
       let _this = this;
-      let specs = [], invid;
+      let specs = [],
+        invid;
 
       if (id) {
         _this.wholesaleId = id;
@@ -1197,12 +1206,16 @@ export default {
 
       if (e) {
         //获取选中值 存成数组
-        $(e.target).siblings().removeClass("shop-bg");
+        $(e.target)
+          .siblings()
+          .removeClass("shop-bg");
         $(e.target).addClass("shop-bg");
       }
       for (var i = 0; i < $(".js-specValue .shop-bg").length; i++) {
         specs.push(
-          $(".js-specValue .shop-bg").eq(i).attr("value")
+          $(".js-specValue .shop-bg")
+            .eq(i)
+            .attr("value")
         );
       }
       //获取选中值的规格集合
@@ -1235,7 +1248,7 @@ export default {
         busId: _this.$store.state.busId,
         url: _this.$store.state.loginDTO_URL,
         browerType: _this.$store.state.browerType,
-        ucLogin: 1,//不需要登陆
+        ucLogin: 1, //不需要登陆
         productId: _this.$route.params.goodsId
       };
       if (c === 1) {
@@ -1259,11 +1272,13 @@ export default {
         ajaxdata.productNum = _this.pifaAmount;
         ajaxdata.price = _this.goodsData.pfPrice;
       }
-     if(_this.saleMemberId != null){//销售员id
-				ajaxdata.saleMemberId = _this.saleMemberId;
-			}
-			if(_this.dialogData.commissionMoney != null){//佣金
-				ajaxdata.commission = _this.dialogData.commissionMoney;
+      if (_this.saleMemberId != null) {
+        //销售员id
+        ajaxdata.saleMemberId = _this.saleMemberId;
+      }
+      if (_this.dialogData.commissionMoney != null) {
+        //佣金
+        ajaxdata.commission = _this.dialogData.commissionMoney;
       }
       if (_this.dialogData.xsid != null) {
         ajaxdata.productSpecificas = _this.dialogData.xsid;
@@ -1313,34 +1328,35 @@ export default {
       this.$router.push("/cart/" + shopId + "/" + busId + "/0");
     },
     //跳转到我要分享的页面
-    sellerShare(){
+    sellerShare() {
       let busId = this.$route.params.busId;
-      let proId =  this.$route.params.goodsId;
-      this.$router.push("/seller/share/"+busId+"/"+proId+"/"+this.saleMemberId);
+      let proId = this.$route.params.goodsId;
+      this.$router.push(
+        "/seller/share/" + busId + "/" + proId + "/" + this.saleMemberId
+      );
     },
-    showImage(image){
+    showImage(image) {
       // this.$refs.goodsFooter.showDialog();
       this.dialogImageUrl = image;
       this.isPhoto = true;
     },
     //进入QQ客服聊天页面
-    ToQQ(){
-     window.location.href =
+    ToQQ() {
+      window.location.href =
         "http://wpa.qq.com/msgrd?v=3&amp;uin=&amp;site=" +
         this.$store.state.QQ +
         "&amp;menu=yes";
     },
     // type 1   查看店铺其他商品  2 查看其他店铺商品
-    toJumpShop(type){
+    toJumpShop(type) {
       let busId = this.$route.params.busId;
-      let shopId =  this.$route.params.shopId;
-      if(type == 1){
-        this.$router.push("/classify/"+shopId+"/"+busId+"/0/0");
-      }else if(type == 2){
-        this.$router.push("/stores/"+busId);
+      let shopId = this.$route.params.shopId;
+      if (type == 1) {
+        this.$router.push("/classify/" + shopId + "/" + busId + "/0/0");
+      } else if (type == 2) {
+        this.$router.push("/stores/" + busId);
       }
     }
-    
   },
   beforeDestroy() {
     this.$store.commit("show_footer", true);
@@ -1349,19 +1365,19 @@ export default {
     // this.$parent.getShopStyle(this.$route.params.busId);
     // console.log(this.$route,'this.$route')
     let desc = this.$route.params.toShop;
-    if(desc != null){
+    if (desc != null) {
       let str = desc.split("-");
-      if(str != null && str.length > 0){
-        if(str[0] != null && str[0] != ''){
+      if (str != null && str.length > 0) {
+        if (str[0] != null && str[0] != "") {
           this.toShop = str[0];
         }
-        if(str.length >= 2 && str[1] != null && str[1] != ''){
+        if (str.length >= 2 && str[1] != null && str[1] != "") {
           this.view = str[1];
         }
       }
     }
     let saleMemberId = this.$route.params.saleMemberId;
-    if(this.commonFn.isNotNull(saleMemberId) && saleMemberId > 0){
+    if (this.commonFn.isNotNull(saleMemberId) && saleMemberId > 0) {
       this.saleMemberId = saleMemberId;
       this.$parent.setSaleMemberId(saleMemberId);
     }
@@ -1374,7 +1390,6 @@ export default {
     this.type = this.$route.params.type;
     this.isShowButtom = true;
 
-
     //清空提交订单的参数
     this.$store.commit("img_url", null);
     this.$store.commit("orderData_change", null);
@@ -1382,10 +1397,10 @@ export default {
 };
 </script>
 
-<style lang="less" >
-@import  '~assets/css/base.less';
-@import  '~assets/css/mixins.less';
-@import  '~assets/css/common.less';
+<style lang="less" scoped>
+@import "~assets/css/base.less";
+@import "~assets/css/mixins.less";
+@import "~assets/css/common.less";
 .goods-wrapper {
   width: 100%;
   position: relative;
@@ -1398,42 +1413,42 @@ export default {
     padding-bottom: 168/@dev-Width *1rem;
   }
 
-  .goods-info {
-    width: 100%;
-    padding: 30/@dev-Width *1rem 46/@dev-Width *1rem;
-    .goods-info-money {
-      margin: 15/@dev-Width *1rem 0;
-      .shopGray {
-        margin-left: 20/@dev-Width *1rem;
-      }
-    }
-    .goods-bottom {
-      width: 100%;
-      padding-top: 5px;
-    }
-    .goods-info-other {
-      .ik-box;
-      .ik-box-pack(justify);
-      margin-top: 5px;
-      & > span {
-        display: block;
-      }
-      .goods-info-time {
-        span {
-          color: #333333;
-          margin: 3px;
-        }
-        em {
-          font-size: 32/@dev-Width *1rem;
-          display: inline-block;
-          background: #ffcc00;
-          color: #333333;
-          padding: 1px 2px;
-          .border-radius(3px);
-        }
-      }
-    }
-  }
+  // .goods-info {
+  //   width: 100%;
+  //   padding: 30/@dev-Width *1rem 46/@dev-Width *1rem;
+  //   .goods-info-money {
+  //     margin: 15/@dev-Width *1rem 0;
+  //     .shopGray {
+  //       margin-left: 20/@dev-Width *1rem;
+  //     }
+  //   }
+  //   .goods-bottom {
+  //     width: 100%;
+  //     padding-top: 5px;
+  //   }
+  //   .goods-info-other {
+  //     .ik-box;
+  //     .ik-box-pack(justify);
+  //     margin-top: 5px;
+  //     & > span {
+  //       display: block;
+  //     }
+  //     .goods-info-time {
+  //       span {
+  //         color: #333333;
+  //         margin: 3px;
+  //       }
+  //       em {
+  //         font-size: 32/@dev-Width *1rem;
+  //         display: inline-block;
+  //         background: #ffcc00;
+  //         color: #333333;
+  //         padding: 1px 2px;
+  //         .border-radius(3px);
+  //       }
+  //     }
+  //   }
+  // }
   .goods-selected {
     width: 100%;
     padding: 30/@dev-Width *1rem 22/@dev-Width *1rem 30/@dev-Width *1rem 46/@dev-Width *1rem;
@@ -1447,123 +1462,123 @@ export default {
       }
     }
   }
-  .goods-address {
-    width: 100%;
-    padding-left: 46/@dev-Width *1rem;
-    .goods-address-main {
-      width: 100%;
-      padding: 30/@dev-Width *1rem 0;
-      .goods-address-txt {
-        width: 94%;
-        // float: left;
-      }
-      .shopGray {
-        color: #c7c7cc;
-      }
-    }
-    .goods-address-postage {
-      padding: 30/@dev-Width *1rem 0;
-    }
-  }
-  .goods-prove {
-    padding: 48/@dev-Width *1rem 30/@dev-Width *1rem;
-    line-height: 1;
-    span {
-      margin-right: 30/@dev-Width *1rem;
-    }
-    i {
-      font-size: 48/@dev-Width *1rem;
-      font-weight: bold;
-      margin-right: 3px;
-      vertical-align: -0.02rem;
-    }
-  }
-  .goods-shop {
-    padding: 28/@dev-Width *1rem 30/@dev-Width *1rem;
-    .goods-shop-main {
-      width: 100%;
-      .goods-shop-info {
-        float: left;
-        width: 63%;
-      }
-      .goods-shop-rigtn {
-        float: right;
-        width: 37%;
-        height: 158/@dev-Width *1rem;
-        
-        .ik-box;
-        .ik-box-align(center);
-        .ik-box-pack(right);
-        .goods-shop-buttom {
-          letter-spacing: 1px;
-          display: block;
-          .border-radius(3px);
-          padding: 5px 3px;
-          margin-left: 10/@dev-Width *1rem;
-        }
-      }
-      .goods-shop-img {
-        vertical-align: 0.4rem;
-        display: inline-block;
-        width: 88/@dev-Width *1rem;
-        height: 88/@dev-Width *1rem;
-        background-size: cover;
-        .border-radius(100%);
-        overflow: hidden;
-      }
-      .goods-shop-txt {
-        display: inline-block;
-        width: 82%;
-        margin-left: 25 /@dev-Width *1rem;
-        .goods-shop-name {
-          margin-bottom: 30 /@dev-Width *1rem;
-        }
-        span {
-          max-width: 74%;
-          display: inline-block;
-          vertical-align: -2px;
-        }
-        .goods-shop-km {
-          width: 33%;
-        }
-        .goods-shop-tel {
-          width: 64%;
-        }
-      }
-    }
-  }
-  .goods-auction {
-    width: 100%;
-    padding-left: 30/@dev-Width *1rem;
-    .goods-auction-title {
-      padding: 35/@dev-Width *1rem 0;
-      padding-right: 30/@dev-Width *1rem;
-      .shop-box-center;
-      span {
-        .shop-show;
-      }
-    }
-    .goods-auction-rule {
-      width: 100%;
-      padding: 46/@dev-Width *1rem 0;
-      text-align: center;
-      .fs36;
-      span {
-        margin: 0 3px;
-      }
-      em {
-        .shop-inblock;
-        .fs40;
-        width: 50/@dev-Width *1rem;
-        height: 50/@dev-Width *1rem;
-        line-height: 50/@dev-Width *1rem;
-        background: #e4393c;
-        color: #fff;
-        margin-right: 2px;
-        .border-radius(100%);
-      }
-    }
-  }
+  // .goods-address {
+  //   width: 100%;
+  //   padding-left: 46/@dev-Width *1rem;
+  //   .goods-address-main {
+  //     width: 100%;
+  //     padding: 30/@dev-Width *1rem 0;
+  //     .goods-address-txt {
+  //       width: 94%;
+  //       // float: left;
+  //     }
+  //     .shopGray {
+  //       color: #c7c7cc;
+  //     }
+  //   }
+  //   .goods-address-postage {
+  //     padding: 30/@dev-Width *1rem 0;
+  //   }
+  // }
+  // .goods-prove {
+  //   padding: 48/@dev-Width *1rem 30/@dev-Width *1rem;
+  //   line-height: 1;
+  //   span {
+  //     margin-right: 30/@dev-Width *1rem;
+  //   }
+  //   i {
+  //     font-size: 48/@dev-Width *1rem;
+  //     font-weight: bold;
+  //     margin-right: 3px;
+  //     vertical-align: -0.02rem;
+  //   }
+  // }
+  // .goods-shop {
+  //   padding: 28/@dev-Width *1rem 30/@dev-Width *1rem;
+  //   .goods-shop-main {
+  //     width: 100%;
+  //     .goods-shop-info {
+  //       float: left;
+  //       width: 63%;
+  //     }
+  //     .goods-shop-rigtn {
+  //       float: right;
+  //       width: 37%;
+  //       height: 158/@dev-Width *1rem;
+
+  //       .ik-box;
+  //       .ik-box-align(center);
+  //       .ik-box-pack(right);
+  //       .goods-shop-buttom {
+  //         letter-spacing: 1px;
+  //         display: block;
+  //         .border-radius(3px);
+  //         padding: 5px 3px;
+  //         margin-left: 10/@dev-Width *1rem;
+  //       }
+  //     }
+  //     .goods-shop-img {
+  //       vertical-align: 0.4rem;
+  //       display: inline-block;
+  //       width: 88/@dev-Width *1rem;
+  //       height: 88/@dev-Width *1rem;
+  //       background-size: cover;
+  //       .border-radius(100%);
+  //       overflow: hidden;
+  //     }
+  //     .goods-shop-txt {
+  //       display: inline-block;
+  //       width: 82%;
+  //       margin-left: 25 /@dev-Width *1rem;
+  //       .goods-shop-name {
+  //         margin-bottom: 30 /@dev-Width *1rem;
+  //       }
+  //       span {
+  //         max-width: 74%;
+  //         display: inline-block;
+  //         vertical-align: -2px;
+  //       }
+  //       .goods-shop-km {
+  //         width: 33%;
+  //       }
+  //       .goods-shop-tel {
+  //         width: 64%;
+  //       }
+  //     }
+  //   }
+  // }
+  // .goods-auction {
+  //   width: 100%;
+  //   padding-left: 30/@dev-Width *1rem;
+  //   .goods-auction-title {
+  //     padding: 35/@dev-Width *1rem 0;
+  //     padding-right: 30/@dev-Width *1rem;
+  //     .shop-box-center;
+  //     span {
+  //       .shop-show;
+  //     }
+  //   }
+  //   .goods-auction-rule {
+  //     width: 100%;
+  //     padding: 46/@dev-Width *1rem 0;
+  //     text-align: center;
+  //     .fs36;
+  //     span {
+  //       margin: 0 3px;
+  //     }
+  //     em {
+  //       .shop-inblock;
+  //       .fs40;
+  //       width: 50/@dev-Width *1rem;
+  //       height: 50/@dev-Width *1rem;
+  //       line-height: 50/@dev-Width *1rem;
+  //       background: #e4393c;
+  //       color: #fff;
+  //       margin-right: 2px;
+  //       .border-radius(100%);
+  //     }
+  //   }
+  // }
   .goods-content {
     width: 100%;
     // padding-bottom: 1.05333333rem;
@@ -1737,7 +1752,7 @@ export default {
             .ik-box-pack(end);
             width: 30%;
           }
-          .spec_div{
+          .spec_div {
             max-width: 25%;
           }
         }

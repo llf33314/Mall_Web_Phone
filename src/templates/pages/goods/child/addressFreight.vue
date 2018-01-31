@@ -36,6 +36,25 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="less" scoped>
+@import (reference) "~assets/css/base.less";
+@import (reference) "~assets/css/mixins.less";
+.goods-address {
+    width: 100%;
+    padding-left: 46/@dev-Width *1rem;
+    .goods-address-main {
+      width: 100%;
+      padding: 30/@dev-Width *1rem 0;
+      .goods-address-txt {
+        width: 94%;
+        // float: left;
+      }
+      .shopGray {
+        color: #c7c7cc;
+      }
+    }
+    .goods-address-postage {
+      padding: 30/@dev-Width *1rem 0;
+    }
+  }
 </style>

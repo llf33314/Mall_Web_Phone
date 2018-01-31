@@ -125,7 +125,7 @@ export default {
     font-size: 0;
     position: absolute;
     bottom: 5%;
-    z-index: 1;
+    z-index: 5;
     i {
       display: inline-block;
       width: 8px;

@@ -6,7 +6,7 @@
             <div class="goods-img">
                 <default-img  :background="imgUrl+productObj.productImageUrl"
                               :isHeadPortrait="0"
-                              :size="'0.8rem'">
+                              :size="'0.8'">
                 </default-img>
             </div>
             <div class="goods-txt">
@@ -23,7 +23,7 @@
                 <div class="comment-img"  v-if="imageArr != null" v-for="(image , index) in imageArr">
                     <default-img :background="imgUrl+image"
                                  :isHeadPortrait="0"
-                                 :size="'0.8rem'">
+                                 :size="'0.8'">
                     </default-img>
                     <i class="iconfont icon-guanbi"  @click="removeImages(index)"></i>
                 </div>

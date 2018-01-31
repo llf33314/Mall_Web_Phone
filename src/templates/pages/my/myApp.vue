@@ -4,7 +4,8 @@
         <div class="my-header shop-bg" @click="toLogin">
             <div class="my-indexUser">
                <default-img :background="background"
-                            :isHeadPortrait="1">
+                            :isHeadPortrait="1"
+                            :size="'1'">
                 </default-img>
             </div>
             <p class="fs46">{{memberName}}</p>
@@ -158,7 +159,7 @@
 
 <script>
 // import Lib from 'assets/js/Lib';
-
+// import { Toast } from 'mint-ui';
 export default {
   name: "my",
 

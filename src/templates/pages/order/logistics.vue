@@ -3,7 +3,8 @@
     <section class="fs40 logistics-header clearfix">
         <div class="order-header-img">
         <default-img :background="background"
-                     :isHeadPortrait="1">
+                     :isHeadPortrait="1"
+                     :size="'0.3'">
         </default-img>
         </div>
         <div class="order-header-txt">
@@ -35,7 +36,7 @@
         <div class="logistics-title fs46 border">
             <div class="logistics-img">
                 <default-img :background="background"
-                            :isHeadPortrait="1">
+                            :isHeadPortrait="1" :size="'0.3'">
                 </default-img>
             </div>
             本数据由<span class="shopBlue">多粉物流信息</span>提供

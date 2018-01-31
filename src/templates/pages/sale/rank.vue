@@ -9,13 +9,16 @@
                 <header-nav :headers="headerArr" :selectId="type" :type.sync="type"></header-nav>
             </div>
        </div>
-        <div class="seller-content" v-if="rankArr != null">
+        <div class="seller-content" v-if="rankArr != null"
+          v-infinite-scroll="loadDatas"
+          infinite-scroll-distance="200">
             <div class="seller-item" v-for="(rank,index) in rankArr" :key="index">
                 <div class="item-left">
                     <div class="blue-color index-div">{{index+1}}</div>
                     <div class="img-div">
                         <default-img :background="rank.headimgurl"
-                            :isHeadPortrait="1"></default-img>
+                            :isHeadPortrait="1"
+                            :size="'0.6'"></default-img>
                     </div>
                     <div class="text-overflow">{{rank.user_name || rank.nickname}}</div>
                 </div>
@@ -56,9 +59,7 @@ export default {
       this.rankArr = null;
       this.isMore = 2;
       this.curPage = 1;
-      this.loadDatas({
-        curPage: this.curPage
-      }); //初始化数据
+      this.loadDatas(); //初始化数据
     }
   },
   //已成功挂载，相当ready()
@@ -66,10 +67,8 @@ export default {
     this.commonFn.setTitle("销售员排行榜");
     this.$store.commit("show_footer", false); //隐藏底部导航栏
 
-    this.loadDatas({
-      curPage: this.curPage
-    }); //初始化数据
-    this.scroll();
+    this.loadDatas(); //初始化数据
+    // this.scroll();
   },
   beforeDestroy() {
     //离开后的操作
@@ -77,43 +76,19 @@ export default {
   },
   //相关操作事件
   methods: {
-    scroll() {
-      let _this = this;
-      $(window).bind("scroll", function() {
-        var isScroll =
-          $(window).scrollTop() > 0 &&
-          $(window).scrollTop() >=
-            $(document).height() - $(window).height() - 1000;
-        if (isScroll) {
-          this.isMore = -1;
-          _this.loadMore();
-        }
-      });
-    },
-    loadMore() {
-      let pageCount = this.pageCount; //总页数
-      if (this.curPage >= pageCount) {
-        this.isMore = 3; //没有更多
-        return;
-      }
-      if (this.isMore == 2) {
-        return;
-      }
-      this.curPage++; //请求页数
-      this.isMore = 2;
-      this.loadDatas({
-        curPage: this.curPage
-      });
-    },
-    loadDatas(data) {
+    loadDatas() {
       //初始化数据
       let _this = this;
+      if (this.isMore == 3 || this.isMore == 1) {
+        return;
+      }
+      this.isMore = 1;
       let _data = {
         busId: _this.busId, //商家id
         url: location.href, //当前页面的地址
         browerType: _this.$store.state.browerType, //浏览器类型
         type: this.type,
-        curPage: data.curPage > 0 ? data.curPage : 1
+        curPage: this.curPage || 1
       };
       _this.ajaxRequest({
         url: h5App.activeAPI.seller_rank_post,
@@ -123,6 +98,10 @@ export default {
           _this.imgUrl = data.imgUrl;
           let page = myData.page;
           let list = page.subList;
+          if (list == null || list.length == 0) {
+            _this.isMore = 3; //没有更多
+            return;
+          }
           _this.curPage = page.curPage;
           _this.pageCount = page.pageCount;
           if (_this.curPage === 1) {
@@ -135,7 +114,10 @@ export default {
           _this.isMore = 1;
           if (_this.curPage >= _this.pageCount) {
             _this.isMore = 3; //没有更多
+            return;
           }
+          _this.isMore = 2;
+          _this.curPage++; //请求页数
         }
       });
     },
@@ -147,10 +129,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import  (reference) '~assets/css/base.less';
-@import  (reference) '~assets/css/mixins.less';
-@import  (reference) "~assets/css/common.less";
-@import  "~assets/css/sellercommon.less";
+@import (reference) "~assets/css/base.less";
+@import (reference) "~assets/css/mixins.less";
+@import (reference) "~assets/css/common.less";
+@import "~assets/css/sellercommon.less";
 
 .sale-wrapper {
   .seller-content {
@@ -193,6 +175,9 @@ export default {
   .blue-color {
     color: #4e95ef;
   }
+}
+.more-main {
+  padding-bottom: 10px;
 }
 </style>
 

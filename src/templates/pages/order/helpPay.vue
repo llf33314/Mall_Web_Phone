@@ -39,7 +39,7 @@
                 @click="toReturnProduct(product.productId,product.shopId)">
                 <div class="helppay-img">
                     <default-img :background="imgUrl+product.productImageUrl"
-                                :isHeadPortrait="1">
+                                :isHeadPortrait="0" :size="'0.8'">
                     </default-img>
                 </div>
                 <div class="helppay-goods-inf">

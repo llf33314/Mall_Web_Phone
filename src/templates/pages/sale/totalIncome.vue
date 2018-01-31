@@ -11,7 +11,7 @@
               <div class="left-div ">
                   <div class="img-div">
                       <default-img :background="income.headimgurl"
-                          :isHeadPortrait="1"></default-img>
+                          :isHeadPortrait="1" :size="'0.5'"></default-img>
                   </div>
                   <div class="seller-content">
                     <div class="div-title fs45">{{income.user_name || income.nickname}}</div>

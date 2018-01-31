@@ -26,7 +26,7 @@
 
 <script>
 import more from "components/more"; //更多
-import filte from "@/lib/filters";
+//import filte from "@/lib/filters";
 export default {
   name: "succeed",
   data() {

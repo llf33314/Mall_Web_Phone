@@ -38,7 +38,8 @@
                     <div class="comment-img"  v-if="imageArr != null" v-for="(image , index) in imageArr">
                         <!-- <img src="../../../assets/img/test/test1.jpg"/> -->
                          <default-img :background="imgUrl+image"
-                                 :isHeadPortrait="1">
+                                 :isHeadPortrait="0"
+                                 :size="'0.8'">
                         </default-img>
                         <i class="iconfont icon-guanbi" @click="removeImages(index)"></i>
                     </div>

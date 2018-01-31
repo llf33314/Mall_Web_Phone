@@ -8,31 +8,37 @@
 
 <script>
 export default {
-    props:['row','num'],
-    watch: {
-        'row'(a,b){
-          this.data = a;
-        },
-        'num'(a,b){
-            this.spec_num = a;
-        }
+  props: ["row", "num"],
+  watch: {
+    row(a, b) {
+      this.data = a;
     },
-    data () {
-        return {
-            data:'',
-            spec_num:''
-        }
-    },
-    methods:{
-
-    },
-    mounted () {
-        
+    num(a, b) {
+      this.spec_num = a;
     }
-
-}
+  },
+  data() {
+    return {
+      data: "",
+      spec_num: ""
+    };
+  },
+  methods: {},
+  mounted() {}
+};
 </script>
 
-<style>
-
+<style lang="less" scoped>
+@import (reference) "~assets/css/base.less";
+@import (reference) "~assets/css/mixins.less";
+@import (reference) "~assets/css/common.less";
+.goods-selected-main {
+  width: 100%;
+  .ik-box;
+  .ik-box-align(center);
+  .ik-box-pack(justify);
+  i {
+    color: #c7c7cc;
+  }
+}
 </style>
