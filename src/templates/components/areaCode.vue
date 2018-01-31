@@ -8,7 +8,7 @@
       
     </div>
     <!--搜索页-->
-    <popup v-model="isShow" position="right" class="mint-popup-3" :modal="false">
+    <mt-popup v-model="isShow" position="right" class="mint-popup-3" :modal="false">
       <div class="code-main">
         <div class="code-top border">
           <input  class="fs50" placeholder="搜索国家/地区" v-model="content" />
@@ -21,11 +21,11 @@
           </div>
         </div>
       </div>
-    </popup>
+    </mt-popup>
   </div>
 </template>
 <script>
- import {Popup} from 'mint-ui'
+//import {Popup} from 'mint-ui'
 export default {
   props: {
     'dataStyle':{
@@ -34,7 +34,7 @@ export default {
     }
   },
   components: {
-    Popup
+    //Popup
   },
   data: function() {
     return {

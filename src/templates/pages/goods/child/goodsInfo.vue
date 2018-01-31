@@ -8,25 +8,25 @@
             <div class="fs40  goods-info-other">
                 <div class="style-main-font" v-if="type != 5">
                     <span v-if=" type== 3">秒杀价</span>
-                    <span v-else-if="type== 1">团购价: ￥<span class="fs50" v-if="goodsData.groupPrice > 0">{{goodsData.groupPrice | moneySplit1}}</span>.{{goodsData.groupPrice | moneySplit2}}</span>
+                    <span v-else-if="type== 1">团购价: ￥<span class="fs50" v-if="goodsData.groupPrice > 0">{{goodsData.groupPrice | moneySplit1}}</span>.{{goodsData.groupPrice | currency |moneySplit2}}</span>
                     <span v-else-if="type== 4">当前价:</span>
                     <span v-else-if="type== 4 && goodsData.auctionResult.isWin == 1">出价{{goodsData.auctionResult.auctionNumber}}次</span>
                     <span v-else-if="type== 6">预售价:</span>
                     <span class="fs50" v-else-if="type== 5">
-                        {{goodsData.productPrice | moneySplit1}}.{{goodsData.productPrice | moneySplit2}}粉币
+                        {{goodsData.productPrice | moneySplit1}}.{{goodsData.productPrice | currency | moneySplit2}}粉币
                     </span>
                     <span v-else >价格:</span>
                     <span v-if="type != 1">
-                    ￥<span class="fs50" v-if="goodsData.productPrice > 0">{{goodsData.productPrice | moneySplit1}}</span>.{{goodsData.productPrice | moneySplit2}}
+                    ￥<span class="fs50" v-if="goodsData.productPrice > 0">{{goodsData.productPrice | moneySplit1}}</span>.{{goodsData.productPrice | currency |moneySplit2}}
                     </span>
                     <span v-if="type== 7">批发价：￥{{goodsData.pfPrice}}</span>
                     <span class="shopGray" v-if="goodsData.auctionResult >= 0 ">抢拍{{goodsData.auctionResult.auctionNumber}}次</span>
                     <span v-if="goodsData.isShowCommission == 1 && goodsData.commissionMoney > 0">
                         <span >佣金：</span>
-                        ￥<span class="fs50">{{goodsData.commissionMoney | moneySplit1 }}</span>.{{goodsData.commissionMoney | moneySplit2}}
+                        ￥<span class="fs50">{{goodsData.commissionMoney | moneySplit1 }}</span>.{{goodsData.commissionMoney | currency | moneySplit2}}
                     </span>
                 </div>
-                <span class="fs50 style-main-font" v-else>{{goodsData.productPrice | moneySplit1}}.{{goodsData.productPrice | moneySplit2}} 粉币</span>
+                <span class="fs50 style-main-font" v-else>{{goodsData.productPrice | moneySplit1}}.{{goodsData.productPrice | currency | moneySplit2}} 粉币</span>
                 <count-down :times="goodsData.activityTimes" :countBg="'style-middle-bg'"></count-down>
             </div>
             <div class="fs40  goods-info-other" v-if=" type == 4 || type == 7 || type == 6">
@@ -38,7 +38,7 @@
                 <div v-if="type == 4">
                     <div class="style-main-font" v-if="goodsData.auctionResult.isWin < 0 && goodsData.auctionResult.depositMoney > 0">
                         <span >保证金：</span>
-                        ￥<span class="fs50">{{goodsData.auctionResult.depositMoney | moneySplit1 }}</span>.{{goodsData.auctionResult.depositMoney | moneySplit2}}
+                        ￥<span class="fs50">{{goodsData.auctionResult.depositMoney | moneySplit1 }}</span>.{{goodsData.auctionResult.depositMoney | currency | moneySplit2}}
                         <span class="shopGray">不成拍卖后退还</span>
                     </div>
                     <!----拍卖胜出------>
@@ -55,11 +55,11 @@
                 <div v-if="type == 6 && goodsData.presaleResult != null">
                     <div class="style-main-font" v-if="goodsData.presaleResult.dingMoney > 0">
                         <span >{{goodsData.presaleResult.payDespositStatus == 0 ? "定金" : "定金已付"}}：</span>
-                        ￥<span class="fs50">{{goodsData.presaleResult.dingMoney | moneySplit1 }}</span>.{{goodsData.presaleResult.dingMoney | moneySplit2}}
+                        ￥<span class="fs50">{{goodsData.presaleResult.dingMoney | moneySplit1 }}</span>.{{goodsData.presaleResult.dingMoney | currency | moneySplit2}}
                     </div>
                     <div class="style-main-font" v-if="goodsData.presaleResult.payDespositStatus == 1 && goodsData.presaleResult.weiMoney > 0">
                         <span >尾款应付：</span>
-                        ￥<span class="fs50">{{goodsData.presaleResult.weiMoney | moneySplit1 }}</span>.{{goodsData.presaleResult.weiMoney | moneySplit2}}
+                        ￥<span class="fs50">{{goodsData.presaleResult.weiMoney | moneySplit1 }}</span>.{{goodsData.presaleResult.weiMoney | currency | moneySplit2}}
                     </div>
                 </div>
             </div>

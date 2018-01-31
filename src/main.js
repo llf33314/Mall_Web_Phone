@@ -26,16 +26,19 @@ import storeConfig from './vuex/store'
 import jq from './lib/jquery-2.2.2.min';
 
 import vueFilter from './lib/vueDirective.js';
+import filters from './lib/filters.js'
 
 import 'babel-polyfill';
+
+//import MintUi from 'mint-ui'
+import { Popup } from 'mint-ui'
 //webUI
 import ui from 'components/gt-webUI/index.js'
 
-import MintUi from 'mint-ui'
-
-Vue.use(MintUi);
 Vue.use(VueI18n);
 Vue.use(ui);
+Vue.use(Popup);
+
 
 //消除移动端300ms延迟
 import FastClick from 'fastclick'

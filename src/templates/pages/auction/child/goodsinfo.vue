@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import filters from "@/lib/filters";
+// import filters from "@/lib/filters";
 export default {
   props: ["obj", "imgpath"],
   components: {

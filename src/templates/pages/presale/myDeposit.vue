@@ -28,7 +28,7 @@
 <script>
 import headerNav from "components/headerNav"; //头部
 import goodsInfo from "../auction/child/goodsinfo"; //商品信息
-import filters from "@/lib/filters"; //过滤器
+// import filters from "@/lib/filters"; //过滤器
 export default {
   components: {
     headerNav,

@@ -101,7 +101,7 @@
 <script>
 import imgUpload from "components/imgUpload";
 import dialogShow from "./component/selectDialog";
-import filters2 from "../../../lib/filters"; //过滤器
+// import filters2 from "../../../lib/filters"; //过滤器
 export default {
   data() {
     return {

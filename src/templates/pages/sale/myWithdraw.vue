@@ -69,7 +69,7 @@
     </div>
 </template>
       <script>
-import filter from "@/lib/filters";
+// import filter from "@/lib/filters";
 export default {
   data() {
     return {

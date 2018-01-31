@@ -1,8 +1,8 @@
 <template>
 </template>
 <script>
-import { map } from "components/gt-ui/index.js";
-import { Popup } from "mint-ui";
+//import { map } from "components/gt-ui/index.js";
+//import { Popup } from "mint-ui";
 export default {
   name: "mapAddress",
   props: ["type", "lat", "lng", "memAddress"],
@@ -17,7 +17,7 @@ export default {
     };
   },
   components: {
-    Popup
+    //Popup
   },
   mounted() {
     let _this = this;

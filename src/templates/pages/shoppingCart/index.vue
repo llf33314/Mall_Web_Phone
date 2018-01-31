@@ -247,7 +247,7 @@
 
 import headerNav from 'components/headerNav'
 import deleteSlide from './component/deleteSlide'
-import filter from '../../../lib/filters'// 过滤器
+// import filter from '../../../lib/filters'// 过滤器
 import dialogModular from 'components/dialogModular'// 过滤器
 
 export default {

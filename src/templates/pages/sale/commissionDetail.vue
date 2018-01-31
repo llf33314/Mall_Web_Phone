@@ -27,7 +27,7 @@
 <script>
 import headerNav from "./setchlid/headerNav";
 // import more from "components/more";
-import filter from "@/lib/filters";
+// import filter from "@/lib/filters";
 export default {
   data() {
     return {

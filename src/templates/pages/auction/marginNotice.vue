@@ -83,7 +83,7 @@
 
 <script>
 import headerNav from "components/headerNav"; //头部
-import filters from "@/lib/filters"; //过滤器
+// import filters from "@/lib/filters"; //过滤器
 export default {
   name: "agreement",
 

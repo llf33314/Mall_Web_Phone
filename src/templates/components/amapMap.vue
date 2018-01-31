@@ -7,7 +7,6 @@
 </template>
 <script>
 
-import {Popup} from 'mint-ui'
 
 export default  {
   props: ['memAddress'],
@@ -21,9 +20,6 @@ export default  {
     'memAddress'(a,b){
       console.log(a,b,'memAddress')
     }
-  },
-  components: {
-      Popup
   },
   mounted () {
     let _this = this;

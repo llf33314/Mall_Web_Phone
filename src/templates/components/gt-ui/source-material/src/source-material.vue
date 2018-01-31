@@ -8,9 +8,9 @@
   </section>
 </template>
 <script>
-  import Popup from '../../util/popup';
+  //import Popup from '../../util/popup';
   export default {
-    mixins: [ Popup ],
+    //mixins: [ Popup ],
     data() {
       return {
         materialUrl:'',

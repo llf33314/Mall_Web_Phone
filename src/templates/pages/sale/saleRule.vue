@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import filters from "@/lib/filters";
+// import filters from "@/lib/filters";
 export default {
   data() {
     return {

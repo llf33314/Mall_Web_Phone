@@ -1,15 +1,15 @@
 <template>
     <div>
-      <popup v-model="value" position="right" class="mint-popup-3" :modal="false">
+      <mt-popup v-model="value" position="right" class="mint-popup-3" :modal="false">
           <!--<a @click="handleAction('confirm')" class="page-back router-link-active"><i class="mintui mintui-back"></i><span>返回</span></a>-->
           <iframe id="mapPage" width="100%" height="100%" frameborder=0 :src="http"></iframe>
           {{lat}}
-      </popup>
+      </mt-popup>
     </div>
 </template>
 
 <script>
-  import {Popup} from 'mint-ui'
+  //import {Popup} from 'mint-ui'
 	export default {
     props: {
       value: {
@@ -18,7 +18,7 @@
       }
     },
 		components: {
-      Popup
+      //Popup
     },
 		//实例初始化最之前，无法获取到data里的数据
 		beforeCreate() {

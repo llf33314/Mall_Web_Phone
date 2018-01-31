@@ -31,7 +31,7 @@
 </template>
 <script>
 import { Swipe, SwipeItem } from "mint-ui";
-import "mint-ui/lib/style.css";
+//import "mint-ui/lib/style.css";
 export default {
   components: {
     Swipe,

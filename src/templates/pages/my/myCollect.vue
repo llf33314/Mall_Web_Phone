@@ -50,7 +50,7 @@
 import more from "components/more"; //更多
 import goodsInfo from "../auction/child/goodsinfo"; //商品信息
 import deleteSlide from "../shoppingCart/component/deleteSlide"; //滑动删除插件
-import filters from "@/lib/filters"; //过滤器
+// import filters from "@/lib/filters"; //过滤器
 export default {
   components: {
     goodsInfo,

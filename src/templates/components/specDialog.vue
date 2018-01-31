@@ -101,7 +101,7 @@
 </template>
 
 <script>
-import filter from "../../lib/filters"; // 过滤器
+// import filter from "../../lib/filters"; // 过滤器
 export default {
   name: "Admin",
   props: {

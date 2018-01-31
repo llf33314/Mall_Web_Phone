@@ -521,7 +521,7 @@ import groupMethod from "./child/group/groupMethod"; //拼团玩法
 import goodsFooter from "./child/goodsFooter"; //商品详请内导航
 import comment from "./child/comment"; //商品详情评论
 import spec from "./child/spec"; //商品详情规格
-import filter from "../../../lib/filters"; // 过滤器
+// import filter from "../../../lib/filters"; // 过滤器
 import spDialog from "components/spDialog"; //卡卷包
 import activity from "./js/activity.js"; //卡卷包
 

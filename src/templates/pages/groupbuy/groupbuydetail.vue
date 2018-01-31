@@ -111,7 +111,7 @@
 import tuangoubg from "assets/img/tungoubg.jpg";
 import grounpSharebg from "assets/img/grounpShare.png";
 import countDown from "../home/classify_child/countDown";
-import filter from "@/lib/filters";
+// import filter from "@/lib/filters";
 export default {
   data() {
     return {
