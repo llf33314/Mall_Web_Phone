@@ -431,7 +431,7 @@ export default {
     position: absolute;
     top: 27/@dev-Width *1rem;
     left: 27/@dev-Width *1rem;
-    z-index: 2;
+    z-index: 3;
   }
   .integral-title {
     width: 100%;

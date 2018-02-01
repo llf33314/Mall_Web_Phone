@@ -73,7 +73,6 @@
                                       <p  v-if="product.productOldPrice > product.productPrice && orderData.type > 0" style="margin-bottom:0" >
                                         <span class="span-block">原价：</span>
                                         <del>¥{{product.productOldPrice | moneySplit1}}.{{product.productOldPrice | moneySplit2}}</del>
-                                        
                                       </p>
                                       <p>
                                         <span class="span-block" 
@@ -614,7 +613,7 @@ export default {
         _this.selectPayWay = _this.payWayList[0];
       }
       _this.orderData.typePriceName =
-        _this.$t('order_type_price_name')[myData.type];
+        _this.$t('order_type_price_name.'+myData.type);
       _this.caculationOrder(0); //初始化计算订单
     },
     /**

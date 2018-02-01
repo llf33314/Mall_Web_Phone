@@ -170,6 +170,7 @@ Vue.mixin({
 				//获取批发规格
 				//批发购买
 				let pfDatas = _this.newDialog;
+				console.log(pfDatas,"pfDatas")
 				let arr = [];
 				pfDatas.forEach((item, i) => {
 					let pfObj = {

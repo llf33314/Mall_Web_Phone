@@ -9,8 +9,8 @@
                     </default-img>
                 </div>
                 <div class="goods-delt">
-                    <p class="fs40">{{myData.productName}}</p>
-                    <p class="fs36 shopGray" v-if="myData.productSpecifica != null">
+                    <p class="fs43">{{myData.productName}}</p>
+                    <p class="fs38 shopGray" v-if="myData.productSpecifica != null">
                       规格：{{myData.productSpecifica}}
                     </p>
                 </div>
@@ -21,7 +21,7 @@
                     <div class="fs46 list-txt">
                         <i class="iconfont" :class="way.cla"></i>
                         <div>
-                            <p class="fs40">{{way.name}}</p>
+                            <p class="fs48">{{way.name}}</p>
                             <p class="fs36 shopGray">{{way.nameMsg}}</p>
                         </div>
                     </div>
@@ -29,18 +29,6 @@
                         <i class="iconfont icon-jiantou-copy"></i>
                     </p>
                 </div>
-                <!-- <div class="refund-list2 border" >
-                    <div class="fs46 list-txt">
-                        <i class="iconfont icon-tuihuo"></i>
-                        <div>
-                            <p class="fs40">退货退款</p>
-                            <p class="fs36 shopGray">已收到货，需要退换已收到的货物</p>
-                        </div>
-                    </div>
-                    <p class="shopGray">
-                        <i class="iconfont icon-jiantou-copy"></i>
-                    </p>
-                </div> -->
             </section>
         </div>
     </div>
@@ -141,7 +129,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import  (reference) '~assets/css/base.less';
 @import  (reference) '~assets/css/mixins.less';
 /**------vars------*/
@@ -224,7 +212,8 @@ export default {
   font-size: 0.28rem;
 }
 .refund-wrapper .refund-list2 {
-  height: 1.6rem;
+  height:  241/@dev-Width *1rem;
+  line-height: 1;
 }
 .refund-wrapper .refund-list2 .list-txt {
   display: -webkit-box;
@@ -240,10 +229,13 @@ export default {
   -o-box-align: center;
   box-align: center;
 }
+.refund-wrapper .refund-list2 .list-txt p:first-child{
+  margin-bottom: 45/@dev-Width *1rem;
+}
 .refund-wrapper .refund-list2 .list-txt > i {
   color: #e4393c;
   font-size: 0.45333333rem;
-  margin-right: 0.13333333rem;
+  margin-right: 60/@dev-Width *1rem;
 }
 .refund-wrapper .refund-input {
   width: 80%;

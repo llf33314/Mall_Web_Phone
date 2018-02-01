@@ -3,7 +3,7 @@
         <div class="refund-main comment-main">
             <section class="refund-state">
                 <div class="refund-list" @click="showDialog">
-                    <p class="fs46">物流公司</p>
+                    <p class="fs48">物流公司</p>
                     <p class="shopGray" >
                         <span class="fs36" v-if="selectDialogData != null && selectDialogData.value != null">{{selectDialogData.value}}</span>
                         <span class="fs36" v-else>请选择物流公司（必选）</span>
@@ -14,20 +14,29 @@
             </section>
             <section class="refund-money">
                 <div class="refund-list border">
-                    <p class="fs46">物流单号：</p>
-                    <input placeholder="请输入物流单号(必填)" class="fs46 refund-input" v-model="wuliuNo" @blur="blurWuLiuNo">
+                    <p class="fs48">物流单号：</p>
+                    <input placeholder="请输入物流单号(必填)" class="fs48 refund-input" v-model="wuliuNo" @blur="blurWuLiuNo">
                 </div>
             </section>
             <section class="refund-money">
                 <div class="refund-list border">
-                    <p class="fs46">联系电话：</p>
-                    <input placeholder="请输入收件人电话(必填)" class="fs46 refund-input" v-model="returnTelphone" @blur="blurPhone">
+                    <p class="fs48">联系电话：</p>
+                    <input placeholder="请输入收件人电话(必填)" class="fs48 refund-input" v-model="returnTelphone" @blur="blurPhone">
                 </div>
             </section>
+            <section class="refund-money" v-if="sellerReturnAddress != null">
+                <div class="refund-list4 border">
+                    <p class="fs48">退货地址：</p>
+                     <p class="p_add text-force-wrap">
+                        <span class="fs48">{{sellerReturnAddress}}</span>
+                     </p>
+                </div>
+            </section>
+
             <section class="refund-money">
                 <div class="refund-list3 border">
-                    <p class="fs46">退款说明：</p>
-                     <textarea class="fs46 refund-input"  placeholder="请输入退货说明（可不填)" v-model="returnRemark"
+                    <p class="fs48">退款说明：</p>
+                     <textarea class="fs48                                                           refund-input"  placeholder="请输入退货说明（可不填)" v-model="returnRemark"
                         @blur="blurRemark"></textarea>
                 </div>
             </section>
@@ -50,7 +59,7 @@
             </section>
             <section class="shop-footer-fixed comment-footer1">
               <technical-support v-if="$store.state.isAdvert == 1" ></technical-support>
-                <div class="shop-max-button fs52 shop-bg" @click="submitData">
+                <div class="shop-max-button fs54 shop-bg" @click="submitData">
                     提交退货物流申请
                 </div>
             </section>
@@ -85,7 +94,8 @@ export default {
       wuliuList: [], //物流集合
       returnRemark: "", //退款说明
       returnTelphone: "", //联系电话
-      wuliuNo: "" //物流单号
+      wuliuNo: "" ,//物流单号
+      sellerReturnAddress:null,//商家退货地址
     };
   },
   mounted() {
@@ -205,6 +215,9 @@ export default {
           _this.wuliuNo = returnData.wlNo; //物流单号
           _this.returnTelphone = returnData.wlTelephone; //物流手机号码
           _this.returnRemark = returnData.wlRemark; //物流说明
+          if(returnData.returnAddress != null && returnData.returnAddress != ''){
+            _this.sellerReturnAddress = returnData.returnAddress;
+          }
           if (
             returnData.wlImagesUrl != null &&
             returnData.wlImagesUrl.length > 0
@@ -268,8 +281,8 @@ export default {
 </script>
 
 <style lang="less">
-@import  (reference) '~assets/css/base.less';
-@import  (reference) '~assets/css/mixins.less';
+@import (reference) "~assets/css/base.less";
+@import (reference) "~assets/css/mixins.less";
 
 .refund-wrapper {
   width: 100%;
@@ -310,10 +323,10 @@ export default {
   }
   .refund-list,
   .refund-list2,
-  .refund-list3 {
+  .refund-list3,
+  .refund-list4 {
     font-size: 0;
     width: 100%;
-    height: 145 / @dev-Width *1rem;
     .ik-box;
     .ik-box-pack(justify);
     .ik-box-align(center);
@@ -323,6 +336,12 @@ export default {
       color: #c7c7cc;
       font-size: 42/@dev-Width *1rem;
     }
+    .p_add {
+      width: 82%;
+    }
+  }
+  .refund-list{
+    height: 145 / @dev-Width *1rem;
   }
   .refund-list2 {
     height: 240 / @dev-Width *1rem;
@@ -341,7 +360,13 @@ export default {
     height: 250 / @dev-Width *1rem;
     .ik-box-align(stretch);
     padding-top: 20/@dev-Width *1rem;
-    padding-bottom: 20/@dev-Width *1rem;
+    // padding-bottom: 20/@dev-Width *1rem;
+  }
+  .refund-list4 {
+    padding-top: 50/@dev-Width *1rem;
+    padding-bottom: 40/@dev-Width *1rem;
+    .ik-box-align(stretch);
+    padding-top: 20/@dev-Width *1rem;
   }
   .refund-input {
     width: 80%;
@@ -424,8 +449,7 @@ export default {
       background: #fff;
       bottom: 0;
       animation: dialogShow 0.2s;
-      -moz-animation: dialogShow 0.2s;
-      /* Firefox */
+      -moz-animation: dialogShow 0.2s; /* Firefox */
       -webkit-animation: dialogShow 0.2s;
     }
     .dialog-content {

@@ -14,7 +14,7 @@
       <div class="product-item" v-for="(integral,index) in integralArr" :key="index">
           <div class="product-content">
             <p class="fs46 text-overflow">{{integral.itemName}}</p>
-            <p class="div-text fs40">{{integral.createDate | formatNot}}</p>
+            <p class="div-text fs40">{{integral.createDate |  formatNot}}</p>
           </div>
           <div class="div-icon shop-font fs46">{{integral.number}}</div>
       </div>

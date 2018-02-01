@@ -9,8 +9,8 @@
                     </default-img>
                 </div>
                 <div class="goods-delt">
-                    <p class="fs40">{{returnData.productName}}</p>
-                    <p class="fs36 shopGray" v-if="returnData.productSpecifica != null">
+                    <p class="fs43">{{returnData.productName}}</p>
+                    <p class="fs38 shopGray" v-if="returnData.productSpecifica != null">
                       规格：{{returnData.productSpecifica}}
                     </p>
                     <!-- <p class="fs36 shop-font shop-textr" v-if="returnData.returnMoneys != null">
@@ -21,7 +21,7 @@
             <section class="refund-state">
                 <div class="refund-list border" v-if="returnData.isShowCargoStatus == 1 && cargoStatusData!= null"
                   @click="showDialogs(cargoStatusData,cargoStatusList,1,'货物状态')">
-                    <p class="fs46">货物状态</p>
+                    <p class="fs48">货物状态</p>
                     <p class="shopGray">
                         <span class="fs36">{{cargoStatusData.value}}</span>
                         <i class="iconfont icon-jiantou-copy"></i>
@@ -29,7 +29,7 @@
                 </div>
                 <div class="refund-list" v-if="returnReasonData != null" 
                   @click="showDialogs(returnReasonData,returnReasonList,2,'退款原因')">
-                    <p class="fs46">退款原因</p>
+                    <p class="fs48">退款原因</p>
                     <p class="shopGray">
                         <span class="fs36">{{returnReasonData.item_value}}</span>
                         <i class="iconfont icon-jiantou-copy"></i>
@@ -38,7 +38,7 @@
             </section>
             <section class="refund-money">
                 <div class="refund-list border" v-if="returnData.returnPrice != null">
-                    <p class="fs46">
+                    <p class="fs48">
                       退款金额：<span class="shop-font">￥{{returnData.returnPrice | moneySplit1}}.<span class="fs32">{{returnData.returnPrice | moneySplit2}}</span></span>
                     </p>
                 </div>
@@ -50,24 +50,24 @@
             </section>
             <section class="refund-state">
                <div class="refund-list">
-                    <div class="fs46">手机号码：</div>
+                    <div class="fs48">手机号码：</div>
                     <div class="refund-textarea">
-                      <input class="v-input fs46" placeholder="必填" v-model="returnTelphone" 
+                      <input class="v-input fs48" placeholder="必填" v-model="returnTelphone" 
                         @blur="blurPhone"/>
                     </div>
                 </div>
             </section>
             <section class="refund-state " >
                <div class=" refund-list3" >
-                    <div class="fs46">退款说明：</div>
+                    <div class="fs48">退款说明：</div>
                     <div class="refund-textarea">
-                       <textarea class="table fs46"  placeholder="选填" v-model="returnRemark"
+                       <textarea class="table fs48"  placeholder="选填" v-model="returnRemark"
                         @blur="blurRemark"></textarea>
                     </div>
                 </div>
             </section>
             <section class="refund-photo comment-content">
-                <p class="fs42">上传凭证：</p>
+                <p class="fs48">上传凭证：</p>
                 <div class="refund-box comment-photo border clearfix"
                      style="padding:0;">
                     <div class="comment-img"  v-if="imageArr != null" v-for="(image , index) in imageArr" >
@@ -84,7 +84,7 @@
             </section>
              <technical-support v-if="$store.state.isAdvert == 1" ></technical-support>
             <div class="shop-footer-fixed comment-footer1">
-                <div class="shop-max-button fs52 shop-bg" @click="submitData">
+                <div class="shop-max-button fs54 shop-bg" @click="submitData">
                     提 交
                 </div>
             </div>
