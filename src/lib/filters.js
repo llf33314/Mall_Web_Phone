@@ -2,10 +2,10 @@ import Vue from 'vue'
 
 //四舍五入保留2位小数（不够位数，则用0替补）
 Vue.filter("currency", function (value) {
-    let result = parseFloat(value);
     if(value == null){
         value = 0;
     }
+    let result = parseFloat(value);
     if (isNaN(value)) {
         console.log('传递参数错误，请检查！');
         return false;

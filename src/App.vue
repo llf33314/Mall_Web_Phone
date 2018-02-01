@@ -40,7 +40,6 @@ export default {
         loginDTO_URL: window.location.href
       });
       this.loadData();
-      document.body.scrollTop = 0;
     },
     listenshowpage1(a, b) {
       if (a != b) {

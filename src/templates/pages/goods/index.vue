@@ -318,7 +318,7 @@
                     </default-img>
                 </div>
                 <div class="goods-dialog-txt">
-                    <p class="fs40 style-main-font">批发价:¥ {{goodsData.pfPrice}}</span>
+                    <p class="fs40 style-main-font">批发价:¥ {{goodsData.pfPrice}}</p>
                     <p class="fs36 style-main-font" v-if="w_dialogData.inv_num">库存{{w_dialogData.inv_num}}件</p>
                     <p class="fs36 style-main-font" v-else>库存 0 件</p>
                     <p class="fs36 style-main-font" v-if="w_dialogData.inv_code">商品编号: {{w_dialogData.inv_code}}</p>
@@ -335,7 +335,7 @@
                             <em class="em-choice" @click="w_addSpecNumber('-')">-</em>
                             <input  class="em-choice" 
                                     v-model="w_dialogData.productNum" 
-                                    @blur="w_addSpecNumber('',index)"></input>
+                                    @blur="w_addSpecNumber('',index)"/>
                             <em class="em-choice" @click="w_addSpecNumber('+')">+</em>
                         </div>
                     </div>
@@ -438,14 +438,14 @@
                     <!--手批-->
                     <span v-if="pifaResult.pfSetObj.isSpHand == 1 && pifaResult.pfSetObj.spHand != '' && w_specNum >= pifaResult.pfSetObj.spHand">满{{pifaResult.pfSetObj.spHand}}手</span>
                     <span v-if="pifaResult.pfSetObj.isSpHand == 0 ">满1手</span>
-                    <span v-if="w_specNum  < pifaResult.pfSetObj.spHand">还差{{pifaResult.pfSetObj.spHand-w_specNum }}手达到批发条件</span>
+                    <span v-if="w_specNum  < pifaResult.pfSetObj.spHand">还差{{pifaResult.pfSetObj.spHand- w_specNum }}手达到批发条件</span>
                     <span class="fs46 style-main-font">￥{{pifaTotal | currency}}</span>
                     <span class="style-main-font">.00 </span>共{{pifaAmount}}件
                 </div>
                 <div class="fs40 goods-choice-Total fs36 shop-textr" v-else>
                     <!--混批-->
-                    <div class="shop-inblock" v-if="pifaResult.pfSetObj.hpMoney-pifaTotal > 0 || pifaAmount - pifaResult.pfSetObj.hpNum < 0">
-                         还差<span v-if="pifaResult.pfSetObj.hpNum>0"> {{pifaResult.pfSetObj.hpNum-pifaAmount}} 件 或</span>
+                    <div class="shop-inblock" v-if="pifaResult.pfSetObj.hpMoney-pifaTotal < 0 || pifaAmount - pifaResult.pfSetObj.hpNum < 0">
+                         还差<span v-if="pifaResult.pfSetObj.hpNum-pifaAmount > 0"> {{pifaResult.pfSetObj.hpNum-pifaAmount}} 件 或</span>
                          <span>{{(pifaResult.pfSetObj.hpMoney-pifaTotal) | currency }} 元达到批发条件,</span>
                     </div>
                     <div class="shop-inblock" v-else>
@@ -475,13 +475,13 @@
             </div>
             <div class="goods-dialog-footer" v-if="pifaResult.pfType == 2" >
                 <div class="goods-dialog-button fs52 style-middle-bg " 
-                    :class="[(pifaResult.pfSetObj.hpMoney-pifaTotal > 0 || pifaAmount - pifaResult.pfSetObj.hpNum < 0) ?'shopRgba':'']"
+                    :class="[(pifaResult.pfSetObj.hpMoney-pifaTotal < 0 || pifaAmount - pifaResult.pfSetObj.hpNum < 0) ?'shopRgba':'']"
                     v-if=" goodsData.isShowAddShopButton == 1"
                     @click="addCard(2,$event)">
                     加入购物车 
                 </div>
                 <div class="goods-dialog-button fs52  style-main-bg "
-                    :class="[(pifaResult.pfSetObj.hpMoney-pifaTotal > 0 || pifaAmount - pifaResult.pfSetObj.hpNum < 0) ?'shopRgba':'']"
+                    :class="[(pifaResult.pfSetObj.hpMoney-pifaTotal < 0 || pifaAmount - pifaResult.pfSetObj.hpNum < 0) ?'shopRgba':'']"
                     v-if=" goodsData.isShowLiJiBuyButton == 1"
                     @click="lijiBuy(pifaResult.pfType)">
                     立刻批发
@@ -599,7 +599,7 @@ export default {
         }
       ],
       flag: false,
-      //newDialogData:'',
+      newDialog:'',
       arrDialog: "",
       isShowButtom: false, //是否显示底部菜单
       chujiaMoney: 0, //出价金额
@@ -615,33 +615,51 @@ export default {
     flag() {
       let _this = this;
       let arr = [];
-      //在所有规格中 获取已选择商品 数量>1的商品
-      _this.w_guigePrice.forEach((item, i) => {
-        if (item.productNum > 0) {
-          arr.push(item);
-        }
-      });
+
       _this.pifaAmount = 0;
       _this.pifaTotal = 0;
-
-      //切换规划分类数量显示
       let newArr = _this.newArrDialog();
-      arr.forEach((item, i) => {
-        newArr.forEach((test, j) => {
-          if (test.id == item.specifica_ids[0]) {
+      //在所有规格中 获取已选择商品 数量>1的商品
+      if (_this.w_guigePrice == "") {
+
+        //_this.pifaAmount = _this.w_dialogData.productNum;
+        //_this.pifaTotal = _this.w_dialogData.pfPrice * _this.w_dialogData.productNum;
+        arr.push(_this.w_dialogData);
+        arr.forEach((item, i) => {
+          newArr.forEach((test, j) => {
             test.num += item.productNum;
+          });
+          //计算总数
+          _this.pifaAmount += item.productNum;
+          //计算总价
+          _this.pifaTotal += item.pfPrice * item.productNum;
+        });
+
+      } else {
+        _this.w_guigePrice.forEach((item, i) => {
+          if (item.productNum > 0) {
+            arr.push(item);
           }
         });
-        //计算总数
-        _this.pifaAmount += item.productNum;
-        //计算总价
-        _this.pifaTotal += item.inv_price * item.productNum;
-      });
+        arr.forEach((item, i) => {
+          newArr.forEach((test, j) => {
+            if (test.id == item.specifica_ids[0]) {
+              test.num += item.productNum;
+            }
+          });
+          //计算总数
+          _this.pifaAmount += item.productNum;
+          //计算总价
+          _this.pifaTotal += item.inv_price * item.productNum;
+        });
 
-      console.log(arr, "arr");
-
-      _this.arrDialog = newArr;
-      _this.newDialog = arr;
+      }
+       //切换规划分类数量显示
+      
+        _this.arrDialog = newArr;
+        _this.newDialog = arr;
+        console.log(_this.arrDialog,_this.newDialog,'_this.newDialog')
+      
     },
     isShow(a, b) {
       console.log(this.isCardRecevie, "isCardRecevie");
@@ -663,7 +681,6 @@ export default {
     dialogShow() {
       //弹出正常的
       console.log(this.isShow);
-      // debugger
       // if(!this.isSoldOut) return;
       if (!this.isError) {
         this.$store.commit("error_msg", "暂不能选规格");
@@ -992,7 +1009,7 @@ export default {
           });
         }
       }
-      console.log(_data, "_data");
+
       _data.forEach((item, i) => {
         //vue监听不到数组里面的数据，改变vue里面的数据，实现dom重新渲染；
         _this.w_guigePrice.push([]);
@@ -1069,28 +1086,39 @@ export default {
     newArrDialog() {
       let _this = this;
       let newArr = [];
-      _this.w_specificaList[0].specValues.forEach((item, j) => {
-        let obj = {
-          id: "",
-          value: "",
-          num: 0,
-          inv_num: 0
-        };
-        obj.id = item.id;
-        obj.value = item.specValue;
+      if( _this.w_specificaList != ''){
+        _this.w_specificaList[0].specValues.forEach((item, j) => {
+          let obj = {
+            id: "",
+            value: "",
+            num: 0,
+            inv_num: 0
+          };
+          obj.id = item.id;
+          obj.value = item.specValue;
 
-        let a = null;
+          let a = null;
 
-        _this.w_guigePrice.forEach((test, i) => {
-          if (test.specifica_ids[0] == obj.id) {
-            if (a < test.inv_num) {
-              a = test.inv_num;
-              obj.inv_num = a;
+          _this.w_guigePrice.forEach((test, i) => {
+            if (test.specifica_ids[0] == obj.id) {
+              if (a < test.inv_num) {
+                a = test.inv_num;
+                obj.inv_num = a;
+              }
             }
-          }
+          });
+          newArr.push(obj);
         });
+      }else{
+        let obj ={
+          id: _this.dialogData.activityId,
+          value: '',
+          num:0,
+          inv_num:_this.dialogData.inv_num,
+        }
         newArr.push(obj);
-      });
+      }
+     
 
       return newArr;
     },
@@ -1101,16 +1129,12 @@ export default {
       let _this = this;
       let _data; //当前要改变的数据
       //监听flag变化,input输入watch监听不了
-
       _this.flag = !_this.flag;
-
       /*
             有规格 - 从返回规格列表中获取（w_guigePrice）
             无规格 - 从初始默认数据中获取（w_dialogData）
             */
-      _this.w_guigePrice == ""
-        ? (_data = _this.w_dialogData)
-        : (_data = _this.w_guigePrice[index]);
+      _this.w_guigePrice == ""? (_data = _this.w_dialogData) : (_data = _this.w_guigePrice[index]);
 
       let re = /^[0-9]+$/;
 
@@ -1121,6 +1145,7 @@ export default {
       //库存为0
       if (_data.inv_num == 0) {
         _data.inv_num = 0;
+
         if (_this.w_guigePrice == "") {
           _this.$set(_this.w_dialogData, "productNum", 0);
         } else {
@@ -1132,10 +1157,16 @@ export default {
       }
 
       if (_data.productNum < 0) {
-        _this.$store.commit("error_msg", "数量不能小于0");
-        _this.$set(_this.w_guigePrice[index], "productNum", 0);
+         _this.$store.commit("error_msg", "数量不能小于0");
+        if (_this.w_guigePrice == "" ) {
+          _this.$set(_this.w_dialogData, "productNum", 0);
+        } else {
+          _this.$set(_this.w_guigePrice[index], "productNum", 0);
+        }
         return;
       }
+      
+      
       if (e === "-") {
         //减小时，
         if (_data.productNum <= 0) {
@@ -1145,14 +1176,16 @@ export default {
 
         //_this.w_guigePrice[num].productNum=_data.productNum--;
         _data.productNum--;
-        _this.$set(_this.w_guigePrice, index, _data);
+
+        if (_this.w_guigePrice == "") {
+          _this.$set(_this.w_dialogData, "productNum", _data.productNum);
+        } else {
+          _this.$set(_this.w_guigePrice, index, _data);
+        }
       } else {
         //增减时
         //限购数量不为零时，购买数量不能超出限购数量
-        if (
-          _this.goodsData.maxBuyNum &&
-          _data.productNum >= _this.goodsData.maxBuyNum
-        ) {
+        if (_this.goodsData.maxBuyNum &&  _data.productNum >= _this.goodsData.maxBuyNum){
           _this.$store.commit("error_msg", "超出限购数量");
           return;
         }
@@ -1163,11 +1196,17 @@ export default {
           return;
         }
         if (e === "+") {
-          _this.w_guigePrice[index].productNum = _data.productNum++;
+          _data.productNum++;
+
+          if (_this.w_guigePrice == "") {
+            _this.$set(_this.w_dialogData, "productNum", _data.productNum);
+          } else {
+             _this.$set(_this.w_guigePrice, index, _data);
+          }
+          // _this.w_guigePrice[index].productNum = _data.productNum++;
           // _this.w_guigePrice.push([]);
           // _this.w_guigePrice.pop();
-          _data.productNum++;
-          _this.$set(_this.w_guigePrice, index, _data);
+          //_this.$set(_this.w_guigePrice, index, _data);
 
           return;
         }
@@ -1180,13 +1219,13 @@ export default {
       let _this = this;
       let data = _this.goodsData.pifaResult;
       console.log(data, "pifaResult");
-      //console.log(_this.w_dialogData,'w_dialogData',_this.w_guigePrice,_this.w_specificaList);
+      console.log(_this.w_dialogData,'w_dialogData',_this.w_guigePrice,_this.w_specificaList);
 
       //"pfStatus"--//批发状态  0 未审核  1审核通过   -1 审核不通过  -2还未申请
       if (!_this.w_pfStatus) {
         //跳转申请页
         _this.$store.commit("error_msg", data.pfErrorMsg);
-        _this.$router.push("/wholesale/apply");
+        _this.$router.push("/wholesale/apply/"+_this.$route.params.busId);
         return;
       }
       _this.isWholesale = true;
@@ -1219,6 +1258,7 @@ export default {
         );
       }
       //获取选中值的规格集合
+      debugger
       _this.guigePrice.forEach((item, i) => {
         //判断两个数组完全相等 转字符串比较
         if (specs.toString() === item.specifica_ids.toString()) {
@@ -1262,9 +1302,10 @@ export default {
         data = _this.newDialog;
         let arr = {};
         data.forEach((item, i) => {
+          console.log(item.values)
           arr[item.xsid] = {
             num: item.productNum,
-            value: item.values.toString(),
+            value: item.values == undefined ?'':item.values.toString(),
             price: item.inv_price
           };
         });

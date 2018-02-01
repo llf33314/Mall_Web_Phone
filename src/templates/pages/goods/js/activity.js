@@ -175,7 +175,7 @@ Vue.mixin({
 				pfDatas.forEach((item, i) => {
 					let pfObj = {
 						productNum: item.productNum,
-						specificaValueIds: item.xsid.toString()
+						specificaValueIds: item.xsid == undefined? '' : item.xsid.toString()
 					};
 					arr.push(pfObj);
 					// _this.$set(arr,arr.length,pfObj);
