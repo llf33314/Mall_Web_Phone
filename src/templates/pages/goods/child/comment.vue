@@ -129,7 +129,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
  
 @import  (reference) '~assets/css/base.less';
 @import  (reference) '~assets/css/mixins.less';
