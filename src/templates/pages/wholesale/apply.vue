@@ -54,7 +54,7 @@
                 </div>
             </div>
             <div class="apply-item border">
-                <div class="apply-title fs40">
+                <div class="apply-title fs40" style="min-height: 1.35rem;">
                     备注
                 </div>
                 <div class="apply-txt fs40">

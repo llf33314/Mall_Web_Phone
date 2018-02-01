@@ -25,9 +25,9 @@
                 <span :class="[sort =='price'?'shop-font':'']">价格</span>
                 <span style="color: #ccc;">
                   <i class="iconfont icon-paixu2" 
-                  :class="{'shop-font':desc_num == 0}"></i>  
+                  :class="{'shop-font':desc_num == 0 && sort =='price'}"></i>  
                   <i class="iconfont icon-paixu" 
-                  :class="{'shop-font':desc_num == 1}"></i> 
+                  :class="{'shop-font':desc_num == 1 && sort =='price'}"></i> 
                 </span>
             </div>
             <div>
@@ -67,7 +67,8 @@
             :key="index">
             <div class="classify-img" >
                 <default-img :background="goods.image_url"
-                            :isHeadPortrait="0">
+                            :isHeadPortrait="0"
+                            :size="'0.8'">
                 </default-img>
             </div>
             <div class="classify-txt">
@@ -266,7 +267,7 @@ export default {
             }
             this.sort = sort;
             this.productAjax({
-                sort : sort,
+                sort : this.sort,
                 isDesc : _this.desc_num,
                 curPage: 1,
                 type :  _this.$route.params.type,
@@ -348,7 +349,7 @@ export default {
                 if(Id==''){//是0的 就是全部分类
                     _this.$router.push('/classify/'+this.$route.params.shopId+'/'+this.$route.params.busId+'/'+this.$route.params.type+'/'+'k=k');
                 }
-                _this.groupId = Id;
+                _this.sort = 'new'
                 _this.productAjax({
                     groupId: Id,
                     type: _this.$route.params.type
@@ -397,6 +398,7 @@ export default {
                 this.$parent.setSaleMemberId(this.saleMemberId);
             }
         }
+        this.sort = 'new',
         _this.setTitle();
 
         _this.classAllAjax();

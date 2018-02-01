@@ -47,7 +47,7 @@ export default {
     },
     methods: {
         goods_jump(e){
-            let type = this.$store.state.type || _this.$route.params.type || 0;//活动类型
+            let type = this.$store.state.type || this.$route.params.type || 0;//活动类型
             let shopId = this.$store.state.shopId || 'shopId';//店铺id
             let busId = this.$store.state.busId || 'busId';//店铺id
 

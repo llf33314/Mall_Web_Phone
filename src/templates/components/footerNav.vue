@@ -148,6 +148,7 @@ export default {
       let busId = this.$route.params.busId || this.$store.state.busId;
       let shopId = this.$route.params.shopId || this.$store.state.shopId;
       // console.log(name, shopId, busId);
+      
       if (name == "index") {
         // this.$router.push('/index/'+shopId+'/'+busId);
         this.$parent.getPageId(busId, shopId, true);
@@ -158,6 +159,9 @@ export default {
       } else if (name == "my") {
         this.$router.push("/my/center/" + busId);
       }
+      
+      document.body.scrollTop = 0;
+      
       this.clearSelect();
       this.isSelect();
     }
