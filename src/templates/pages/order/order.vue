@@ -69,7 +69,7 @@
                         共计{{order.totalNum}}个商品
                     </p>
                 </div>
-                <div class="order-item-box" v-for=" detail in orderDetailList">
+                <div class="order-item-box" v-for=" (detail,dIndex) in orderDetailList" :key="dIndex">
                     <div class="order-item-content" @click="toProductDetail(detail,order)">
                         <div class="order-item-img">
                             <default-img :background="imgUrl+detail.productImageUrl"
@@ -79,9 +79,12 @@
                         </div>
                         <div class="order-item-txt">
                             <p class="fs42">{{detail.productName}}</p>
-                            <p class="fs42 shop-font">¥{{detail.productPrice[0]}}.<span class="fs32">{{detail.productPrice[1]}}</span></p>
+                            <p class="fs42 shop-font">
+                              <span v-if="order.unit == null">¥</span>{{detail.productPrice[0]}}.<span class="fs32">{{detail.productPrice[1]}}</span>
+                              <span v-if="order.unit != null">{{order.unit}}</span>
+                              </p>
                             <p class="fs36 shopGray">
-                                <span v-if="detail.productSpecificaValue != ''">{{detail.productSpecificaValue}}/</span>{{detail.productNum}}件
+                                <span v-if="detail.productSpecificaValue != null && detail.productSpecificaValue != ''">{{detail.productSpecificaValue}}/</span>{{detail.productNum}}件
                             </p>
                         </div>
                     </div>
@@ -115,15 +118,24 @@
                 <div class="deltails-del border">
                     <p class="fs40">
                         <span>商品金额</span>
-                        <span class="shop-font">￥{{order.productTotalMoney}}</span>
+                        <span class="shop-font">
+                          <em v-if="order.unit == null">¥</em>{{order.productTotalMoney}}
+                          <em v-if="order.unit != null">{{order.unit}}</em>
+                        </span>
                     </p>
                     <p class="fs40" v-if="order.orderFreightMoney != null && order.orderFreightMoney  > 0" >
                         <span>运费</span>
-                        <span class="shop-font">+￥{{order.orderFreightMoney}}</span>
+                        <span class="shop-font">
+                          +<em v-if="order.unit == null">¥</em>{{order.orderFreightMoney}}
+                          <em v-if="order.unit != null">{{order.unit}}</em>
+                          </span>
                     </p>
                     <p class="fs40" v-if="order.orderYouhuiMoney != null && order.orderYouhuiMoney  > 0">
                         <span>优惠</span>
-                        <span class="shop-font">-￥{{order.orderYouhuiMoney}}</span>
+                        <span class="shop-font">
+                          -<em v-if="order.unit == null">¥</em>{{order.orderYouhuiMoney}}
+                          <em v-if="order.unit != null">{{order.unit}}</em>
+                        </span>
                     </p>
                     <p class="fs40" v-if="order.buyerMessage != null">
                         <span>买家留言</span>
@@ -135,7 +147,10 @@
                     </p>
                 </div>
                 <div class="deltails-money fs40 border">
-                    实付金额：<span class="shop-font">￥{{order.orderMoney}}</span>
+                    实付金额：
+                    <span class="shop-font">
+                      <em v-if="order.unit == null">¥</em>{{order.orderMoney}} <em v-if="order.unit != null">{{order.unit}}</em>
+                    </span>
                 </div>  
             </div>
         </div>
@@ -193,11 +208,10 @@ export default {
       orderType: 0, //活动类型 1.团购商品 3.秒杀商品 4.拍卖商品 5 粉币商品 6预售商品 7批发商品
       activityId: 0, //活动id
       imgUrl: "", //图片域名
-      bondStatu:2
+      bondStatu: 2
     };
   },
-  components: {
-  },
+  components: {},
   mounted() {
     let _this = this;
     //把路由带来的参数保存到页面
@@ -287,7 +301,17 @@ export default {
       let productId = detail.productId;
       let shopId = detail.shopId;
       let busId = order.busId;
-      let url = "/goods/details/" + shopId + "/" + busId + "/" + this.orderType + "/" + productId + "/" + this.activityId;
+      let url =
+        "/goods/details/" +
+        shopId +
+        "/" +
+        busId +
+        "/" +
+        this.orderType +
+        "/" +
+        productId +
+        "/" +
+        this.activityId;
       if (this.commonFn.isNotNull(detail.saleMemberId)) {
         url += "/" + detail.saleMemberId + "/0";
       }
@@ -297,23 +321,32 @@ export default {
     groupBuyDetail(groupBuyId, joinId, memberId) {
       //查看团购详情
       let busId = this.busId;
-      this.$router.push( "/groupbuy/detail/" + busId + "/" + groupBuyId + "/" + joinId + "/" + memberId );
+      this.$router.push(
+        "/groupbuy/detail/" +
+          busId +
+          "/" +
+          groupBuyId +
+          "/" +
+          joinId +
+          "/" +
+          memberId
+      );
     },
     /**跳转到商家页面 */
-    jumpBus(e){
-      this.$router.push("/stores/"+e.busId);
+    jumpBus(e) {
+      this.$router.push("/stores/" + e.busId);
     },
     /**跳转到店铺页面 */
-    jumpShop(e){
-      this.$parent.getPageId(e.busId,e.shopId,true);
+    jumpShop(e) {
+      this.$parent.getPageId(e.busId, e.shopId, true);
     }
   }
 };
 </script>
 
 <style lang="less" scoped>
-@import  (reference) '~assets/css/base.less';
-@import  (reference) '~assets/css/mixins.less';
+@import (reference) "~assets/css/base.less";
+@import (reference) "~assets/css/mixins.less";
 //我的订单
 .order-content {
   width: 100%;
@@ -545,6 +578,9 @@ export default {
     padding-right: 25 /@dev-Width *1rem;
     span {
       display: block;
+      em {
+        display: inline !important;
+      }
     }
   }
   & > p:last-child {
@@ -554,6 +590,9 @@ export default {
 .deltails-money {
   text-align: right;
   padding: 40 /@dev-Width *1rem;
+  em {
+    display: inline !important;
+  }
 }
 .deltails-footer {
   padding: 35 /@dev-Width *1rem 0;

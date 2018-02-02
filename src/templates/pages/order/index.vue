@@ -37,9 +37,12 @@
                         </div>
                         <div class="order-item-txt">
                             <p class="fs42">{{detail.productName}}</p>
-                            <p class="fs42 shop-font">¥{{detail.productPrice[0]}}.<span class="fs32">{{detail.productPrice[1]}}</span></p>
+                            <p class="fs42 shop-font">
+                              <span v-if="busItem.unit == null">¥</span>{{detail.productPrice[0]}}.<span class="fs32">{{detail.productPrice[1]}}</span>
+                              <span v-if="busItem.unit != null">{{busItem.unit}}</span>
+                              </p>
                             <p class="fs36 shopGray">
-                                <span v-if="detail.productSpecificaValue != ''">{{detail.productSpecificaValue}}/</span>
+                                <span v-if="detail.productSpecificaValue != null && detail.productSpecificaValue != ''">{{detail.productSpecificaValue}}/</span>
                                 {{detail.productNum}}件</p>
                         </div>
                     </div>
@@ -59,7 +62,7 @@
                 <div class="order-item-box"  v-if="busItem.orderPayWay == 5">
                   <div class="order-item-content  border" style="padding:0.5rem;">
                   <span class="fs42">扫码支付</span>
-                  <span class="fs42" style="margin-left:0.5rem;">订单金额：{{busItem.orderMoney[0]}}.{{busItem.orderMoney[1]}}</span>
+                  <span class="fs42" style="margin-left:0.5rem;">订单金额：¥{{busItem.orderMoney[0]}}.{{busItem.orderMoney[1]}}</span>
                   </div>
 
                 </div>
@@ -74,7 +77,8 @@
                     </div>
                 </div>
                 <div class="order-item-total border fs42">
-                    共计{{busItem.totalNum}}件商品 合计：￥{{busItem.orderMoney[0]}}.{{busItem.orderMoney[1]}}
+                    共计{{busItem.totalNum}}件商品 合计：<span v-if="busItem.unit == null">¥</span>{{busItem.orderMoney[0]}}.{{busItem.orderMoney[1]}}
+                    <span v-if="busItem.unit != null">{{busItem.unit}}</span>
                 </div>
                 <div class="order-item-button fs42"  v-if="busItem.isShowGoPayButton == 1 || busItem.isShowReceiveGoodButton == 1 || busItem.isShowDaifuButton == 1">
                     <div class="order-button shop-bg" 
