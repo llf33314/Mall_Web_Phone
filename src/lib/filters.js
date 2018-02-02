@@ -31,7 +31,9 @@ Vue.filter("currency", function (value) {
  * @param date 时间戳  
  */
 Vue.filter('format', (value) => {
-    value=value.replace(new RegExp(/-/gm) ,"/"); 
+    if(isNaN(value)){
+        value=value.replace(new RegExp(/-/gm) ,"/"); 
+    }
     let add0 = (m) => m < 10 ? '0' + m : m;
     //时间轴是整数，否则要parseInt转换
     let time = new Date(value);
@@ -49,7 +51,9 @@ Vue.filter('format', (value) => {
  * @param date 时间戳  
  */
 Vue.filter('formatNot', (value) => {
-    value=value.replace(new RegExp(/-/gm) ,"/"); 
+    if(isNaN(value)){
+        value=value.replace(new RegExp(/-/gm) ,"/"); 
+    }
     let add0 = (m) => m < 10 ? '0' + m : m;
     //shijianchuo是整数，否则要parseInt转换
     let time = new Date(value);
@@ -65,7 +69,9 @@ Vue.filter('formatNot', (value) => {
  * @param date 时间戳  
  */
 Vue.filter('formatNotM', (value) => {
-    value=value.replace(new RegExp(/-/gm) ,"/"); 
+    if(isNaN(value)){
+        value=value.replace(new RegExp(/-/gm) ,"/"); 
+    }
     let add0 = (m) => m < 10 ? '0' + m : m;
     //时间轴是整数，否则要parseInt转换
     let time = new Date(value);
