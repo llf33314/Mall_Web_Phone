@@ -34,12 +34,14 @@
       </div>
       <div class="main-div" v-if="productList != null && productList.length > 0">
         <div class="pro-item-div" v-for="(product,index) in productList" :key="index" @click="toProductDetail(product)">
-          <default-img :background="product.image_url" :isHeadPortrait="0" class="img-div"></default-img>
-          <p class="title-p">{{product.pro_name}}</p>
-          <p class="p-price">
-            <span class="shopFont fs50">￥{{product.price | moneySplit1}}.<em>{{product.price | moneySplit2}}</em></span>
-            <span class="fs34">销量：{{product.sale_total}}</span>
-          </p>
+          <router-link :to="'/goods/details/'+product.shop_id+'/'+product.user_id+'/0/' +product.id +'/0/' +mallSeller.memberId +'/0'">
+            <default-img :background="product.image_url" :isHeadPortrait="0" class="img-div"></default-img>
+            <p class="title-p">{{product.pro_name}}</p>
+            <p class="p-price">
+              <span class="shopFont fs50">￥{{product.price | moneySplit1}}.<em>{{product.price | moneySplit2}}</em></span>
+              <span class="fs34">销量：{{product.sale_total}}</span>
+            </p>
+          </router-link>
         </div>
       </div>
       <wx-share :shareData="shareObj"></wx-share>
@@ -69,7 +71,6 @@ export default {
     this.loadDatas(); //初始化数据
     this.commonFn.setTitle("商城首页");
     this.$store.commit("show_footer", true); //显示底部导航栏
-    // console.log(this.$parent.getPageId(this.busId,0))
     this.$parent.setSaleMemberId(this.saleMemberId);
   },
   //相关操作事件
@@ -122,17 +123,18 @@ export default {
     //进入商品详情页面
     toProductDetail(obj) {
       let saleMemberId = this.mallSeller.memberId;
-      this.$router.push(
-        "/goods/details/" +
-          obj.shop_id +
-          "/" +
-          obj.user_id +
-          "/0/" +
-          obj.id +
-          "/0/" +
-          saleMemberId +
-          "/0"
-      );
+      alert(obj.shop_id+','+obj.user_id)
+      // this.$router.push(
+      //   "/goods/details/" +
+      //     obj.shop_id +
+      //     "/" +
+      //     obj.user_id +
+      //     "/0/" +
+      //     obj.id +
+      //     "/0/" +
+      //     saleMemberId +
+      //     "/0"
+      // );
     },
     //打电话
     tel() {

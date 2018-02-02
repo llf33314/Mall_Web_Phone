@@ -446,7 +446,7 @@
                     <!--混批-->
                     <div class="shop-inblock" v-if="pifaResult.pfSetObj.hpMoney-pifaTotal < 0 || pifaAmount - pifaResult.pfSetObj.hpNum < 0">
                          还差<span v-if="pifaResult.pfSetObj.hpNum-pifaAmount > 0"> {{pifaResult.pfSetObj.hpNum-pifaAmount}} 件 或</span>
-                         <span>{{(pifaResult.pfSetObj.hpMoney-pifaTotal) | currency }} 元达到批发条件,</span>
+                         <span v-if="pifaResult.pfSetObj.hpMoney">{{(pifaResult.pfSetObj.hpMoney-pifaTotal) | currency }} 元达到批发条件,</span>
                     </div>
                     <div class="shop-inblock" v-else>
                         满

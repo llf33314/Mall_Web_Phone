@@ -127,7 +127,7 @@ export default {
             sessionStorage.setItem("shopId", shopId);
             _this.$store.commit("mutationData", { shopId: shopId });
 
-            _this.getPageId(busId, shopId);
+            _this.getPageId(busId, shopId,false);
           }
           return shopId;
         }
@@ -145,7 +145,7 @@ export default {
         return;
       }
       let saleMemberId = this.getSaleMemberId();
-      if (this.commonFn.isNotNull(saleMemberId) && saleMemberId > 0) {
+      if (this.commonFn.isNotNull(saleMemberId) && saleMemberId > 0 && isReturn) {
         this.$router.push("/seller/mallindex/" + busId + "/" + saleMemberId);
         return;
       }
@@ -163,6 +163,7 @@ export default {
             sessionStorage.setItem("pageId", pageId);
             sessionStorage.setItem("shopId", shopId);
             _this.$store.commit("mutationData", { pageId: pageId });
+           
             if (isReturn) {
               if("#/index/" + pageId == location.hash){
                 location.reload();
