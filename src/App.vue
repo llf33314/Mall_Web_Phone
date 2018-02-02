@@ -1,7 +1,11 @@
 <template>
   <div class="wrapper" v-cloak>
     <div v-html="style"></div> <!--主题切换渲染style-->
-    <router-view ref="main"/>
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive" ref="main"></router-view>
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive" ref="main"></router-view>
+    <!-- <router-view ref="main"/> -->
     <bubble-hint ref="bubble"></bubble-hint>
     <shop-dialog ref="dialog"></shop-dialog>
     <top ref="top" v-if="$store.state.showTop" :shopId="$store.state.shopId"></top>
@@ -35,11 +39,12 @@ export default {
     }
   },
   watch: {
-    $route() {
+    $route(to,from) {
       this.$store.commit("mutationData", {
         loginDTO_URL: window.location.href
       });
       this.loadData();
+       
     },
     listenshowpage1(a, b) {
       if (a != b) {
@@ -281,7 +286,7 @@ export default {
 .wrapper {
   height: 100%;
   width: 100%;
-  max-width: 8.30rem;
+  max-width: 8.35rem;
   margin: 0 auto;
 }
 </style>

@@ -26,7 +26,11 @@ const state = {
     firstUrl : "",//第一次访问的路径
     errorMsg : null,//错误提醒
     isShowLoading : false,//错误
-    isShowFooter: true,//是否显示底部菜单
+    isShowFooter: true,//是否显示底部菜单,
+    scrollTopData:{
+        scrollTop: 0,
+        curPage: 1
+    }//跳转高度
 }
 const actions ={
     
@@ -57,8 +61,10 @@ const mutations = {
     img_url:(state,data)=>state.imgUrl = data,
     error_msg:(state,data)=>state.errorMsg = data,
     is_show_loading:(state,Booleans)=>state.isShowLoading =  Booleans,
-    is_show_footer:(state,Booleans)=>state.isShowFooter =  Booleans
-    
+    is_show_footer:(state,Booleans)=>state.isShowFooter =  Booleans,
+    isScrollTop:(state,data)=> {
+        state.scrollTopData =  data
+    }
 }
 
 const tipMsg = {

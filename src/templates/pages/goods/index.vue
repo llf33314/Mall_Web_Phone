@@ -445,8 +445,9 @@
                 <div class="fs40 goods-choice-Total fs36 shop-textr" v-else>
                     <!--混批-->
                     <div class="shop-inblock" v-if="pifaResult.pfSetObj.hpMoney-pifaTotal < 0 || pifaAmount - pifaResult.pfSetObj.hpNum < 0">
-                         还差<span v-if="pifaResult.pfSetObj.hpNum-pifaAmount > 0"> {{pifaResult.pfSetObj.hpNum-pifaAmount}} 件 或</span>
-                         <span v-if="pifaResult.pfSetObj.hpMoney">{{(pifaResult.pfSetObj.hpMoney-pifaTotal) | currency }} 元达到批发条件,</span>
+                        还差<span v-if="pifaResult.pfSetObj.hpNum-pifaAmount > 0"> {{pifaResult.pfSetObj.hpNum-pifaAmount}} 件 </span>
+                        <span v-if="pifaResult.pfSetObj.isHpNum == 1 && pifaResult.pfSetObj.isHpMoney == 1">或</span>
+                        <span v-if="pifaResult.pfSetObj.hpMoney">{{(pifaResult.pfSetObj.hpMoney-pifaTotal) | currency }} 元达到批发条件,</span>
                     </div>
                     <div class="shop-inblock" v-else>
                         满
@@ -1218,8 +1219,6 @@ export default {
     wholesaleShow() {
       let _this = this;
       let data = _this.goodsData.pifaResult;
-      console.log(data, "pifaResult");
-      console.log(_this.w_dialogData,'w_dialogData',_this.w_guigePrice,_this.w_specificaList);
 
       //"pfStatus"--//批发状态  0 未审核  1审核通过   -1 审核不通过  -2还未申请
       if (!_this.w_pfStatus) {
@@ -1227,6 +1226,11 @@ export default {
         _this.$store.commit("error_msg", data.pfErrorMsg);
         _this.$router.push("/wholesale/apply/"+_this.$route.params.busId);
         return;
+      }
+
+      if(_this.w_dialogData.isSpec){
+        _this.pifaAmount = _this.w_dialogData.productNum;
+        _this.pifaTotal = _this.w_dialogData.pfPrice * _this.w_dialogData.productNum;
       }
       _this.isWholesale = true;
     },
