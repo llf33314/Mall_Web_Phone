@@ -64,7 +64,9 @@
             v-if="subList !=='' ">
         <div class="classify-item" v-for="(goods,index) in subList"
             @click="goods_jump(goods)"
-            :key="index">
+            :key="index" 
+            v-infinite-scroll="loadMore"
+            infinite-scroll-distance="100">
             <div class="classify-img" >
                 <default-img :background="goods.image_url"
                             :isHeadPortrait="0"
@@ -137,24 +139,34 @@ export default {
     },
     watch: {
           // 如果路由有变化，会再次执行该方法
-          "$route":'setTitle'
+          //"$route":'setTitle'
     },
     methods: {
         //加载更多
         loadMore: function () {
-            console.log('加载更多');
-            this.curPage++; //请求页数
-
+           
+           
+            
             let pageCount = this.productList.pageCount;//总页数
 
-            if(this.curPage > pageCount){
+            if(this.curPage >= pageCount){
                 this.isMore = 3;
                 return
             }
             if (this.isMore == 2) {
                 return;
             }
+            
+            let scrollTopData = this.$store.state.scrollTopData;
+            if(scrollTopData.scrollTop > 0){
+                this.curPage =  scrollTopData.curPage;
+                this.$store.commit('isScrollTop',{scrollTop:0});
+                return
+            }
+
             this.isMore = 2;
+            this.curPage++; //请求页数
+            console.log('加载更多',this.curPage);
             this.productAjax({
                 sort: this.sort,
                 curPage: this.curPage,
@@ -174,7 +186,7 @@ export default {
          */
         search(){
             let type = this.$route.params.type ;
-            console.log(type,'typetype')
+
             let shopId = this.$route.params.shopId || this.$store.state.shopId;
             let busId = this.$route.params.busId || this.$store.state.shopId;
             let keyWord = this.keyWord || this.$store.state.keywords ||this.$route.params.keywords
@@ -287,9 +299,12 @@ export default {
             let _keyword = this.$route.params.keywords || this.$store.state.keywords ;
             _keyword === 'k=k' ?_this.keyWord = '':_this.keyWord = _keyword || '';
 
+            let scrollTopData = this.$store.state.scrollTopData;
+            if(scrollTopData.scrollTop > 0){
+                return
+            }
             _this.curPage = 1;
-
-            this.productAjax({
+            _this.productAjax({
                 sort: 'new',
                 curPage: _this.curPage,
                 type : _this.$route.params.type,
@@ -362,6 +377,11 @@ export default {
                 e.activityId = 0;
             }
 
+            let _scrollTop = $(window).scrollTop();
+            this.$store.commit('isScrollTop',{scrollTop:_scrollTop,curPage:this.curPage});
+           
+            this.isMore = 2;
+
             let shopId =  e.shop_id ||this.$store.state.shopId ||this.$store.state.shopId || this.$route.params.shopId;
             let busId =  this.$store.state.busId || this.$route.params.busId;
             let type = this.$store.state.type || this.$route.params.type;
@@ -383,8 +403,9 @@ export default {
             this.showNav();
         }
     },
-    mounted () {
+    created () {
         let _this = this;
+        
         // _this.type = _this.$route.params.type;
         let _keyword = this.$store.state.keywords || this.$route.params.keywords;
         _keyword === 'k=k'?_this.keyWord = '':_this.keyWord = _keyword || '';
@@ -398,16 +419,10 @@ export default {
                 this.$parent.setSaleMemberId(this.saleMemberId);
             }
         }
-        this.sort = 'new',
+        this.sort = 'new';
         _this.setTitle();
-
         _this.classAllAjax();
 
-        $(window).bind('scroll', function () {
-            if ($(window).scrollTop() > 0 && $(window).scrollTop() >= ($(document).height() - $(window).height()) - 1000) {
-            _this.loadMore()
-            }
-        });
     }
 }
 </script>
@@ -421,7 +436,8 @@ export default {
         width: 100%;
         font-size: 0;
         background: #fff;
-        position: absolute;
+        position: fixed;
+        top: 0;
         z-index: 3;
         max-width: 8.28rem;
         .price{

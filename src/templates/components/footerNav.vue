@@ -160,8 +160,6 @@ export default {
         this.$router.push("/my/center/" + busId);
       }
       
-      document.body.scrollTop = 0;
-      
       this.clearSelect();
       this.isSelect();
     }

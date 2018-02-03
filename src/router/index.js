@@ -173,56 +173,64 @@ export default new Router({
       name: 'nav',
       component: Nav,
       meta: {
-        title: '导航,上线后删除'
+        title: '导航,上线后删除',
+        keepAlive: false
       },
     }, {
       path: '/stores/:busId',
       name: 'Stores',
       component: Stores,
       meta: {
-        title: '选择门店'
+        title: '选择门店',
+        keepAlive: false
       },
     },  {
       path: '/stores/fenbi/:busId',
       name: 'fenbi_store_list',
       component: fenbi_store_list,
       meta: {
-        title: '选择门店（粉币商城）'
+        title: '选择门店（粉币商城）',
+        keepAlive: false
       },
     },{
       path: '/search/:busId/:type/:keywords',
       name: 'search',
       component: Search,
       meta: {
-        title: '搜索'
+        title: '搜索',
+        keepAlive: false
       }
     }, {
       path: '/search/:busId/:type/:keywords/:desc',
       name: 'search',
       component: Search,
       meta: {
-        title: '搜索'
+        title: '搜索',
+        keepAlive: false
       }
     }, {
       path: '/classify/:shopId/:busId/:type/:keywords',
       name: 'classify',
       component: Classify,
       meta: {
-        title: '分类'
+        title: '分类',
+        keepAlive: true
       },
     }, {
       path: '/classify/:shopId/:busId/:type/:keywords/:desc',
       name: 'classify',
       component: Classify,
       meta: {
-        title: '分类'
+        title: '分类',
+        keepAlive: true
       },
     }, {
       path: '/goods/details/:shopId/:busId/:type/:goodsId/:activityId',
       name: 'goods',
       component: Goods,
       meta: {
-        title: '商品详情'
+        title: '商品详情',
+        keepAlive: false
       },
       children: [{
         path: '/goods/spec/:shopId/:busId/:type/:goodsId/:activityId',
@@ -238,182 +246,208 @@ export default new Router({
       name: 'goods',
       component: Goods,
       meta: {
-        title: '商品详情'
+        title: '商品详情',
+        keepAlive: false
       },
     }, {
       path: '/comment/:busId/:orderDetailId',
       name: 'comment',
       component: Comment,
       meta: {
-        title: '评论'
+        title: '评论',
+        keepAlive: false
       }
     }, {
       path: '/comment/success/:busId/:id',
       name: 'Comment_success',
       component: Comment_success,
       meta: {
-        title: '评论成功'
+        title: '评论成功',
+        keepAlive: false
       }
     }, {
       path: '/comment/share/:busId/:id',
       name: 'share',
       component: Comment_Share,
       meta: {
-        title: '评论分享成功'
+        title: '评论分享成功',
+        keepAlive: false
       }
     }, {
       path: '/wholesale/apply/:busId',
       name: 'Wholesale_Apply',
       component: Wholesale_Apply,
       meta: {
-        title: '批发申请页'
+        title: '批发申请页',
+        keepAlive: false
       }
     }, {
       path: '/my/center/:busId',
       name: 'my_center',
       component: my_center,
       meta: {
-        title: '我的'
+        title: '我的',
+        keepAlive: false
       }
     }, {
       path: '/order/settlement/:busId/:from',
       name: 'subtmit_order_list',
       component: subtmit_order_list,
       meta: {
-        title: '提交订单'
+        title: '提交订单',
+        keepAlive: false
       }
     }, {
       path: '/order/settlement/:busId/:from/:ids',
       name: 'subtmit_order_list',
       component: subtmit_order_list,
       meta: {
-        title: '提交订单'
+        title: '提交订单',
+        keepAlive: false
       }
     }, {
       path: '/order/list/:busId/:type',
       name: 'my_order_list',
       component: my_order_list,
       meta: {
-        title: '我的订单'
+        title: '我的订单',
+        keepAlive: false
       }
     }, {
       path: '/order/detail/:busId/:orderId',
       name: 'my_order_detail',
       component: my_order_detail,
       meta: {
-        title: '订单详情'
+        title: '订单详情',
+        keepAlive: false
       }
     }, {
       path: '/return/list/:busId',
       name: 'return_list',
       component: return_list,
       meta: {
-        title: '退款/售后列表'
+        title: '退款/售后列表',
+        keepAlive: false
       }
     }, {
       path: '/return/succeed/:busId/:returnId',
       name: 'detail_return',
       component: detail_return,
       meta: {
-        title: '退款详情'
+        title: '退款详情',
+        keepAlive: false
       }
     }, {
       path: '/return/classify/:busId/:orderDetailId',
       name: 'return_classify',
       component: return_classify,
       meta: {
-        title: '退款类型'
+        title: '退款类型',
+        keepAlive: false
       }
     }, {
       path: '/return/apply/:busId/:orderDetailId/:returnType/:returnId',
       name: 'apply_return',
       component: apply_return,
       meta: {
-        title: '申请退款'
+        title: '申请退款',
+        keepAlive: false
       }
     }, {
       path: '/return/logistics/:busId/:returnId',
       name: 'logistics_return',
       component: logistics_return,
       meta: {
-        title: '物流信息（上传未完成)'
+        title: '物流信息（上传未完成)',
+        keepAlive: false
       }
     }, {
       path: '/return/consult/:busId/:returnId',
       name: 'consult_return',
       component: consult_return,
       meta: {
-        title: '协商详情'
+        title: '协商详情',
+        keepAlive: false
       }
     }, {
       path: '/cart/:shopId/:busId/:type',
       name: 'shoppingCart',
       component: shoppingCart,
       meta: {
-        title: '购物车'
+        title: '购物车',
+        keepAlive: false
       }
     }, {
       path: '/my/comment/:busId',
       name: 'my_comment',
       component: my_comment,
       meta: {
-        title: '我的评论'
+        title: '我的评论',
+        keepAlive: false
       }
     }, {
       path: '/daifu/:busId/:orderId',
       name: 'help_Pay',
       component: help_Pay,
       meta: {
-        title: '找人代付'
+        title: '找人代付',
+        keepAlive: false
       }
     }, {
       path: '/address/:busId',
       name: 'myAddress',
       component: myAddress,
       meta: {
-        title: '地址列表'
+        title: '地址列表',
+        keepAlive: false
       }
     }, {
       path: '/address/:busId/:integralId',
       name: 'integral_my_address',
       component: integral_my_address,
       meta: {
-        title: '地址列表(积分商城)'
+        title: '地址列表(积分商城)',
+        keepAlive: false
       }
     }, {
       path: '/address/edit/:busId/:id',
       name: 'address',
       component: address,
       meta: {
-        title: '编辑地址页面'
+        title: '编辑地址页面',
+        keepAlive: false
       }
     }, {
       path: '/address/edit/:busId/:id/:integralId',
       name: 'address',
       component: address,
       meta: {
-        title: '编辑地址页面(积分商城)'
+        title: '编辑地址页面(积分商城)',
+        keepAlive: false
       }
     }, {
       path: '/groupbuy/detail/:busId/:id/:joinId/:memberId',
       name: 'groupbuydetail',
       component: groupbuydetail,
       meta: {
-        title: '团购详情'
+        title: '团购详情',
+        keepAlive: false
       }
     }, {
       path: '/auction/bond/:busId/:proId/:aucId/:invId/:agree',
       name: 'bond',
       component: Auction_Bond,
       meta: {
-        title: '保证金'
+        title: '保证金',
+        keepAlive: false
       }
     }, {
       path: '/auction/agreement/:busId/:proId/:aucId/:invId',
       name: 'agreement',
       component: Auction_Agreement,
       meta: {
-        title: '协议'
+        title: '协议',
+        keepAlive: false
       }
     },
     {
@@ -421,207 +455,250 @@ export default new Router({
       name: 'auction_success',
       component: auction_success,
       meta: {
-        title: '保证金缴纳成功'
+        title: '保证金缴纳成功',
+        keepAlive: false
       }
     }, {
       path: '/auction/notice/:busId/:aucId/:type',
       name: 'margin_notice',
       component: margin_notice,
       meta: {
-        title: '保证金须知'
+        title: '保证金须知',
+        keepAlive: false
       }
     }, {
       path: '/auction/myBidding/:busId/:type',
       name: 'auction_bidding',
       component: auction_bidding,
       meta: {
-        title: '我的竞拍'
+        title: '我的竞拍',
+        keepAlive: false
       }
     }, {
       path: '/presale/deposit/:busId/:proId/:presaleId/:invId/:num',
       name: 'presaleDeposit',
       component: presaleDeposit,
       meta: {
-        title: '预售交定金'
+        title: '预售交定金',
+        keepAlive: false
       }
     }, {
       path: '/presale/myDeposit/:busId/:type',
       name: 'myPresaleDeposit',
       component: myPresaleDeposit,
       meta: {
-        title: '我的定金'
+        title: '我的定金',
+        keepAlive: false
       }
     }, {
       path: '/my/collect/:busId',
       name: 'myCollect',
       component: myCollect,
       meta: {
-        title: '我的收藏'
+        title: '我的收藏',
+        keepAlive: false
       }
     }, {
       path: '/integral/index/:busId',
       name: 'integral_index',
       component: integral_index,
       meta: {
-        title: '积分商城首页'
+        title: '积分商城首页',
+        keepAlive: false
       }
     }, {
       path: '/integral/product/:busId/:productId/:shopId',
       name: 'integral_product',
       component: integral_product,
       meta: {
-        title: '积分商品'
+        title: '积分商品',
+        keepAlive: false
       }
     }, {
       path: '/integral/detail/:busId',
       name: 'integral_detail',
       component: integral_detail,
       meta: {
-        title: '积分明细'
+        title: '积分明细',
+        keepAlive: false
       }
     }, {
       path: '/integral/record/:busId',
       name: 'integral_record',
       component: integral_record,
       meta: {
-        title: '兑换记录'
+        title: '兑换记录',
+        keepAlive: false
       }
     }, {
       path: '/seller/index/:busId',
       name: 'Sale_index',
       component: Sale_index,
       meta: {
-        title: '超级营销员首页'
+        title: '超级营销员首页',
+        keepAlive: false
       }
     }, {
       path: '/seller/apply/:busId',
       name: 'Sale_apply',
       component: Sale_apply,
       meta: {
-        title: '超级营销员申请'
+        title: '超级营销员申请',
+        keepAlive: false
       }
     }, {
       path: '/seller/rank/:busId',
       name: 'saleRank',
       component: saleRank,
       meta: {
-        title: '销售员排行榜'
+        title: '销售员排行榜',
+        keepAlive: false
       }
     }, {
       path: '/seller/client/:busId',
       name: 'myClient',
       component: myClient,
       meta: {
-        title: '我的客户'
+        title: '我的客户',
+        keepAlive: false
       }
     }, {
       path: '/seller/clientOrder/:busId',
       name: 'myClientOrder',
       component: myClientOrder,
       meta: {
-        title: '客户订单'
+        title: '客户订单',
+        keepAlive: false
       }
     }, {
       path: '/seller/totalIncome/:busId/:type',
       name: 'totalIncome',
       component: totalIncome,
       meta: {
-        title: '累计佣金'
+        title: '累计佣金',
+        keepAlive: false
       }
     }, {
       path: '/seller/twoCode/:busId/:saleMemberId',
       name: 'twoCode',
       component: twoCode,
       meta: {
-        title: '我的二维码'
+        title: '我的二维码',
+        keepAlive: false
       }
     }, {
       path: '/seller/promotion/:busId/:saleMemberId',
       name: 'promotion',
       component: promotion,
       meta: {
-        title: '推广海报'
+        title: '推广海报',
+        keepAlive: false
       }
     }, {
       path: '/seller/saleRule/:busId',
       name: 'saleRule',
       component: saleRule,
       meta: {
-        title: '销售规则'
+        title: '销售规则',
+        keepAlive: false
       }
     }, {
       path: '/seller/withdraw/:busId',
       name: 'myWithdraw',
       component: myWithdraw,
       meta: {
-        title: '我的提现'
+        title: '我的提现',
+        keepAlive: false
       }
     }, {
       path: '/seller/commission/detail/:busId',
       name: 'commissionDetail',
       component: commissionDetail,
       meta: {
-        title: '佣金明细'
+        title: '佣金明细',
+        keepAlive: false
       }
     }, {
       path: '/seller/mallset/:busId/:type/:findIds',
       name: 'mallSet',
       component: mallSet,
       meta: {
-        title: '商城设置'
+        title: '商城设置',
+        keepAlive: false
       }
     }, {
       path: '/seller/findproduct/:busId/:ids',
       name: 'findProduct',
       component: findProduct,
       meta: {
-        title: '自选商品'
+        title: '自选商品',
+        keepAlive: false
       }
     }, {
       path: '/seller/mallindex/:busId/:saleMemberId',
       name: 'mallIndex',
       component: mallIndex,
       meta: {
-        title: '超级销售员商城首页'
+        title: '超级销售员商城首页',
+        keepAlive: false
       }
     }, {
       path: '/seller/share/:busId/:proId/:saleMemberId',
       name: 'sellerShare',
       component: sellerShare,
       meta: {
-        title: '超级销售员商城首页'
+        title: '超级销售员商城首页',
+        keepAlive: false
       }
     }, {
       path: '/error/404',
       name: 'error_404',
       component: error_404,
       meta: {
-        title: '404页面'
+        title: '404页面',
+        keepAlive: false
       }
     }, {
       path: '/error/404/:busId',
       name: 'error_404',
       component: error_404,
       meta: {
-        title: '404页面'
+        title: '404页面',
+        keepAlive: false
       }
     }, {
       path: '/error/url/:busId',
       name: 'error_url',
       component: error_url,
       meta: {
-        title: '链接错误页面'
+        title: '链接错误页面',
+        keepAlive: false
       }
     }, {
       path: '/grant/:busId',
       name: 'authorization',
       component: authorization,
       meta: {
-        title: '商家授权页面'
+        title: '商家授权页面',
+        keepAlive: false
       }
     }
 
 
 
-  ]
+  ],
+  scrollBehavior (to, from, savedPosition) {
+    if(to.name == "classify" && from.name == "goods"){
+      if (savedPosition) {
+            return savedPosition
+        } else {
+          return new Promise((resolve, reject) => {
+            setTimeout(() => {
+              resolve({ x: 0, y: to.meta.savedPosition || 0 })
+            }, 1000)
+          })
+      }
+    }
+    return { x: 0, y: 0 }
+  }
 })
