@@ -47,10 +47,7 @@ export default {
       );
     },
     qqUrl() {
-      window.location.href =
-        "http://wpa.qq.com/msgrd?v=3&amp;uin=&amp;site=" +
-        this.QQ +
-        "&amp;menu=yes";
+      window.location.href = "http://wpa.qq.com/msgrd?v=3&uin=" + this.QQ + "&site=qq&menu=yes";
     },
     /**
          * 客服QQ

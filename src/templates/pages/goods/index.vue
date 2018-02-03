@@ -1383,10 +1383,7 @@ export default {
     },
     //进入QQ客服聊天页面
     ToQQ() {
-      window.location.href =
-        "http://wpa.qq.com/msgrd?v=3&amp;uin=&amp;site=" +
-        this.$store.state.QQ +
-        "&amp;menu=yes";
+      window.location.href = "http://wpa.qq.com/msgrd?v=3&uin=" +  this.$store.state.QQ  + "&site=qq&menu=yes";
     },
     // type 1   查看店铺其他商品  2 查看其他店铺商品
     toJumpShop(type) {

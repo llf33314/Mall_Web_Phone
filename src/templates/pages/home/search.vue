@@ -143,9 +143,6 @@ export default {
                             }
                         }
                     })
-                },
-                'btnTow': function () {
-
                 }
             }
         };

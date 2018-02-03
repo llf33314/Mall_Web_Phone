@@ -35,6 +35,7 @@ Vue.mixin({
 					if (_this.orderList != null) {
 						//订单列表页面刷新数据
 						_this.orderList = null;
+						_this.curPage = 1;
 						_this.getOrderList({ curPage: 1 });
 					} else if (_this.order != null && _this.orderDetailList != null) {
 						//订单详情页面刷新数据

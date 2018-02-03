@@ -31,7 +31,7 @@
                 </div>
                 <div class="item-center-text">
                     <p class="text-overflow fs42">{{comment.productName}}</p>
-                    <p class="fs40">￥{{comment.productPrice}}</p>
+                    <p class="fs40"><span v-if="comment.unit == null">￥</span>{{comment.productPrice}}<span v-if="comment.unit != null">{{comment.unit}}</span></p>
                     <p class="fs40 shop-font">{{comment.feel == 1 ? "好评" : comment.feel == 0 ? "中评" : comment.feel == -1 ? "差评" : ""}}</p>
                 </div>
             </div>
@@ -58,7 +58,7 @@ export default {
       pageCount: 0, //总页数
       imgUrl: "", //图片域名
       commentArr: [], //评论集合
-      isMore: 2, //控制没有更多的显示 1 未加载；2 加载中 ；3 没有更多了；4 出错了
+      isMore: 2 //控制没有更多的显示 1 未加载；2 加载中 ；3 没有更多了；4 出错了
     };
   },
   components: {
@@ -119,15 +119,27 @@ export default {
     },
     //跳转到商品详情页面
     jumpProductDetail(e) {
-      this.$router.push(
+      let busId = e.busId || this.busId;
+      let orderType = e.orderType || 0;
+      let productId = e.productId;
+      let activityId = e.activityId || 0;
+      let shopId = e.shopId;
+      let _url =
         "/goods/details/" +
-          e.shopId +
-          "/" +
-          this.busId +
-          "/0/" +
-          e.productId +
-          "/0"
-      );
+        shopId +
+        "/" +
+        busId +
+        "/" +
+        orderType +
+        "/" +
+        productId +
+        "/" +
+        activityId;
+      if (orderType == 2) {
+        //跳到积分商品页面
+        _url = "/integral/product/" + busId + "/" + productId + "/" + shopId;
+      }
+      this.$router.push(_url);
     }
   }
 };
@@ -224,7 +236,7 @@ export default {
     }
   }
 }
-.more-main{
+.more-main {
   padding-bottom: 20px;
 }
 </style>

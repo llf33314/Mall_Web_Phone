@@ -55,8 +55,7 @@ export default {
       imageList: [] //图片集合
     };
   },
-  components: {
-  },
+  components: {},
   mounted() {
     this.loadDatas(); //初始化数据
     this.commonFn.setTitle("评论成功");
@@ -75,7 +74,7 @@ export default {
         url: location.href, //当前页面的地址
         id: this.id, //评论id
         browerType: _this.$store.state.browerType, //浏览器类型
-        ucLogin: 1//不需要登陆
+        ucLogin: 1 //不需要登陆
       };
       _this.ajaxRequest({
         url: h5App.activeAPI.comment_success_post,
@@ -103,26 +102,30 @@ export default {
       let shopId = this.product.shopId;
       let busId = this.busId;
       let productId = this.product.productId;
-      this.$router.push(
+      let _url =
         "/goods/details/" +
-          shopId +
-          "/" +
-          busId +
-          "/" +
-          orderType +
-          "/" +
-          productId +
-          "/" +
-          activityId
-      );
+        shopId +
+        "/" +
+        busId +
+        "/" +
+        orderType +
+        "/" +
+        productId +
+        "/" +
+        activityId;
+      if (orderType == 2) {
+        //跳到积分商品页面
+        _url = "/integral/product/" + busId + "/" + productId + "/" + shopId;
+      }
+      this.$router.push(_url);
     }
   }
 };
 </script>
 
 <style lang="less" scoped>
-@import  (reference) '~assets/css/base.less';
-@import  (reference) '~assets/css/mixins.less';
+@import (reference) "~assets/css/base.less";
+@import (reference) "~assets/css/mixins.less";
 .deltails-header {
   color: #fff;
   .ik-box;

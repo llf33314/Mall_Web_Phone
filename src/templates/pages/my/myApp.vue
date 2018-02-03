@@ -270,14 +270,14 @@ export default {
       }
     },
     pifaShow() {
-      let _this = this;
-      let _myData = _this.myData;
-      let _pfStatus = _myData.pfStatus;
-      let _isShow = false; //是否显示弹出框
       let msg = {
         dialogTitle: this.$t('pifa_tishi_msg'),
         dialogMsg: _myData.pfErrorMsg
       };
+      let _this = this;
+      let _myData = _this.myData;
+      let _pfStatus = _myData.pfStatus;
+      let _isShow = false; //是否显示弹出框
       //没有开通批发商
       if (_pfStatus == "-2") {
         //还未申请批发商 跳转至申请批发商页面
@@ -292,7 +292,7 @@ export default {
         //审核失败，询问是否跳转至申请批发商页面
         msg.btnNum = 2;
         msg.callback = {
-          btnOne: _this.returnPifaAll
+          btnOne: _this.returnApplyPifa
         };
         _isShow = true;
       }

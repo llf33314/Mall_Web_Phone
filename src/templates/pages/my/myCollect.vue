@@ -124,8 +124,7 @@ export default {
         callback: {
           btnOne: function() {
             _this.deleteCollect(ids);
-          },
-          btnTow: function() {}
+          }
         }
       };
       _this.$parent.$refs.dialog.showDialog(msg); //弹出框
@@ -201,11 +200,10 @@ export default {
     //跳转到商品详情
     proDetail(obj) {
       let busId = this.busId;
-      let shopId = obj.shop_id || obj.shopId;
-      let proId = obj.pro_id || obj.proId;
-      let aucId = obj.auc_id || obj.aucId;
+      let shopId = obj.shopId;
+      let proId = obj.productId;
       this.$router.push(
-        "/goods/details/" + shopId + "/" + busId + "/4/" + proId + "/" + aucId
+        "/goods/details/" + shopId + "/" + busId + "/0/" + proId + "/0"
       );
     },
     /**
@@ -226,9 +224,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import  (reference) '~assets/css/base.less';
-@import  (reference) '~assets/css/mixins.less';
-@import  (reference) "~assets/css/common.less";
+@import (reference) "~assets/css/base.less";
+@import (reference) "~assets/css/mixins.less";
+@import (reference) "~assets/css/common.less";
 .collect-nav {
   height: 100/@dev-Width *1rem;
   background-color: #f6f6f6;

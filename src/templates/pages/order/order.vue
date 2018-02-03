@@ -315,6 +315,10 @@ export default {
       if (this.commonFn.isNotNull(detail.saleMemberId)) {
         url += "/" + detail.saleMemberId + "/0";
       }
+      if(this.orderType == 2){
+        //跳到积分商品页面
+        url = "/integral/product/"+busId+"/"+productId+"/"+shopId;
+      }
       //跳转至商品详情页面
       this.$router.push(url);
     },

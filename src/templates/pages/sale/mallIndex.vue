@@ -145,10 +145,7 @@ export default {
     //进入QQ聊天
     toQQ() {
       let qq = this.mallSet.qq;
-      location.href =
-        "http://wpa.qq.com/msgrd?v=3&amp;uin=" +
-        qq +
-        "&amp;site=qq&amp;menu=yes";
+      window.location.href = "http://wpa.qq.com/msgrd?v=3&uin=" +  qq + "&site=qq&menu=yes";
     },
     //进入全部商品页面
     toAllProduct() {
@@ -205,7 +202,7 @@ export default {
       }
     }
     .set-div {
-      width: 8%;
+      width: 7%;
       .shop-textc;
       .fs0;
       i {

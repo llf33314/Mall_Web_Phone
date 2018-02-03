@@ -1,6 +1,6 @@
 <template>
   <transition name="dialog">
-    <section class="shop-dialog" v-show="isShow">
+    <!-- <section class="shop-dialog" v-show="isShow">
       <div class="dialog-main">
         <div class="dialog-content border">
           <p class="dialog-title fs50"
@@ -25,133 +25,158 @@
           </span>
         </div>
       </div>
-    </section>
+    </section> -->
   </transition>
 </template>
 <script>
-
 export default {
-    props:['navshow'],
-    data: function () {
-        return {
-            isShow: false,
-            btnNum : 2,
-            btnOne: '',
-            btnTow: '',
-            dialogTitle:'提示',
-            dialogMsg: '我是消息内容？',
-            callback: {
-                btnOne: '',
-                btnTow: ''
-            }
-        }
-    }, 
-    methods: {
-        //关闭弹窗
-        dialogClose: function (num) {
-            this.allowScroll();
-            this.isShow = false;
-            if(num === 1 && Number(this.btnNum) === 2){
-                return this.callback.btnTow && !this.callback.btnTow();
-            }
-        },
-        //确定
-        dialogConfirm: function () {
-            this.isShow = false;
-            this.allowScroll();
-            if(this.callback !== undefined &&　this.callback　!== ''){
-                return this.callback.btnOne && !this.callback.btnOne();
-            }
-        },
+  props: ["navshow"],
+  data: function() {
+    return {
+      isShow: false,
+      btnNum: 2,
+      btnOne: "",
+      btnTow: "",
+      dialogTitle: "提示",
+      dialogMsg: "我是消息内容？",
+      callback: {
+        btnOne: "",
+        btnTow: ""
+      }
+    };
+  },
+  methods: {
+    // //关闭弹窗
+    // dialogClose: function(num) {
+    //   this.allowScroll();
+    //   this.isShow = false;
+    //   if (num === 1 && Number(this.btnNum) === 2) {
+    //     return this.callback.btnTow && !this.callback.btnTow();
+    //   }
+    // },
+    // //确定
+    // dialogConfirm: function() {
+    //   this.isShow = false;
+    //   this.allowScroll();
+    //   if (this.callback !== undefined && this.callback !== "") {
+    //     return this.callback.btnOne && !this.callback.btnOne();
+    //   }
+    // },
+    showDialog: function(msg) {
+      var vm = this;
+      vm.btnNum = msg.btnNum || 2;
+      vm.dialogTitle = msg.dialogTitle;
+      vm.dialogMsg = msg.dialogMsg;
+      vm.btnOne = msg.btnOne || "确定";
+      vm.btnTow = msg.btnTow || "取消";
+      vm.callback = msg.callback;
+      // vm.isShow = true;
 
-        showDialog: function (msg) {
-            var vm = this;
-            vm.btnNum = msg.btnNum || 2;
-            vm.dialogTitle = msg.dialogTitle;
-            vm.dialogMsg = msg.dialogMsg;
-            vm.btnOne = msg.btnOne || '确定';
-            vm.btnTow = msg.btnTow || '取消';
-            vm.callback = msg.callback;
-            vm.isShow = true;
-            
-            vm.disableScroll();
-        },
-        /**
-         * 禁止页面滚动
-         */
-        disableScroll: function () {
-            $(window).bind("touchmove", function (e) {
-                e.preventDefault();
-            });
-        },
-        /**
-         * 允许页面滚动
-         */
-        allowScroll: function () {
-            $(window).unbind("touchmove");
-        }
-    }    
-}
+      //   vm.disableScroll();
+      if (msg.btnNum == 1) {
+        vm.$messagebox.alert(msg.dialogMsg, msg.dialogTitle).then(action => {
+          if (this.callback !== undefined && this.callback !== "") {
+            //确定事件
+            return vm.callback.btnOne && !vm.callback.btnOne();
+          }
+        });
+        return;
+      }
+      vm
+        .$messagebox({
+          title: msg.dialogTitle,
+          message: msg.dialogMsg,
+          showCancelButton: true,
+          confirmButtonText: vm.btnOne
+        })
+        .then(action => {
+          if (action == "confirm") {
+            //确定事件
+            return vm.callback.btnOne && !vm.callback.btnOne();
+          } else if (action == "cancel") {
+            return this.callback.btnTow && !this.callback.btnTow();
+          }
+        });
+    }
+    // /**
+    //      * 禁止页面滚动
+    //      */
+    // disableScroll: function() {
+    //   $(window).bind("touchmove", function(e) {
+    //     e.preventDefault();
+    //   });
+    // },
+    // /**
+    //      * 允许页面滚动
+    //      */
+    // allowScroll: function() {
+    //   $(window).unbind("touchmove");
+    // }
+  }
+};
 </script>
 
-<style lang="less" scoped>
-@import  (reference) '~assets/css/base.less';
-@import  (reference) '~assets/css/mixins.less';
-.shop-dialog{
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 99;
-    background: rgba(0, 0, 0, 0.5);
-    .ik-box;
-    .ik-box-align(center);
-    .ik-box-pack(center);
-    .dialog-main{
-        width: 90%;
-        background: #fff;
-        margin: 0 auto;
-        .border-radius(5px);
-        animation: dialogShow 0.25s;
-        -moz-animation: dialogShow 0.25s;	/* Firefox */
-        -webkit-animation: dialogShow 0.25s;
-        .dialog-content{
-            text-align: center;
-            padding: 60/@dev-Width *1rem ;
-            .dialog-title{
-                margin-bottom: 80/@dev-Width *1rem ;
-            }
-        }
-        .dialog-bottom{
-            width: 100%;
-            font-size: 0;
-            display: -webkit-box;
-            .dialog-button{
-                text-align: center;
-                .ik-box;
-                .ik-box-flex(1);
-                .ik-box-pack(center);
-                color: #25ae5f;
-                padding: 45/@dev-Width *1rem 0;
-            }
-            &>span:nth-child(2){
-                border-left:1px solid #e2e2e2; 
-            }
-        }
-    }
-}
-@keyframes dialogShow{
-    from {transform: scale(0)}
-    to {transform: scale(1)}
-}
-@-moz-keyframes dialogShow{ /* Firefox */
-    from {transform: scale(0)}
-    to {transform: scale(1)}
-}
-@-webkit-keyframes dialogShow{/* Safari 和 Chrome */
-    from {transform: scale(0)}
-    to {transform: scale(1)}
-}
+<style lang="less" >
+// @import  (reference) '~assets/css/base.less';
+// @import  (reference) '~assets/css/mixins.less';
+// .shop-dialog{
+//     position: fixed;
+//     width: 100%;
+//     height: 100%;
+//     top: 0;
+//     left: 0;
+//     z-index: 99;
+//     background: rgba(0, 0, 0, 0.5);
+//     .ik-box;
+//     .ik-box-align(center);
+//     .ik-box-pack(center);
+//     .dialog-main{
+//         width: 90%;
+//         background: #fff;
+//         margin: 0 auto;
+//         .border-radius(5px);
+//         animation: dialogShow 0.25s;
+//         -moz-animation: dialogShow 0.25s;	/* Firefox */
+//         -webkit-animation: dialogShow 0.25s;
+//         .dialog-content{
+//             text-align: center;
+//             padding: 60/@dev-Width *1rem ;
+//             .dialog-title{
+//                 margin-bottom: 80/@dev-Width *1rem ;
+//             }
+//         }
+//         .dialog-bottom{
+//             width: 100%;
+//             font-size: 0;
+//             display: -webkit-box;
+//             .dialog-button{
+//                 text-align: center;
+//                 .ik-box;
+//                 .ik-box-flex(1);
+//                 .ik-box-pack(center);
+//                 color: #25ae5f;
+//                 padding: 45/@dev-Width *1rem 0;
+//             }
+//             &>span:nth-child(2){
+//                 border-left:1px solid #e2e2e2;
+//             }
+//         }
+//     }
+// }
+// @keyframes dialogShow{
+//     from {transform: scale(0)}
+//     to {transform: scale(1)}
+// }
+// @-moz-keyframes dialogShow{ /* Firefox */
+//     from {transform: scale(0)}
+//     to {transform: scale(1)}
+// }
+// @-webkit-keyframes dialogShow{/* Safari 和 Chrome */
+//     from {transform: scale(0)}
+//     to {transform: scale(1)}
+// }
 
+.mint-msgbox-confirm {
+  color: #25ae5f !important;
+}
 </style>

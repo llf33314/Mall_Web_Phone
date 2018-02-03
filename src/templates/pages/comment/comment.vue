@@ -136,10 +136,10 @@ export default {
       let content = this.content;
       let _show_tip = this.$parent.$refs.bubble.show_tips;
       if (_isNull(content)) {
-        _show_tip(this.$t('comment_content_null_msg'));
+        _show_tip(this.$t("comment_content_null_msg"));
         return false;
       } else if (content.length > 240) {
-        _show_tip(this.$t('comment_content_length_msg'));
+        _show_tip(this.$t("comment_content_length_msg"));
         return false;
       }
       return true;
@@ -181,28 +181,33 @@ export default {
     },
     //跳转商品详情页面
     toReturnProductDetail(productId, shopId, busId) {
+      let productObj = this.productObj;
       let orderType = productObj.orderType || 0;
       let activityId = productObj.activityId || 0;
-      this.$router.push(
+      let _url =
         "/goods/details/" +
-          shopId +
-          "/" +
-          busId +
-          "/" +
-          orderType +
-          "/" +
-          productId +
-          "/" +
-          activityId
-      );
+        shopId +
+        "/" +
+        busId +
+        "/" +
+        orderType +
+        "/" +
+        productId +
+        "/" +
+        activityId;
+      if (orderType == 2) {
+        //跳到积分商品页面
+        _url = "/integral/product/"+busId+"/"+productId+"/"+shopId;
+      }
+      this.$router.push(_url);
     }
   }
 };
 </script>
 
 <style lang="less" scoped>
-@import  (reference) '~assets/css/base.less';
-@import  (reference) '~assets/css/mixins.less';
+@import (reference) "~assets/css/base.less";
+@import (reference) "~assets/css/mixins.less";
 .comment-main {
   width: 100%;
   padding-bottom: 134/@dev-Width *1rem;

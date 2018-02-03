@@ -52,11 +52,10 @@ export default {
       comment: null, //评论对象
       product: null, //商品对象
       imageList: [], //图片集合
-      shareObj: null,//分享对象
+      shareObj: null //分享对象
     };
   },
-  components: {
-  },
+  components: {},
   mounted() {
     this.loadDatas(); //初始化数据
     this.commonFn.setTitle("评论分享");
@@ -75,7 +74,7 @@ export default {
         url: location.href, //当前页面的地址
         id: this.id, //评论id
         browerType: _this.$store.state.browerType, //浏览器类型
-        ucLogin: 1//不需要登陆
+        ucLogin: 1 //不需要登陆
       };
       _this.ajaxRequest({
         url: h5App.activeAPI.comment_success_post,
@@ -91,13 +90,13 @@ export default {
         }
       });
     },
-      //获取微信分享数据
+    //获取微信分享数据
     getWxShare(myData) {
       let _shareObj = {
         title: "评价分享",
         desc: "评价分享",
         url: location.href,
-        imgUrl:  this.imgUrl + myData.productResult.productImageUrl,
+        imgUrl: this.imgUrl + myData.productResult.productImageUrl,
         isOpenAllMenu: true, //显示所有功能按钮接口
         jsApiList: ["onMenuShareTimeline", "onMenuShareAppMessage"]
       };
@@ -110,26 +109,31 @@ export default {
       let shopId = this.product.shopId;
       let busId = this.busId;
       let productId = this.product.productId;
-      this.$router.push(
+      let _url =
         "/goods/details/" +
-          shopId +
-          "/" +
-          busId +
-          "/" +
-          orderType +
-          "/" +
-          productId +
-          "/" +
-          activityId
-      );
+        shopId +
+        "/" +
+        busId +
+        "/" +
+        orderType +
+        "/" +
+        productId +
+        "/" +
+        activityId;
+
+      if (orderType == 2) {
+        //跳到积分商品页面
+        _url = "/integral/product/" + busId + "/" + productId + "/" + shopId;
+      }
+      this.$router.push(_url);
     }
   }
 };
 </script>
 
 <style lang="less" scoped>
-@import  (reference) '~assets/css/base.less';
-@import  (reference) '~assets/css/mixins.less';
+@import (reference) "~assets/css/base.less";
+@import (reference) "~assets/css/mixins.less";
 .comment-main {
   width: 100%;
   padding-bottom: 134/@dev-Width *1rem;
@@ -321,7 +325,7 @@ export default {
     background: #fff;
     margin: 0 auto;
     .border-radius(8px);
-    p{
+    p {
       margin: 45/@dev-Width *1rem 0;
     }
   }

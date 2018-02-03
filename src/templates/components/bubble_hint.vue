@@ -49,7 +49,7 @@ module.exports = {
       } else {
         message = msg;
       }
-      console.log(cla,"cla",msg)
+      // console.log(cla,"cla",msg)
       this.$toast({
         message: message,
         iconClass: cla,
