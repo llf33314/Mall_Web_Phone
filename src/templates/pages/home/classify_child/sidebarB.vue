@@ -2,11 +2,11 @@
     <transition name="sidebar">
         <div class="sidebar-goods">
             <div class="Slide">
-                <div class="classify-title ">
+                <div class="classify-title">
                     {{name}}分类
                 </div>
                 <!--其他分类-->
-                <div class="classify-goods clearfix">
+                <div class="classify-goods clearfix" >
                     <div class="goods-item" v-for="(item,index) in goodsData"
                     :key="index" 
                     @click="goods_jump(item.group_name)">
@@ -50,7 +50,7 @@ export default {
             let type = this.$store.state.type || this.$route.params.type || 0;//活动类型
             let shopId = this.$store.state.shopId || 'shopId';//店铺id
             let busId = this.$store.state.busId || 'busId';//店铺id
-
+        
             this.$store.commit('mutationData',{keywords:e});
             this.$router.push('/classify/'+shopId+'/'+busId+'/'+type+'/'+e);
 

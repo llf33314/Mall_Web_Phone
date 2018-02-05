@@ -42,7 +42,10 @@
             </div>
         </div>
     </header>
-    <section class="classify-content-nav" v-if="isNav" :class="{'padding-bottom-clear' : !$store.state.isShowFooter}">
+    <section class="classify-content-nav" 
+            v-if="isNav" 
+            :class="{'padding-bottom-clear' : !$store.state.isShowFooter}"
+            @click.self="isNav=false">
         <ul class="classify-nav" :class="{'navshow':isNav}">
             <li class="fs42 " 
                 v-for="(item,index) in classNav"
@@ -139,14 +142,12 @@ export default {
     },
     watch: {
           // 如果路由有变化，会再次执行该方法
-          //"$route":'setTitle'
+          "$route":'setTitle'
     },
     methods: {
         //加载更多
         loadMore: function () {
-           
-           
-            
+
             let pageCount = this.productList.pageCount;//总页数
 
             if(this.curPage >= pageCount){
@@ -303,6 +304,7 @@ export default {
             if(scrollTopData.scrollTop > 0){
                 return
             }
+           
             _this.curPage = 1;
             _this.productAjax({
                 sort: 'new',
@@ -372,7 +374,6 @@ export default {
             }
         },
         goods_jump(e){
-            console.log(e,'跳转数据')
             if(e.activityId == null || e.activityId == '' || typeof(e.activityId) == "undefined"){
                 e.activityId = 0;
             }
